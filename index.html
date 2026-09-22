@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>XALLO-GAMING</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -13,7 +12,7 @@
   box-sizing:border-box;
   margin:0;
   padding:0;
-  font-family:Arial,sans-serif;
+  font-family:Arial,sans-serif
 }
 
 body{
@@ -23,38 +22,42 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  padding:20px;
+  padding:20px
 }
 
 .container{
   width:100%;
-  max-width:430px;
+  max-width:460px;
   background:#11182d;
   border:1px solid #263553;
   border-radius:25px;
   padding:30px 25px;
-  box-shadow:0 0 40px rgba(0,170,255,.18);
+  box-shadow:0 0 40px rgba(0,170,255,.18)
 }
 
 .logo{
   text-align:center;
   font-size:32px;
   font-weight:bold;
-  margin-bottom:8px;
+  margin-bottom:8px
 }
 
 .logo span{
-  color:#08a9ff;
+  color:#08a9ff
 }
 
 .subtitle{
   text-align:center;
   color:#9da8bd;
-  margin-bottom:28px;
+  margin-bottom:28px
 }
 
 h2{
-  margin-bottom:20px;
+  margin-bottom:20px
+}
+
+h3{
+  margin-bottom:15px
 }
 
 input,select{
@@ -66,7 +69,7 @@ input,select{
   background:#070b19;
   color:white;
   font-size:16px;
-  outline:none;
+  outline:none
 }
 
 button{
@@ -78,43 +81,40 @@ button{
   font-size:17px;
   font-weight:bold;
   cursor:pointer;
-  margin-top:8px;
+  margin-top:8px
 }
 
 button:disabled{
   opacity:.6;
+  cursor:not-allowed
 }
 
 .login-btn{
-  background:#08a9ff;
-}
-
-.coin-button{
-  background:#16b978;
+  background:#08a9ff
 }
 
 .reward-button{
-  background:#9c27b0;
+  background:#9c27b0
 }
 
 .withdraw-button{
-  background:#ff9800;
+  background:#ff9800
 }
 
 .logout{
-  background:#e53935;
+  background:#e53935
 }
 
 .switch{
   text-align:center;
   margin-top:20px;
-  color:#9da8bd;
+  color:#9da8bd
 }
 
 .switch a{
   color:#08a9ff;
   font-weight:bold;
-  cursor:pointer;
+  cursor:pointer
 }
 
 .message{
@@ -123,30 +123,30 @@ button:disabled{
   border-radius:10px;
   text-align:center;
   display:none;
-  line-height:1.5;
+  line-height:1.5
 }
 
 .success{
   display:block;
   color:#55e6a5;
-  background:rgba(0,200,120,.12);
+  background:rgba(0,200,120,.12)
 }
 
 .error{
   display:block;
   color:#ff7777;
-  background:rgba(255,60,60,.12);
+  background:rgba(255,60,60,.12)
 }
 
 .dashboard{
   display:none;
-  text-align:center;
+  text-align:center
 }
 
 .email{
   color:#b8c1d4;
   margin:15px 0;
-  word-break:break-word;
+  word-break:break-word
 }
 
 .coins{
@@ -154,35 +154,31 @@ button:disabled{
   padding:22px;
   border-radius:18px;
   background:#0c1b2e;
-  border:1px solid #315174;
+  border:1px solid #315174
 }
 
 .coin-number{
   color:#ffd54a;
   font-size:40px;
   font-weight:bold;
-  margin-top:8px;
+  margin-top:8px
 }
 
-.withdraw-box{
+.withdraw-box,
+.admin-box{
   margin-top:25px;
   padding:20px;
   background:#0c1b2e;
   border:1px solid #315174;
   border-radius:18px;
-  text-align:left;
-}
-
-.withdraw-box h3{
-  margin-bottom:15px;
-  text-align:center;
+  text-align:left
 }
 
 .balance-info{
   text-align:center;
   color:#9da8bd;
   margin-bottom:15px;
-  font-size:14px;
+  font-size:14px
 }
 
 .info{
@@ -190,6 +186,88 @@ button:disabled{
   font-size:13px;
   margin-top:15px;
   text-align:center;
+  line-height:1.5
+}
+
+.history{
+  margin-top:25px;
+  text-align:left
+}
+
+.history h3{
+  text-align:center
+}
+
+.request{
+  border:1px solid #283653;
+  background:#070b19;
+  border-radius:12px;
+  padding:12px;
+  margin-top:10px;
+  font-size:13px;
+  line-height:1.7
+}
+
+.status{
+  font-weight:bold
+}
+
+.pending{
+  color:#ffd54a
+}
+
+.approved{
+  color:#55e6a5
+}
+
+.rejected{
+  color:#ff7777
+}
+
+.admin-box{
+  display:none
+}
+
+.admin-title{
+  text-align:center;
+  margin-bottom:12px
+}
+
+.admin-row{
+  border:1px solid #283653;
+  background:#070b19;
+  border-radius:12px;
+  padding:12px;
+  margin-top:10px;
+  font-size:13px;
+  line-height:1.6
+}
+
+.admin-actions{
+  display:flex;
+  gap:8px;
+  margin-top:8px
+}
+
+.admin-actions button{
+  font-size:13px;
+  padding:10px;
+  margin:0
+}
+
+.approve{
+  background:#16b978
+}
+
+.reject{
+  background:#e53935
+}
+
+.small{
+  font-size:12px;
+  color:#8f9bb3;
+  text-align:center;
+  margin-top:8px
 }
 </style>
 </head>
@@ -197,8 +275,6 @@ button:disabled{
 <body>
 
 <div class="container">
-
-<!-- AUTH -->
 
 <div id="authBox">
 
@@ -209,8 +285,6 @@ button:disabled{
   <div class="subtitle">
     Play • Earn • Enjoy
   </div>
-
-  <!-- LOGIN -->
 
   <div id="loginBox">
 
@@ -239,9 +313,6 @@ button:disabled{
     </div>
 
   </div>
-
-
-  <!-- SIGN UP -->
 
   <div id="signupBox" style="display:none;">
 
@@ -276,8 +347,6 @@ button:disabled{
 </div>
 
 
-<!-- DASHBOARD -->
-
 <div id="dashboard" class="dashboard">
 
   <div class="logo">
@@ -293,8 +362,6 @@ button:disabled{
   <div class="email" id="userEmail"></div>
 
 
-  <!-- COINS -->
-
   <div class="coins">
 
     🪙 Your Coins
@@ -308,20 +375,6 @@ button:disabled{
   </div>
 
 
-  <!-- GET COINS -->
-
-  <button
-    class="coin-button"
-    id="coinButton"
-    onclick="addCoins()">
-
-    🎁 Get 10 Coins
-
-  </button>
-
-
-  <!-- DAILY REWARD -->
-
   <button
     class="reward-button"
     id="rewardButton"
@@ -332,17 +385,18 @@ button:disabled{
   </button>
 
 
-  <!-- WITHDRAW -->
-
   <div class="withdraw-box">
 
     <h3>💳 Withdraw</h3>
 
     <div class="balance-info">
+
       Your balance:
       <b>
-        <span id="withdrawCoins">0</span> Coins
+        <span id="withdrawCoins">0</span>
+        Coins
       </b>
+
     </div>
 
 
@@ -399,6 +453,11 @@ button:disabled{
 
     </button>
 
+    <div class="small">
+      Demo rate: 1,000 Coins = 1,000 IQD.
+      Actual payment is not automated yet.
+    </div>
+
   </div>
 
 
@@ -408,8 +467,48 @@ button:disabled{
   </div>
 
 
+  <div class="history">
+
+    <h3>
+      📋 My Withdrawals
+    </h3>
+
+    <div id="withdrawHistory">
+
+      <div class="small">
+        No requests yet.
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="adminBox"
+    class="admin-box">
+
+    <h3 class="admin-title">
+      👑 Admin Panel
+    </h3>
+
+    <div class="small">
+      Review withdrawal requests.
+      Approval here does not automatically send
+      a telecom card/recharge.
+    </div>
+
+    <div id="adminRequests"></div>
+
+  </div>
+
+
   <div class="info">
-    Withdraw requests are reviewed before payment.
+
+    Withdraw requests are recorded for review.
+    Real telecom payment requires a legitimate
+    payment/recharge integration.
+
   </div>
 
 
@@ -428,10 +527,6 @@ button:disabled{
 
 <script>
 
-/* =====================================
-   SUPABASE
-===================================== */
-
 const SUPABASE_URL =
 "https://vnyprsjjmmjahkisozib.supabase.co";
 
@@ -445,17 +540,16 @@ window.supabase.createClient(
 );
 
 
-/* =====================================
-   MESSAGE
-===================================== */
-
 function showMessage(text,type){
 
   const box =
     document.getElementById("message");
 
   box.textContent=text;
-  box.className="message "+type;
+
+  box.className =
+    "message "+type;
+
 }
 
 
@@ -465,27 +559,12 @@ function dashboardMessage(text,type){
     document.getElementById("dashboardMessage");
 
   box.textContent=text;
-  box.className="message "+type;
+
+  box.className =
+    "message "+type;
+
 }
 
-
-/* =====================================
-   LOCAL DATE
-===================================== */
-
-function getLocalDate(){
-
-  const now=new Date();
-
-  return now.getFullYear()+"-"+
-    String(now.getMonth()+1).padStart(2,"0")+"-"+
-    String(now.getDate()).padStart(2,"0");
-}
-
-
-/* =====================================
-   SHOW LOGIN
-===================================== */
 
 function showLogin(){
 
@@ -497,12 +576,9 @@ function showLogin(){
 
   document.getElementById("message")
     .style.display="none";
+
 }
 
-
-/* =====================================
-   SHOW SIGNUP
-===================================== */
 
 function showSignup(){
 
@@ -514,21 +590,22 @@ function showSignup(){
 
   document.getElementById("message")
     .style.display="none";
+
 }
 
 
-/* =====================================
-   CREATE PROFILE
-===================================== */
-
 async function createUserProfile(email){
 
-  const {data:existing,error:selectError} =
+  const {
+    data:existing,
+    error:selectError
+  } =
     await supabaseClient
       .from("users")
       .select("email")
       .eq("email",email)
       .maybeSingle();
+
 
   if(selectError){
 
@@ -538,11 +615,14 @@ async function createUserProfile(email){
     );
 
     return;
+
   }
+
 
   if(existing){
     return;
   }
+
 
   const {error} =
     await supabaseClient
@@ -552,19 +632,18 @@ async function createUserProfile(email){
         username:email.split("@")[0]
       });
 
+
   if(error){
 
     console.log(
       "Profile:",
       error.message
     );
+
   }
+
 }
 
-
-/* =====================================
-   SIGN UP
-===================================== */
 
 async function signup(){
 
@@ -576,6 +655,7 @@ async function signup(){
     document.getElementById("signupPassword")
       .value;
 
+
   if(!email || !password){
 
     showMessage(
@@ -584,9 +664,11 @@ async function signup(){
     );
 
     return;
+
   }
 
-  if(password.length<6){
+
+  if(password.length < 6){
 
     showMessage(
       "Password must be at least 6 characters.",
@@ -594,7 +676,9 @@ async function signup(){
     );
 
     return;
+
   }
+
 
   const button =
     document.getElementById("signupButton");
@@ -602,14 +686,20 @@ async function signup(){
   button.disabled=true;
   button.textContent="Creating...";
 
-  const {data,error} =
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient.auth.signUp({
       email:email,
       password:password
     });
 
+
   button.disabled=false;
   button.textContent="Sign Up";
+
 
   if(error){
 
@@ -619,9 +709,15 @@ async function signup(){
     );
 
     return;
+
   }
 
-  if(data && data.session && data.user){
+
+  if(
+    data &&
+    data.session &&
+    data.user
+  ){
 
     await createUserProfile(
       data.user.email
@@ -632,18 +728,17 @@ async function signup(){
     );
 
     return;
+
   }
 
+
   showMessage(
-    "Account created! Check your email.",
+    "Account created! Check your email, then login.",
     "success"
   );
+
 }
 
-
-/* =====================================
-   LOGIN
-===================================== */
 
 async function login(){
 
@@ -655,6 +750,7 @@ async function login(){
     document.getElementById("loginPassword")
       .value;
 
+
   if(!email || !password){
 
     showMessage(
@@ -663,7 +759,9 @@ async function login(){
     );
 
     return;
+
   }
+
 
   const button =
     document.getElementById("loginButton");
@@ -671,15 +769,21 @@ async function login(){
   button.disabled=true;
   button.textContent="Logging in...";
 
-  const {data,error} =
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient.auth
       .signInWithPassword({
         email:email,
         password:password
       });
 
+
   button.disabled=false;
   button.textContent="Login";
+
 
   if(error){
 
@@ -689,7 +793,9 @@ async function login(){
     );
 
     return;
+
   }
+
 
   if(data && data.user){
 
@@ -700,48 +806,61 @@ async function login(){
     await showDashboard(
       data.user
     );
+
   }
+
 }
 
 
-/* =====================================
-   LOAD COINS
-===================================== */
+function setCoins(amount){
+
+  const value =
+    Number(amount)||0;
+
+
+  document.getElementById("coins")
+    .textContent=value;
+
+
+  document.getElementById("withdrawCoins")
+    .textContent=value;
+
+}
+
 
 async function loadCoins(user){
 
-  const {data,error} =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("users")
-      .select("coins")
+      .select("coins,last_reward_date")
       .eq("email",user.email)
       .maybeSingle();
 
-  if(!error && data){
 
-    const amount =
-      Number(data.coins)||0;
+  if(error || !data){
 
-    document.getElementById("coins")
-      .textContent=amount;
+    setCoins(0);
 
-    document.getElementById("withdrawCoins")
-      .textContent=amount;
+    console.log(
+      "Load coins:",
+      error?.message
+    );
 
-  }else{
+    return null;
 
-    document.getElementById("coins")
-      .textContent="0";
-
-    document.getElementById("withdrawCoins")
-      .textContent="0";
   }
+
+
+  setCoins(data.coins);
+
+  return data;
+
 }
 
-
-/* =====================================
-   DASHBOARD
-===================================== */
 
 async function showDashboard(user){
 
@@ -751,231 +870,131 @@ async function showDashboard(user){
   document.getElementById("dashboard")
     .style.display="block";
 
+
   document.getElementById("userEmail")
     .textContent=user.email;
+
+
+  dashboardMessage("","success");
+
 
   await loadCoins(user);
 
   await checkDailyRewardButton(user);
+
+  await loadWithdrawHistory(user);
+
+  await checkAdmin();
+
 }
 
 
-/* =====================================
-   DAILY BUTTON
-===================================== */
-
 async function checkDailyRewardButton(user){
 
-  const {data,error} =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("users")
       .select("last_reward_date")
       .eq("email",user.email)
       .maybeSingle();
 
+
   if(error || !data){
     return;
   }
 
+
   const button =
     document.getElementById("rewardButton");
 
-  if(data.last_reward_date===getLocalDate()){
+
+  const today =
+    new Date().toLocaleDateString("en-CA");
+
+
+  if(
+    data.last_reward_date === today
+  ){
 
     button.disabled=true;
-    button.textContent="✅ Reward Claimed";
+
+    button.textContent =
+      "✅ Reward Claimed";
 
   }else{
 
     button.disabled=false;
-    button.textContent="🎁 Daily Reward +10";
+
+    button.textContent =
+      "🎁 Daily Reward +10";
+
   }
+
 }
 
-
-/* =====================================
-   GET 10 COINS
-===================================== */
-
-async function addCoins(){
-
-  const {data:userData} =
-    await supabaseClient.auth.getUser();
-
-  if(!userData.user){
-    return;
-  }
-
-  const email=userData.user.email;
-
-  const button =
-    document.getElementById("coinButton");
-
-  button.disabled=true;
-  button.textContent="Adding...";
-
-  const {data,error} =
-    await supabaseClient
-      .from("users")
-      .select("coins")
-      .eq("email",email)
-      .maybeSingle();
-
-  if(error || !data){
-
-    button.disabled=false;
-    button.textContent="🎁 Get 10 Coins";
-
-    dashboardMessage(
-      "User profile not found.",
-      "error"
-    );
-
-    return;
-  }
-
-  const newCoins =
-    (Number(data.coins)||0)+10;
-
-  const {error:updateError} =
-    await supabaseClient
-      .from("users")
-      .update({
-        coins:newCoins
-      })
-      .eq("email",email);
-
-  button.disabled=false;
-  button.textContent="🎁 Get 10 Coins";
-
-  if(updateError){
-
-    dashboardMessage(
-      updateError.message,
-      "error"
-    );
-
-    return;
-  }
-
-  document.getElementById("coins")
-    .textContent=newCoins;
-
-  document.getElementById("withdrawCoins")
-    .textContent=newCoins;
-
-  dashboardMessage(
-    "🎉 10 Coins added!",
-    "success"
-  );
-}
-
-
-/* =====================================
-   DAILY REWARD
-===================================== */
 
 async function dailyReward(){
-
-  const {data:userData} =
-    await supabaseClient.auth.getUser();
-
-  if(!userData.user){
-    return;
-  }
-
-  const email=userData.user.email;
 
   const button =
     document.getElementById("rewardButton");
 
+
   button.disabled=true;
   button.textContent="Checking...";
 
-  const {data,error} =
-    await supabaseClient
-      .from("users")
-      .select("coins,last_reward_date")
-      .eq("email",email)
-      .maybeSingle();
 
-  if(error || !data){
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .rpc("claim_daily_reward");
+
+
+  if(error){
 
     button.disabled=false;
-    button.textContent="🎁 Daily Reward +10";
+
+    button.textContent =
+      "🎁 Daily Reward +10";
+
 
     dashboardMessage(
-      "User profile not found.",
+      error.message,
       "error"
     );
 
     return;
+
   }
 
-  const today=getLocalDate();
 
-  if(data.last_reward_date===today){
+  setCoins(data);
 
-    button.disabled=true;
-    button.textContent="✅ Reward Claimed";
 
-    dashboardMessage(
-      "You already claimed today's reward.",
-      "error"
-    );
+  button.textContent =
+    "✅ Reward Claimed";
 
-    return;
-  }
-
-  const newCoins =
-    (Number(data.coins)||0)+10;
-
-  const {error:updateError} =
-    await supabaseClient
-      .from("users")
-      .update({
-        coins:newCoins,
-        last_reward_date:today
-      })
-      .eq("email",email);
-
-  if(updateError){
-
-    button.disabled=false;
-    button.textContent="🎁 Daily Reward +10";
-
-    dashboardMessage(
-      updateError.message,
-      "error"
-    );
-
-    return;
-  }
-
-  document.getElementById("coins")
-    .textContent=newCoins;
-
-  document.getElementById("withdrawCoins")
-    .textContent=newCoins;
-
-  button.disabled=true;
-  button.textContent="✅ Reward Claimed";
 
   dashboardMessage(
     "🎉 Daily Reward: +10 Coins!",
     "success"
   );
+
 }
 
 
-/* =====================================
-   WITHDRAW REQUEST
-===================================== */
-
 async function requestWithdraw(){
 
-  const {data:userData} =
-    await supabaseClient.auth.getUser();
+  const {
+    data:userData
+  } =
+    await supabaseClient.auth
+      .getUser();
+
 
   if(!userData.user){
 
@@ -985,25 +1004,33 @@ async function requestWithdraw(){
     );
 
     return;
+
   }
 
-  const email=userData.user.email;
 
   const method =
-    document.getElementById("withdrawMethod")
-      .value;
+    document.getElementById(
+      "withdrawMethod"
+    ).value;
+
 
   const coins =
     Number(
-      document.getElementById("withdrawAmount")
-        .value
+      document.getElementById(
+        "withdrawAmount"
+      ).value
     );
 
-  const phone =
-    document.getElementById("withdrawPhone")
-      .value.trim();
 
-  if(!method){
+  const phone =
+    document.getElementById(
+      "withdrawPhone"
+    ).value.trim();
+
+
+  if(
+    !["Korek","Asiacell"].includes(method)
+  ){
 
     dashboardMessage(
       "Select Korek or Asiacell.",
@@ -1011,29 +1038,27 @@ async function requestWithdraw(){
     );
 
     return;
+
   }
 
-  if(!coins){
+
+  if(
+    ![1000,5000,10000].includes(coins)
+  ){
 
     dashboardMessage(
-      "Select withdrawal amount.",
+      "Select a valid withdrawal amount.",
       "error"
     );
 
     return;
+
   }
 
-  if(!phone){
 
-    dashboardMessage(
-      "Enter your phone number.",
-      "error"
-    );
-
-    return;
-  }
-
-  if(phone.length<10){
+  if(
+    !/^[0-9+\s-]{10,15}$/.test(phone)
+  ){
 
     dashboardMessage(
       "Enter a valid phone number.",
@@ -1041,93 +1066,39 @@ async function requestWithdraw(){
     );
 
     return;
+
   }
 
+
   const button =
-    document.getElementById("withdrawButton");
+    document.getElementById(
+      "withdrawButton"
+    );
+
 
   button.disabled=true;
   button.textContent="Sending...";
 
 
-  /* Get current balance */
-
-  const {data:user,error:userError} =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
-      .from("users")
-      .select("coins")
-      .eq("email",email)
-      .maybeSingle();
-
-
-  if(userError || !user){
-
-    button.disabled=false;
-    button.textContent="💰 Request Withdraw";
-
-    dashboardMessage(
-      "Could not find your account.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const currentCoins =
-    Number(user.coins)||0;
-
-
-  if(currentCoins<coins){
-
-    button.disabled=false;
-    button.textContent="💰 Request Withdraw";
-
-    dashboardMessage(
-      "❌ You don't have enough Coins.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  /*
-    Convert Coins to amount.
-
-    For now this is a demo conversion:
-    1,000 Coins = 1,000 IQD
-
-    We can change this later.
-  */
-
-  const amount=coins;
-
-
-  /* Create withdrawal request */
-
-  const {error} =
-    await supabaseClient
-      .from("withdrawals")
-      .insert({
-
-        user_email:email,
-
-        coins:coins,
-
-        amount:amount,
-
-        method:method,
-
-        phone:phone,
-
-        status:"pending"
-
-      });
+      .rpc(
+        "create_withdrawal",
+        {
+          p_coins:coins,
+          p_method:method,
+          p_phone:phone
+        }
+      );
 
 
   button.disabled=false;
-  button.textContent="💰 Request Withdraw";
+
+  button.textContent =
+    "💰 Request Withdraw";
 
 
   if(error){
@@ -1138,71 +1109,473 @@ async function requestWithdraw(){
     );
 
     return;
+
   }
 
 
-  /*
-    IMPORTANT:
-    Coins are NOT removed yet.
-    Admin will review the request first.
-  */
+  setCoins(
+    data?.new_balance ?? 0
+  );
+
+
+  document.getElementById(
+    "withdrawMethod"
+  ).value="";
+
+
+  document.getElementById(
+    "withdrawAmount"
+  ).value="";
+
+
+  document.getElementById(
+    "withdrawPhone"
+  ).value="";
+
 
   dashboardMessage(
-    "✅ Withdraw request sent successfully! Status: Pending.",
+    "✅ Request sent. Your Coins were reserved and the request is Pending.",
     "success"
   );
 
 
-  document.getElementById("withdrawMethod")
-    .value="";
+  await loadWithdrawHistory(
+    userData.user
+  );
 
-  document.getElementById("withdrawAmount")
-    .value="";
-
-  document.getElementById("withdrawPhone")
-    .value="";
 }
 
 
-/* =====================================
-   LOGOUT
-===================================== */
+function statusClass(status){
+
+  if(status==="approved"){
+    return "approved";
+  }
+
+  if(status==="rejected"){
+    return "rejected";
+  }
+
+  return "pending";
+
+}
+
+
+async function loadWithdrawHistory(user){
+
+  const box =
+    document.getElementById(
+      "withdrawHistory"
+    );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("withdrawals")
+      .select(
+        "coins,amount,method,phone,status,created_at"
+      )
+      .eq(
+        "user_email",
+        user.email
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      )
+      .limit(20);
+
+
+  if(error){
+
+    box.innerHTML =
+      '<div class="small">Could not load history.</div>';
+
+    return;
+
+  }
+
+
+  if(
+    !data ||
+    !data.length
+  ){
+
+    box.innerHTML =
+      '<div class="small">No requests yet.</div>';
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    data.map(r => `
+
+      <div class="request">
+
+        <b>
+          ${escapeHtml(r.method)}
+        </b>
+
+        •
+        ${Number(r.coins).toLocaleString()}
+        Coins
+
+        <br>
+
+        Phone:
+        ${escapeHtml(r.phone)}
+
+        <br>
+
+        Status:
+
+        <span
+          class="status ${statusClass(r.status)}">
+
+          ${escapeHtml(r.status)}
+
+        </span>
+
+        <br>
+
+        ${new Date(
+          r.created_at
+        ).toLocaleString()}
+
+      </div>
+
+    `).join("");
+
+}
+
+
+async function checkAdmin(){
+
+  const {
+    data:userData
+  } =
+    await supabaseClient.auth
+      .getUser();
+
+
+  if(!userData.user){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("admins")
+      .select("email")
+      .eq(
+        "email",
+        userData.user.email
+      )
+      .maybeSingle();
+
+
+  const box =
+    document.getElementById(
+      "adminBox"
+    );
+
+
+  if(!error && data){
+
+    box.style.display="block";
+
+    await loadAdminRequests();
+
+  }else{
+
+    box.style.display="none";
+
+  }
+
+}
+
+
+async function loadAdminRequests(){
+
+  const box =
+    document.getElementById(
+      "adminRequests"
+    );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("withdrawals")
+      .select(
+        "id,user_email,coins,amount,method,phone,status,created_at"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      )
+      .limit(50);
+
+
+  if(error){
+
+    box.innerHTML =
+      '<div class="small">Could not load admin requests.</div>';
+
+    return;
+
+  }
+
+
+  if(
+    !data ||
+    !data.length
+  ){
+
+    box.innerHTML =
+      '<div class="small">No withdrawal requests.</div>';
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    data.map(r => `
+
+      <div class="admin-row">
+
+        <b>
+          ${escapeHtml(r.method)}
+        </b>
+
+        •
+        ${Number(r.coins).toLocaleString()}
+        Coins
+
+        <br>
+
+        User:
+        ${escapeHtml(r.user_email)}
+
+        <br>
+
+        Phone:
+        ${escapeHtml(r.phone)}
+
+        <br>
+
+        Status:
+
+        <span
+          class="status ${statusClass(r.status)}">
+
+          ${escapeHtml(r.status)}
+
+        </span>
+
+
+        ${
+          r.status==="pending"
+          ?
+
+          `
+          <div class="admin-actions">
+
+            <button
+              class="approve"
+              onclick="adminDecision('${r.id}','approved')">
+
+              Approve
+
+            </button>
+
+            <button
+              class="reject"
+              onclick="adminDecision('${r.id}','rejected')">
+
+              Reject
+
+            </button>
+
+          </div>
+          `
+
+          :
+
+          ""
+        }
+
+      </div>
+
+    `).join("");
+
+}
+
+
+async function adminDecision(
+  id,
+  status
+){
+
+  if(
+    !confirm(
+      status==="approved"
+      ?
+      "Approve this request?"
+      :
+      "Reject and return the Coins to the user?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .rpc(
+        "admin_update_withdrawal",
+        {
+          p_withdrawal_id:id,
+          p_status:status
+        }
+      );
+
+
+  if(error){
+
+    dashboardMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  dashboardMessage(
+    "✅ Withdrawal status updated.",
+    "success"
+  );
+
+
+  await loadAdminRequests();
+
+
+  const {
+    data:userData
+  } =
+    await supabaseClient.auth
+      .getUser();
+
+
+  if(userData.user){
+
+    await loadWithdrawHistory(
+      userData.user
+    );
+
+  }
+
+
+  if(
+    status==="rejected" &&
+    userData.user
+  ){
+
+    await loadCoins(
+      userData.user
+    );
+
+  }
+
+}
+
+
+function escapeHtml(value){
+
+  return String(
+    value ?? ""
+  ).replace(
+    /[&<>"']/g,
+    m => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[m])
+  );
+
+}
+
 
 async function logout(){
 
   await supabaseClient.auth.signOut();
 
-  document.getElementById("dashboard")
-    .style.display="none";
 
-  document.getElementById("authBox")
-    .style.display="block";
+  document.getElementById(
+    "dashboard"
+  ).style.display="none";
+
+
+  document.getElementById(
+    "authBox"
+  ).style.display="block";
+
+
+  document.getElementById(
+    "adminBox"
+  ).style.display="none";
+
 
   showLogin();
+
 }
 
 
-/* =====================================
-   CHECK USER
-===================================== */
-
 async function checkUser(){
 
-  const {data} =
-    await supabaseClient.auth.getUser();
+  const {
+    data
+  } =
+    await supabaseClient.auth
+      .getUser();
 
-  if(data && data.user){
+
+  if(
+    data &&
+    data.user
+  ){
 
     await showDashboard(
       data.user
     );
+
   }
+
 }
 
-
-/* =====================================
-   START
-===================================== */
 
 checkUser();
 
