@@ -34,8 +34,7 @@
       border: 1px solid #263553;
       border-radius: 25px;
       padding: 35px 28px;
-      box-shadow:
-        0 0 40px rgba(0, 170, 255, 0.18);
+      box-shadow: 0 0 40px rgba(0, 170, 255, 0.18);
     }
 
     .logo {
@@ -139,8 +138,33 @@
 
     .email {
       color: #b8c1d4;
-      margin: 15px 0 25px;
+      margin: 15px 0 20px;
       word-break: break-word;
+    }
+
+    .coins-box {
+      background: linear-gradient(135deg, #172b48, #0b1628);
+      border: 1px solid #315174;
+      border-radius: 18px;
+      padding: 22px;
+      margin: 20px 0 25px;
+      box-shadow: 0 0 25px rgba(8,169,255,.12);
+    }
+
+    .coins-title {
+      color: #9da8bd;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .coins-number {
+      color: #ffd54a;
+      font-size: 38px;
+      font-weight: bold;
+    }
+
+    .coins-icon {
+      font-size: 30px;
     }
 
     .logout {
@@ -248,6 +272,23 @@
 
       <p class="email" id="userEmail"></p>
 
+      <!-- COINS -->
+      <div class="coins-box">
+
+        <div class="coins-icon">
+          🪙
+        </div>
+
+        <div class="coins-title">
+          Your Coins
+        </div>
+
+        <div class="coins-number" id="coins">
+          0
+        </div>
+
+      </div>
+
       <button class="logout" onclick="logout()">
         Logout
       </button>
@@ -268,7 +309,6 @@
 
   const SUPABASE_KEY =
     "sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
-
 
   const supabaseClient =
     window.supabase.createClient(
@@ -329,6 +369,61 @@
 
 
   // ==============================
+  // CREATE USER PROFILE
+  // ==============================
+
+  async function createUserProfile(user) {
+
+    const username =
+      user.email
+        ? user.email.split("@")[0]
+        : "Player";
+
+    const { error } =
+      await supabaseClient
+        .from("users")
+        .upsert({
+          email: user.email,
+          username: username
+        }, {
+          onConflict: "email"
+        });
+
+    if (error) {
+      console.log("Profile error:", error);
+    }
+  }
+
+
+  // ==============================
+  // LOAD COINS
+  // ==============================
+
+  async function loadCoins(user) {
+
+    const { data, error } =
+      await supabaseClient
+        .from("users")
+        .select("coins")
+        .eq("email", user.email)
+        .single();
+
+    if (error) {
+
+      console.log("Coins error:", error);
+
+      document.getElementById("coins")
+        .textContent = "0";
+
+      return;
+    }
+
+    document.getElementById("coins")
+      .textContent = data.coins || 0;
+  }
+
+
+  // ==============================
   // SIGN UP
   // ==============================
 
@@ -383,10 +478,20 @@
     }
 
 
-    showMessage(
-      "Account created! Check your email if verification is required.",
-      "success"
-    );
+    if (data.user && data.session) {
+
+      await createUserProfile(data.user);
+
+      showDashboard(data.user);
+
+    } else {
+
+      showMessage(
+        "Account created! Check your email if verification is required.",
+        "success"
+      );
+
+    }
 
   }
 
@@ -435,9 +540,9 @@
     }
 
 
-    showDashboard(
-      data.user
-    );
+    await createUserProfile(data.user);
+
+    showDashboard(data.user);
 
   }
 
@@ -446,7 +551,7 @@
   // DASHBOARD
   // ==============================
 
-  function showDashboard(user) {
+  async function showDashboard(user) {
 
     document.getElementById("authBox")
       .style.display = "none";
@@ -456,6 +561,8 @@
 
     document.getElementById("userEmail")
       .textContent = user.email;
+
+    await loadCoins(user);
 
   }
 
@@ -490,9 +597,9 @@
 
     if (data.user) {
 
-      showDashboard(
-        data.user
-      );
+      await createUserProfile(data.user);
+
+      showDashboard(data.user);
 
     }
 
