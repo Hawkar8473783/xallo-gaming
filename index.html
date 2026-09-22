@@ -18,8 +18,7 @@
 
 body{
   min-height:100vh;
-  background:
-    radial-gradient(circle at top,#123b5d,#050713 65%);
+  background:radial-gradient(circle at top,#123b5d,#050713 65%);
   color:white;
   display:flex;
   justify-content:center;
@@ -85,10 +84,6 @@ button{
   font-weight:bold;
   cursor:pointer;
   margin-top:8px;
-}
-
-button:active{
-  transform:scale(.98);
 }
 
 button:disabled{
@@ -178,8 +173,6 @@ button:disabled{
 
 <div class="container">
 
-<!-- ================= AUTH ================= -->
-
 <div id="authBox">
 
   <div class="logo">
@@ -190,9 +183,6 @@ button:disabled{
     Play • Earn • Enjoy
   </div>
 
-
-  <!-- LOGIN -->
-
   <div id="loginBox">
 
     <h2>Login</h2>
@@ -201,19 +191,15 @@ button:disabled{
       id="loginEmail"
       type="email"
       placeholder="Email"
-      autocomplete="email"
-    >
+      autocomplete="email">
 
     <input
       id="loginPassword"
       type="password"
       placeholder="Password"
-      autocomplete="current-password"
-    >
+      autocomplete="current-password">
 
-    <button
-      id="loginButton"
-      onclick="login()">
+    <button id="loginButton" onclick="login()">
       Login
     </button>
 
@@ -224,12 +210,7 @@ button:disabled{
 
   </div>
 
-
-  <!-- SIGN UP -->
-
-  <div
-    id="signupBox"
-    style="display:none;">
+  <div id="signupBox" style="display:none;">
 
     <h2>Create Account</h2>
 
@@ -237,19 +218,15 @@ button:disabled{
       id="signupEmail"
       type="email"
       placeholder="Email"
-      autocomplete="email"
-    >
+      autocomplete="email">
 
     <input
       id="signupPassword"
       type="password"
       placeholder="Password"
-      autocomplete="new-password"
-    >
+      autocomplete="new-password">
 
-    <button
-      id="signupButton"
-      onclick="signup()">
+    <button id="signupButton" onclick="signup()">
       Sign Up
     </button>
 
@@ -260,20 +237,12 @@ button:disabled{
 
   </div>
 
-
-  <div
-    id="message"
-    class="message">
-  </div>
+  <div id="message" class="message"></div>
 
 </div>
 
 
-<!-- ================= DASHBOARD ================= -->
-
-<div
-  id="dashboard"
-  class="dashboard">
+<div id="dashboard" class="dashboard">
 
   <div class="logo">
     XALLO-<span>GAMING</span>
@@ -285,70 +254,40 @@ button:disabled{
 
   <h2>Welcome 🎮</h2>
 
-  <div
-    class="email"
-    id="userEmail">
-  </div>
-
-
-  <!-- COINS -->
+  <div class="email" id="userEmail"></div>
 
   <div class="coins">
 
     🪙 Your Coins
 
-    <div
-      class="coin-number"
-      id="coins">
+    <div class="coin-number" id="coins">
       0
     </div>
 
   </div>
 
-
-  <!-- GET COINS -->
-
   <button
     class="coin-button"
     id="coinButton"
     onclick="addCoins()">
-
     🎁 Get 10 Coins
-
   </button>
-
-
-  <!-- DAILY REWARD -->
 
   <button
     class="reward-button"
     id="rewardButton"
     onclick="dailyReward()">
-
     🎁 Daily Reward +10
-
   </button>
 
-
-  <div
-    id="dashboardMessage"
-    class="message">
-  </div>
-
+  <div id="dashboardMessage" class="message"></div>
 
   <div class="info">
     Daily Reward can be claimed once per day.
   </div>
 
-
-  <!-- LOGOUT -->
-
-  <button
-    class="logout"
-    onclick="logout()">
-
+  <button class="logout" onclick="logout()">
     Logout
-
   </button>
 
 </div>
@@ -358,9 +297,9 @@ button:disabled{
 
 <script>
 
-/* =========================================
+/* ================================
    SUPABASE
-========================================= */
+================================ */
 
 const SUPABASE_URL =
 "https://vnyprsjjmmjahkisozib.supabase.co";
@@ -375,43 +314,46 @@ window.supabase.createClient(
 );
 
 
-/* =========================================
-   MESSAGE
-========================================= */
+/* ================================
+   MESSAGES
+================================ */
 
 function showMessage(text,type){
 
   const box =
     document.getElementById("message");
 
-  box.textContent = text;
-
-  box.className =
-    "message " + type;
-
+  box.textContent=text;
+  box.className="message "+type;
 }
-
-
-/* =========================================
-   DASHBOARD MESSAGE
-========================================= */
 
 function dashboardMessage(text,type){
 
   const box =
     document.getElementById("dashboardMessage");
 
-  box.textContent = text;
-
-  box.className =
-    "message " + type;
-
+  box.textContent=text;
+  box.className="message "+type;
 }
 
 
-/* =========================================
-   SHOW LOGIN
-========================================= */
+/* ================================
+   LOCAL DATE
+================================ */
+
+function getLocalDate(){
+
+  const now=new Date();
+
+  return now.getFullYear()+"-"+
+    String(now.getMonth()+1).padStart(2,"0")+"-"+
+    String(now.getDate()).padStart(2,"0");
+}
+
+
+/* ================================
+   LOGIN / SIGNUP SCREEN
+================================ */
 
 function showLogin(){
 
@@ -423,13 +365,7 @@ function showLogin(){
 
   document.getElementById("message")
     .style.display="none";
-
 }
-
-
-/* =========================================
-   SHOW SIGNUP
-========================================= */
 
 function showSignup(){
 
@@ -441,13 +377,58 @@ function showSignup(){
 
   document.getElementById("message")
     .style.display="none";
-
 }
 
 
-/* =========================================
+/* ================================
+   CREATE PROFILE
+================================ */
+
+async function createUserProfile(email){
+
+  const {data:existing,error:selectError} =
+    await supabaseClient
+      .from("users")
+      .select("email")
+      .eq("email",email)
+      .maybeSingle();
+
+  if(selectError){
+
+    console.log(
+      "Profile check:",
+      selectError.message
+    );
+
+    return;
+  }
+
+  if(existing){
+
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("users")
+      .insert({
+        email:email,
+        username:email.split("@")[0]
+      });
+
+  if(error){
+
+    console.log(
+      "Profile:",
+      error.message
+    );
+  }
+}
+
+
+/* ================================
    SIGN UP
-========================================= */
+================================ */
 
 async function signup(){
 
@@ -459,7 +440,6 @@ async function signup(){
     document.getElementById("signupPassword")
       .value;
 
-
   if(!email || !password){
 
     showMessage(
@@ -470,8 +450,7 @@ async function signup(){
     return;
   }
 
-
-  if(password.length < 6){
+  if(password.length<6){
 
     showMessage(
       "Password must be at least 6 characters.",
@@ -481,26 +460,20 @@ async function signup(){
     return;
   }
 
-
   const button =
     document.getElementById("signupButton");
 
   button.disabled=true;
   button.textContent="Creating...";
 
-
   const {data,error} =
     await supabaseClient.auth.signUp({
-
       email:email,
       password:password
-
     });
-
 
   button.disabled=false;
   button.textContent="Sign Up";
-
 
   if(error){
 
@@ -512,66 +485,40 @@ async function signup(){
     return;
   }
 
+  /*
+    Profile is created only when
+    a session is available.
+  */
 
-  /* Create user profile */
+  if(data && data.session && data.user){
 
-  await createUserProfile(email);
+    await createUserProfile(
+      data.user.email
+    );
 
+    await showDashboard(
+      data.user
+    );
+
+    return;
+  }
 
   showMessage(
-    "Account created successfully! 🎉",
+    "Account created! Check your email to confirm your account.",
     "success"
   );
-
 
   document.getElementById("signupEmail")
     .value="";
 
   document.getElementById("signupPassword")
     .value="";
-
 }
 
 
-/* =========================================
-   CREATE PROFILE
-========================================= */
-
-async function createUserProfile(email){
-
-  const username =
-    email.split("@")[0];
-
-
-  const {error} =
-    await supabaseClient
-      .from("users")
-      .upsert({
-
-        email:email,
-        username:username,
-        coins:0
-
-      },{
-        onConflict:"email"
-      });
-
-
-  if(error){
-
-    console.log(
-      "Profile:",
-      error.message
-    );
-
-  }
-
-}
-
-
-/* =========================================
+/* ================================
    LOGIN
-========================================= */
+================================ */
 
 async function login(){
 
@@ -583,7 +530,6 @@ async function login(){
     document.getElementById("loginPassword")
       .value;
 
-
   if(!email || !password){
 
     showMessage(
@@ -594,27 +540,21 @@ async function login(){
     return;
   }
 
-
   const button =
     document.getElementById("loginButton");
 
   button.disabled=true;
   button.textContent="Logging in...";
 
-
   const {data,error} =
     await supabaseClient.auth
       .signInWithPassword({
-
         email:email,
         password:password
-
       });
-
 
   button.disabled=false;
   button.textContent="Login";
-
 
   if(error){
 
@@ -626,8 +566,12 @@ async function login(){
     return;
   }
 
-
   if(data && data.user){
+
+    /*
+      IMPORTANT:
+      We do NOT reset coins here.
+    */
 
     await createUserProfile(
       data.user.email
@@ -636,15 +580,13 @@ async function login(){
     await showDashboard(
       data.user
     );
-
   }
-
 }
 
 
-/* =========================================
+/* ================================
    LOAD COINS
-========================================= */
+================================ */
 
 async function loadCoins(user){
 
@@ -653,28 +595,30 @@ async function loadCoins(user){
       .from("users")
       .select("coins")
       .eq("email",user.email)
-      .single();
-
+      .maybeSingle();
 
   if(!error && data){
 
     document.getElementById("coins")
-      .textContent =
-        Number(data.coins) || 0;
+      .textContent=
+        Number(data.coins)||0;
 
   }else{
 
     document.getElementById("coins")
       .textContent="0";
 
+    console.log(
+      "Load coins:",
+      error?.message
+    );
   }
-
 }
 
 
-/* =========================================
+/* ================================
    DASHBOARD
-========================================= */
+================================ */
 
 async function showDashboard(user){
 
@@ -687,33 +631,63 @@ async function showDashboard(user){
   document.getElementById("userEmail")
     .textContent=user.email;
 
-
   await loadCoins(user);
 
+  await checkDailyRewardButton(user);
 }
 
 
-/* =========================================
+/* ================================
+   CHECK DAILY REWARD
+================================ */
+
+async function checkDailyRewardButton(user){
+
+  const {data,error} =
+    await supabaseClient
+      .from("users")
+      .select("last_reward_date")
+      .eq("email",user.email)
+      .maybeSingle();
+
+  if(error || !data){
+
+    return;
+  }
+
+  const today=getLocalDate();
+
+  const button =
+    document.getElementById("rewardButton");
+
+  if(data.last_reward_date===today){
+
+    button.disabled=true;
+    button.textContent="✅ Reward Claimed";
+
+  }else{
+
+    button.disabled=false;
+    button.textContent="🎁 Daily Reward +10";
+  }
+}
+
+
+/* ================================
    GET 10 COINS
-========================================= */
+================================ */
 
 async function addCoins(){
 
   const {data:userData} =
-    await supabaseClient.auth
-      .getUser();
-
+    await supabaseClient.auth.getUser();
 
   if(!userData.user){
 
     return;
-
   }
 
-
-  const email =
-    userData.user.email;
-
+  const email=userData.user.email;
 
   const button =
     document.getElementById("coinButton");
@@ -721,14 +695,12 @@ async function addCoins(){
   button.disabled=true;
   button.textContent="Adding...";
 
-
   const {data,error} =
     await supabaseClient
       .from("users")
       .select("coins")
       .eq("email",email)
-      .single();
-
+      .maybeSingle();
 
   if(error || !data){
 
@@ -741,28 +713,21 @@ async function addCoins(){
     );
 
     return;
-
   }
 
-
   const newCoins =
-    (Number(data.coins) || 0) + 10;
-
+    (Number(data.coins)||0)+10;
 
   const {error:updateError} =
     await supabaseClient
       .from("users")
       .update({
-
         coins:newCoins
-
       })
       .eq("email",email);
 
-
   button.disabled=false;
   button.textContent="🎁 Get 10 Coins";
-
 
   if(updateError){
 
@@ -772,43 +737,33 @@ async function addCoins(){
     );
 
     return;
-
   }
-
 
   document.getElementById("coins")
     .textContent=newCoins;
-
 
   dashboardMessage(
     "🎉 10 Coins added!",
     "success"
   );
-
 }
 
 
-/* =========================================
+/* ================================
    DAILY REWARD
-========================================= */
+================================ */
 
 async function dailyReward(){
 
   const {data:userData} =
-    await supabaseClient.auth
-      .getUser();
-
+    await supabaseClient.auth.getUser();
 
   if(!userData.user){
 
     return;
-
   }
 
-
-  const email =
-    userData.user.email;
-
+  const email=userData.user.email;
 
   const button =
     document.getElementById("rewardButton");
@@ -816,16 +771,12 @@ async function dailyReward(){
   button.disabled=true;
   button.textContent="Checking...";
 
-
   const {data,error} =
     await supabaseClient
       .from("users")
-      .select(
-        "coins,last_reward_date"
-      )
+      .select("coins,last_reward_date")
       .eq("email",email)
-      .single();
-
+      .maybeSingle();
 
   if(error || !data){
 
@@ -838,26 +789,14 @@ async function dailyReward(){
     );
 
     return;
-
   }
 
+  const today=getLocalDate();
 
-  /* Today's date */
+  if(data.last_reward_date===today){
 
-  const today =
-    new Date()
-      .toISOString()
-      .split("T")[0];
-
-
-  /* Already claimed */
-
-  if(
-    data.last_reward_date === today
-  ){
-
-    button.disabled=false;
-    button.textContent="🎁 Already Claimed";
+    button.disabled=true;
+    button.textContent="✅ Reward Claimed";
 
     dashboardMessage(
       "🎁 You already claimed today's reward.",
@@ -865,27 +804,19 @@ async function dailyReward(){
     );
 
     return;
-
   }
 
-
-  /* Add 10 coins */
-
   const newCoins =
-    (Number(data.coins) || 0) + 10;
-
+    (Number(data.coins)||0)+10;
 
   const {error:updateError} =
     await supabaseClient
       .from("users")
       .update({
-
         coins:newCoins,
         last_reward_date:today
-
       })
       .eq("email",email);
-
 
   if(updateError){
 
@@ -898,34 +829,28 @@ async function dailyReward(){
     );
 
     return;
-
   }
-
 
   document.getElementById("coins")
     .textContent=newCoins;
 
-
   button.disabled=true;
   button.textContent="✅ Reward Claimed";
-
 
   dashboardMessage(
     "🎉 Daily Reward: +10 Coins!",
     "success"
   );
-
 }
 
 
-/* =========================================
+/* ================================
    LOGOUT
-========================================= */
+================================ */
 
 async function logout(){
 
   await supabaseClient.auth.signOut();
-
 
   document.getElementById("dashboard")
     .style.display="none";
@@ -933,36 +858,31 @@ async function logout(){
   document.getElementById("authBox")
     .style.display="block";
 
-
   showLogin();
-
 }
 
 
-/* =========================================
+/* ================================
    CHECK USER
-========================================= */
+================================ */
 
 async function checkUser(){
 
   const {data} =
     await supabaseClient.auth.getUser();
 
-
   if(data && data.user){
 
-    showDashboard(
+    await showDashboard(
       data.user
     );
-
   }
-
 }
 
 
-/* =========================================
-   START APP
-========================================= */
+/* ================================
+   START
+================================ */
 
 checkUser();
 
