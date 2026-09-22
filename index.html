@@ -210,7 +210,7 @@
     /* NAV TABS */
     .nav-tabs {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       margin: 20px 0;
       background: #0c1b2e;
       padding: 6px;
@@ -219,11 +219,11 @@
 
     .nav-tab {
       flex: 1;
-      padding: 10px;
+      padding: 10px 4px;
       border-radius: 10px;
       background: transparent;
       color: #9da8bd;
-      font-size: 14px;
+      font-size: 12px;
       margin: 0;
       cursor: pointer;
     }
@@ -278,6 +278,66 @@
       font-size: 13px;
       margin: 0;
       background: #10b981;
+    }
+
+    /* LEADERBOARD */
+    .leaderboard-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 15px 0;
+    }
+
+    .lb-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #0c1b2e;
+      border: 1px solid #315174;
+    }
+
+    .lb-row.top-1 {
+      background: linear-gradient(135deg, #4a3a00, #2a1f00);
+      border-color: #ffd54a;
+      box-shadow: 0 0 20px rgba(255, 213, 74, .3);
+    }
+
+    .lb-row.top-2 {
+      background: linear-gradient(135deg, #2e2e2e, #1a1a1a);
+      border-color: #c0c0c0;
+    }
+
+    .lb-row.top-3 {
+      background: linear-gradient(135deg, #3a2a1a, #241810);
+      border-color: #cd7f32;
+    }
+
+    .lb-row.me {
+      border-color: #08a9ff;
+      box-shadow: 0 0 15px rgba(8, 169, 255, .3);
+    }
+
+    .lb-rank {
+      font-size: 22px;
+      font-weight: bold;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .lb-email {
+      flex: 1;
+      font-size: 13px;
+      color: #b8c1d4;
+      word-break: break-all;
+      text-align: left;
+    }
+
+    .lb-coins {
+      font-size: 15px;
+      font-weight: bold;
+      color: #ffd54a;
     }
   </style>
 </head>
@@ -336,7 +396,8 @@
     <div class="nav-tabs">
       <button class="nav-tab active" onclick="showTab('home')">🏠 Home</button>
       <button class="nav-tab" onclick="showTab('shop')">🛒 Shop</button>
-      <button class="nav-tab" onclick="showTab('mycards')">🎴 My Cards</button>
+      <button class="nav-tab" onclick="showTab('mycards')">🎴 Cards</button>
+      <button class="nav-tab" onclick="showTab('leaderboard')">🏆 Top</button>
     </div>
 
 
@@ -381,6 +442,16 @@
     </div>
 
 
+    <!-- LEADERBOARD TAB -->
+    <div id="leaderboardTab" style="display:none;">
+      <h2 style="margin-top: 10px;">🏆 Leaderboard</h2>
+      <p style="color: #9da8bd; font-size: 14px; margin-bottom: 10px;">
+        Top 10 players with the most coins!
+      </p>
+      <div id="leaderboardList" class="leaderboard-list"></div>
+    </div>
+
+
     <button class="logout" onclick="logout()" style="margin-top: 15px;">
       Logout
     </button>
@@ -409,9 +480,11 @@ function showTab(tab) {
   document.getElementById("homeTab").style.display = tab === "home" ? "block" : "none";
   document.getElementById("shopTab").style.display = tab === "shop" ? "block" : "none";
   document.getElementById("mycardsTab").style.display = tab === "mycards" ? "block" : "none";
+  document.getElementById("leaderboardTab").style.display = tab === "leaderboard" ? "block" : "none";
 
   if (tab === "shop") loadShop();
   if (tab === "mycards") loadMyCards();
+  if (tab === "leaderboard") loadLeaderboard();
 }
 
 
@@ -613,6 +686,46 @@ async function sellCard(userCardId) {
   } else {
     alert("❌ " + data.message);
   }
+}
+
+
+// ============ LEADERBOARD ============
+async function loadLeaderboard() {
+  const list = document.getElementById("leaderboardList");
+  list.innerHTML = "<p style='color:#9da8bd;'>Loading...</p>";
+
+  const { data, error } = await supabaseClient.rpc("get_leaderboard");
+
+  if (error || !data) {
+    list.innerHTML = "<p style='color:#ff7777;'>Error loading leaderboard</p>";
+    return;
+  }
+
+  const myEmail = document.getElementById("userEmail").textContent;
+  list.innerHTML = "";
+
+  data.forEach(row => {
+    const div = document.createElement("div");
+    div.className = "lb-row";
+
+    if (row.rank === 1) div.classList.add("top-1");
+    if (row.rank === 2) div.classList.add("top-2");
+    if (row.rank === 3) div.classList.add("top-3");
+    if (row.email === myEmail) div.classList.add("me");
+
+    let medal = "";
+    if (row.rank === 1) medal = "🥇";
+    else if (row.rank === 2) medal = "🥈";
+    else if (row.rank === 3) medal = "🥉";
+    else medal = "#" + row.rank;
+
+    div.innerHTML = `
+      <div class="lb-rank">${medal}</div>
+      <div class="lb-email">${row.email}${row.email === myEmail ? " (You)" : ""}</div>
+      <div class="lb-coins">🪙 ${row.coins}</div>
+    `;
+    list.appendChild(div);
+  });
 }
 
 
