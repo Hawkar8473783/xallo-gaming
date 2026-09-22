@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>XALLO-GAMING</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #080b16;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 420px;
+      padding: 30px 25px;
+      background: #111629;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0, 170, 255, .25);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .logo span {
+      color: #00aaff;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #9da6bd;
+      margin-bottom: 28px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 14px;
+      border: 1px solid #29314d;
+      border-radius: 10px;
+      background: #090d1b;
+      color: white;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #00aaff;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #00aaff;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #008dcc;
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 20px;
+      color: #9da6bd;
+    }
+
+    .switch span {
+      color: #00aaff;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="logo">
+      XALLO-<span>GAMING</span>
+    </div>
+
+    <div class="subtitle">
+      Play • Earn • Enjoy
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginBox">
+
+      <h2 style="margin-bottom:20px;">Login</h2>
+
+      <input
+        type="email"
+        id="loginEmail"
+        placeholder="Email"
+      >
+
+      <input
+        type="password"
+        id="loginPassword"
+        placeholder="Password"
+      >
+
+      <button onclick="login()">
+        Login
+      </button>
+
+      <div class="switch">
+        Don't have an account?
+        <span onclick="showSignup()">Sign Up</span>
+      </div>
+
+    </div>
+
+    <!-- SIGN UP -->
+    <div id="signupBox" class="hidden">
+
+      <h2 style="margin-bottom:20px;">Create Account</h2>
+
+      <input
+        type="text"
+        id="username"
+        placeholder="Username"
+      >
+
+      <input
+        type="email"
+        id="signupEmail"
+        placeholder="Email"
+      >
+
+      <input
+        type="password"
+        id="signupPassword"
+        placeholder="Password"
+      >
+
+      <button onclick="signup()">
+        Create Account
+      </button>
+
+      <div class="switch">
+        Already have an account?
+        <span onclick="showLogin()">Login</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function showSignup() {
+      document.getElementById("loginBox").classList.add("hidden");
+      document.getElementById("signupBox").classList.remove("hidden");
+    }
+
+    function showLogin() {
+      document.getElementById("signupBox").classList.add("hidden");
+      document.getElementById("loginBox").classList.remove("hidden");
+    }
+
+    function login() {
+      alert("Login system will be connected to Supabase next.");
+    }
+
+    function signup() {
+      alert("Sign Up system will be connected to Supabase next.");
+    }
+  </script>
+
+</body>
+</html>
