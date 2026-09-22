@@ -243,7 +243,11 @@
       </div>
     </div>
 
-    <button class="logout" onclick="logout()">
+    <button onclick="earnCoins()" style="background: #10b981;">
+      + 10 Coins
+    </button>
+
+    <button class="logout" onclick="logout()" style="margin-top: 10px;">
       Logout
     </button>
 
@@ -430,9 +434,54 @@ async function showDashboard(user) {
 
   } else {
 
+    // ئەگەر بەکارهێنەرەکە نەبوو، دروستی بکە
+    await supabaseClient
+      .from("users")
+      .insert({ email: user.email, coins: 0 });
+
     document.getElementById("coins")
       .textContent = "0";
   }
+}
+
+
+// EARN COINS
+async function earnCoins() {
+
+  const email =
+  document.getElementById("userEmail")
+    .textContent;
+
+  if (!email) return;
+
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = "...";
+
+  const { data, error } =
+  await supabaseClient.rpc(
+    "add_coins",
+    {
+      user_email: email,
+      amount: 10
+    }
+  );
+
+  if (error) {
+
+    alert("Error: " + error.message);
+
+    btn.disabled = false;
+    btn.textContent = "+ 10 Coins";
+
+    return;
+  }
+
+  document.getElementById("coins")
+    .textContent = data;
+
+  btn.disabled = false;
+  btn.textContent = "+ 10 Coins";
 }
 
 
