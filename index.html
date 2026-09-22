@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>XALLO-GAMING</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 *{
   box-sizing:border-box;
   margin:0;
@@ -20,27 +17,27 @@
 
 body{
   min-height:100vh;
-  background:radial-gradient(circle at top,#123b5d,#050713 65%);
+  background:radial-gradient(circle at top,#123b5d,#050713 70%);
   color:white;
   padding:20px;
 }
 
 .container{
   width:100%;
-  max-width:520px;
+  max-width:500px;
   margin:auto;
   background:#11182d;
   border:1px solid #263553;
   border-radius:25px;
-  padding:25px;
+  padding:25px 20px;
   box-shadow:0 0 40px rgba(0,170,255,.18);
 }
 
 .logo{
   text-align:center;
-  font-size:32px;
+  font-size:30px;
   font-weight:bold;
-  margin-bottom:8px;
+  margin-bottom:6px;
 }
 
 .logo span{
@@ -53,11 +50,7 @@ body{
   margin-bottom:25px;
 }
 
-h2{
-  margin-bottom:20px;
-}
-
-h3{
+h2,h3{
   margin-bottom:15px;
 }
 
@@ -66,8 +59,8 @@ select,
 textarea{
   width:100%;
   padding:15px;
-  margin-bottom:14px;
-  border-radius:13px;
+  margin-bottom:12px;
+  border-radius:12px;
   border:1px solid #283653;
   background:#070b19;
   color:white;
@@ -76,24 +69,24 @@ textarea{
 }
 
 textarea{
-  resize:none;
   min-height:90px;
+  resize:none;
 }
 
 button{
   width:100%;
   padding:15px;
   border:0;
-  border-radius:13px;
+  border-radius:12px;
   color:white;
   font-size:16px;
   font-weight:bold;
   cursor:pointer;
-  margin-top:8px;
+  margin-top:7px;
 }
 
 button:disabled{
-  opacity:.6;
+  opacity:.5;
   cursor:not-allowed;
 }
 
@@ -110,7 +103,7 @@ button:disabled{
 }
 
 .upload-button{
-  background:#08a9ff;
+  background:#00a878;
 }
 
 .logout{
@@ -119,7 +112,7 @@ button:disabled{
 
 .switch{
   text-align:center;
-  margin-top:20px;
+  margin-top:18px;
   color:#9da8bd;
 }
 
@@ -130,12 +123,12 @@ button:disabled{
 }
 
 .message{
-  margin-top:18px;
+  margin-top:15px;
   padding:12px;
   border-radius:10px;
   text-align:center;
-  display:none;
   line-height:1.5;
+  display:none;
 }
 
 .success{
@@ -152,78 +145,112 @@ button:disabled{
 
 .dashboard{
   display:none;
-  text-align:center;
 }
 
 .email{
   color:#b8c1d4;
-  margin:15px 0;
+  margin:10px 0 18px;
+  text-align:center;
   word-break:break-word;
 }
 
 .coins{
-  margin:25px 0 15px;
-  padding:22px;
+  padding:20px;
   border-radius:18px;
   background:#0c1b2e;
   border:1px solid #315174;
+  text-align:center;
+  margin-bottom:15px;
 }
 
 .coin-number{
   color:#ffd54a;
   font-size:40px;
   font-weight:bold;
-  margin-top:8px;
+  margin-top:7px;
 }
 
-.withdraw-box,
-.admin-box,
-.upload-box,
-.videos-box{
-  margin-top:25px;
-  padding:20px;
+.box{
+  margin-top:20px;
+  padding:18px;
   background:#0c1b2e;
   border:1px solid #315174;
   border-radius:18px;
-  text-align:left;
 }
 
-.balance-info{
+.balance{
   text-align:center;
   color:#9da8bd;
-  margin-bottom:15px;
-  font-size:14px;
+  margin-bottom:12px;
 }
 
-.info{
+.small{
   color:#8f9bb3;
-  font-size:13px;
-  margin-top:15px;
-  text-align:center;
+  font-size:12px;
   line-height:1.5;
+  text-align:center;
+  margin-top:8px;
+}
+
+.video-feed{
+  margin-top:20px;
+}
+
+.video-card{
+  background:#070b19;
+  border:1px solid #283653;
+  border-radius:18px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.video-card video{
+  width:100%;
+  display:block;
+  max-height:600px;
+  background:black;
+}
+
+.video-info{
+  padding:14px;
+}
+
+.video-user{
+  color:#08a9ff;
+  font-weight:bold;
+  margin-bottom:8px;
+  word-break:break-word;
+}
+
+.caption{
+  color:#ddd;
+  line-height:1.5;
+  margin-bottom:10px;
+}
+
+.video-date{
+  color:#77839a;
+  font-size:11px;
+}
+
+.like-button{
+  background:#18243b;
+  margin-top:12px;
 }
 
 .history{
-  margin-top:25px;
-  text-align:left;
+  margin-top:22px;
 }
 
-.history h3{
-  text-align:center;
-}
-
-.request{
-  border:1px solid #283653;
+.request,
+.admin-row{
   background:#070b19;
+  border:1px solid #283653;
   border-radius:12px;
   padding:12px;
   margin-top:10px;
   font-size:13px;
   line-height:1.7;
-}
-
-.status{
-  font-weight:bold;
 }
 
 .pending{
@@ -242,31 +269,16 @@ button:disabled{
   display:none;
 }
 
-.admin-title{
-  text-align:center;
-  margin-bottom:12px;
-}
-
-.admin-row{
-  border:1px solid #283653;
-  background:#070b19;
-  border-radius:12px;
-  padding:12px;
-  margin-top:10px;
-  font-size:13px;
-  line-height:1.6;
-}
-
 .admin-actions{
   display:flex;
   gap:8px;
-  margin-top:8px;
+  margin-top:10px;
 }
 
 .admin-actions button{
+  margin:0;
   font-size:13px;
   padding:10px;
-  margin:0;
 }
 
 .approve{
@@ -277,95 +289,16 @@ button:disabled{
   background:#e53935;
 }
 
-.small{
-  font-size:12px;
-  color:#8f9bb3;
-  text-align:center;
-  margin-top:8px;
+.logout{
+  margin-top:25px;
 }
 
-.file-label{
-  display:block;
-  padding:15px;
-  border:2px dashed #315174;
-  border-radius:13px;
-  text-align:center;
-  color:#9da8bd;
-  margin-bottom:14px;
-  cursor:pointer;
-}
-
-.file-label:hover{
-  border-color:#08a9ff;
-}
-
-#videoFile{
-  display:none;
-}
-
-.video-card{
-  margin-top:18px;
-  background:#070b19;
-  border:1px solid #283653;
-  border-radius:16px;
-  overflow:hidden;
-}
-
-.video-card video{
-  width:100%;
-  display:block;
-  max-height:600px;
-  background:#000;
-}
-
-.video-info{
-  padding:14px;
-}
-
-.video-user{
+.file-name{
   color:#08a9ff;
-  font-weight:bold;
-  margin-bottom:7px;
-}
-
-.video-caption{
-  color:#ddd;
-  line-height:1.5;
+  font-size:13px;
+  margin:5px 0 10px;
   word-break:break-word;
 }
-
-.video-date{
-  color:#7f8ba3;
-  font-size:12px;
-  margin-top:8px;
-}
-
-.like-row{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-top:10px;
-}
-
-.like-button{
-  width:auto;
-  padding:8px 14px;
-  background:#18243b;
-  margin:0;
-}
-
-.empty{
-  text-align:center;
-  color:#8f9bb3;
-  padding:20px;
-}
-
-.loading{
-  text-align:center;
-  color:#8f9bb3;
-  padding:20px;
-}
-
 </style>
 </head>
 
@@ -373,7 +306,7 @@ button:disabled{
 
 <div class="container">
 
-<!-- AUTH -->
+<!-- ================= AUTH ================= -->
 
 <div id="authBox">
 
@@ -384,8 +317,6 @@ button:disabled{
   <div class="subtitle">
     Play • Earn • Enjoy
   </div>
-
-  <!-- LOGIN -->
 
   <div id="loginBox">
 
@@ -405,9 +336,7 @@ button:disabled{
       class="login-btn"
       id="loginButton"
       onclick="login()">
-
       Login
-
     </button>
 
     <div class="switch">
@@ -417,9 +346,8 @@ button:disabled{
 
   </div>
 
-  <!-- SIGN UP -->
 
-  <div id="signupBox" style="display:none;">
+  <div id="signupBox" style="display:none">
 
     <h2>Create Account</h2>
 
@@ -437,9 +365,7 @@ button:disabled{
       class="login-btn"
       id="signupButton"
       onclick="signup()">
-
       Sign Up
-
     </button>
 
     <div class="switch">
@@ -454,9 +380,9 @@ button:disabled{
 </div>
 
 
-<!-- DASHBOARD -->
+<!-- ================= DASHBOARD ================= -->
 
-<div id="dashboard" class="dashboard">
+<div id="dashboard">
 
   <div class="logo">
     XALLO-<span>GAMING</span>
@@ -480,9 +406,7 @@ button:disabled{
     <div
       class="coin-number"
       id="coins">
-
       0
-
     </div>
 
   </div>
@@ -500,32 +424,21 @@ button:disabled{
   </button>
 
 
-  <!-- UPLOAD VIDEO -->
+  <!-- ================= UPLOAD VIDEO ================= -->
 
-  <div class="upload-box">
+  <div class="box">
 
-    <h3>🎥 Upload Video</h3>
-
-    <label
-      class="file-label"
-      for="videoFile">
-
-      📁 Choose Video
-
-    </label>
+    <h3>📹 Upload Video</h3>
 
     <input
       id="videoFile"
       type="file"
       accept="video/*"
-      onchange="showSelectedVideo()">
+      onchange="showSelectedFile()">
 
     <div
-      id="selectedVideo"
-      class="small">
-
-      No video selected.
-
+      id="selectedFile"
+      class="file-name">
     </div>
 
     <textarea
@@ -537,26 +450,26 @@ button:disabled{
       id="uploadButton"
       onclick="uploadVideo()">
 
-      🚀 Upload Video
+      ⬆️ Upload Video
 
     </button>
 
     <div class="small">
-      Maximum recommended size: 50MB.
+      Maximum video size: 50 MB
     </div>
 
   </div>
 
 
-  <!-- VIDEOS -->
+  <!-- VIDEO FEED -->
 
-  <div class="videos-box">
+  <div class="video-feed">
 
-    <h3>🔥 XALLO Videos</h3>
+    <h3>🎬 XALLO Videos</h3>
 
     <div id="videoFeed">
 
-      <div class="loading">
+      <div class="small">
         Loading videos...
       </div>
 
@@ -565,13 +478,13 @@ button:disabled{
   </div>
 
 
-  <!-- WITHDRAW -->
+  <!-- ================= WITHDRAW ================= -->
 
-  <div class="withdraw-box">
+  <div class="box">
 
     <h3>💳 Withdraw</h3>
 
-    <div class="balance-info">
+    <div class="balance">
 
       Your balance:
       <b>
@@ -632,8 +545,7 @@ button:disabled{
     </button>
 
     <div class="small">
-      Demo rate: 1,000 Coins = 1,000 IQD.
-      Actual payment is not automated yet.
+      Withdraw requests are reviewed by admin.
     </div>
 
   </div>
@@ -649,9 +561,7 @@ button:disabled{
 
   <div class="history">
 
-    <h3>
-      📋 My Withdrawals
-    </h3>
+    <h3>📋 My Withdrawals</h3>
 
     <div id="withdrawHistory">
 
@@ -664,32 +574,19 @@ button:disabled{
   </div>
 
 
-  <!-- ADMIN -->
+  <!-- ================= ADMIN ================= -->
 
   <div
     id="adminBox"
-    class="admin-box">
+    class="box admin-box">
 
-    <h3 class="admin-title">
-      👑 Admin Panel
-    </h3>
+    <h3>👑 Admin Panel</h3>
 
     <div class="small">
-      Review withdrawal requests.
-      Approval here does not automatically send
-      a telecom card/recharge.
+      Manage withdrawal requests.
     </div>
 
     <div id="adminRequests"></div>
-
-  </div>
-
-
-  <div class="info">
-
-    Withdraw requests are recorded for review.
-    Real telecom payment requires a legitimate
-    payment/recharge integration.
 
   </div>
 
@@ -709,9 +606,9 @@ button:disabled{
 
 <script>
 
-/* =========================
+/* =========================================
    SUPABASE
-========================= */
+========================================= */
 
 const SUPABASE_URL =
 "https://vnyprsjjmmjahkisozib.supabase.co";
@@ -726,9 +623,9 @@ window.supabase.createClient(
 );
 
 
-/* =========================
-   MESSAGES
-========================= */
+/* =========================================
+   MESSAGE
+========================================= */
 
 function showMessage(text,type){
 
@@ -738,25 +635,29 @@ function showMessage(text,type){
   box.textContent=text;
 
   box.className =
-    "message "+type;
+    "message " + type;
+
 }
 
 
 function dashboardMessage(text,type){
 
   const box =
-    document.getElementById("dashboardMessage");
+    document.getElementById(
+      "dashboardMessage"
+    );
 
   box.textContent=text;
 
   box.className =
-    "message "+type;
+    "message " + type;
+
 }
 
 
-/* =========================
-   AUTH UI
-========================= */
+/* =========================================
+   LOGIN / SIGNUP UI
+========================================= */
 
 function showLogin(){
 
@@ -768,6 +669,7 @@ function showLogin(){
 
   document.getElementById("message")
     .style.display="none";
+
 }
 
 
@@ -781,18 +683,19 @@ function showSignup(){
 
   document.getElementById("message")
     .style.display="none";
+
 }
 
 
-/* =========================
+/* =========================================
    USER PROFILE
-========================= */
+========================================= */
 
 async function createUserProfile(email){
 
   const {
     data:existing,
-    error:selectError
+    error
   } =
     await supabaseClient
       .from("users")
@@ -800,11 +703,11 @@ async function createUserProfile(email){
       .eq("email",email)
       .maybeSingle();
 
-  if(selectError){
+  if(error){
 
     console.log(
-      "Profile check:",
-      selectError.message
+      "Profile error:",
+      error.message
     );
 
     return;
@@ -814,7 +717,9 @@ async function createUserProfile(email){
     return;
   }
 
-  const {error} =
+  const {
+    error:insertError
+  } =
     await supabaseClient
       .from("users")
       .insert({
@@ -822,29 +727,32 @@ async function createUserProfile(email){
         username:email.split("@")[0]
       });
 
-  if(error){
+  if(insertError){
 
     console.log(
-      "Profile:",
-      error.message
+      "Profile insert:",
+      insertError.message
     );
   }
+
 }
 
 
-/* =========================
+/* =========================================
    SIGN UP
-========================= */
+========================================= */
 
 async function signup(){
 
   const email =
-    document.getElementById("signupEmail")
-      .value.trim();
+    document.getElementById(
+      "signupEmail"
+    ).value.trim();
 
   const password =
-    document.getElementById("signupPassword")
-      .value;
+    document.getElementById(
+      "signupPassword"
+    ).value;
 
   if(!email || !password){
 
@@ -867,7 +775,9 @@ async function signup(){
   }
 
   const button =
-    document.getElementById("signupButton");
+    document.getElementById(
+      "signupButton"
+    );
 
   button.disabled=true;
   button.textContent="Creating...";
@@ -894,11 +804,7 @@ async function signup(){
     return;
   }
 
-  if(
-    data &&
-    data.session &&
-    data.user
-  ){
+  if(data && data.session && data.user){
 
     await createUserProfile(
       data.user.email
@@ -912,25 +818,28 @@ async function signup(){
   }
 
   showMessage(
-    "Account created! Check your email, then login.",
+    "Account created. Check your email, then login.",
     "success"
   );
+
 }
 
 
-/* =========================
+/* =========================================
    LOGIN
-========================= */
+========================================= */
 
 async function login(){
 
   const email =
-    document.getElementById("loginEmail")
-      .value.trim();
+    document.getElementById(
+      "loginEmail"
+    ).value.trim();
 
   const password =
-    document.getElementById("loginPassword")
-      .value;
+    document.getElementById(
+      "loginPassword"
+    ).value;
 
   if(!email || !password){
 
@@ -943,7 +852,9 @@ async function login(){
   }
 
   const button =
-    document.getElementById("loginButton");
+    document.getElementById(
+      "loginButton"
+    );
 
   button.disabled=true;
   button.textContent="Logging in...";
@@ -981,23 +892,26 @@ async function login(){
       data.user
     );
   }
+
 }
 
 
-/* =========================
+/* =========================================
    COINS
-========================= */
+========================================= */
 
 function setCoins(amount){
 
   const value =
-    Number(amount)||0;
+    Number(amount) || 0;
 
   document.getElementById("coins")
-    .textContent=value.toLocaleString();
+    .textContent=value;
 
-  document.getElementById("withdrawCoins")
-    .textContent=value.toLocaleString();
+  document.getElementById(
+    "withdrawCoins"
+  ).textContent=value;
+
 }
 
 
@@ -1017,11 +931,6 @@ async function loadCoins(user){
 
     setCoins(0);
 
-    console.log(
-      "Load coins:",
-      error?.message
-    );
-
     return null;
   }
 
@@ -1031,9 +940,9 @@ async function loadCoins(user){
 }
 
 
-/* =========================
+/* =========================================
    DASHBOARD
-========================= */
+========================================= */
 
 async function showDashboard(user){
 
@@ -1046,42 +955,21 @@ async function showDashboard(user){
   document.getElementById("userEmail")
     .textContent=user.email;
 
-  dashboardMessage("","success");
-
   await loadCoins(user);
 
   await checkDailyRewardButton(user);
 
+  await loadVideos();
+
   await loadWithdrawHistory(user);
 
   await checkAdmin();
-
-  await loadVideos();
 }
 
 
-/* =========================
+/* =========================================
    DAILY REWARD
-========================= */
-
-function getLocalDate(){
-
-  const now = new Date();
-
-  const year =
-    now.getFullYear();
-
-  const month =
-    String(now.getMonth()+1)
-      .padStart(2,"0");
-
-  const day =
-    String(now.getDate())
-      .padStart(2,"0");
-
-  return `${year}-${month}-${day}`;
-}
-
+========================================= */
 
 async function checkDailyRewardButton(user){
 
@@ -1100,14 +988,14 @@ async function checkDailyRewardButton(user){
   }
 
   const button =
-    document.getElementById("rewardButton");
+    document.getElementById(
+      "rewardButton"
+    );
 
   const today =
-    getLocalDate();
+    new Date().toLocaleDateString("en-CA");
 
-  if(
-    data.last_reward_date === today
-  ){
+  if(data.last_reward_date === today){
 
     button.disabled=true;
 
@@ -1121,13 +1009,16 @@ async function checkDailyRewardButton(user){
     button.textContent =
       "🎁 Daily Reward +10";
   }
+
 }
 
 
 async function dailyReward(){
 
   const button =
-    document.getElementById("rewardButton");
+    document.getElementById(
+      "rewardButton"
+    );
 
   button.disabled=true;
   button.textContent="Checking...";
@@ -1166,49 +1057,54 @@ async function dailyReward(){
 }
 
 
-/* =========================
-   VIDEO SELECT
-========================= */
+/* =========================================
+   SELECTED FILE
+========================================= */
 
-function showSelectedVideo(){
+function showSelectedFile(){
 
   const input =
-    document.getElementById("videoFile");
+    document.getElementById(
+      "videoFile"
+    );
 
   const box =
-    document.getElementById("selectedVideo");
+    document.getElementById(
+      "selectedFile"
+    );
 
   if(!input.files.length){
 
-    box.textContent =
-      "No video selected.";
-
+    box.textContent="";
     return;
   }
 
-  const file =
-    input.files[0];
+  const file=input.files[0];
 
   const sizeMB =
-    file.size / (1024*1024);
+    file.size / (1024 * 1024);
 
   box.textContent =
-    `${file.name} • ${sizeMB.toFixed(1)} MB`;
+    file.name +
+    " • " +
+    sizeMB.toFixed(1) +
+    " MB";
 }
 
 
-/* =========================
+/* =========================================
    UPLOAD VIDEO
-========================= */
+========================================= */
 
 async function uploadVideo(){
 
   const {
-    data:userData
+    data:userData,
+    error:userError
   } =
     await supabaseClient.auth.getUser();
 
-  if(!userData.user){
+  if(userError || !userData.user){
 
     dashboardMessage(
       "Please login first.",
@@ -1219,13 +1115,11 @@ async function uploadVideo(){
   }
 
   const input =
-    document.getElementById("videoFile");
+    document.getElementById(
+      "videoFile"
+    );
 
-  const caption =
-    document.getElementById("videoCaption")
-      .value.trim();
-
-  if(!input.files.length){
+  if(!input.files || !input.files.length){
 
     dashboardMessage(
       "Please choose a video.",
@@ -1235,8 +1129,7 @@ async function uploadVideo(){
     return;
   }
 
-  const file =
-    input.files[0];
+  const file=input.files[0];
 
   if(!file.type.startsWith("video/")){
 
@@ -1254,38 +1147,52 @@ async function uploadVideo(){
   if(file.size > maxSize){
 
     dashboardMessage(
-      "Video must be smaller than 50MB.",
+      "Video is larger than 50 MB.",
       "error"
     );
 
     return;
   }
 
+  const caption =
+    document.getElementById(
+      "videoCaption"
+    ).value.trim();
+
   const button =
-    document.getElementById("uploadButton");
+    document.getElementById(
+      "uploadButton"
+    );
 
   button.disabled=true;
   button.textContent="Uploading...";
 
   try{
 
-    const extension =
-      file.name
-        .split(".")
-        .pop()
-        .toLowerCase();
+    const email =
+      userData.user.email;
 
     const safeEmail =
-      userData.user.email
+      email
         .replace(/[^a-zA-Z0-9]/g,"_");
 
-    const fileName =
-      `${Date.now()}_${Math.random()
-        .toString(36)
-        .substring(2)}.${extension}`;
+    const extension =
+      file.name.includes(".")
+      ? file.name.split(".").pop()
+      : "mp4";
 
     const filePath =
-      `${safeEmail}/${fileName}`;
+      safeEmail +
+      "/" +
+      Date.now() +
+      "_" +
+      Math.random()
+        .toString(36)
+        .substring(2,8) +
+      "." +
+      extension;
+
+    /* UPLOAD TO STORAGE */
 
     const {
       error:uploadError
@@ -1303,8 +1210,14 @@ async function uploadVideo(){
         );
 
     if(uploadError){
-      throw uploadError;
+
+      throw new Error(
+        "Storage Upload Error: " +
+        uploadError.message
+      );
     }
+
+    /* GET PUBLIC URL */
 
     const {
       data:urlData
@@ -1316,38 +1229,56 @@ async function uploadVideo(){
     const videoUrl =
       urlData.publicUrl;
 
+    if(!videoUrl){
+
+      throw new Error(
+        "Could not create video URL."
+      );
+    }
+
+    /* SAVE VIDEO INFORMATION */
+
     const {
-      error:insertError
+      error:dbError
     } =
       await supabaseClient
         .from("videos")
         .insert({
-          user_email:userData.user.email,
+          user_email:email,
           video_url:videoUrl,
-          caption:caption
+          caption:caption,
+          likes:0
         });
 
-    if(insertError){
+    if(dbError){
+
+      /* Remove uploaded file
+         if database insert fails */
 
       await supabaseClient.storage
         .from("videos")
         .remove([filePath]);
 
-      throw insertError;
+      throw new Error(
+        "Database Error: " +
+        dbError.message
+      );
     }
 
+    /* SUCCESS */
+
     input.value="";
+
+    document.getElementById(
+      "selectedFile"
+    ).textContent="";
 
     document.getElementById(
       "videoCaption"
     ).value="";
 
-    document.getElementById(
-      "selectedVideo"
-    ).textContent="No video selected.";
-
     dashboardMessage(
-      "🎉 Video uploaded successfully!",
+      "✅ Video uploaded successfully!",
       "success"
     );
 
@@ -1358,31 +1289,33 @@ async function uploadVideo(){
     console.error(error);
 
     dashboardMessage(
-      "Upload failed: "+error.message,
+      error.message ||
+      "Video upload failed.",
       "error"
     );
 
   }finally{
 
     button.disabled=false;
-
-    button.textContent =
-      "🚀 Upload Video";
+    button.textContent="⬆️ Upload Video";
   }
+
 }
 
 
-/* =========================
+/* =========================================
    LOAD VIDEOS
-========================= */
+========================================= */
 
 async function loadVideos(){
 
   const box =
-    document.getElementById("videoFeed");
+    document.getElementById(
+      "videoFeed"
+    );
 
   box.innerHTML =
-    '<div class="loading">Loading videos...</div>';
+    '<div class="small">Loading videos...</div>';
 
   const {
     data,
@@ -1399,14 +1332,14 @@ async function loadVideos(){
           ascending:false
         }
       )
-      .limit(30);
+      .limit(50);
 
   if(error){
 
     box.innerHTML =
-      '<div class="empty">Could not load videos.</div>';
-
-    console.error(error);
+      '<div class="small">Could not load videos: ' +
+      escapeHtml(error.message) +
+      '</div>';
 
     return;
   }
@@ -1414,124 +1347,104 @@ async function loadVideos(){
   if(!data || !data.length){
 
     box.innerHTML =
-      '<div class="empty">🎥 No videos yet.<br>Upload the first video!</div>';
+      '<div class="small">No videos yet. Upload the first video! 🎬</div>';
 
     return;
   }
 
   box.innerHTML =
-    data.map(video => {
+    data.map(video => `
 
-      const likes =
-        Number(video.likes)||0;
+      <div class="video-card">
 
-      return `
+        <video
+          controls
+          playsinline
+          preload="metadata"
+          src="${escapeHtml(video.video_url)}">
+        </video>
 
-        <div class="video-card">
+        <div class="video-info">
 
-          <video
-            controls
-            playsinline
-            preload="metadata"
-            src="${escapeHtml(video.video_url)}">
-          </video>
-
-          <div class="video-info">
-
-            <div class="video-user">
-              👤 ${escapeHtml(video.user_email)}
-            </div>
-
-            ${
-              video.caption
-              ?
-              `<div class="video-caption">
-                ${escapeHtml(video.caption)}
-              </div>`
-              :
-              ""
-            }
-
-            <div class="like-row">
-
-              <button
-                class="like-button"
-                onclick="likeVideo('${video.id}',${likes})">
-
-                ❤️ ${likes}
-
-              </button>
-
-            </div>
-
-            <div class="video-date">
-              ${new Date(video.created_at).toLocaleString()}
-            </div>
-
+          <div class="video-user">
+            👤 ${escapeHtml(video.user_email)}
           </div>
+
+          <div class="caption">
+            ${escapeHtml(video.caption || "")}
+          </div>
+
+          <div class="video-date">
+            ${new Date(video.created_at).toLocaleString()}
+          </div>
+
+          <button
+            class="like-button"
+            onclick="likeVideo('${video.id}',this)">
+
+            ❤️ ${Number(video.likes) || 0}
+
+          </button>
 
         </div>
 
-      `;
+      </div>
 
-    }).join("");
+    `).join("");
+
 }
 
 
-/* =========================
+/* =========================================
    LIKE VIDEO
-========================= */
+========================================= */
 
-async function likeVideo(id,currentLikes){
+async function likeVideo(id,button){
 
-  const {
-    data:userData
-  } =
-    await supabaseClient.auth.getUser();
-
-  if(!userData.user){
-
-    return;
-  }
-
-  const newLikes =
-    Number(currentLikes)+1;
+  button.disabled=true;
 
   const {
+    data,
     error
   } =
     await supabaseClient
-      .from("videos")
-      .update({
-        likes:newLikes
-      })
-      .eq("id",id);
+      .rpc(
+        "like_video",
+        {
+          p_video_id:id
+        }
+      );
 
   if(error){
 
+    button.disabled=false;
+
     dashboardMessage(
-      "Like failed. "+error.message,
+      "Like error: " +
+      error.message,
       "error"
     );
 
     return;
   }
 
-  await loadVideos();
+  button.textContent =
+    "❤️ " + Number(data);
+
+  button.disabled=false;
 }
 
 
-/* =========================
+/* =========================================
    WITHDRAW
-========================= */
+========================================= */
 
 async function requestWithdraw(){
 
   const {
     data:userData
   } =
-    await supabaseClient.auth
-      .getUser();
+    await supabaseClient.auth.getUser();
 
   if(!userData.user){
 
@@ -1560,9 +1473,7 @@ async function requestWithdraw(){
       "withdrawPhone"
     ).value.trim();
 
-  if(
-    !["Korek","Asiacell"].includes(method)
-  ){
+  if(!["Korek","Asiacell"].includes(method)){
 
     dashboardMessage(
       "Select Korek or Asiacell.",
@@ -1572,21 +1483,17 @@ async function requestWithdraw(){
     return;
   }
 
-  if(
-    ![1000,5000,10000].includes(coins)
-  ){
+  if(![1000,5000,10000].includes(coins)){
 
     dashboardMessage(
-      "Select a valid withdrawal amount.",
+      "Select a valid amount.",
       "error"
     );
 
     return;
   }
 
-  if(
-    !/^[0-9+\s-]{10,15}$/.test(phone)
-  ){
+  if(!/^[0-9+\s-]{10,15}$/.test(phone)){
 
     dashboardMessage(
       "Enter a valid phone number.",
@@ -1619,8 +1526,7 @@ async function requestWithdraw(){
       );
 
   button.disabled=false;
-
-  button.textContent =
+  button.textContent=
     "💰 Request Withdraw";
 
   if(error){
@@ -1650,7 +1556,7 @@ async function requestWithdraw(){
   ).value="";
 
   dashboardMessage(
-    "✅ Request sent. Your Coins were reserved and the request is Pending.",
+    "✅ Withdrawal request sent.",
     "success"
   );
 
@@ -1659,6 +1565,10 @@ async function requestWithdraw(){
   );
 }
 
+
+/* =========================================
+   WITHDRAW HISTORY
+========================================= */
 
 function statusClass(status){
 
@@ -1673,10 +1583,6 @@ function statusClass(status){
   return "pending";
 }
 
-
-/* =========================
-   WITHDRAW HISTORY
-========================= */
 
 async function loadWithdrawHistory(user){
 
@@ -1714,10 +1620,7 @@ async function loadWithdrawHistory(user){
     return;
   }
 
-  if(
-    !data ||
-    !data.length
-  ){
+  if(!data || !data.length){
 
     box.innerHTML =
       '<div class="small">No requests yet.</div>';
@@ -1746,12 +1649,8 @@ async function loadWithdrawHistory(user){
         <br>
 
         Status:
-
-        <span
-          class="status ${statusClass(r.status)}">
-
+        <span class="${statusClass(r.status)}">
           ${escapeHtml(r.status)}
-
         </span>
 
         <br>
@@ -1766,17 +1665,16 @@ async function loadWithdrawHistory(user){
 }
 
 
-/* =========================
+/* =========================================
    ADMIN
-========================= */
+========================================= */
 
 async function checkAdmin(){
 
   const {
     data:userData
   } =
-    await supabaseClient.auth
-      .getUser();
+    await supabaseClient.auth.getUser();
 
   if(!userData.user){
     return;
@@ -1809,7 +1707,6 @@ async function checkAdmin(){
   }else{
 
     box.style.display="none";
-
   }
 }
 
@@ -1828,7 +1725,7 @@ async function loadAdminRequests(){
     await supabaseClient
       .from("withdrawals")
       .select(
-        "id,user_email,coins,amount,method,phone,status,created_at"
+        "id,user_email,coins,method,phone,status,created_at"
       )
       .order(
         "created_at",
@@ -1841,15 +1738,12 @@ async function loadAdminRequests(){
   if(error){
 
     box.innerHTML =
-      '<div class="small">Could not load admin requests.</div>';
+      '<div class="small">Could not load requests.</div>';
 
     return;
   }
 
-  if(
-    !data ||
-    !data.length
-  ){
+  if(!data || !data.length){
 
     box.innerHTML =
       '<div class="small">No withdrawal requests.</div>';
@@ -1884,41 +1778,36 @@ async function loadAdminRequests(){
 
         Status:
 
-        <span
-          class="status ${statusClass(r.status)}">
-
+        <span class="${statusClass(r.status)}">
           ${escapeHtml(r.status)}
-
         </span>
 
         ${
-          r.status==="pending"
-          ?
+          r.status === "pending"
+          ? `
+
+            <div class="admin-actions">
+
+              <button
+                class="approve"
+                onclick="adminDecision('${r.id}','approved')">
+
+                Approve
+
+              </button>
+
+              <button
+                class="reject"
+                onclick="adminDecision('${r.id}','rejected')">
+
+                Reject
+
+              </button>
+
+            </div>
+
           `
-
-          <div class="admin-actions">
-
-            <button
-              class="approve"
-              onclick="adminDecision('${r.id}','approved')">
-
-              Approve
-
-            </button>
-
-            <button
-              class="reject"
-              onclick="adminDecision('${r.id}','rejected')">
-
-              Reject
-
-            </button>
-
-          </div>
-
-          `
-          :
-          ""
+          : ""
         }
 
       </div>
@@ -1927,20 +1816,13 @@ async function loadAdminRequests(){
 }
 
 
-async function adminDecision(
-  id,
-  status
-){
+async function adminDecision(id,status){
 
-  if(
-    !confirm(
-      status==="approved"
-      ?
-      "Approve this request?"
-      :
-      "Reject and return the Coins to the user?"
-    )
-  ){
+  if(!confirm(
+    status === "approved"
+    ? "Approve this request?"
+    : "Reject and return Coins?"
+  )){
 
     return;
   }
@@ -1977,8 +1859,7 @@ async function adminDecision(
   const {
     data:userData
   } =
-    await supabaseClient.auth
-      .getUser();
+    await supabaseClient.auth.getUser();
 
   if(userData.user){
 
@@ -1993,9 +1874,9 @@ async function adminDecision(
 }
 
 
-/* =========================
-   SECURITY
-========================= */
+/* =========================================
+   ESCAPE HTML
+========================================= */
 
 function escapeHtml(value){
 
@@ -2014,9 +1895,9 @@ function escapeHtml(value){
 }
 
 
-/* =========================
+/* =========================================
    LOGOUT
-========================= */
+========================================= */
 
 async function logout(){
 
@@ -2030,30 +1911,22 @@ async function logout(){
     "authBox"
   ).style.display="block";
 
-  document.getElementById(
-    "adminBox"
-  ).style.display="none";
-
   showLogin();
 }
 
 
-/* =========================
-   CHECK USER
-========================= */
+/* =========================================
+   CHECK LOGIN
+========================================= */
 
 async function checkUser(){
 
   const {
     data
   } =
-    await supabaseClient.auth
-      .getUser();
+    await supabaseClient.auth.getUser();
 
-  if(
-    data &&
-    data.user
-  ){
+  if(data && data.user){
 
     await createUserProfile(
       data.user.email
@@ -2066,9 +1939,9 @@ async function checkUser(){
 }
 
 
-/* =========================
+/* =========================================
    START
-========================= */
+========================================= */
 
 checkUser();
 
