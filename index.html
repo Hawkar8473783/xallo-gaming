@@ -581,9 +581,38 @@ async function loadMyCards() {
       <div class="card-icon">${card.icon}</div>
       <div class="card-name">${card.name}</div>
       <div class="card-company">${card.company}</div>
+      <div style="color:#ffd54a; font-size:12px; margin: 6px 0;">Refund: ${Math.floor(card.price * 0.7)} 🪙</div>
+      <button class="card-buy" style="background:#e53935;" onclick="sellCard(${item.id})">Sell</button>
     `;
     list.appendChild(div);
   });
+}
+
+
+// ============ SELL CARD ============
+async function sellCard(userCardId) {
+  const email = document.getElementById("userEmail").textContent;
+  if (!email) return;
+
+  if (!confirm("Are you sure you want to sell this card? You'll get 70% back.")) return;
+
+  const { data, error } = await supabaseClient.rpc("sell_card", {
+    user_email: email,
+    user_card_id: userCardId
+  });
+
+  if (error) {
+    alert("Error: " + error.message);
+    return;
+  }
+
+  if (data.success) {
+    document.getElementById("coins").textContent = data.coins;
+    alert("💰 " + data.message + " +" + data.refund + " Coins");
+    loadMyCards();
+  } else {
+    alert("❌ " + data.message);
+  }
 }
 
 
