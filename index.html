@@ -196,11 +196,11 @@
     </div>
 
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="showTab('home')">🏠 Home</button>
-      <button class="nav-tab" onclick="showTab('shop')">🛒 Shop</button>
-      <button class="nav-tab" onclick="showTab('packs')">🎁 Packs</button>
-      <button class="nav-tab" onclick="showTab('mycards')">🎴 Cards</button>
-      <button class="nav-tab" onclick="showTab('leaderboard')">🏆 Top</button>
+      <button class="nav-tab active" onclick="showTab('home', event)">🏠 Home</button>
+      <button class="nav-tab" onclick="showTab('shop', event)">🛒 Shop</button>
+      <button class="nav-tab" onclick="showTab('packs', event)">🎁 Packs</button>
+      <button class="nav-tab" onclick="showTab('mycards', event)">🎴 Cards</button>
+      <button class="nav-tab" onclick="showTab('leaderboard', event)">🏆 Top</button>
     </div>
 
     <div id="homeTab">
@@ -209,9 +209,9 @@
         <div class="wheel" id="wheel"></div>
         <div class="wheel-center">🪙</div>
       </div>
-      <button onclick="spinWheel()" id="spinBtn" style="background: #8b5cf6;">🎡 Spin the Wheel</button>
-      <button onclick="earnCoins()" style="background: #10b981;">+ 10 Coins</button>
-      <button onclick="claimDailyBonus()" style="background: #f59e0b;">🎁 Daily Bonus (+100)</button>
+      <button onclick="spinWheel(event)" id="spinBtn" style="background: #8b5cf6;">🎡 Spin the Wheel</button>
+      <button onclick="earnCoins(event)" style="background: #10b981;">+ 10 Coins</button>
+      <button onclick="claimDailyBonus(event)" style="background: #f59e0b;">🎁 Daily Bonus (+100)</button>
     </div>
 
     <div id="shopTab" style="display:none;">
@@ -242,7 +242,6 @@
 
 </div>
 
-<!-- MODAL FOR PACK OPENING -->
 <div class="modal-overlay" id="packModal">
   <div class="modal">
     <h3>🎉 You Got!</h3>
@@ -252,7 +251,6 @@
 </div>
 
 <script>
-
 const SUPABASE_URL = "https://vnyprsjjmmjahkisozib.supabase.co";
 const SUPABASE_KEY = "sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -267,9 +265,9 @@ const RARITY_LABELS = {
   legendary: "💎 LEGENDARY"
 };
 
-function showTab(tab) {
+function showTab(tab, ev) {
   document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
-  event.target.classList.add("active");
+  if (ev && ev.target) ev.target.classList.add("active");
   document.getElementById("homeTab").style.display = tab === "home" ? "block" : "none";
   document.getElementById("shopTab").style.display = tab === "shop" ? "block" : "none";
   document.getElementById("packsTab").style.display = tab === "packs" ? "block" : "none";
@@ -306,12 +304,12 @@ function buildWheel() {
 
 let isSpinning = false;
 
-async function spinWheel() {
+async function spinWheel(ev) {
   if (isSpinning) return;
   const email = document.getElementById("userEmail").textContent;
   if (!email) return;
   isSpinning = true;
-  const btn = document.getElementById("spinBtn");
+  const btn = ev.target;
   btn.disabled = true;
   btn.textContent = "Spinning...";
   const { data, error } = await supabaseClient.rpc("spin_wheel", { user_email: email });
@@ -385,7 +383,6 @@ async function buyCard(cardId, price) {
   } else { alert("❌ " + data.message); }
 }
 
-// ============ PACKS ============
 async function loadPacks() {
   const { data, error } = await supabaseClient.from("packs").select("*").order("price");
   if (error || !data) {
@@ -413,13 +410,10 @@ async function openPack(packId, price) {
   const email = document.getElementById("userEmail").textContent;
   if (!email) return;
   if (!confirm("Open this pack for " + price + " Coins?")) return;
-
   const { data, error } = await supabaseClient.rpc("buy_pack", {
     user_email: email, pack_id_param: packId
   });
-
   if (error) { alert("Error: " + error.message); return; }
-
   if (data.success) {
     document.getElementById("coins").textContent = data.coins;
     showPackModal(data.won_names);
@@ -434,16 +428,9 @@ function showPackModal(cardNames) {
   cardNames.forEach(name => {
     const div = document.createElement("div");
     div.className = "won-card";
-
-    // Determine rarity by name (approximate)
-    if (name.includes("Fastlink") || name.includes("VIP")) {
-      div.classList.add("legendary");
-    } else if (name.includes("Roshan") || name.includes("MTN")) {
-      div.classList.add("epic");
-    } else if (name.includes("10,000")) {
-      div.classList.add("rare");
-    }
-
+    if (name.includes("Fastlink") || name.includes("VIP")) div.classList.add("legendary");
+    else if (name.includes("Roshan") || name.includes("MTN")) div.classList.add("epic");
+    else if (name.includes("10,000")) div.classList.add("rare");
     div.textContent = name;
     list.appendChild(div);
   });
@@ -556,4 +543,93 @@ async function signup() {
   const password = document.getElementById("signupPassword").value;
   if (!email || !password) { showMessage("Enter email and password.", "error"); return; }
   if (password.length < 6) { showMessage("Password must be at least 6 characters.", "error"); return; }
-  const { error } = await supabaseClient.auth.sign
+  const { error } = await supabaseClient.auth.signUp({ email, password });
+  if (error) { showMessage(error.message, "error"); return; }
+  showMessage("Account created! Check your email if verification is required.", "success");
+}
+
+async function login() {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  if (!email || !password) { showMessage("Enter email and password.", "error"); return; }
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) { showMessage(error.message, "error"); return; }
+  showDashboard(data.user);
+}
+
+async function showDashboard(user) {
+  document.getElementById("authBox").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+  document.getElementById("userEmail").textContent = user.email;
+  const { data, error } = await supabaseClient
+    .from("users").select("coins").eq("email", user.email).single();
+  if (!error && data) {
+    document.getElementById("coins").textContent = data.coins || 0;
+  } else {
+    await supabaseClient.from("users").insert({ email: user.email, coins: 0 });
+    document.getElementById("coins").textContent = "0";
+  }
+}
+
+async function earnCoins(ev) {
+  const email = document.getElementById("userEmail").textContent;
+  if (!email) return;
+  const btn = ev.target;
+  btn.disabled = true;
+  btn.textContent = "...";
+  const { data, error } = await supabaseClient.rpc("add_coins", {
+    user_email: email, amount: 10
+  });
+  if (error) {
+    alert("Error: " + error.message);
+    btn.disabled = false;
+    btn.textContent = "+ 10 Coins";
+    return;
+  }
+  document.getElementById("coins").textContent = data;
+  btn.disabled = false;
+  btn.textContent = "+ 10 Coins";
+}
+
+async function claimDailyBonus(ev) {
+  const email = document.getElementById("userEmail").textContent;
+  if (!email) return;
+  const btn = ev.target;
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = "...";
+  const { data, error } = await supabaseClient.rpc("claim_daily_bonus", { user_email: email });
+  if (error) {
+    alert("Error: " + error.message);
+    btn.disabled = false;
+    btn.textContent = originalText;
+    return;
+  }
+  if (data.success) {
+    document.getElementById("coins").textContent = data.coins;
+    alert("🎉 " + data.message);
+  } else {
+    alert("⏳ " + data.message + " (" + data.hours_left + " hours left)");
+  }
+  btn.disabled = false;
+  btn.textContent = originalText;
+}
+
+async function logout() {
+  await supabaseClient.auth.signOut();
+  document.getElementById("dashboard").style.display = "none";
+  document.getElementById("authBox").style.display = "block";
+  showLogin();
+}
+
+async function checkUser() {
+  const { data } = await supabaseClient.auth.getUser();
+  if (data.user) showDashboard(data.user);
+}
+
+buildWheel();
+checkUser();
+</script>
+
+</body>
+</html>
