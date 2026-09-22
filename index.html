@@ -1,391 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XALLO-GAMING</title>
 
-  <title>XALLO-GAMING</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at top,#123b5d,#050713 65%);
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
 
-    body {
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at top, #12385a, #050713 60%);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
+.container{
+  width:100%;
+  max-width:430px;
+  background:rgba(17,24,45,.98);
+  border:1px solid #263553;
+  border-radius:25px;
+  padding:30px 25px;
+  box-shadow:0 0 40px rgba(0,170,255,.18);
+}
 
-    .container {
-      width: 100%;
-      max-width: 430px;
-      background: rgba(17, 24, 45, 0.97);
-      border: 1px solid #263553;
-      border-radius: 25px;
-      padding: 32px 25px;
-      box-shadow: 0 0 40px rgba(0, 170, 255, .18);
-    }
+.logo{
+  text-align:center;
+  font-size:34px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
 
-    .logo {
-      text-align: center;
-      font-size: 34px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
+.logo span{
+  color:#08a9ff;
+}
 
-    .logo span {
-      color: #08a9ff;
-    }
+.subtitle{
+  text-align:center;
+  color:#9da8bd;
+  margin-bottom:30px;
+}
 
-    .subtitle {
-      text-align: center;
-      color: #9da8bd;
-      margin-bottom: 30px;
-    }
+h2{
+  margin-bottom:20px;
+}
 
-    h2 {
-      margin-bottom: 20px;
-    }
+input{
+  width:100%;
+  padding:16px;
+  margin-bottom:14px;
+  border-radius:13px;
+  border:1px solid #283653;
+  background:#070b19;
+  color:white;
+  font-size:16px;
+  outline:none;
+}
 
-    input {
-      width: 100%;
-      padding: 16px;
-      margin-bottom: 14px;
-      border-radius: 13px;
-      border: 1px solid #283653;
-      background: #070b19;
-      color: white;
-      font-size: 16px;
-      outline: none;
-    }
+input:focus{
+  border-color:#08a9ff;
+}
 
-    input:focus {
-      border-color: #08a9ff;
-    }
+button{
+  width:100%;
+  padding:16px;
+  border:0;
+  border-radius:13px;
+  background:#08a9ff;
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:5px;
+}
 
-    button {
-      width: 100%;
-      padding: 16px;
-      border: 0;
-      border-radius: 13px;
-      background: #08a9ff;
-      color: white;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 5px;
-    }
+button:disabled{
+  opacity:.6;
+}
 
-    button:active {
-      transform: scale(.98);
-    }
+.switch{
+  text-align:center;
+  margin-top:22px;
+  color:#9da8bd;
+}
 
-    .switch {
-      text-align: center;
-      margin-top: 22px;
-      color: #9da8bd;
-    }
+.switch a{
+  color:#08a9ff;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-    .switch a {
-      color: #08a9ff;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.message{
+  margin-top:18px;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  display:none;
+  line-height:1.5;
+}
 
-    .message {
-      margin-top: 18px;
-      padding: 12px;
-      border-radius: 10px;
-      text-align: center;
-      display: none;
-      line-height: 1.5;
-    }
+.success{
+  display:block;
+  color:#55e6a5;
+  background:rgba(0,200,120,.12);
+}
 
-    .success {
-      display: block;
-      color: #55e6a5;
-      background: rgba(0, 200, 120, .12);
-    }
+.error{
+  display:block;
+  color:#ff7777;
+  background:rgba(255,60,60,.12);
+}
 
-    .error {
-      display: block;
-      color: #ff7777;
-      background: rgba(255, 60, 60, .12);
-    }
+.dashboard{
+  display:none;
+  text-align:center;
+}
 
-    .dashboard {
-      display: none;
-      text-align: center;
-    }
+.email{
+  color:#b8c1d4;
+  margin:15px 0;
+  word-break:break-word;
+}
 
-    .email {
-      color: #b8c1d4;
-      margin: 15px 0;
-      word-break: break-word;
-    }
+.coins{
+  margin:25px 0 15px;
+  padding:22px;
+  border-radius:18px;
+  background:#0c1b2e;
+  border:1px solid #315174;
+}
 
-    .coins {
-      margin: 25px 0 15px;
-      padding: 22px;
-      border-radius: 18px;
-      background: #0c1b2e;
-      border: 1px solid #315174;
-    }
+.coin-number{
+  color:#ffd54a;
+  font-size:40px;
+  font-weight:bold;
+  margin-top:8px;
+}
 
-    .coin-number {
-      color: #ffd54a;
-      font-size: 40px;
-      font-weight: bold;
-      margin-top: 8px;
-    }
+.coin-button{
+  background:#16b978;
+}
 
-    .coin-button {
-      background: #16b978;
-      margin-bottom: 12px;
-    }
-
-    .coin-button:hover {
-      background: #13a86c;
-    }
-
-    .logout {
-      background: #e53935;
-    }
-
-    .logout:hover {
-      background: #c62828;
-    }
-
-    .loading {
-      opacity: .7;
-      pointer-events: none;
-    }
-  </style>
+.logout{
+  background:#e53935;
+  margin-top:12px;
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <!-- AUTH -->
-  <div id="authBox">
+<!-- AUTH -->
+<div id="authBox">
 
-    <div class="logo">
-      XALLO-<span>GAMING</span>
+  <div class="logo">
+    XALLO-<span>GAMING</span>
+  </div>
+
+  <div class="subtitle">
+    Play • Earn • Enjoy
+  </div>
+
+  <!-- LOGIN -->
+  <div id="loginBox">
+
+    <h2>Login</h2>
+
+    <input
+      id="loginEmail"
+      type="email"
+      placeholder="Email"
+      autocomplete="email"
+    >
+
+    <input
+      id="loginPassword"
+      type="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    >
+
+    <button id="loginButton" onclick="login()">
+      Login
+    </button>
+
+    <div class="switch">
+      Don't have an account?
+      <a onclick="showSignup()">Sign Up</a>
     </div>
-
-    <div class="subtitle">
-      Play • Earn • Enjoy
-    </div>
-
-    <!-- LOGIN -->
-    <div id="loginBox">
-
-      <h2>Login</h2>
-
-      <input
-        id="loginEmail"
-        type="email"
-        placeholder="Email"
-        autocomplete="email"
-      >
-
-      <input
-        id="loginPassword"
-        type="password"
-        placeholder="Password"
-        autocomplete="current-password"
-      >
-
-      <button id="loginButton" onclick="login()">
-        Login
-      </button>
-
-      <div class="switch">
-        Don't have an account?
-        <a onclick="showSignup()">Sign Up</a>
-      </div>
-
-    </div>
-
-    <!-- SIGN UP -->
-    <div id="signupBox" style="display:none;">
-
-      <h2>Create Account</h2>
-
-      <input
-        id="signupEmail"
-        type="email"
-        placeholder="Email"
-        autocomplete="email"
-      >
-
-      <input
-        id="signupPassword"
-        type="password"
-        placeholder="Password"
-        autocomplete="new-password"
-      >
-
-      <button id="signupButton" onclick="signup()">
-        Sign Up
-      </button>
-
-      <div class="switch">
-        Already have an account?
-        <a onclick="showLogin()">Login</a>
-      </div>
-
-    </div>
-
-    <div id="message" class="message"></div>
 
   </div>
 
+  <!-- SIGN UP -->
+  <div id="signupBox" style="display:none;">
 
-  <!-- DASHBOARD -->
-  <div id="dashboard" class="dashboard">
+    <h2>Create Account</h2>
 
-    <div class="logo">
-      XALLO-<span>GAMING</span>
-    </div>
-
-    <div class="subtitle">
-      Play • Earn • Enjoy
-    </div>
-
-    <h2>Welcome 🎮</h2>
-
-    <div class="email" id="userEmail"></div>
-
-    <div class="coins">
-      🪙 Your Coins
-
-      <div class="coin-number" id="coins">
-        0
-      </div>
-    </div>
-
-    <button
-      class="coin-button"
-      id="coinButton"
-      onclick="addCoins()"
+    <input
+      id="signupEmail"
+      type="email"
+      placeholder="Email"
+      autocomplete="email"
     >
-      🎁 Get 10 Coins
+
+    <input
+      id="signupPassword"
+      type="password"
+      placeholder="Password"
+      autocomplete="new-password"
+    >
+
+    <button id="signupButton" onclick="signup()">
+      Sign Up
     </button>
 
-    <button
-      class="logout"
-      onclick="logout()"
-    >
-      Logout
-    </button>
-
-    <div
-      id="dashboardMessage"
-      class="message"
-    ></div>
+    <div class="switch">
+      Already have an account?
+      <a onclick="showLogin()">Login</a>
+    </div>
 
   </div>
+
+  <div id="message" class="message"></div>
+
+</div>
+
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="dashboard">
+
+  <div class="logo">
+    XALLO-<span>GAMING</span>
+  </div>
+
+  <div class="subtitle">
+    Play • Earn • Enjoy
+  </div>
+
+  <h2>Welcome 🎮</h2>
+
+  <div class="email" id="userEmail"></div>
+
+  <div class="coins">
+    🪙 Your Coins
+
+    <div class="coin-number" id="coins">
+      0
+    </div>
+  </div>
+
+  <button
+    class="coin-button"
+    onclick="addCoins()">
+    🎁 Get 10 Coins
+  </button>
+
+  <button
+    class="logout"
+    onclick="logout()">
+    Logout
+  </button>
+
+  <div id="dashboardMessage" class="message"></div>
+
+</div>
 
 </div>
 
 
 <script>
 
+/* =========================
+   SUPABASE
+========================= */
+
 const SUPABASE_URL =
-  "https://vnyprsjjmmjahkisozib.supabase.co";
+"https://vnyprsjjmmjahkisozib.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
+"sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
 
 const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 
-// ================================
-// MESSAGE
-// ================================
+/* =========================
+   MESSAGE
+========================= */
 
-function showMessage(text, type) {
+function showMessage(text,type){
 
-  const message =
+  const box =
     document.getElementById("message");
 
-  message.textContent = text;
+  box.textContent = text;
 
-  message.className =
+  box.className =
     "message " + type;
 }
 
 
-// DASHBOARD MESSAGE
+/* =========================
+   DASHBOARD MESSAGE
+========================= */
 
-function showDashboardMessage(text, type) {
+function dashboardMessage(text,type){
 
-  const message =
+  const box =
     document.getElementById("dashboardMessage");
 
-  message.textContent = text;
+  box.textContent = text;
 
-  message.className =
+  box.className =
     "message " + type;
 }
 
 
-// ================================
-// SHOW LOGIN
-// ================================
+/* =========================
+   LOGIN PAGE
+========================= */
 
-function showLogin() {
+function showLogin(){
 
   document.getElementById("loginBox")
-    .style.display = "block";
+    .style.display="block";
 
   document.getElementById("signupBox")
-    .style.display = "none";
+    .style.display="none";
 
   document.getElementById("message")
-    .style.display = "none";
+    .style.display="none";
 }
 
 
-// ================================
-// SHOW SIGNUP
-// ================================
+/* =========================
+   SIGNUP PAGE
+========================= */
 
-function showSignup() {
+function showSignup(){
 
   document.getElementById("loginBox")
-    .style.display = "none";
+    .style.display="none";
 
   document.getElementById("signupBox")
-    .style.display = "block";
+    .style.display="block";
 
   document.getElementById("message")
-    .style.display = "none";
+    .style.display="none";
 }
 
 
-// ================================
-// SIGN UP
-// ================================
+/* =========================
+   SIGN UP
+========================= */
 
-async function signup() {
+async function signup(){
 
   const email =
     document.getElementById("signupEmail")
@@ -395,8 +380,7 @@ async function signup() {
     document.getElementById("signupPassword")
       .value;
 
-
-  if (!email || !password) {
+  if(!email || !password){
 
     showMessage(
       "Enter email and password.",
@@ -406,8 +390,7 @@ async function signup() {
     return;
   }
 
-
-  if (password.length < 6) {
+  if(password.length < 6){
 
     showMessage(
       "Password must be at least 6 characters.",
@@ -417,26 +400,22 @@ async function signup() {
     return;
   }
 
-
   const button =
     document.getElementById("signupButton");
 
-  button.classList.add("loading");
-  button.textContent = "Creating...";
+  button.disabled=true;
+  button.textContent="Creating...";
 
-
-  const { data, error } =
+  const {data,error} =
     await supabaseClient.auth.signUp({
-      email: email,
-      password: password
+      email:email,
+      password:password
     });
 
+  button.disabled=false;
+  button.textContent="Sign Up";
 
-  button.classList.remove("loading");
-  button.textContent = "Sign Up";
-
-
-  if (error) {
+  if(error){
 
     showMessage(
       error.message,
@@ -446,66 +425,18 @@ async function signup() {
     return;
   }
 
-
   showMessage(
     "Account created successfully! 🎉",
     "success"
   );
-
-
-  // Create profile
-  await createUserProfile(email);
-
-
-  // Clear inputs
-  document.getElementById("signupEmail")
-    .value = "";
-
-  document.getElementById("signupPassword")
-    .value = "";
 }
 
 
-// ================================
-// CREATE USER PROFILE
-// ================================
+/* =========================
+   LOGIN
+========================= */
 
-async function createUserProfile(email) {
-
-  const username =
-    email.split("@")[0];
-
-
-  const { error } =
-    await supabaseClient
-      .from("users")
-      .upsert(
-        {
-          email: email,
-          username: username,
-          coins: 0
-        },
-        {
-          onConflict: "email"
-        }
-      );
-
-
-  if (error) {
-
-    console.log(
-      "Profile error:",
-      error.message
-    );
-  }
-}
-
-
-// ================================
-// LOGIN
-// ================================
-
-async function login() {
+async function login(){
 
   const email =
     document.getElementById("loginEmail")
@@ -515,8 +446,7 @@ async function login() {
     document.getElementById("loginPassword")
       .value;
 
-
-  if (!email || !password) {
+  if(!email || !password){
 
     showMessage(
       "Enter email and password.",
@@ -526,27 +456,26 @@ async function login() {
     return;
   }
 
-
   const button =
     document.getElementById("loginButton");
 
-  button.classList.add("loading");
-  button.textContent = "Logging in...";
+  button.disabled=true;
+  button.textContent="Logging in...";
 
 
-  const { data, error } =
+  const {data,error} =
     await supabaseClient.auth
       .signInWithPassword({
-        email: email,
-        password: password
+        email:email,
+        password:password
       });
 
 
-  button.classList.remove("loading");
-  button.textContent = "Login";
+  button.disabled=false;
+  button.textContent="Login";
 
 
-  if (error) {
+  if(error){
 
     showMessage(
       error.message,
@@ -557,119 +486,96 @@ async function login() {
   }
 
 
-  if (data.user) {
-
-    await createUserProfile(
-      data.user.email
-    );
+  /* LOGIN SUCCESS */
+  if(data && data.user){
 
     showDashboard(data.user);
+
   }
+
 }
 
 
-// ================================
-// LOAD COINS
-// ================================
+/* =========================
+   DASHBOARD
+========================= */
 
-async function loadCoins(user) {
+async function showDashboard(user){
 
-  const { data, error } =
+  document.getElementById("authBox")
+    .style.display="none";
+
+  document.getElementById("dashboard")
+    .style.display="block";
+
+  document.getElementById("userEmail")
+    .textContent=user.email;
+
+
+  /* Load coins */
+  loadCoins(user);
+
+}
+
+
+/* =========================
+   LOAD COINS
+========================= */
+
+async function loadCoins(user){
+
+  const {data,error} =
     await supabaseClient
       .from("users")
       .select("coins")
-      .eq("email", user.email)
+      .eq("email",user.email)
       .single();
 
 
-  if (!error && data) {
+  if(!error && data){
 
     document.getElementById("coins")
-      .textContent =
-        data.coins || 0;
+      .textContent=data.coins || 0;
 
-  } else {
+  }else{
 
     document.getElementById("coins")
-      .textContent = "0";
+      .textContent="0";
+
   }
+
 }
 
 
-// ================================
-// DASHBOARD
-// ================================
+/* =========================
+   ADD COINS
+========================= */
 
-async function showDashboard(user) {
+async function addCoins(){
 
-  document.getElementById("authBox")
-    .style.display = "none";
-
-  document.getElementById("dashboard")
-    .style.display = "block";
-
-  document.getElementById("userEmail")
-    .textContent = user.email;
-
-
-  await createUserProfile(
-    user.email
-  );
-
-
-  await loadCoins(user);
-}
-
-
-// ================================
-// ADD 10 COINS
-// ================================
-
-async function addCoins() {
-
-  const { data: userData, error: userError } =
+  const {data:userData} =
     await supabaseClient.auth.getUser();
 
-
-  if (
-    userError ||
-    !userData.user
-  ) {
-
-    showDashboardMessage(
-      "Please login first.",
-      "error"
-    );
+  if(!userData.user){
 
     return;
   }
-
 
   const email =
     userData.user.email;
 
 
-  const button =
-    document.getElementById("coinButton");
-
-  button.classList.add("loading");
-  button.textContent = "Adding...";
-
-
-  const { data, error } =
+  const {data,error} =
     await supabaseClient
       .from("users")
       .select("coins")
-      .eq("email", email)
+      .eq("email",email)
       .single();
 
 
-  if (error || !data) {
+  if(error || !data){
 
-    button.classList.remove("loading");
-    button.textContent = "🎁 Get 10 Coins";
-
-    showDashboardMessage(
+    dashboardMessage(
       "User profile not found.",
       "error"
     );
@@ -678,29 +584,22 @@ async function addCoins() {
   }
 
 
-  const currentCoins =
-    Number(data.coins) || 0;
-
   const newCoins =
-    currentCoins + 10;
+    (Number(data.coins) || 0) + 10;
 
 
-  const { error: updateError } =
+  const {error:updateError} =
     await supabaseClient
       .from("users")
       .update({
-        coins: newCoins
+        coins:newCoins
       })
-      .eq("email", email);
+      .eq("email",email);
 
 
-  button.classList.remove("loading");
-  button.textContent = "🎁 Get 10 Coins";
+  if(updateError){
 
-
-  if (updateError) {
-
-    showDashboardMessage(
+    dashboardMessage(
       updateError.message,
       "error"
     );
@@ -710,59 +609,55 @@ async function addCoins() {
 
 
   document.getElementById("coins")
-    .textContent = newCoins;
+    .textContent=newCoins;
 
 
-  showDashboardMessage(
-    "🎉 10 Coins added successfully!",
+  dashboardMessage(
+    "🎉 10 Coins added!",
     "success"
   );
+
 }
 
 
-// ================================
-// LOGOUT
-// ================================
+/* =========================
+   LOGOUT
+========================= */
 
-async function logout() {
+async function logout(){
 
   await supabaseClient.auth.signOut();
 
-
   document.getElementById("dashboard")
-    .style.display = "none";
+    .style.display="none";
 
   document.getElementById("authBox")
-    .style.display = "block";
-
-
-  document.getElementById("dashboardMessage")
-    .style.display = "none";
-
+    .style.display="block";
 
   showLogin();
+
 }
 
 
-// ================================
-// CHECK USER
-// ================================
+/* =========================
+   CHECK LOGIN
+========================= */
 
-async function checkUser() {
+async function checkUser(){
 
-  const { data } =
+  const {data} =
     await supabaseClient.auth.getUser();
 
-
-  if (data.user) {
+  if(data && data.user){
 
     showDashboard(data.user);
 
   }
+
 }
 
 
-// START
+/* START */
 checkUser();
 
 </script>
