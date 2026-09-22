@@ -52,121 +52,16 @@ button:disabled { opacity: 0.6; }
 }
 .coin-number { color: #ffd54a; font-size: 40px; font-weight: bold; margin-top: 8px; }
 .logout { background: #e53935; }
-.wheel-wrapper { position: relative; width: 260px; height: 260px; margin: 25px auto; }
-.wheel-pointer {
-  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-  font-size: 32px; z-index: 10;
-}
-.wheel {
-  width: 100%; height: 100%; border-radius: 50%;
-  border: 6px solid #ffd54a; position: relative; overflow: hidden;
-  transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-}
-.wheel-sector {
-  position: absolute; top: 0; left: 0; width: 50%; height: 50%;
-  transform-origin: 100% 100%; display: flex; align-items: center;
-  justify-content: center; font-weight: bold; color: white;
-}
-.wheel-center {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 50px; height: 50px; background: #ffd54a; border-radius: 50%;
-  z-index: 5; display: flex; align-items: center; justify-content: center; font-size: 24px;
-}
-.nav-tabs {
-  display: flex; gap: 2px; margin: 20px 0;
-  background: #0c1b2e; padding: 5px; border-radius: 14px;
-}
-.nav-tab {
-  flex: 1; padding: 10px 2px; border-radius: 10px;
-  background: transparent; color: #9da8bd;
-  font-size: 9px; margin: 0; cursor: pointer;
-}
-.nav-tab.active { background: #08a9ff; color: white; }
-.shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
-.card-item {
-  background: #0c1b2e; border: 2px solid #315174;
-  border-radius: 14px; padding: 14px 10px; text-align: center; position: relative;
-}
-.card-item.rare { border-color: #3b82f6; }
-.card-item.epic { border-color: #a855f7; }
-.card-item.legendary { border-color: #ffd54a; }
-.rarity-badge {
-  position: absolute; top: 6px; right: 6px; font-size: 10px;
-  font-weight: bold; padding: 3px 7px; border-radius: 8px;
-}
-.rarity-badge.common { background: #6b7280; }
-.rarity-badge.rare { background: #3b82f6; }
-.rarity-badge.epic { background: #a855f7; }
-.rarity-badge.legendary { background: #ffd54a; color: #000; }
-.card-icon { font-size: 34px; margin: 8px 0 6px; }
-.card-name { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
-.card-company { font-size: 11px; color: #9da8bd; margin-bottom: 8px; }
-.card-price { color: #ffd54a; font-weight: bold; font-size: 15px; margin-bottom: 8px; }
-.card-buy { padding: 8px; font-size: 13px; margin: 0; background: #10b981; }
-.leaderboard-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; }
-.lb-row {
-  display: flex; align-items: center; gap: 12px; padding: 14px;
-  border-radius: 14px; background: #0c1b2e; border: 1px solid #315174;
-}
-.lb-row.top-1 { background: linear-gradient(135deg, #4a3a00, #2a1f00); border-color: #ffd54a; }
-.lb-row.top-2 { background: #2e2e2e; border-color: #c0c0c0; }
-.lb-row.top-3 { background: #3a2a1a; border-color: #cd7f32; }
-.lb-row.me { border-color: #08a9ff; }
-.lb-rank { font-size: 22px; font-weight: bold; min-width: 40px; text-align: center; }
-.lb-email { flex: 1; font-size: 12px; color: #b8c1d4; word-break: break-all; text-align: left; }
-.lb-coins { font-size: 15px; font-weight: bold; color: #ffd54a; }
-.pack-item {
-  background: #0c1b2e; border: 2px solid #315174;
-  border-radius: 14px; padding: 20px 14px; text-align: center; margin-bottom: 12px;
-}
-.pack-icon { font-size: 56px; margin-bottom: 10px; }
-.pack-name { font-size: 17px; font-weight: bold; margin-bottom: 6px; }
-.pack-info { font-size: 13px; color: #9da8bd; margin-bottom: 12px; }
-.pack-price { color: #ffd54a; font-weight: bold; font-size: 20px; margin-bottom: 12px; }
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.85);
-  display: none; z-index: 100; justify-content: center; align-items: center; padding: 20px;
-}
-.modal-overlay.show { display: flex; }
-.modal {
-  background: linear-gradient(135deg, #1a2340, #0c1b2e);
-  border: 2px solid #ffd54a; border-radius: 20px;
-  padding: 24px; max-width: 380px; width: 100%; text-align: center;
-}
-.modal h3 { margin-bottom: 16px; color: #ffd54a; font-size: 24px; }
-.won-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
-.won-card {
-  background: #0c1b2e; border: 2px solid #315174;
-  border-radius: 12px; padding: 12px 6px; font-size: 12px;
-}
-.won-card.rare { border-color: #3b82f6; }
-.won-card.epic { border-color: #a855f7; }
-.won-card.legendary { border-color: #ffd54a; }
-.ach-grid { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; }
-.ach-item {
-  display: flex; align-items: center; gap: 12px; padding: 14px;
-  border-radius: 14px; background: #0c1b2e;
-  border: 2px solid #315174; opacity: 0.5;
-}
-.ach-item.unlocked {
-  opacity: 1; border-color: #ffd54a;
-  background: linear-gradient(135deg, #1a2340, #1a1400);
-  box-shadow: 0 0 20px rgba(255, 213, 74, .3);
-}
-.ach-icon { font-size: 32px; min-width: 40px; text-align: center; }
-.ach-info { flex: 1; text-align: left; }
-.ach-name { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
-.ach-desc { font-size: 11px; color: #9da8bd; margin-bottom: 4px; }
-.ach-reward { color: #ffd54a; font-size: 12px; font-weight: bold; }
-.ach-status { font-size: 22px; }
 </style>
 </head>
 <body>
 
 <div class="container">
+
   <div id="authBox">
     <div class="logo">XALLO-<span>GAMING</span></div>
     <div class="subtitle">Play • Earn • Enjoy</div>
+
     <div id="loginBox">
       <h2>Login</h2>
       <input id="loginEmail" type="email" placeholder="Email">
@@ -174,6 +69,7 @@ button:disabled { opacity: 0.6; }
       <button id="loginBtn">Login</button>
       <div class="switch">Don't have an account? <a id="showSignupLink">Sign Up</a></div>
     </div>
+
     <div id="signupBox" style="display:none;">
       <h2>Create Account</h2>
       <input id="signupEmail" type="email" placeholder="Email">
@@ -181,6 +77,7 @@ button:disabled { opacity: 0.6; }
       <button id="signupBtn">Sign Up</button>
       <div class="switch">Already have an account? <a id="showLoginLink">Login</a></div>
     </div>
+
     <div id="message" class="message"></div>
   </div>
 
@@ -192,492 +89,150 @@ button:disabled { opacity: 0.6; }
       🪙 Your Coins
       <div class="coin-number" id="coins">0</div>
     </div>
-    <div class="nav-tabs">
-      <button class="nav-tab active" data-tab="home">🏠</button>
-      <button class="nav-tab" data-tab="shop">🛒</button>
-      <button class="nav-tab" data-tab="packs">🎁</button>
-      <button class="nav-tab" data-tab="mycards">🎴</button>
-      <button class="nav-tab" data-tab="achievements">🏅</button>
-      <button class="nav-tab" data-tab="leaderboard">🏆</button>
-    </div>
-    <div id="homeTab">
-      <div class="wheel-wrapper">
-        <div class="wheel-pointer">▼</div>
-        <div class="wheel" id="wheel"></div>
-        <div class="wheel-center">🪙</div>
-      </div>
-      <button id="spinBtn" style="background: #8b5cf6;">🎡 Spin the Wheel</button>
-      <button id="earnBtn" style="background: #10b981;">+ 10 Coins</button>
-      <button id="bonusBtn" style="background: #f59e0b;">🎁 Daily Bonus (+100)</button>
-    </div>
-    <div id="shopTab" style="display:none;">
-      <h2 style="margin-top: 10px;">🛒 Shop</h2>
-      <p style="color: #9da8bd; font-size: 14px; margin-bottom: 10px;">Buy cards!</p>
-      <div id="cardsList" class="shop-grid"></div>
-    </div>
-    <div id="packsTab" style="display:none;">
-      <h2 style="margin-top: 10px;">🎁 Card Packs</h2>
-      <p style="color: #9da8bd; font-size: 14px; margin-bottom: 10px;">Get random cards!</p>
-      <div id="packsList"></div>
-    </div>
-    <div id="mycardsTab" style="display:none;">
-      <h2 style="margin-top: 10px;">🎴 My Cards</h2>
-      <div id="myCardsList" class="shop-grid"></div>
-    </div>
-    <div id="achievementsTab" style="display:none;">
-      <h2 style="margin-top: 10px;">🏅 Achievements</h2>
-      <p style="color: #9da8bd; font-size: 14px; margin-bottom: 10px;">Unlock and earn coins!</p>
-      <div id="achievementsList" class="ach-grid"></div>
-    </div>
-    <div id="leaderboardTab" style="display:none;">
-      <h2 style="margin-top: 10px;">🏆 Leaderboard</h2>
-      <div id="leaderboardList" class="leaderboard-list"></div>
-    </div>
-    <button class="logout" id="logoutBtn" style="margin-top: 15px;">Logout</button>
+    <button id="earnBtn" style="background: #10b981; margin-top: 10px;">+ 10 Coins</button>
+    <button class="logout" id="logoutBtn" style="margin-top: 10px;">Logout</button>
   </div>
-</div>
 
-<div class="modal-overlay" id="packModal">
-  <div class="modal">
-    <h3>🎉 You Got!</h3>
-    <div class="won-cards" id="wonCardsList"></div>
-    <button id="closeModalBtn" style="background: #10b981;">Awesome!</button>
-  </div>
 </div>
 
 <script>
-// ========== Supabase ==========
-const SUPABASE_URL = "https://vnyprsjjmmjahkisozib.supabase.co";
-const SUPABASE_KEY = "sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+var SUPABASE_URL = "https://vnyprsjjmmjahkisozib.supabase.co";
+var SUPABASE_KEY = "sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
+var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const PRIZES = [10, 20, 50, 100, 200, 500];
-const COLORS = ["#ef4444", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6", "#ec4899"];
-const RARITY_LABELS = { common: "🥉 C", rare: "🥈 R", epic: "🥇 E", legendary: "💎 L" };
-
-// Helper
 function el(id) { return document.getElementById(id); }
 
-// ========== LOGIN ==========
+function showMessage(text, type) {
+  var m = el("message");
+  m.textContent = text;
+  m.className = "message " + type;
+}
+
+// LOGIN
 async function doLogin() {
-  const email = el("loginEmail").value.trim();
-  const password = el("loginPassword").value;
+  var email = el("loginEmail").value.trim();
+  var password = el("loginPassword").value;
 
   if (!email || !password) {
     showMessage("Enter email and password.", "error");
     return;
   }
 
-  const btn = el("loginBtn");
+  var btn = el("loginBtn");
   btn.disabled = true;
   btn.textContent = "Loading...";
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  var res = await db.auth.signInWithPassword({ email: email, password: password });
 
   btn.disabled = false;
   btn.textContent = "Login";
 
-  if (error) {
-    showMessage(error.message, "error");
+  if (res.error) {
+    showMessage(res.error.message, "error");
     return;
   }
 
-  showDashboard(data.user);
+  showDashboard(res.data.user);
 }
 
-// ========== SIGNUP ==========
+// SIGNUP
 async function doSignup() {
-  const email = el("signupEmail").value.trim();
-  const password = el("signupPassword").value;
+  var email = el("signupEmail").value.trim();
+  var password = el("signupPassword").value;
 
   if (!email || !password) {
     showMessage("Enter email and password.", "error");
     return;
   }
   if (password.length < 6) {
-    showMessage("Password must be at least 6 characters.", "error");
+    showMessage("Password must be 6+ characters.", "error");
     return;
   }
 
-  const btn = el("signupBtn");
+  var btn = el("signupBtn");
   btn.disabled = true;
   btn.textContent = "Loading...";
 
-  const { error } = await supabaseClient.auth.signUp({ email, password });
+  var res = await db.auth.signUp({ email: email, password: password });
 
   btn.disabled = false;
   btn.textContent = "Sign Up";
 
-  if (error) {
-    showMessage(error.message, "error");
+  if (res.error) {
+    showMessage(res.error.message, "error");
     return;
   }
 
   showMessage("Account created! You can now login.", "success");
 }
 
-// ========== SHOW MESSAGE ==========
-function showMessage(text, type) {
-  const m = el("message");
-  m.textContent = text;
-  m.className = "message " + type;
-}
-
-// ========== SHOW DASHBOARD ==========
+// DASHBOARD
 async function showDashboard(user) {
   el("authBox").style.display = "none";
   el("dashboard").style.display = "block";
   el("userEmail").textContent = user.email;
 
-  const { data } = await supabaseClient.from("users").select("coins").eq("email", user.email).single();
-
-  if (data) {
-    el("coins").textContent = data.coins || 0;
+  var res = await db.from("users").select("coins").eq("email", user.email).single();
+  if (res.data) {
+    el("coins").textContent = res.data.coins || 0;
   } else {
-    await supabaseClient.from("users").insert({ email: user.email, coins: 0 });
+    await db.from("users").insert({ email: user.email, coins: 0 });
     el("coins").textContent = "0";
   }
 }
 
-// ========== LOGOUT ==========
+// LOGOUT
 async function doLogout() {
-  await supabaseClient.auth.signOut();
+  await db.auth.signOut();
   el("dashboard").style.display = "none";
   el("authBox").style.display = "block";
   el("loginBox").style.display = "block";
   el("signupBox").style.display = "none";
 }
 
-// ========== TAB SWITCHING ==========
-function switchTab(tabName, btn) {
-  document.querySelectorAll(".nav-tab").forEach(x => x.classList.remove("active"));
-  if (btn) btn.classList.add("active");
-
-  ["home", "shop", "packs", "mycards", "achievements", "leaderboard"].forEach(name => {
-    el(name + "Tab").style.display = (name === tabName) ? "block" : "none";
-  });
-
-  if (tabName === "shop") loadShop();
-  if (tabName === "packs") loadPacks();
-  if (tabName === "mycards") loadMyCards();
-  if (tabName === "achievements") loadAchievements();
-  if (tabName === "leaderboard") loadLeaderboard();
-}
-
-// ========== WHEEL ==========
-function buildWheel() {
-  const wheel = el("wheel");
-  wheel.innerHTML = "";
-  const sliceAngle = 360 / PRIZES.length;
-  PRIZES.forEach((prize, i) => {
-    const sector = document.createElement("div");
-    sector.className = "wheel-sector";
-    sector.style.background = COLORS[i];
-    sector.style.transform = `rotate(${i * sliceAngle}deg)`;
-    sector.style.clipPath = "polygon(100% 100%, 100% 0, 0 0)";
-    const label = document.createElement("span");
-    label.textContent = prize;
-    label.style.position = "absolute";
-    label.style.top = "50%";
-    label.style.left = "70%";
-    label.style.transform = "rotate(45deg)";
-    label.style.fontSize = "16px";
-    label.style.fontWeight = "bold";
-    sector.appendChild(label);
-    wheel.appendChild(sector);
-  });
-}
-
-let isSpinning = false;
-async function doSpin() {
-  if (isSpinning) return;
-  const email = el("userEmail").textContent;
-  if (!email) return;
-
-  isSpinning = true;
-  const btn = el("spinBtn");
-  btn.disabled = true;
-  btn.textContent = "Spinning...";
-
-  const { data, error } = await supabaseClient.rpc("spin_wheel", { user_email: email });
-
-  if (error) {
-    alert("Error: " + error.message);
-    isSpinning = false; btn.disabled = false; btn.textContent = "🎡 Spin the Wheel";
-    return;
-  }
-  if (!data.success) {
-    alert("⏳ " + data.message);
-    isSpinning = false; btn.disabled = false; btn.textContent = "🎡 Spin the Wheel";
-    return;
-  }
-
-  const sectorAngle = 360 / PRIZES.length;
-  const targetAngle = 360 * 5 + (360 - (data.prize_index * sectorAngle + sectorAngle / 2));
-  const wheel = el("wheel");
-  wheel.style.transition = "transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)";
-  wheel.style.transform = `rotate(${targetAngle}deg)`;
-
-  setTimeout(() => {
-    el("coins").textContent = data.coins;
-    alert("🎉 You won " + data.prize + " Coins!");
-    isSpinning = false;
-    btn.disabled = false;
-    btn.textContent = "🎡 Spin the Wheel";
-    wheel.style.transition = "none";
-    wheel.style.transform = "rotate(0deg)";
-  }, 4200);
-}
-
-// ========== EARN COINS ==========
+// EARN COINS
 async function doEarn() {
-  const email = el("userEmail").textContent;
+  var email = el("userEmail").textContent;
   if (!email) return;
-  const btn = el("earnBtn");
+  var btn = el("earnBtn");
   btn.disabled = true;
   btn.textContent = "...";
-  const { data, error } = await supabaseClient.rpc("add_coins", { user_email: email, amount: 10 });
-  if (error) {
-    alert("Error: " + error.message);
-    btn.disabled = false; btn.textContent = "+ 10 Coins";
+  var res = await db.rpc("add_coins", { user_email: email, amount: 10 });
+  if (res.error) {
+    alert("Error: " + res.error.message);
+    btn.disabled = false;
+    btn.textContent = "+ 10 Coins";
     return;
   }
-  el("coins").textContent = data;
+  el("coins").textContent = res.data;
   btn.disabled = false;
   btn.textContent = "+ 10 Coins";
 }
 
-// ========== DAILY BONUS ==========
-async function doBonus() {
-  const email = el("userEmail").textContent;
-  if (!email) return;
-  const btn = el("bonusBtn");
-  const original = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = "...";
-  const { data, error } = await supabaseClient.rpc("claim_daily_bonus", { user_email: email });
-  if (error) {
-    alert("Error: " + error.message);
-    btn.disabled = false; btn.textContent = original;
-    return;
-  }
-  if (data.success) {
-    el("coins").textContent = data.coins;
-    alert("🎉 " + data.message);
-  } else {
-    alert("⏳ " + data.message);
-  }
-  btn.disabled = false;
-  btn.textContent = original;
-}
+// EVENT LISTENERS
+el("loginBtn").addEventListener("click", doLogin);
+el("signupBtn").addEventListener("click", doSignup);
+el("logoutBtn").addEventListener("click", doLogout);
+el("earnBtn").addEventListener("click", doEarn);
 
-// ========== SHOP ==========
-async function loadShop() {
-  const { data } = await supabaseClient.from("cards").select("*").order("price");
-  const list = el("cardsList");
-  list.innerHTML = "";
-  if (!data) return;
-  data.forEach(card => {
-    const rarity = card.rarity || "common";
-    const div = document.createElement("div");
-    div.className = "card-item " + rarity;
-    div.innerHTML = `
-      <div class="rarity-badge ${rarity}">${RARITY_LABELS[rarity]}</div>
-      <div class="card-icon">${card.icon}</div>
-      <div class="card-name">${card.name}</div>
-      <div class="card-company">${card.company}</div>
-      <div class="card-price">🪙 ${card.price}</div>
-      <div style="color:#10b981;font-size:11px;margin-bottom:6px;">+${card.bonus_coins}</div>
-      <button class="card-buy" data-id="${card.id}" data-price="${card.price}">Buy</button>`;
-    list.appendChild(div);
-  });
-  list.querySelectorAll(".card-buy").forEach(b => {
-    b.addEventListener("click", () => buyCard(parseInt(b.dataset.id), parseInt(b.dataset.price)));
-  });
-}
+el("showSignupLink").addEventListener("click", function() {
+  el("loginBox").style.display = "none";
+  el("signupBox").style.display = "block";
+  el("message").style.display = "none";
+});
 
-async function buyCard(cardId, price) {
-  const email = el("userEmail").textContent;
-  if (!email) return;
-  if (!confirm("Buy for " + price + " Coins?")) return;
-  const { data, error } = await supabaseClient.rpc("buy_card", { user_email: email, card_id_param: cardId });
-  if (error) { alert("Error: " + error.message); return; }
-  if (data.success) {
-    el("coins").textContent = data.coins;
-    alert("🎉 " + data.message);
-    loadShop();
-  } else {
-    alert("❌ " + data.message);
-  }
-}
+el("showLoginLink").addEventListener("click", function() {
+  el("loginBox").style.display = "block";
+  el("signupBox").style.display = "none";
+  el("message").style.display = "none";
+});
 
-// ========== PACKS ==========
-async function loadPacks() {
-  const { data } = await supabaseClient.from("packs").select("*").order("price");
-  const list = el("packsList");
-  list.innerHTML = "";
-  if (!data) return;
-  data.forEach(pack => {
-    const div = document.createElement("div");
-    div.className = "pack-item";
-    div.style.borderColor = pack.color;
-    div.innerHTML = `
-      <div class="pack-icon">${pack.icon}</div>
-      <div class="pack-name">${pack.name}</div>
-      <div class="pack-info">${pack.cards_count} cards</div>
-      <div class="pack-price">🪙 ${pack.price}</div>
-      <button style="background:${pack.color};" data-id="${pack.id}" data-price="${pack.price}">Open Pack</button>`;
-    list.appendChild(div);
-  });
-  list.querySelectorAll("button[data-id]").forEach(b => {
-    b.addEventListener("click", () => openPack(parseInt(b.dataset.id), parseInt(b.dataset.price)));
-  });
-}
+// CHECK USER
+(async function() {
+  var res = await db.auth.getUser();
+  if (res.data.user) showDashboard(res.data.user);
+})();
+</script>
 
-async function openPack(packId, price) {
-  const email = el("userEmail").textContent;
-  if (!email) return;
-  if (!confirm("Open for " + price + " Coins?")) return;
-  const { data, error } = await supabaseClient.rpc("buy_pack", { user_email: email, pack_id_param: packId });
-  if (error) { alert("Error: " + error.message); return; }
-  if (data.success) {
-    el("coins").textContent = data.coins;
-    showPackModal(data.won_names);
-  } else {
-    alert("❌ " + data.message);
-  }
-}
-
-function showPackModal(cardNames) {
-  const list = el("wonCardsList");
-  list.innerHTML = "";
-  cardNames.forEach(name => {
-    const div = document.createElement("div");
-    div.className = "won-card";
-    if (name.includes("Fastlink") || name.includes("VIP")) div.classList.add("legendary");
-    else if (name.includes("Roshan") || name.includes("MTN")) div.classList.add("epic");
-    else if (name.includes("10,000")) div.classList.add("rare");
-    div.textContent = name;
-    list.appendChild(div);
-  });
-  el("packModal").classList.add("show");
-}
-
-function closePackModal() {
-  el("packModal").classList.remove("show");
-  loadMyCards();
-}
-
-// ========== MY CARDS ==========
-async function loadMyCards() {
-  const email = el("userEmail").textContent;
-  if (!email) return;
-  const { data } = await supabaseClient.from("user_cards").select("*, cards(*)").eq("user_email", email);
-  const list = el("myCardsList");
-  list.innerHTML = "";
-  if (!data || data.length === 0) {
-    list.innerHTML = "<p style='color:#9da8bd;grid-column:span 2;'>No cards yet.</p>";
-    return;
-  }
-  data.forEach(item => {
-    const card = item.cards;
-    const rarity = card.rarity || "common";
-    const div = document.createElement("div");
-    div.className = "card-item " + rarity;
-    div.innerHTML = `
-      <div class="rarity-badge ${rarity}">${RARITY_LABELS[rarity]}</div>
-      <div class="card-icon">${card.icon}</div>
-      <div class="card-name">${card.name}</div>
-      <div class="card-company">${card.company}</div>
-      <div style="color:#ffd54a;font-size:12px;margin:6px 0;">Refund: ${Math.floor(card.price * 0.7)} 🪙</div>
-      <button class="card-buy" style="background:#e53935;" data-ucid="${item.id}">Sell</button>`;
-    list.appendChild(div);
-  });
-  list.querySelectorAll("button[data-ucid]").forEach(b => {
-    b.addEventListener("click", () => sellCard(parseInt(b.dataset.ucid)));
-  });
-}
-
-async function sellCard(userCardId) {
-  const email = el("userEmail").textContent;
-  if (!email) return;
-  if (!confirm("Sell this card? You'll get 70% back.")) return;
-  const { data, error } = await supabaseClient.rpc("sell_card", { user_email: email, user_card_id: userCardId });
-  if (error) { alert("Error: " + error.message); return; }
-  if (data.success) {
-    el("coins").textContent = data.coins;
-    alert("💰 " + data.message + " +" + data.refund);
-    loadMyCards();
-  } else {
-    alert("❌ " + data.message);
-  }
-}
-
-// ========== ACHIEVEMENTS ==========
-async function loadAchievements() {
-  const email = el("userEmail").textContent;
-  if (!email) return;
-
-  const list = el("achievementsList");
-  list.innerHTML = "<p style='color:#9da8bd;'>Loading...</p>";
-
-  const { data: checkData } = await supabaseClient.rpc("check_achievements", { user_email: email });
-
-  if (checkData && checkData.reward_total > 0) {
-    const { data: u } = await supabaseClient.from("users").select("coins").eq("email", email).single();
-    if (u) el("coins").textContent = u.coins;
-
-    let msg = "🎉 New achievements!\n\n";
-    checkData.unlocked.forEach(a => {
-      msg += a.icon + " " + a.name + " (+" + a.reward + ")\n";
-    });
-    msg += "\nTotal: +" + checkData.reward_total + " Coins";
-    alert(msg);
-  }
-
-  const { data, error } = await supabaseClient.rpc("get_user_achievements", { user_email: email });
-
-  if (error || !data) {
-    list.innerHTML = "<p style='color:#ff7777;'>Error</p>";
-    return;
-  }
-
-  list.innerHTML = "";
-  data.forEach(ach => {
-    const div = document.createElement("div");
-    div.className = "ach-item" + (ach.unlocked ? " unlocked" : "");
-    div.innerHTML = `
-      <div class="ach-icon">${ach.icon}</div>
-      <div class="ach-info">
-        <div class="ach-name">${ach.name}</div>
-        <div class="ach-desc">${ach.description}</div>
-        <div class="ach-reward">Reward: 🪙 ${ach.reward}</div>
-      </div>
-      <div class="ach-status">${ach.unlocked ? "✅" : "🔒"}</div>
-    `;
-    list.appendChild(div);
-  });
-}
-
-// ========== LEADERBOARD ==========
-async function loadLeaderboard() {
-  const list = el("leaderboardList");
-  list.innerHTML = "<p style='color:#9da8bd;'>Loading...</p>";
-  const { data, error } = await supabaseClient.rpc("get_leaderboard");
-  if (error || !data) {
-    list.innerHTML = "<p style='color:#ff7777;'>Error</p>";
-    return;
-  }
-  const myEmail = el("userEmail").textContent;
-  list.innerHTML = "";
-  data.forEach(row => {
-    const div = document.createElement("div");
-    div.className = "lb-row";
-    if (row.rank === 1) div.classList.add("top-1");
-    if (row.rank === 2) div.classList.add("top-2");
-    if (row.rank === 3) div.classList.add("top-3");
-    if (row.email === myEmail) div.classList.add("me");
-    let medal = row.rank === 1 ? "🥇" : row.rank === 2 ? "🥈" : row.rank === 3 ? "🥉" : "#" + row.rank;
-    div.innerHTML = `<div class="lb-rank">${medal}</div>
-      <div class="lb-email">${row.email}${row.email === myEmail ? " (You)" : ""}</div>
-      <div class="lb-co
+</body>
+</html>
