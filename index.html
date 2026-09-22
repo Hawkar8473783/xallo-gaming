@@ -18,8 +18,7 @@
 
     body {
       min-height: 100vh;
-      background:
-        radial-gradient(circle at top, #102a45, #050713 55%);
+      background: radial-gradient(circle at top, #102a45, #050713 60%);
       color: white;
       display: flex;
       justify-content: center;
@@ -30,16 +29,16 @@
     .container {
       width: 100%;
       max-width: 430px;
-      background: rgba(17, 24, 45, 0.96);
+      background: rgba(17, 24, 45, .97);
       border: 1px solid #263553;
       border-radius: 25px;
-      padding: 35px 28px;
-      box-shadow: 0 0 40px rgba(0, 170, 255, 0.18);
+      padding: 32px 25px;
+      box-shadow: 0 0 40px rgba(0,170,255,.18);
     }
 
     .logo {
       text-align: center;
-      font-size: 36px;
+      font-size: 34px;
       font-weight: bold;
       margin-bottom: 8px;
     }
@@ -51,20 +50,18 @@
     .subtitle {
       text-align: center;
       color: #9da8bd;
-      font-size: 18px;
-      margin-bottom: 35px;
+      margin-bottom: 30px;
     }
 
     h2 {
       margin-bottom: 20px;
-      font-size: 28px;
     }
 
     input {
       width: 100%;
-      padding: 17px;
-      margin-bottom: 15px;
-      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border-radius: 13px;
       border: 1px solid #283653;
       background: #070b19;
       color: white;
@@ -72,16 +69,11 @@
       outline: none;
     }
 
-    input:focus {
-      border-color: #08a9ff;
-      box-shadow: 0 0 10px rgba(8,169,255,.2);
-    }
-
     button {
       width: 100%;
-      padding: 17px;
-      border: none;
-      border-radius: 14px;
+      padding: 16px;
+      border: 0;
+      border-radius: 13px;
       background: #08a9ff;
       color: white;
       font-size: 17px;
@@ -90,21 +82,16 @@
       margin-top: 5px;
     }
 
-    button:hover {
-      background: #078fd7;
-    }
-
     .switch {
       text-align: center;
-      margin-top: 25px;
+      margin-top: 22px;
       color: #9da8bd;
-      font-size: 16px;
     }
 
     .switch a {
       color: #08a9ff;
-      cursor: pointer;
       font-weight: bold;
+      cursor: pointer;
     }
 
     .message {
@@ -117,14 +104,14 @@
 
     .success {
       display: block;
-      background: rgba(0, 200, 120, .12);
       color: #55e6a5;
+      background: rgba(0,200,120,.12);
     }
 
     .error {
       display: block;
-      background: rgba(255, 60, 60, .12);
       color: #ff7777;
+      background: rgba(255,60,60,.12);
     }
 
     .dashboard {
@@ -132,481 +119,352 @@
       text-align: center;
     }
 
-    .dashboard h2 {
-      color: #08a9ff;
-    }
-
     .email {
       color: #b8c1d4;
-      margin: 15px 0 20px;
+      margin: 15px 0;
       word-break: break-word;
     }
 
-    .coins-box {
-      background: linear-gradient(135deg, #172b48, #0b1628);
-      border: 1px solid #315174;
-      border-radius: 18px;
+    .coins {
+      margin: 25px 0;
       padding: 22px;
-      margin: 20px 0 25px;
-      box-shadow: 0 0 25px rgba(8,169,255,.12);
+      border-radius: 18px;
+      background: #0c1b2e;
+      border: 1px solid #315174;
     }
 
-    .coins-title {
-      color: #9da8bd;
-      font-size: 15px;
-      margin-bottom: 8px;
-    }
-
-    .coins-number {
+    .coin-number {
       color: #ffd54a;
-      font-size: 38px;
+      font-size: 40px;
       font-weight: bold;
-    }
-
-    .coins-icon {
-      font-size: 30px;
+      margin-top: 8px;
     }
 
     .logout {
       background: #e53935;
-    }
-
-    .logout:hover {
-      background: #c62828;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <!-- AUTH -->
-    <div id="authBox">
+  <!-- LOGIN / SIGNUP -->
+  <div id="authBox">
 
-      <div class="logo">
-        XALLO-<span>GAMING</span>
-      </div>
-
-      <div class="subtitle">
-        Play • Earn • Enjoy
-      </div>
-
-      <!-- LOGIN -->
-      <div id="loginBox">
-
-        <h2>Login</h2>
-
-        <input
-          type="email"
-          id="loginEmail"
-          placeholder="Email"
-          autocomplete="email"
-        >
-
-        <input
-          type="password"
-          id="loginPassword"
-          placeholder="Password"
-          autocomplete="current-password"
-        >
-
-        <button onclick="login()">
-          Login
-        </button>
-
-        <div class="switch">
-          Don't have an account?
-          <a onclick="showSignup()">Sign Up</a>
-        </div>
-
-      </div>
-
-      <!-- SIGN UP -->
-      <div id="signupBox" style="display:none;">
-
-        <h2>Create Account</h2>
-
-        <input
-          type="email"
-          id="signupEmail"
-          placeholder="Email"
-          autocomplete="email"
-        >
-
-        <input
-          type="password"
-          id="signupPassword"
-          placeholder="Password"
-          autocomplete="new-password"
-        >
-
-        <button onclick="signup()">
-          Sign Up
-        </button>
-
-        <div class="switch">
-          Already have an account?
-          <a onclick="showLogin()">Login</a>
-        </div>
-
-      </div>
-
-      <div id="message" class="message"></div>
-
+    <div class="logo">
+      XALLO-<span>GAMING</span>
     </div>
 
+    <div class="subtitle">
+      Play • Earn • Enjoy
+    </div>
 
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="dashboard">
+    <div id="loginBox">
 
-      <div class="logo">
-        XALLO-<span>GAMING</span>
-      </div>
+      <h2>Login</h2>
 
-      <div class="subtitle">
-        Play • Earn • Enjoy
-      </div>
+      <input
+        id="loginEmail"
+        type="email"
+        placeholder="Email"
+      >
 
-      <h2>Welcome 🎮</h2>
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="Password"
+      >
 
-      <p class="email" id="userEmail"></p>
-
-      <!-- COINS -->
-      <div class="coins-box">
-
-        <div class="coins-icon">
-          🪙
-        </div>
-
-        <div class="coins-title">
-          Your Coins
-        </div>
-
-        <div class="coins-number" id="coins">
-          0
-        </div>
-
-      </div>
-
-      <button class="logout" onclick="logout()">
-        Logout
+      <button onclick="login()">
+        Login
       </button>
 
+      <div class="switch">
+        Don't have an account?
+        <a onclick="showSignup()">Sign Up</a>
+      </div>
+
     </div>
+
+
+    <div id="signupBox" style="display:none;">
+
+      <h2>Create Account</h2>
+
+      <input
+        id="signupEmail"
+        type="email"
+        placeholder="Email"
+      >
+
+      <input
+        id="signupPassword"
+        type="password"
+        placeholder="Password"
+      >
+
+      <button onclick="signup()">
+        Sign Up
+      </button>
+
+      <div class="switch">
+        Already have an account?
+        <a onclick="showLogin()">Login</a>
+      </div>
+
+    </div>
+
+    <div id="message" class="message"></div>
 
   </div>
 
 
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="dashboard">
+
+    <div class="logo">
+      XALLO-<span>GAMING</span>
+    </div>
+
+    <div class="subtitle">
+      Play • Earn • Enjoy
+    </div>
+
+    <h2>Welcome 🎮</h2>
+
+    <div class="email" id="userEmail"></div>
+
+    <div class="coins">
+      🪙 Your Coins
+      <div class="coin-number" id="coins">
+        0
+      </div>
+    </div>
+
+    <button class="logout" onclick="logout()">
+      Logout
+    </button>
+
+  </div>
+
+</div>
+
+
 <script>
 
-  // ==============================
-  // SUPABASE CONFIG
-  // ==============================
+const SUPABASE_URL =
+"https://vnyprsjjmmjahkisozib.supabase.co";
 
-  const SUPABASE_URL =
-    "https://vnyprsjjmmjahkisozib.supabase.co";
+const SUPABASE_KEY =
+"sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
 
-  const SUPABASE_KEY =
-    "sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
+
+// MESSAGE
+function showMessage(text, type) {
+
+  const message =
+  document.getElementById("message");
+
+  message.textContent = text;
+
+  message.className =
+  "message " + type;
+}
+
+
+// SHOW LOGIN
+function showLogin() {
+
+  document.getElementById("loginBox")
+    .style.display = "block";
+
+  document.getElementById("signupBox")
+    .style.display = "none";
+
+  document.getElementById("message")
+    .style.display = "none";
+}
+
+
+// SHOW SIGNUP
+function showSignup() {
+
+  document.getElementById("loginBox")
+    .style.display = "none";
+
+  document.getElementById("signupBox")
+    .style.display = "block";
+
+  document.getElementById("message")
+    .style.display = "none";
+}
+
+
+// SIGN UP
+async function signup() {
+
+  const email =
+  document.getElementById("signupEmail")
+    .value.trim();
+
+  const password =
+  document.getElementById("signupPassword")
+    .value;
+
+  if (!email || !password) {
+
+    showMessage(
+      "Enter email and password.",
+      "error"
     );
 
-
-  // ==============================
-  // MESSAGE
-  // ==============================
-
-  function showMessage(text, type) {
-
-    const message =
-      document.getElementById("message");
-
-    message.textContent = text;
-
-    message.className =
-      "message " + type;
-
+    return;
   }
 
+  if (password.length < 6) {
 
-  // ==============================
-  // SHOW LOGIN
-  // ==============================
+    showMessage(
+      "Password must be at least 6 characters.",
+      "error"
+    );
 
-  function showLogin() {
-
-    document.getElementById("loginBox")
-      .style.display = "block";
-
-    document.getElementById("signupBox")
-      .style.display = "none";
-
-    document.getElementById("message")
-      .style.display = "none";
+    return;
   }
 
+  const { data, error } =
+  await supabaseClient.auth.signUp({
+    email: email,
+    password: password
+  });
 
-  // ==============================
-  // SHOW SIGN UP
-  // ==============================
+  if (error) {
 
-  function showSignup() {
+    showMessage(
+      error.message,
+      "error"
+    );
 
-    document.getElementById("loginBox")
-      .style.display = "none";
-
-    document.getElementById("signupBox")
-      .style.display = "block";
-
-    document.getElementById("message")
-      .style.display = "none";
+    return;
   }
 
+  showMessage(
+    "Account created! Check your email if verification is required.",
+    "success"
+  );
+}
 
-  // ==============================
-  // CREATE USER PROFILE
-  // ==============================
 
-  async function createUserProfile(user) {
+// LOGIN
+async function login() {
 
-    const username =
-      user.email
-        ? user.email.split("@")[0]
-        : "Player";
+  const email =
+  document.getElementById("loginEmail")
+    .value.trim();
 
-    const { error } =
-      await supabaseClient
-        .from("users")
-        .upsert({
-          email: user.email,
-          username: username
-        }, {
-          onConflict: "email"
-        });
+  const password =
+  document.getElementById("loginPassword")
+    .value;
 
-    if (error) {
-      console.log("Profile error:", error);
-    }
+  if (!email || !password) {
+
+    showMessage(
+      "Enter email and password.",
+      "error"
+    );
+
+    return;
   }
 
+  const { data, error } =
+  await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
 
-  // ==============================
-  // LOAD COINS
-  // ==============================
+  if (error) {
 
-  async function loadCoins(user) {
+    showMessage(
+      error.message,
+      "error"
+    );
 
-    const { data, error } =
-      await supabaseClient
-        .from("users")
-        .select("coins")
-        .eq("email", user.email)
-        .single();
+    return;
+  }
 
-    if (error) {
+  showDashboard(data.user);
+}
 
-      console.log("Coins error:", error);
 
-      document.getElementById("coins")
-        .textContent = "0";
+// DASHBOARD
+async function showDashboard(user) {
 
-      return;
-    }
+  document.getElementById("authBox")
+    .style.display = "none";
+
+  document.getElementById("dashboard")
+    .style.display = "block";
+
+  document.getElementById("userEmail")
+    .textContent = user.email;
+
+  // Load coins
+  const { data, error } =
+  await supabaseClient
+    .from("users")
+    .select("coins")
+    .eq("email", user.email)
+    .single();
+
+  if (!error && data) {
 
     document.getElementById("coins")
       .textContent = data.coins || 0;
+
+  } else {
+
+    document.getElementById("coins")
+      .textContent = "0";
   }
+}
 
 
-  // ==============================
-  // SIGN UP
-  // ==============================
+// LOGOUT
+async function logout() {
 
-  async function signup() {
+  await supabaseClient.auth.signOut();
 
-    const email =
-      document.getElementById("signupEmail")
-        .value.trim();
+  document.getElementById("dashboard")
+    .style.display = "none";
 
-    const password =
-      document.getElementById("signupPassword")
-        .value;
+  document.getElementById("authBox")
+    .style.display = "block";
 
-
-    if (!email || !password) {
-
-      showMessage(
-        "Please enter email and password.",
-        "error"
-      );
-
-      return;
-    }
+  showLogin();
+}
 
 
-    if (password.length < 6) {
+// CHECK USER
+async function checkUser() {
 
-      showMessage(
-        "Password must be at least 6 characters.",
-        "error"
-      );
+  const { data } =
+  await supabaseClient.auth.getUser();
 
-      return;
-    }
-
-
-    const { data, error } =
-      await supabaseClient.auth.signUp({
-        email: email,
-        password: password
-      });
-
-
-    if (error) {
-
-      showMessage(
-        error.message,
-        "error"
-      );
-
-      return;
-    }
-
-
-    if (data.user && data.session) {
-
-      await createUserProfile(data.user);
-
-      showDashboard(data.user);
-
-    } else {
-
-      showMessage(
-        "Account created! Check your email if verification is required.",
-        "success"
-      );
-
-    }
-
-  }
-
-
-  // ==============================
-  // LOGIN
-  // ==============================
-
-  async function login() {
-
-    const email =
-      document.getElementById("loginEmail")
-        .value.trim();
-
-    const password =
-      document.getElementById("loginPassword")
-        .value;
-
-
-    if (!email || !password) {
-
-      showMessage(
-        "Please enter email and password.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    const { data, error } =
-      await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
-
-
-    if (error) {
-
-      showMessage(
-        error.message,
-        "error"
-      );
-
-      return;
-    }
-
-
-    await createUserProfile(data.user);
+  if (data.user) {
 
     showDashboard(data.user);
 
   }
+}
 
-
-  // ==============================
-  // DASHBOARD
-  // ==============================
-
-  async function showDashboard(user) {
-
-    document.getElementById("authBox")
-      .style.display = "none";
-
-    document.getElementById("dashboard")
-      .style.display = "block";
-
-    document.getElementById("userEmail")
-      .textContent = user.email;
-
-    await loadCoins(user);
-
-  }
-
-
-  // ==============================
-  // LOGOUT
-  // ==============================
-
-  async function logout() {
-
-    await supabaseClient.auth.signOut();
-
-    document.getElementById("dashboard")
-      .style.display = "none";
-
-    document.getElementById("authBox")
-      .style.display = "block";
-
-    showLogin();
-
-  }
-
-
-  // ==============================
-  // CHECK CURRENT USER
-  // ==============================
-
-  async function checkUser() {
-
-    const { data } =
-      await supabaseClient.auth.getUser();
-
-    if (data.user) {
-
-      await createUserProfile(data.user);
-
-      showDashboard(data.user);
-
-    }
-
-  }
-
-
-  checkUser();
+checkUser();
 
 </script>
 
