@@ -43,9 +43,7 @@
       margin-bottom: 8px;
     }
 
-    .logo span {
-      color: #08a9ff;
-    }
+    .logo span { color: #08a9ff; }
 
     .subtitle {
       text-align: center;
@@ -53,9 +51,7 @@
       margin-bottom: 30px;
     }
 
-    h2 {
-      margin-bottom: 20px;
-    }
+    h2 { margin-bottom: 20px; }
 
     input {
       width: 100%;
@@ -149,7 +145,7 @@
       background: #e53935;
     }
 
-    /* WHEEL STYLES */
+    /* WHEEL */
     .wheel-wrapper {
       position: relative;
       width: 260px;
@@ -210,6 +206,79 @@
       font-size: 24px;
       box-shadow: 0 2px 10px rgba(0,0,0,.5);
     }
+
+    /* NAV TABS */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin: 20px 0;
+      background: #0c1b2e;
+      padding: 6px;
+      border-radius: 14px;
+    }
+
+    .nav-tab {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      background: transparent;
+      color: #9da8bd;
+      font-size: 14px;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .nav-tab.active {
+      background: #08a9ff;
+      color: white;
+    }
+
+    /* SHOP */
+    .shop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 15px 0;
+    }
+
+    .card-item {
+      background: #0c1b2e;
+      border: 2px solid #315174;
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .card-icon {
+      font-size: 34px;
+      margin-bottom: 6px;
+    }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .card-company {
+      font-size: 11px;
+      color: #9da8bd;
+      margin-bottom: 8px;
+    }
+
+    .card-price {
+      color: #ffd54a;
+      font-weight: bold;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .card-buy {
+      padding: 8px;
+      font-size: 13px;
+      margin: 0;
+      background: #10b981;
+    }
   </style>
 </head>
 
@@ -220,47 +289,29 @@
   <!-- LOGIN / SIGNUP -->
   <div id="authBox">
 
-    <div class="logo">
-      XALLO-<span>GAMING</span>
-    </div>
-
-    <div class="subtitle">
-      Play • Earn • Enjoy
-    </div>
+    <div class="logo">XALLO-<span>GAMING</span></div>
+    <div class="subtitle">Play • Earn • Enjoy</div>
 
     <div id="loginBox">
-
       <h2>Login</h2>
-
       <input id="loginEmail" type="email" placeholder="Email">
-
       <input id="loginPassword" type="password" placeholder="Password">
-
       <button onclick="login()">Login</button>
-
       <div class="switch">
         Don't have an account?
         <a onclick="showSignup()">Sign Up</a>
       </div>
-
     </div>
 
-
     <div id="signupBox" style="display:none;">
-
       <h2>Create Account</h2>
-
       <input id="signupEmail" type="email" placeholder="Email">
-
       <input id="signupPassword" type="password" placeholder="Password">
-
       <button onclick="signup()">Sign Up</button>
-
       <div class="switch">
         Already have an account?
         <a onclick="showLogin()">Login</a>
       </div>
-
     </div>
 
     <div id="message" class="message"></div>
@@ -271,15 +322,8 @@
   <!-- DASHBOARD -->
   <div id="dashboard" class="dashboard">
 
-    <div class="logo">
-      XALLO-<span>GAMING</span>
-    </div>
-
-    <div class="subtitle">
-      Play • Earn • Enjoy
-    </div>
-
-    <h2>Welcome 🎮</h2>
+    <div class="logo">XALLO-<span>GAMING</span></div>
+    <div class="subtitle">Play • Earn • Enjoy</div>
 
     <div class="email" id="userEmail"></div>
 
@@ -288,26 +332,56 @@
       <div class="coin-number" id="coins">0</div>
     </div>
 
-    <!-- SPIN WHEEL -->
-    <div class="wheel-wrapper">
-      <div class="wheel-pointer">▼</div>
-      <div class="wheel" id="wheel"></div>
-      <div class="wheel-center">🪙</div>
+    <!-- NAV TABS -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showTab('home')">🏠 Home</button>
+      <button class="nav-tab" onclick="showTab('shop')">🛒 Shop</button>
+      <button class="nav-tab" onclick="showTab('mycards')">🎴 My Cards</button>
     </div>
 
-    <button onclick="spinWheel()" id="spinBtn" style="background: #8b5cf6;">
-      🎡 Spin the Wheel
-    </button>
 
-    <button onclick="earnCoins()" style="background: #10b981;">
-      + 10 Coins
-    </button>
+    <!-- HOME TAB -->
+    <div id="homeTab">
 
-    <button onclick="claimDailyBonus()" style="background: #f59e0b;">
-      🎁 Daily Bonus (+100)
-    </button>
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer">▼</div>
+        <div class="wheel" id="wheel"></div>
+        <div class="wheel-center">🪙</div>
+      </div>
 
-    <button class="logout" onclick="logout()" style="margin-top: 10px;">
+      <button onclick="spinWheel()" id="spinBtn" style="background: #8b5cf6;">
+        🎡 Spin the Wheel
+      </button>
+
+      <button onclick="earnCoins()" style="background: #10b981;">
+        + 10 Coins
+      </button>
+
+      <button onclick="claimDailyBonus()" style="background: #f59e0b;">
+        🎁 Daily Bonus (+100)
+      </button>
+
+    </div>
+
+
+    <!-- SHOP TAB -->
+    <div id="shopTab" style="display:none;">
+      <h2 style="margin-top: 10px;">🛒 Shop</h2>
+      <p style="color: #9da8bd; font-size: 14px; margin-bottom: 10px;">
+        Buy cards and get bonus coins!
+      </p>
+      <div id="cardsList" class="shop-grid"></div>
+    </div>
+
+
+    <!-- MY CARDS TAB -->
+    <div id="mycardsTab" style="display:none;">
+      <h2 style="margin-top: 10px;">🎴 My Cards</h2>
+      <div id="myCardsList" class="shop-grid"></div>
+    </div>
+
+
+    <button class="logout" onclick="logout()" style="margin-top: 15px;">
       Logout
     </button>
 
@@ -318,29 +392,33 @@
 
 <script>
 
-const SUPABASE_URL =
-"https://vnyprsjjmmjahkisozib.supabase.co";
+const SUPABASE_URL = "https://vnyprsjjmmjahkisozib.supabase.co";
+const SUPABASE_KEY = "sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
 
-const SUPABASE_KEY =
-"sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const supabaseClient =
-window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-
-// WHEEL PRIZES
 const PRIZES = [10, 20, 50, 100, 200, 500];
-const COLORS = [
-  "#ef4444", "#f59e0b", "#10b981",
-  "#3b82f6", "#8b5cf6", "#ec4899"
-];
+const COLORS = ["#ef4444", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6", "#ec4899"];
 
 
-// BUILD WHEEL
+// ============ TABS ============
+function showTab(tab) {
+  document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+  event.target.classList.add("active");
+
+  document.getElementById("homeTab").style.display = tab === "home" ? "block" : "none";
+  document.getElementById("shopTab").style.display = tab === "shop" ? "block" : "none";
+  document.getElementById("mycardsTab").style.display = tab === "mycards" ? "block" : "none";
+
+  if (tab === "shop") loadShop();
+  if (tab === "mycards") loadMyCards();
+}
+
+
+// ============ WHEEL ============
 function buildWheel() {
   const wheel = document.getElementById("wheel");
   wheel.innerHTML = "";
-
   const sliceAngle = 360 / PRIZES.length;
 
   PRIZES.forEach((prize, i) => {
@@ -349,14 +427,7 @@ function buildWheel() {
     sector.style.background = COLORS[i];
     sector.style.transform = `rotate(${i * sliceAngle}deg)`;
     sector.style.clipPath = "polygon(100% 100%, 100% 0, 0 0)";
-    sector.style.transformOrigin = "100% 100%";
-    sector.style.position = "absolute";
-    sector.style.top = "0";
-    sector.style.left = "0";
-    sector.style.width = "50%";
-    sector.style.height = "50%";
 
-    // Text label
     const label = document.createElement("span");
     label.textContent = prize;
     label.style.position = "absolute";
@@ -365,7 +436,6 @@ function buildWheel() {
     label.style.transform = "rotate(45deg)";
     label.style.fontSize = "16px";
     label.style.fontWeight = "bold";
-    label.style.color = "white";
     sector.appendChild(label);
 
     wheel.appendChild(sector);
@@ -373,12 +443,10 @@ function buildWheel() {
 }
 
 
-// SPIN WHEEL
 let isSpinning = false;
 
 async function spinWheel() {
   if (isSpinning) return;
-
   const email = document.getElementById("userEmail").textContent;
   if (!email) return;
 
@@ -387,10 +455,7 @@ async function spinWheel() {
   btn.disabled = true;
   btn.textContent = "Spinning...";
 
-  const { data, error } = await supabaseClient.rpc(
-    "spin_wheel",
-    { user_email: email }
-  );
+  const { data, error } = await supabaseClient.rpc("spin_wheel", { user_email: email });
 
   if (error) {
     alert("Error: " + error.message);
@@ -408,16 +473,13 @@ async function spinWheel() {
     return;
   }
 
-  // Rotate wheel to the winning sector
   const sectorAngle = 360 / PRIZES.length;
-  const targetAngle = 360 * 5
-    + (360 - (data.prize_index * sectorAngle + sectorAngle / 2));
+  const targetAngle = 360 * 5 + (360 - (data.prize_index * sectorAngle + sectorAngle / 2));
 
   const wheel = document.getElementById("wheel");
   wheel.style.transition = "transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)";
   wheel.style.transform = `rotate(${targetAngle}deg)`;
 
-  // Wait for animation
   setTimeout(() => {
     document.getElementById("coins").textContent = data.coins;
     alert("🎉 You won " + data.prize + " Coins!");
@@ -426,14 +488,106 @@ async function spinWheel() {
     btn.disabled = false;
     btn.textContent = "🎡 Spin the Wheel";
 
-    // Reset wheel rotation (silently)
     wheel.style.transition = "none";
     wheel.style.transform = `rotate(0deg)`;
   }, 4200);
 }
 
 
-// MESSAGE
+// ============ SHOP ============
+async function loadShop() {
+  const { data, error } = await supabaseClient.from("cards").select("*").order("id");
+
+  if (error || !data) {
+    document.getElementById("cardsList").innerHTML = "<p style='color:#ff7777;'>Error loading cards</p>";
+    return;
+  }
+
+  const list = document.getElementById("cardsList");
+  list.innerHTML = "";
+
+  data.forEach(card => {
+    const div = document.createElement("div");
+    div.className = "card-item";
+    div.style.borderColor = card.color;
+    div.innerHTML = `
+      <div class="card-icon">${card.icon}</div>
+      <div class="card-name">${card.name}</div>
+      <div class="card-company">${card.company}</div>
+      <div class="card-price">🪙 ${card.price}</div>
+      <div style="color:#10b981; font-size:11px; margin-bottom:6px;">+${card.bonus_coins} bonus</div>
+      <button class="card-buy" onclick="buyCard(${card.id}, ${card.price})">Buy</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+
+async function buyCard(cardId, price) {
+  const email = document.getElementById("userEmail").textContent;
+  if (!email) return;
+
+  if (!confirm("Buy this card for " + price + " Coins?")) return;
+
+  const { data, error } = await supabaseClient.rpc("buy_card", {
+    user_email: email,
+    card_id_param: cardId
+  });
+
+  if (error) {
+    alert("Error: " + error.message);
+    return;
+  }
+
+  if (data.success) {
+    document.getElementById("coins").textContent = data.coins;
+    alert("🎉 " + data.message + " (+" + data.bonus + " bonus)");
+    loadShop();
+  } else {
+    alert("❌ " + data.message);
+  }
+}
+
+
+// ============ MY CARDS ============
+async function loadMyCards() {
+  const email = document.getElementById("userEmail").textContent;
+  if (!email) return;
+
+  const { data, error } = await supabaseClient
+    .from("user_cards")
+    .select("*, cards(*)")
+    .eq("user_email", email);
+
+  if (error || !data) {
+    document.getElementById("myCardsList").innerHTML = "<p style='color:#9da8bd;'>No cards yet</p>";
+    return;
+  }
+
+  const list = document.getElementById("myCardsList");
+  list.innerHTML = "";
+
+  if (data.length === 0) {
+    list.innerHTML = "<p style='color:#9da8bd; grid-column: span 2;'>You don't have any cards yet. Buy some in the Shop!</p>";
+    return;
+  }
+
+  data.forEach(item => {
+    const card = item.cards;
+    const div = document.createElement("div");
+    div.className = "card-item";
+    div.style.borderColor = card.color;
+    div.innerHTML = `
+      <div class="card-icon">${card.icon}</div>
+      <div class="card-name">${card.name}</div>
+      <div class="card-company">${card.company}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+
+// ============ MESSAGE ============
 function showMessage(text, type) {
   const message = document.getElementById("message");
   message.textContent = text;
@@ -441,7 +595,6 @@ function showMessage(text, type) {
 }
 
 
-// SHOW LOGIN
 function showLogin() {
   document.getElementById("loginBox").style.display = "block";
   document.getElementById("signupBox").style.display = "none";
@@ -449,7 +602,6 @@ function showLogin() {
 }
 
 
-// SHOW SIGNUP
 function showSignup() {
   document.getElementById("loginBox").style.display = "none";
   document.getElementById("signupBox").style.display = "block";
@@ -457,7 +609,7 @@ function showSignup() {
 }
 
 
-// SIGN UP
+// ============ SIGNUP ============
 async function signup() {
   const email = document.getElementById("signupEmail").value.trim();
   const password = document.getElementById("signupPassword").value;
@@ -471,11 +623,7 @@ async function signup() {
     return;
   }
 
-  const { data, error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password
-  });
-
+  const { error } = await supabaseClient.auth.signUp({ email, password });
   if (error) {
     showMessage(error.message, "error");
     return;
@@ -484,7 +632,7 @@ async function signup() {
 }
 
 
-// LOGIN
+// ============ LOGIN ============
 async function login() {
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
@@ -494,11 +642,7 @@ async function login() {
     return;
   }
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
-    email: email,
-    password: password
-  });
-
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error) {
     showMessage(error.message, "error");
     return;
@@ -507,30 +651,25 @@ async function login() {
 }
 
 
-// DASHBOARD
+// ============ DASHBOARD ============
 async function showDashboard(user) {
   document.getElementById("authBox").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
   document.getElementById("userEmail").textContent = user.email;
 
   const { data, error } = await supabaseClient
-    .from("users")
-    .select("coins")
-    .eq("email", user.email)
-    .single();
+    .from("users").select("coins").eq("email", user.email).single();
 
   if (!error && data) {
     document.getElementById("coins").textContent = data.coins || 0;
   } else {
-    await supabaseClient
-      .from("users")
-      .insert({ email: user.email, coins: 0 });
+    await supabaseClient.from("users").insert({ email: user.email, coins: 0 });
     document.getElementById("coins").textContent = "0";
   }
 }
 
 
-// EARN COINS
+// ============ EARN COINS ============
 async function earnCoins() {
   const email = document.getElementById("userEmail").textContent;
   if (!email) return;
@@ -539,10 +678,9 @@ async function earnCoins() {
   btn.disabled = true;
   btn.textContent = "...";
 
-  const { data, error } = await supabaseClient.rpc(
-    "add_coins",
-    { user_email: email, amount: 10 }
-  );
+  const { data, error } = await supabaseClient.rpc("add_coins", {
+    user_email: email, amount: 10
+  });
 
   if (error) {
     alert("Error: " + error.message);
@@ -557,7 +695,7 @@ async function earnCoins() {
 }
 
 
-// CLAIM DAILY BONUS
+// ============ DAILY BONUS ============
 async function claimDailyBonus() {
   const email = document.getElementById("userEmail").textContent;
   if (!email) return;
@@ -567,10 +705,7 @@ async function claimDailyBonus() {
   const originalText = btn.textContent;
   btn.textContent = "...";
 
-  const { data, error } = await supabaseClient.rpc(
-    "claim_daily_bonus",
-    { user_email: email }
-  );
+  const { data, error } = await supabaseClient.rpc("claim_daily_bonus", { user_email: email });
 
   if (error) {
     alert("Error: " + error.message);
@@ -591,7 +726,7 @@ async function claimDailyBonus() {
 }
 
 
-// LOGOUT
+// ============ LOGOUT ============
 async function logout() {
   await supabaseClient.auth.signOut();
   document.getElementById("dashboard").style.display = "none";
@@ -600,13 +735,12 @@ async function logout() {
 }
 
 
-// CHECK USER
+// ============ CHECK USER ============
 async function checkUser() {
   const { data } = await supabaseClient.auth.getUser();
-  if (data.user) {
-    showDashboard(data.user);
-  }
+  if (data.user) showDashboard(data.user);
 }
+
 
 // INIT
 buildWheel();
