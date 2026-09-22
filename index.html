@@ -73,13 +73,13 @@ button:disabled { opacity: 0.6; }
   z-index: 5; display: flex; align-items: center; justify-content: center; font-size: 24px;
 }
 .nav-tabs {
-  display: flex; gap: 3px; margin: 20px 0;
+  display: flex; gap: 2px; margin: 20px 0;
   background: #0c1b2e; padding: 5px; border-radius: 14px;
 }
 .nav-tab {
   flex: 1; padding: 10px 2px; border-radius: 10px;
   background: transparent; color: #9da8bd;
-  font-size: 10px; margin: 0; cursor: pointer;
+  font-size: 9px; margin: 0; cursor: pointer;
 }
 .nav-tab.active { background: #08a9ff; color: white; }
 .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
@@ -142,6 +142,23 @@ button:disabled { opacity: 0.6; }
 .won-card.rare { border-color: #3b82f6; }
 .won-card.epic { border-color: #a855f7; }
 .won-card.legendary { border-color: #ffd54a; }
+.ach-grid { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; }
+.ach-item {
+  display: flex; align-items: center; gap: 12px; padding: 14px;
+  border-radius: 14px; background: #0c1b2e;
+  border: 2px solid #315174; opacity: 0.5;
+}
+.ach-item.unlocked {
+  opacity: 1; border-color: #ffd54a;
+  background: linear-gradient(135deg, #1a2340, #1a1400);
+  box-shadow: 0 0 20px rgba(255, 213, 74, .3);
+}
+.ach-icon { font-size: 32px; min-width: 40px; text-align: center; }
+.ach-info { flex: 1; text-align: left; }
+.ach-name { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+.ach-desc { font-size: 11px; color: #9da8bd; margin-bottom: 4px; }
+.ach-reward { color: #ffd54a; font-size: 12px; font-weight: bold; }
+.ach-status { font-size: 22px; }
 </style>
 </head>
 <body>
@@ -176,11 +193,12 @@ button:disabled { opacity: 0.6; }
       <div class="coin-number" id="coins">0</div>
     </div>
     <div class="nav-tabs">
-      <button class="nav-tab active" data-tab="home">🏠 Home</button>
-      <button class="nav-tab" data-tab="shop">🛒 Shop</button>
-      <button class="nav-tab" data-tab="packs">🎁 Packs</button>
-      <button class="nav-tab" data-tab="mycards">🎴 Cards</button>
-      <button class="nav-tab" data-tab="leaderboard">🏆 Top</button>
+      <button class="nav-tab active" data-tab="home">🏠</button>
+      <button class="nav-tab" data-tab="shop">🛒</button>
+      <button class="nav-tab" data-tab="packs">🎁</button>
+      <button class="nav-tab" data-tab="mycards">🎴</button>
+      <button class="nav-tab" data-tab="achievements">🏅</button>
+      <button class="nav-tab" data-tab="leaderboard">🏆</button>
     </div>
     <div id="homeTab">
       <div class="wheel-wrapper">
@@ -194,7 +212,7 @@ button:disabled { opacity: 0.6; }
     </div>
     <div id="shopTab" style="display:none;">
       <h2 style="margin-top: 10px;">🛒 Shop</h2>
-      <p style="color: #9da8bd; font-size: 14px; margin-bottom: 10px;">Buy cards and get bonus coins!</p>
+      <p style="color: #9da8bd; font-size: 14px; margin-bottom: 10px;">Buy cards!</p>
       <div id="cardsList" class="shop-grid"></div>
     </div>
     <div id="packsTab" style="display:none;">
@@ -205,6 +223,11 @@ button:disabled { opacity: 0.6; }
     <div id="mycardsTab" style="display:none;">
       <h2 style="margin-top: 10px;">🎴 My Cards</h2>
       <div id="myCardsList" class="shop-grid"></div>
+    </div>
+    <div id="achievementsTab" style="display:none;">
+      <h2 style="margin-top: 10px;">🏅 Achievements</h2>
+      <p style="color: #9da8bd; font-size: 14px; margin-bottom: 10px;">Unlock and earn coins!</p>
+      <div id="achievementsList" class="ach-grid"></div>
     </div>
     <div id="leaderboardTab" style="display:none;">
       <h2 style="margin-top: 10px;">🏆 Leaderboard</h2>
@@ -230,8 +253,8 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const PRIZES = [10, 20, 50, 100, 200, 500];
 const COLORS = ["#ef4444", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6", "#ec4899"];
 const RARITY_LABELS = {
-  common: "🥉 COMMON", rare: "🥈 RARE",
-  epic: "🥇 EPIC", legendary: "💎 LEGENDARY"
+  common: "🥉 C", rare: "🥈 R",
+  epic: "🥇 E", legendary: "💎 L"
 };
 
 function $(id) { return document.getElementById(id); }
@@ -242,13 +265,13 @@ document.querySelectorAll(".nav-tab").forEach(tab => {
     const t = tab.dataset.tab;
     document.querySelectorAll(".nav-tab").forEach(x => x.classList.remove("active"));
     tab.classList.add("active");
-    ["home", "shop", "packs", "mycards", "leaderboard"].forEach(name => {
-      $[name + "Tab"] = $(name + "Tab");
+    ["home", "shop", "packs", "mycards", "achievements", "leaderboard"].forEach(name => {
       $(name + "Tab").style.display = (name === t) ? "block" : "none";
     });
     if (t === "shop") loadShop();
     if (t === "packs") loadPacks();
     if (t === "mycards") loadMyCards();
+    if (t === "achievements") loadAchievements();
     if (t === "leaderboard") loadLeaderboard();
   });
 });
@@ -326,7 +349,7 @@ async function loadShop() {
       <div class="card-name">${card.name}</div>
       <div class="card-company">${card.company}</div>
       <div class="card-price">🪙 ${card.price}</div>
-      <div style="color:#10b981;font-size:11px;margin-bottom:6px;">+${card.bonus_coins} bonus</div>
+      <div style="color:#10b981;font-size:11px;margin-bottom:6px;">+${card.bonus_coins}</div>
       <button class="card-buy" data-id="${card.id}" data-price="${card.price}">Buy</button>`;
     list.appendChild(div);
   });
@@ -338,7 +361,7 @@ async function loadShop() {
 async function buyCard(cardId, price) {
   const email = $("userEmail").textContent;
   if (!email) return;
-  if (!confirm("Buy this card for " + price + " Coins?")) return;
+  if (!confirm("Buy for " + price + " Coins?")) return;
   const { data, error } = await supabaseClient.rpc("buy_card", { user_email: email, card_id_param: cardId });
   if (error) { alert("Error: " + error.message); return; }
   if (data.success) {
@@ -360,7 +383,7 @@ async function loadPacks() {
     div.innerHTML = `
       <div class="pack-icon">${pack.icon}</div>
       <div class="pack-name">${pack.name}</div>
-      <div class="pack-info">${pack.cards_count} random cards</div>
+      <div class="pack-info">${pack.cards_count} cards</div>
       <div class="pack-price">🪙 ${pack.price}</div>
       <button style="background:${pack.color};" data-id="${pack.id}" data-price="${pack.price}">Open Pack</button>`;
     list.appendChild(div);
@@ -373,7 +396,7 @@ async function loadPacks() {
 async function openPack(packId, price) {
   const email = $("userEmail").textContent;
   if (!email) return;
-  if (!confirm("Open this pack for " + price + " Coins?")) return;
+  if (!confirm("Open for " + price + " Coins?")) return;
   const { data, error } = await supabaseClient.rpc("buy_pack", { user_email: email, pack_id_param: packId });
   if (error) { alert("Error: " + error.message); return; }
   if (data.success) {
@@ -443,122 +466,36 @@ async function sellCard(userCardId) {
   } else alert("❌ " + data.message);
 }
 
-// LEADERBOARD
-async function loadLeaderboard() {
-  const list = $("leaderboardList");
+// ACHIEVEMENTS
+async function loadAchievements() {
+  const email = $("userEmail").textContent;
+  if (!email) return;
+  
+  const list = $("achievementsList");
   list.innerHTML = "<p style='color:#9da8bd;'>Loading...</p>";
-  const { data, error } = await supabaseClient.rpc("get_leaderboard");
+  
+  const { data: checkData } = await supabaseClient.rpc("check_achievements", { user_email: email });
+  
+  if (checkData && checkData.reward_total > 0) {
+    const { data: u } = await supabaseClient.from("users").select("coins").eq("email", email).single();
+    if (u) $("coins").textContent = u.coins;
+    
+    let msg = "🎉 New achievements!\n\n";
+    checkData.unlocked.forEach(a => {
+      msg += a.icon + " " + a.name + " (+" + a.reward + ")\n";
+    });
+    msg += "\nTotal: +" + checkData.reward_total + " Coins";
+    alert(msg);
+  }
+  
+  const { data, error } = await supabaseClient.rpc("get_user_achievements", { user_email: email });
+  
   if (error || !data) {
     list.innerHTML = "<p style='color:#ff7777;'>Error</p>";
     return;
   }
-  const myEmail = $("userEmail").textContent;
+  
   list.innerHTML = "";
-  data.forEach(row => {
+  data.forEach(ach => {
     const div = document.createElement("div");
-    div.className = "lb-row";
-    if (row.rank === 1) div.classList.add("top-1");
-    if (row.rank === 2) div.classList.add("top-2");
-    if (row.rank === 3) div.classList.add("top-3");
-    if (row.email === myEmail) div.classList.add("me");
-    let medal = row.rank === 1 ? "🥇" : row.rank === 2 ? "🥈" : row.rank === 3 ? "🥉" : "#" + row.rank;
-    div.innerHTML = `<div class="lb-rank">${medal}</div>
-      <div class="lb-email">${row.email}${row.email === myEmail ? " (You)" : ""}</div>
-      <div class="lb-coins">🪙 ${row.coins}</div>`;
-    list.appendChild(div);
-  });
-}
-
-// AUTH
-function showMessage(text, type) {
-  const m = $("message");
-  m.textContent = text;
-  m.className = "message " + type;
-}
-
-$("showSignupLink").addEventListener("click", () => {
-  $("loginBox").style.display = "none";
-  $("signupBox").style.display = "block";
-  $("message").style.display = "none";
-});
-
-$("showLoginLink").addEventListener("click", () => {
-  $("loginBox").style.display = "block";
-  $("signupBox").style.display = "none";
-  $("message").style.display = "none";
-});
-
-$("signupBtn").addEventListener("click", async () => {
-  const email = $("signupEmail").value.trim();
-  const password = $("signupPassword").value;
-  if (!email || !password) { showMessage("Enter email and password.", "error"); return; }
-  if (password.length < 6) { showMessage("Password must be at least 6 characters.", "error"); return; }
-  const { error } = await supabaseClient.auth.signUp({ email, password });
-  if (error) { showMessage(error.message, "error"); return; }
-  showMessage("Account created! You can now login.", "success");
-});
-
-$("loginBtn").addEventListener("click", async () => {
-  const email = $("loginEmail").value.trim();
-  const password = $("loginPassword").value;
-  if (!email || !password) { showMessage("Enter email and password.", "error"); return; }
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error) { showMessage(error.message, "error"); return; }
-  showDashboard(data.user);
-});
-
-async function showDashboard(user) {
-  $("authBox").style.display = "none";
-  $("dashboard").style.display = "block";
-  $("userEmail").textContent = user.email;
-  const { data } = await supabaseClient.from("users").select("coins").eq("email", user.email).single();
-  if (data) $("coins").textContent = data.coins || 0;
-  else {
-    await supabaseClient.from("users").insert({ email: user.email, coins: 0 });
-    $("coins").textContent = "0";
-  }
-}
-
-$("earnBtn").addEventListener("click", async (e) => {
-  const email = $("userEmail").textContent;
-  if (!email) return;
-  const btn = e.target;
-  btn.disabled = true; btn.textContent = "...";
-  const { data, error } = await supabaseClient.rpc("add_coins", { user_email: email, amount: 10 });
-  if (error) { alert("Error: " + error.message); btn.disabled = false; btn.textContent = "+ 10 Coins"; return; }
-  $("coins").textContent = data;
-  btn.disabled = false; btn.textContent = "+ 10 Coins";
-});
-
-$("bonusBtn").addEventListener("click", async (e) => {
-  const email = $("userEmail").textContent;
-  if (!email) return;
-  const btn = e.target;
-  const original = btn.textContent;
-  btn.disabled = true; btn.textContent = "...";
-  const { data, error } = await supabaseClient.rpc("claim_daily_bonus", { user_email: email });
-  if (error) { alert("Error: " + error.message); btn.disabled = false; btn.textContent = original; return; }
-  if (data.success) { $("coins").textContent = data.coins; alert("🎉 " + data.message); }
-  else alert("⏳ " + data.message);
-  btn.disabled = false; btn.textContent = original;
-});
-
-$("logoutBtn").addEventListener("click", async () => {
-  await supabaseClient.auth.signOut();
-  $("dashboard").style.display = "none";
-  $("authBox").style.display = "block";
-  $("loginBox").style.display = "block";
-  $("signupBox").style.display = "none";
-});
-
-async function checkUser() {
-  const { data } = await supabaseClient.auth.getUser();
-  if (data.user) showDashboard(data.user);
-}
-
-buildWheel();
-checkUser();
-</script>
-
-</body>
-</html>
+    div.className = "ach-item" +
