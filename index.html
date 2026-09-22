@@ -1,610 +1,771 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XALLO-GAMING</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-body {
-  min-height: 100vh;
-  background: radial-gradient(circle at top, #102a45, #050713 60%);
-  color: white;
-  display: flex; justify-content: center; align-items: center;
-  padding: 20px;
-}
-.container {
-  width: 100%; max-width: 430px;
-  background: rgba(17, 24, 45, .97);
-  border: 1px solid #263553; border-radius: 25px;
-  padding: 32px 25px;
-  box-shadow: 0 0 40px rgba(0,170,255,.18);
-}
-.logo { text-align: center; font-size: 34px; font-weight: bold; margin-bottom: 8px; }
-.logo span { color: #08a9ff; }
-.subtitle { text-align: center; color: #9da8bd; margin-bottom: 30px; }
-h2 { margin-bottom: 20px; }
-input {
-  width: 100%; padding: 16px; margin-bottom: 14px;
-  border-radius: 13px; border: 1px solid #283653;
-  background: #070b19; color: white; font-size: 16px; outline: none;
-}
-button {
-  width: 100%; padding: 16px; border: 0; border-radius: 13px;
-  background: #08a9ff; color: white; font-size: 17px;
-  font-weight: bold; cursor: pointer; margin-top: 5px;
-}
-button:disabled { opacity: 0.6; }
-.switch { text-align: center; margin-top: 22px; color: #9da8bd; }
-.switch a { color: #08a9ff; font-weight: bold; cursor: pointer; }
-.message {
-  margin-top: 18px; padding: 12px; border-radius: 10px;
-  text-align: center; display: none;
-}
-.success { display: block; color: #55e6a5; background: rgba(0,200,120,.12); }
-.error { display: block; color: #ff7777; background: rgba(255,60,60,.12); }
-.dashboard { display: none; text-align: center; }
-.email { color: #b8c1d4; margin: 15px 0; word-break: break-word; }
-.coins {
-  margin: 25px 0; padding: 22px; border-radius: 18px;
-  background: #0c1b2e; border: 1px solid #315174;
-}
-.coin-number { color: #ffd54a; font-size: 40px; font-weight: bold; margin-top: 8px; }
-.logout { background: #e53935; }
-.nav-tabs {
-  display: flex; gap: 2px; margin: 20px 0;
-  background: #0c1b2e; padding: 5px; border-radius: 14px;
-}
-.nav-tab {
-  flex: 1; padding: 10px 2px; border-radius: 10px;
-  background: transparent; color: #9da8bd;
-  font-size: 16px; margin: 0; cursor: pointer;
-}
-.nav-tab.active { background: #08a9ff; color: white; }
-.wheel-wrapper { position: relative; width: 260px; height: 260px; margin: 25px auto; }
-.wheel-pointer {
-  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-  font-size: 32px; z-index: 10;
-}
-.wheel {
-  width: 100%; height: 100%; border-radius: 50%;
-  border: 6px solid #ffd54a; position: relative; overflow: hidden;
-  transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-}
-.wheel-sector {
-  position: absolute; top: 0; left: 0; width: 50%; height: 50%;
-  transform-origin: 100% 100%; display: flex; align-items: center;
-  justify-content: center; font-weight: bold; color: white;
-}
-.wheel-center {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 50px; height: 50px; background: #ffd54a; border-radius: 50%;
-  z-index: 5; display: flex; align-items: center; justify-content: center; font-size: 24px;
-}
-.shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
-.card-item {
-  background: #0c1b2e; border: 2px solid #315174;
-  border-radius: 14px; padding: 14px 10px; text-align: center; position: relative;
-}
-.card-item.rare { border-color: #3b82f6; }
-.card-item.epic { border-color: #a855f7; }
-.card-item.legendary { border-color: #ffd54a; }
-.rarity-badge {
-  position: absolute; top: 6px; right: 6px; font-size: 10px;
-  font-weight: bold; padding: 3px 7px; border-radius: 8px;
-}
-.rarity-badge.common { background: #6b7280; }
-.rarity-badge.rare { background: #3b82f6; }
-.rarity-badge.epic { background: #a855f7; }
-.rarity-badge.legendary { background: #ffd54a; color: #000; }
-.card-icon { font-size: 34px; margin: 8px 0 6px; }
-.card-name { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
-.card-company { font-size: 11px; color: #9da8bd; margin-bottom: 8px; }
-.card-price { color: #ffd54a; font-weight: bold; font-size: 15px; margin-bottom: 8px; }
-.card-buy { padding: 8px; font-size: 13px; margin: 0; background: #10b981; }
-.pack-item {
-  background: #0c1b2e; border: 2px solid #315174;
-  border-radius: 14px; padding: 20px 14px; text-align: center; margin-bottom: 12px;
-}
-.pack-icon { font-size: 56px; margin-bottom: 10px; }
-.pack-name { font-size: 17px; font-weight: bold; margin-bottom: 6px; }
-.pack-info { font-size: 13px; color: #9da8bd; margin-bottom: 12px; }
-.pack-price { color: #ffd54a; font-weight: bold; font-size: 20px; margin-bottom: 12px; }
-.leaderboard-list { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; }
-.lb-row {
-  display: flex; align-items: center; gap: 12px; padding: 14px;
-  border-radius: 14px; background: #0c1b2e; border: 1px solid #315174;
-}
-.lb-row.top-1 { background: linear-gradient(135deg, #4a3a00, #2a1f00); border-color: #ffd54a; }
-.lb-row.top-2 { background: #2e2e2e; border-color: #c0c0c0; }
-.lb-row.top-3 { background: #3a2a1a; border-color: #cd7f32; }
-.lb-row.me { border-color: #08a9ff; }
-.lb-rank { font-size: 22px; font-weight: bold; min-width: 40px; text-align: center; }
-.lb-email { flex: 1; font-size: 12px; color: #b8c1d4; word-break: break-all; text-align: left; }
-.lb-coins { font-size: 15px; font-weight: bold; color: #ffd54a; }
-.ach-grid { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; }
-.ach-item {
-  display: flex; align-items: center; gap: 12px; padding: 14px;
-  border-radius: 14px; background: #0c1b2e;
-  border: 2px solid #315174; opacity: 0.5;
-}
-.ach-item.unlocked {
-  opacity: 1; border-color: #ffd54a;
-  background: linear-gradient(135deg, #1a2340, #1a1400);
-  box-shadow: 0 0 20px rgba(255, 213, 74, .3);
-}
-.ach-icon { font-size: 32px; min-width: 40px; text-align: center; }
-.ach-info { flex: 1; text-align: left; }
-.ach-name { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
-.ach-desc { font-size: 11px; color: #9da8bd; margin-bottom: 4px; }
-.ach-reward { color: #ffd54a; font-size: 12px; font-weight: bold; }
-.ach-status { font-size: 22px; }
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.85);
-  display: none; z-index: 100; justify-content: center; align-items: center; padding: 20px;
-}
-.modal-overlay.show { display: flex; }
-.modal {
-  background: linear-gradient(135deg, #1a2340, #0c1b2e);
-  border: 2px solid #ffd54a; border-radius: 20px;
-  padding: 24px; max-width: 380px; width: 100%; text-align: center;
-}
-.modal h3 { margin-bottom: 16px; color: #ffd54a; font-size: 24px; }
-.won-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
-.won-card {
-  background: #0c1b2e; border: 2px solid #315174;
-  border-radius: 12px; padding: 12px 6px; font-size: 12px;
-}
-.won-card.rare { border-color: #3b82f6; }
-.won-card.epic { border-color: #a855f7; }
-.won-card.legendary { border-color: #ffd54a; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>XALLO-GAMING</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, #12385a, #050713 60%);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 430px;
+      background: rgba(17, 24, 45, 0.97);
+      border: 1px solid #263553;
+      border-radius: 25px;
+      padding: 32px 25px;
+      box-shadow: 0 0 40px rgba(0, 170, 255, .18);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 34px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .logo span {
+      color: #08a9ff;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #9da8bd;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 14px;
+      border-radius: 13px;
+      border: 1px solid #283653;
+      background: #070b19;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #08a9ff;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      border: 0;
+      border-radius: 13px;
+      background: #08a9ff;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    button:active {
+      transform: scale(.98);
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 22px;
+      color: #9da8bd;
+    }
+
+    .switch a {
+      color: #08a9ff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .success {
+      display: block;
+      color: #55e6a5;
+      background: rgba(0, 200, 120, .12);
+    }
+
+    .error {
+      display: block;
+      color: #ff7777;
+      background: rgba(255, 60, 60, .12);
+    }
+
+    .dashboard {
+      display: none;
+      text-align: center;
+    }
+
+    .email {
+      color: #b8c1d4;
+      margin: 15px 0;
+      word-break: break-word;
+    }
+
+    .coins {
+      margin: 25px 0 15px;
+      padding: 22px;
+      border-radius: 18px;
+      background: #0c1b2e;
+      border: 1px solid #315174;
+    }
+
+    .coin-number {
+      color: #ffd54a;
+      font-size: 40px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .coin-button {
+      background: #16b978;
+      margin-bottom: 12px;
+    }
+
+    .coin-button:hover {
+      background: #13a86c;
+    }
+
+    .logout {
+      background: #e53935;
+    }
+
+    .logout:hover {
+      background: #c62828;
+    }
+
+    .loading {
+      opacity: .7;
+      pointer-events: none;
+    }
+  </style>
 </head>
+
 <body>
 
 <div class="container">
 
+  <!-- AUTH -->
   <div id="authBox">
-    <div class="logo">XALLO-<span>GAMING</span></div>
-    <div class="subtitle">Play • Earn • Enjoy</div>
 
-    <div id="loginBox">
-      <h2>Login</h2>
-      <input id="loginEmail" type="email" placeholder="Email">
-      <input id="loginPassword" type="password" placeholder="Password">
-      <button onclick="doLogin()">Login</button>
-      <div class="switch">Don't have an account? <a onclick="showSignup()">Sign Up</a></div>
+    <div class="logo">
+      XALLO-<span>GAMING</span>
     </div>
 
+    <div class="subtitle">
+      Play • Earn • Enjoy
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginBox">
+
+      <h2>Login</h2>
+
+      <input
+        id="loginEmail"
+        type="email"
+        placeholder="Email"
+        autocomplete="email"
+      >
+
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+      >
+
+      <button id="loginButton" onclick="login()">
+        Login
+      </button>
+
+      <div class="switch">
+        Don't have an account?
+        <a onclick="showSignup()">Sign Up</a>
+      </div>
+
+    </div>
+
+    <!-- SIGN UP -->
     <div id="signupBox" style="display:none;">
+
       <h2>Create Account</h2>
-      <input id="signupEmail" type="email" placeholder="Email">
-      <input id="signupPassword" type="password" placeholder="Password">
-      <button onclick="doSignup()">Sign Up</button>
-      <div class="switch">Already have an account? <a onclick="showLogin()">Login</a></div>
+
+      <input
+        id="signupEmail"
+        type="email"
+        placeholder="Email"
+        autocomplete="email"
+      >
+
+      <input
+        id="signupPassword"
+        type="password"
+        placeholder="Password"
+        autocomplete="new-password"
+      >
+
+      <button id="signupButton" onclick="signup()">
+        Sign Up
+      </button>
+
+      <div class="switch">
+        Already have an account?
+        <a onclick="showLogin()">Login</a>
+      </div>
+
     </div>
 
     <div id="message" class="message"></div>
+
   </div>
 
+
+  <!-- DASHBOARD -->
   <div id="dashboard" class="dashboard">
-    <div class="logo">XALLO-<span>GAMING</span></div>
-    <div class="subtitle">Play • Earn • Enjoy</div>
+
+    <div class="logo">
+      XALLO-<span>GAMING</span>
+    </div>
+
+    <div class="subtitle">
+      Play • Earn • Enjoy
+    </div>
+
+    <h2>Welcome 🎮</h2>
+
     <div class="email" id="userEmail"></div>
+
     <div class="coins">
       🪙 Your Coins
-      <div class="coin-number" id="coins">0</div>
-    </div>
 
-    <div class="nav-tabs">
-      <button class="nav-tab active" onclick="switchTab('home', this)">🏠</button>
-      <button class="nav-tab" onclick="switchTab('shop', this)">🛒</button>
-      <button class="nav-tab" onclick="switchTab('packs', this)">🎁</button>
-      <button class="nav-tab" onclick="switchTab('mycards', this)">🎴</button>
-      <button class="nav-tab" onclick="switchTab('achievements', this)">🏅</button>
-      <button class="nav-tab" onclick="switchTab('leaderboard', this)">🏆</button>
-    </div>
-
-    <div id="homeTab">
-      <div class="wheel-wrapper">
-        <div class="wheel-pointer">▼</div>
-        <div class="wheel" id="wheel"></div>
-        <div class="wheel-center">🪙</div>
+      <div class="coin-number" id="coins">
+        0
       </div>
-      <button onclick="doSpin()" id="spinBtn" style="background: #8b5cf6;">🎡 Spin the Wheel</button>
-      <button onclick="doEarn()" id="earnBtn" style="background: #10b981;">+ 10 Coins</button>
-      <button onclick="doBonus()" id="bonusBtn" style="background: #f59e0b;">🎁 Daily Bonus (+100)</button>
     </div>
 
-    <div id="shopTab" style="display:none;">
-      <h2 style="margin-top: 10px;">🛒 Shop</h2>
-      <div id="cardsList" class="shop-grid"></div>
-    </div>
+    <button
+      class="coin-button"
+      id="coinButton"
+      onclick="addCoins()"
+    >
+      🎁 Get 10 Coins
+    </button>
 
-    <div id="packsTab" style="display:none;">
-      <h2 style="margin-top: 10px;">🎁 Packs</h2>
-      <div id="packsList"></div>
-    </div>
+    <button
+      class="logout"
+      onclick="logout()"
+    >
+      Logout
+    </button>
 
-    <div id="mycardsTab" style="display:none;">
-      <h2 style="margin-top: 10px;">🎴 My Cards</h2>
-      <div id="myCardsList" class="shop-grid"></div>
-    </div>
+    <div
+      id="dashboardMessage"
+      class="message"
+    ></div>
 
-    <div id="achievementsTab" style="display:none;">
-      <h2 style="margin-top: 10px;">🏅 Achievements</h2>
-      <div id="achievementsList" class="ach-grid"></div>
-    </div>
-
-    <div id="leaderboardTab" style="display:none;">
-      <h2 style="margin-top: 10px;">🏆 Leaderboard</h2>
-      <div id="leaderboardList" class="leaderboard-list"></div>
-    </div>
-
-    <button class="logout" onclick="doLogout()" style="margin-top: 15px;">Logout</button>
   </div>
 
 </div>
 
-<div class="modal-overlay" id="packModal">
-  <div class="modal">
-    <h3>🎉 You Got!</h3>
-    <div class="won-cards" id="wonCardsList"></div>
-    <button onclick="closePackModal()" style="background: #10b981;">Awesome!</button>
-  </div>
-</div>
 
 <script>
-var SUPABASE_URL = "https://vnyprsjjmmjahkisozib.supabase.co";
-var SUPABASE_KEY = "sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
-var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-var PRIZES = [10, 20, 50, 100, 200, 500];
-var COLORS = ["#ef4444", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6", "#ec4899"];
-var RARITY_LABELS = { common: "🥉 C", rare: "🥈 R", epic: "🥇 E", legendary: "💎 L" };
+const SUPABASE_URL =
+  "https://vnyprsjjmmjahkisozib.supabase.co";
 
-function el(id) { return document.getElementById(id); }
+const SUPABASE_KEY =
+  "sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+// ================================
+// MESSAGE
+// ================================
 
 function showMessage(text, type) {
-  var m = el("message");
-  m.textContent = text;
-  m.className = "message " + type;
+
+  const message =
+    document.getElementById("message");
+
+  message.textContent = text;
+
+  message.className =
+    "message " + type;
 }
 
-function showSignup() {
-  el("loginBox").style.display = "none";
-  el("signupBox").style.display = "block";
-  el("message").style.display = "none";
+
+// DASHBOARD MESSAGE
+
+function showDashboardMessage(text, type) {
+
+  const message =
+    document.getElementById("dashboardMessage");
+
+  message.textContent = text;
+
+  message.className =
+    "message " + type;
 }
+
+
+// ================================
+// SHOW LOGIN
+// ================================
 
 function showLogin() {
-  el("loginBox").style.display = "block";
-  el("signupBox").style.display = "none";
-  el("message").style.display = "none";
+
+  document.getElementById("loginBox")
+    .style.display = "block";
+
+  document.getElementById("signupBox")
+    .style.display = "none";
+
+  document.getElementById("message")
+    .style.display = "none";
 }
 
-async function doLogin() {
-  var email = el("loginEmail").value.trim();
-  var password = el("loginPassword").value;
-  if (!email || !password) { showMessage("Enter email and password.", "error"); return; }
-  var btn = el("loginBtn");
-  if (btn) { btn.disabled = true; btn.textContent = "Loading..."; }
-  try {
-    var res = await db.auth.signInWithPassword({ email: email, password: password });
-    if (btn) { btn.disabled = false; btn.textContent = "Login"; }
-    if (res.error) { showMessage(res.error.message, "error"); return; }
-    showDashboard(res.data.user);
-  } catch (e) {
-    if (btn) { btn.disabled = false; btn.textContent = "Login"; }
-    showMessage("Error: " + e.message, "error");
+
+// ================================
+// SHOW SIGNUP
+// ================================
+
+function showSignup() {
+
+  document.getElementById("loginBox")
+    .style.display = "none";
+
+  document.getElementById("signupBox")
+    .style.display = "block";
+
+  document.getElementById("message")
+    .style.display = "none";
+}
+
+
+// ================================
+// SIGN UP
+// ================================
+
+async function signup() {
+
+  const email =
+    document.getElementById("signupEmail")
+      .value.trim();
+
+  const password =
+    document.getElementById("signupPassword")
+      .value;
+
+
+  if (!email || !password) {
+
+    showMessage(
+      "Enter email and password.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (password.length < 6) {
+
+    showMessage(
+      "Password must be at least 6 characters.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const button =
+    document.getElementById("signupButton");
+
+  button.classList.add("loading");
+  button.textContent = "Creating...";
+
+
+  const { data, error } =
+    await supabaseClient.auth.signUp({
+      email: email,
+      password: password
+    });
+
+
+  button.classList.remove("loading");
+  button.textContent = "Sign Up";
+
+
+  if (error) {
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  showMessage(
+    "Account created successfully! 🎉",
+    "success"
+  );
+
+
+  // Create profile
+  await createUserProfile(email);
+
+
+  // Clear inputs
+  document.getElementById("signupEmail")
+    .value = "";
+
+  document.getElementById("signupPassword")
+    .value = "";
+}
+
+
+// ================================
+// CREATE USER PROFILE
+// ================================
+
+async function createUserProfile(email) {
+
+  const username =
+    email.split("@")[0];
+
+
+  const { error } =
+    await supabaseClient
+      .from("users")
+      .upsert(
+        {
+          email: email,
+          username: username,
+          coins: 0
+        },
+        {
+          onConflict: "email"
+        }
+      );
+
+
+  if (error) {
+
+    console.log(
+      "Profile error:",
+      error.message
+    );
   }
 }
 
-async function doSignup() {
-  var email = el("signupEmail").value.trim();
-  var password = el("signupPassword").value;
-  if (!email || !password) { showMessage("Enter email and password.", "error"); return; }
-  if (password.length < 6) { showMessage("Password must be 6+ characters.", "error"); return; }
-  try {
-    var res = await db.auth.signUp({ email: email, password: password });
-    if (res.error) { showMessage(res.error.message, "error"); return; }
-    showMessage("Account created! You can now login.", "success");
-  } catch (e) {
-    showMessage("Error: " + e.message, "error");
+
+// ================================
+// LOGIN
+// ================================
+
+async function login() {
+
+  const email =
+    document.getElementById("loginEmail")
+      .value.trim();
+
+  const password =
+    document.getElementById("loginPassword")
+      .value;
+
+
+  if (!email || !password) {
+
+    showMessage(
+      "Enter email and password.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const button =
+    document.getElementById("loginButton");
+
+  button.classList.add("loading");
+  button.textContent = "Logging in...";
+
+
+  const { data, error } =
+    await supabaseClient.auth
+      .signInWithPassword({
+        email: email,
+        password: password
+      });
+
+
+  button.classList.remove("loading");
+  button.textContent = "Login";
+
+
+  if (error) {
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (data.user) {
+
+    await createUserProfile(
+      data.user.email
+    );
+
+    showDashboard(data.user);
   }
 }
+
+
+// ================================
+// LOAD COINS
+// ================================
+
+async function loadCoins(user) {
+
+  const { data, error } =
+    await supabaseClient
+      .from("users")
+      .select("coins")
+      .eq("email", user.email)
+      .single();
+
+
+  if (!error && data) {
+
+    document.getElementById("coins")
+      .textContent =
+        data.coins || 0;
+
+  } else {
+
+    document.getElementById("coins")
+      .textContent = "0";
+  }
+}
+
+
+// ================================
+// DASHBOARD
+// ================================
 
 async function showDashboard(user) {
-  el("authBox").style.display = "none";
-  el("dashboard").style.display = "block";
-  el("userEmail").textContent = user.email;
-  try {
-    var res = await db.from("users").select("coins").eq("email", user.email).single();
-    if (res.data) {
-      el("coins").textContent = res.data.coins || 0;
-    } else {
-      await db.from("users").insert({ email: user.email, coins: 0 });
-      el("coins").textContent = "0";
-    }
-  } catch (e) { el("coins").textContent = "0"; }
-  buildWheel();
+
+  document.getElementById("authBox")
+    .style.display = "none";
+
+  document.getElementById("dashboard")
+    .style.display = "block";
+
+  document.getElementById("userEmail")
+    .textContent = user.email;
+
+
+  await createUserProfile(
+    user.email
+  );
+
+
+  await loadCoins(user);
 }
 
-async function doLogout() {
-  await db.auth.signOut();
-  el("dashboard").style.display = "none";
-  el("authBox").style.display = "block";
+
+// ================================
+// ADD 10 COINS
+// ================================
+
+async function addCoins() {
+
+  const { data: userData, error: userError } =
+    await supabaseClient.auth.getUser();
+
+
+  if (
+    userError ||
+    !userData.user
+  ) {
+
+    showDashboardMessage(
+      "Please login first.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const email =
+    userData.user.email;
+
+
+  const button =
+    document.getElementById("coinButton");
+
+  button.classList.add("loading");
+  button.textContent = "Adding...";
+
+
+  const { data, error } =
+    await supabaseClient
+      .from("users")
+      .select("coins")
+      .eq("email", email)
+      .single();
+
+
+  if (error || !data) {
+
+    button.classList.remove("loading");
+    button.textContent = "🎁 Get 10 Coins";
+
+    showDashboardMessage(
+      "User profile not found.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const currentCoins =
+    Number(data.coins) || 0;
+
+  const newCoins =
+    currentCoins + 10;
+
+
+  const { error: updateError } =
+    await supabaseClient
+      .from("users")
+      .update({
+        coins: newCoins
+      })
+      .eq("email", email);
+
+
+  button.classList.remove("loading");
+  button.textContent = "🎁 Get 10 Coins";
+
+
+  if (updateError) {
+
+    showDashboardMessage(
+      updateError.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  document.getElementById("coins")
+    .textContent = newCoins;
+
+
+  showDashboardMessage(
+    "🎉 10 Coins added successfully!",
+    "success"
+  );
+}
+
+
+// ================================
+// LOGOUT
+// ================================
+
+async function logout() {
+
+  await supabaseClient.auth.signOut();
+
+
+  document.getElementById("dashboard")
+    .style.display = "none";
+
+  document.getElementById("authBox")
+    .style.display = "block";
+
+
+  document.getElementById("dashboardMessage")
+    .style.display = "none";
+
+
   showLogin();
 }
 
-function switchTab(name, btn) {
-  var all = document.querySelectorAll(".nav-tab");
-  for (var i = 0; i < all.length; i++) all[i].classList.remove("active");
-  if (btn) btn.classList.add("active");
-  var tabs = ["home", "shop", "packs", "mycards", "achievements", "leaderboard"];
-  for (var j = 0; j < tabs.length; j++) {
-    el(tabs[j] + "Tab").style.display = (tabs[j] === name) ? "block" : "none";
-  }
-  if (name === "shop") loadShop();
-  if (name === "packs") loadPacks();
-  if (name === "mycards") loadMyCards();
-  if (name === "achievements") loadAchievements();
-  if (name === "leaderboard") loadLeaderboard();
-}
 
-function buildWheel() {
-  var wheel = el("wheel");
-  if (!wheel) return;
-  wheel.innerHTML = "";
-  var sliceAngle = 360 / PRIZES.length;
-  for (var i = 0; i < PRIZES.length; i++) {
-    var sector = document.createElement("div");
-    sector.className = "wheel-sector";
-    sector.style.background = COLORS[i];
-    sector.style.transform = "rotate(" + (i * sliceAngle) + "deg)";
-    sector.style.clipPath = "polygon(100% 100%, 100% 0, 0 0)";
-    var label = document.createElement("span");
-    label.textContent = PRIZES[i];
-    label.style.position = "absolute";
-    label.style.top = "50%";
-    label.style.left = "70%";
-    label.style.transform = "rotate(45deg)";
-    label.style.fontSize = "16px";
-    label.style.fontWeight = "bold";
-    sector.appendChild(label);
-    wheel.appendChild(sector);
+// ================================
+// CHECK USER
+// ================================
+
+async function checkUser() {
+
+  const { data } =
+    await supabaseClient.auth.getUser();
+
+
+  if (data.user) {
+
+    showDashboard(data.user);
+
   }
 }
 
-var isSpinning = false;
-async function doSpin() {
-  if (isSpinning) return;
-  var email = el("userEmail").textContent;
-  if (!email) return;
-  isSpinning = true;
-  var btn = el("spinBtn");
-  btn.disabled = true; btn.textContent = "Spinning...";
-  try {
-    var res = await db.rpc("spin_wheel", { user_email: email });
-    if (res.error) {
-      alert("Error: " + res.error.message);
-      isSpinning = false; btn.disabled = false; btn.textContent = "🎡 Spin the Wheel"; return;
-    }
-    if (!res.data.success) {
-      alert("⏳ " + res.data.message);
-      isSpinning = false; btn.disabled = false; btn.textContent = "🎡 Spin the Wheel"; return;
-    }
-    var sectorAngle = 360 / PRIZES.length;
-    var targetAngle = 360 * 5 + (360 - (res.data.prize_index * sectorAngle + sectorAngle / 2));
-    var wheel = el("wheel");
-    wheel.style.transition = "transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)";
-    wheel.style.transform = "rotate(" + targetAngle + "deg)";
-    setTimeout(function() {
-      el("coins").textContent = res.data.coins;
-      alert("🎉 You won " + res.data.prize + " Coins!");
-      isSpinning = false; btn.disabled = false; btn.textContent = "🎡 Spin the Wheel";
-      wheel.style.transition = "none";
-      wheel.style.transform = "rotate(0deg)";
-    }, 4200);
-  } catch (e) {
-    alert("Error: " + e.message);
-    isSpinning = false; btn.disabled = false; btn.textContent = "🎡 Spin the Wheel";
-  }
-}
 
-async function doEarn() {
-  var email = el("userEmail").textContent;
-  if (!email) return;
-  var btn = el("earnBtn");
-  btn.disabled = true; btn.textContent = "...";
-  try {
-    var res = await db.rpc("add_coins", { user_email: email, amount: 10 });
-    if (res.error) { alert("Error: " + res.error.message); btn.disabled = false; btn.textContent = "+ 10 Coins"; return; }
-    el("coins").textContent = res.data;
-    btn.disabled = false; btn.textContent = "+ 10 Coins";
-  } catch (e) {
-    alert("Error: " + e.message);
-    btn.disabled = false; btn.textContent = "+ 10 Coins";
-  }
-}
+// START
+checkUser();
 
-async function doBonus() {
-  var email = el("userEmail").textContent;
-  if (!email) return;
-  var btn = el("bonusBtn");
-  var orig = btn.textContent;
-  btn.disabled = true; btn.textContent = "...";
-  try {
-    var res = await db.rpc("claim_daily_bonus", { user_email: email });
-    if (res.error) { alert("Error: " + res.error.message); btn.disabled = false; btn.textContent = orig; return; }
-    if (res.data.success) { el("coins").textContent = res.data.coins; alert("🎉 " + res.data.message); }
-    else alert("⏳ " + res.data.message);
-  } catch (e) { alert("Error: " + e.message); }
-  btn.disabled = false; btn.textContent = orig;
-}
+</script>
 
-async function loadShop() {
-  var res = await db.from("cards").select("*").order("price");
-  var list = el("cardsList"); list.innerHTML = "";
-  if (!res.data) { list.innerHTML = "<p style='color:#ff7777;'>Error</p>"; return; }
-  for (var i = 0; i < res.data.length; i++) {
-    var card = res.data[i];
-    var r = card.rarity || "common";
-    var div = document.createElement("div");
-    div.className = "card-item " + r;
-    div.innerHTML = '<div class="rarity-badge ' + r + '">' + RARITY_LABELS[r] + '</div>' +
-      '<div class="card-icon">' + card.icon + '</div>' +
-      '<div class="card-name">' + card.name + '</div>' +
-      '<div class="card-company">' + card.company + '</div>' +
-      '<div class="card-price">🪙 ' + card.price + '</div>' +
-      '<button class="card-buy" onclick="buyCard(' + card.id + ',' + card.price + ')">Buy</button>';
-    list.appendChild(div);
-  }
-}
-
-async function buyCard(cardId, price) {
-  var email = el("userEmail").textContent;
-  if (!email) return;
-  if (!confirm("Buy for " + price + " Coins?")) return;
-  var res = await db.rpc("buy_card", { user_email: email, card_id_param: cardId });
-  if (res.error) { alert("Error: " + res.error.message); return; }
-  if (res.data.success) { el("coins").textContent = res.data.coins; alert("🎉 " + res.data.message); loadShop(); }
-  else alert("❌ " + res.data.message);
-}
-
-async function loadPacks() {
-  var res = await db.from("packs").select("*").order("price");
-  var list = el("packsList"); list.innerHTML = "";
-  if (!res.data) { list.innerHTML = "<p style='color:#ff7777;'>Error</p>"; return; }
-  for (var i = 0; i < res.data.length; i++) {
-    var p = res.data[i];
-    var div = document.createElement("div");
-    div.className = "pack-item";
-    div.style.borderColor = p.color;
-    div.innerHTML = '<div class="pack-icon">' + p.icon + '</div>' +
-      '<div class="pack-name">' + p.name + '</div>' +
-      '<div class="pack-info">' + p.cards_count + ' cards</div>' +
-      '<div class="pack-price">🪙 ' + p.price + '</div>' +
-      '<button style="background:' + p.color + ';" onclick="openPack(' + p.id + ',' + p.price + ')">Open Pack</button>';
-    list.appendChild(div);
-  }
-}
-
-async function openPack(packId, price) {
-  var email = el("userEmail").textContent;
-  if (!email) return;
-  if (!confirm("Open for " + price + " Coins?")) return;
-  var res = await db.rpc("buy_pack", { user_email: email, pack_id_param: packId });
-  if (res.error) { alert("Error: " + res.error.message); return; }
-  if (res.data.success) { el("coins").textContent = res.data.coins; showPackModal(res.data.won_names); }
-  else alert("❌ " + res.data.message);
-}
-
-function showPackModal(names) {
-  var list = el("wonCardsList"); list.innerHTML = "";
-  for (var i = 0; i < names.length; i++) {
-    var n = names[i];
-    var div = document.createElement("div");
-    div.className = "won-card";
-    if (n.indexOf("Fastlink") >= 0 || n.indexOf("VIP") >= 0) div.classList.add("legendary");
-    else if (n.indexOf("Roshan") >= 0 || n.indexOf("MTN") >= 0) div.classList.add("epic");
-    else if (n.indexOf("10,000") >= 0) div.classList.add("rare");
-    div.textContent = n;
-    list.appendChild(div);
-  }
-  el("packModal").classList.add("show");
-}
-
-function closePackModal() {
-  el("packModal").classList.remove("show");
-  loadMyCards();
-}
-
-async function loadMyCards() {
-  var email = el("userEmail").textContent;
-  if (!email) return;
-  var res = await db.from("user_cards").select("*, cards(*)").eq("user_email", email);
-  var list = el("myCardsList"); list.innerHTML = "";
-  if (!res.data || res.data.length === 0) {
-    list.innerHTML = "<p style='color:#9da8bd;grid-column:span 2;'>No cards yet.</p>";
-    return;
-  }
-  for (var i = 0; i < res.data.length; i++) {
-    var item = res.data[i];
-    var card = item.cards;
-    var r = card.rarity || "common";
-    var div = document.createElement("div");
-    div.className = "card-item " + r;
-    div.innerHTML = '<div class="rarity-badge ' + r + '">' + RARITY_LABELS[r] + '</div>' +
-      '<div class="card-icon">' + card.icon + '</div>' +
-      '<div class="card-name">' + card.name + '</div>' +
-      '<div class="card-company">' + card.company + '</div>' +
-      '<div style="color:#ffd54a;font-size:12px;margin:6px 0;">Refund: ' + Math.floor(card.price * 0.7) + ' 🪙</div>' +
-      '<button class="card-buy" style="background:#e53935;" onclick="sellCard(' + item.id + ')">Sell</button>';
-    list.appendChild(div);
-  }
-}
-
-async function sellCard(userCardId) {
-  var email = el("userEmail").textContent;
-  if (!email) return;
-  if (!confirm("Sell this card?")) return;
-  var res = await db.rpc("sell_card", { user_email: email, user_card_id: userCardId });
-  if (res.error) { alert("Error: " + res.error.message); return; }
-  if (res.data.success) { el("coins").textContent = res.data.coins; alert("💰 " + res.data.message + " +" + res.data.refund); loadMyCards(); }
-  else alert("❌ " + res.data.message);
-}
-
-async function loadAchievements() {
-  var email = el("userEmail").textContent;
-  if (!email) return;
-  var list = el("achievementsList");
-  list.innerHTML = "<p style='color:#9da8bd;'>Loading...</p>";
-  var chk = await db.rpc("check_achievements", { user_email: email });
-  if (chk.data && chk.data.reward_total > 0) {
-    var u = await db.from("users").select("coins").eq("email", email).single();
-    if (u.data) el("coins").textContent = u.data.coins;
-    var msg = "🎉 New achievements!\n\n";
-    for (var i = 0; i < chk.data.unlocked.length; i++) {
-      var a = chk.data.unlocked[i];
-      msg += a.icon + " " + a.name + " (+" + a.reward + ")\n";
-    }
-    alert(msg);
-  }
-  var res = await db.rpc("get_user_achievements", { user_email: email });
-  if (res.error || !res.data) { list.innerHTML = "<p style='color:#ff7777;'>Error</p>"; return; }
-  list.innerHTML = "";
-  for (var j = 0; j < res.data.length; j++) {
-    var ach = res.data[j];
-    var div = document.createElement("div");
-    div.className = "ach-item" + (ach.unlocked ? " unlocked" : "");
-    div.innerHTML = '<div class="ach-icon">' + ach.icon + '</div>' +
-      '<div class="ach-info">' +
-        '<div class="ach-name">' + ach.name + '</div>' +
-        '<div class="ach-desc">' + ach.description + '</div>' +
-        '<div class="ach-reward">Reward: 🪙 ' + ach.reward + '</div>' +
-      '</div>' +
-      '<div class="ach-status">' + (ach.unlocked ? "✅" : "🔒") + '</div>';
-    list.appendChild(div);
-  }
-}
-
-async function loadLeaderboard() {
-  var list = el("leaderboardList");
-  list.innerHTML = "<p style='color:#9da8bd;'>Loading...</p>";
-  var res = await db.rpc("get_leaderboard");
-  if (res.error || !res.data) { list.innerHTML = "<p style='color:#ff7777;'>Error</p>"; return; }
-  var myEmail = el("userEmail").textContent;
-  list.innerHTML = "";
-  for (var i = 0; i < res.data.length; i++) {
-    var row = res.data[i];
-    var div = document.createElement("div");
-    div.className = "lb-row";
-    if (row.rank === 1) div.classList.add("top-1");
-    if (row.rank === 2) div.classList.add("top-2");
-    if (row.rank === 3) div.classList.add("top-3");
-    if (row.email === myEmail) div.classList.add("me");
-    var medal = row.rank === 1 ? "🥇" : row.rank === 2 ? "🥈" : row.rank === 3 ? "🥉" : "#" + row.rank;
-    div.innerHTML = '<div class="lb-rank">' + medal + '</div>' +
-      '<div class="lb-email">
+</body>
+</html>
