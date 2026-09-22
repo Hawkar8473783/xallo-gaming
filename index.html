@@ -82,6 +82,11 @@
       margin-top: 5px;
     }
 
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .switch {
       text-align: center;
       margin-top: 22px;
@@ -247,6 +252,10 @@
       + 10 Coins
     </button>
 
+    <button onclick="claimDailyBonus()" style="background: #f59e0b;">
+      🎁 Daily Bonus (+100)
+    </button>
+
     <button class="logout" onclick="logout()" style="margin-top: 10px;">
       Logout
     </button>
@@ -324,22 +333,12 @@ async function signup() {
     .value;
 
   if (!email || !password) {
-
-    showMessage(
-      "Enter email and password.",
-      "error"
-    );
-
+    showMessage("Enter email and password.", "error");
     return;
   }
 
   if (password.length < 6) {
-
-    showMessage(
-      "Password must be at least 6 characters.",
-      "error"
-    );
-
+    showMessage("Password must be at least 6 characters.", "error");
     return;
   }
 
@@ -350,12 +349,7 @@ async function signup() {
   });
 
   if (error) {
-
-    showMessage(
-      error.message,
-      "error"
-    );
-
+    showMessage(error.message, "error");
     return;
   }
 
@@ -378,12 +372,7 @@ async function login() {
     .value;
 
   if (!email || !password) {
-
-    showMessage(
-      "Enter email and password.",
-      "error"
-    );
-
+    showMessage("Enter email and password.", "error");
     return;
   }
 
@@ -394,12 +383,7 @@ async function login() {
   });
 
   if (error) {
-
-    showMessage(
-      error.message,
-      "error"
-    );
-
+    showMessage(error.message, "error");
     return;
   }
 
@@ -428,13 +412,9 @@ async function showDashboard(user) {
     .single();
 
   if (!error && data) {
-
     document.getElementById("coins")
       .textContent = data.coins || 0;
-
   } else {
-
-    // ئەگەر بەکارهێنەرەکە نەبوو، دروستی بکە
     await supabaseClient
       .from("users")
       .insert({ email: user.email, coins: 0 });
@@ -468,12 +448,9 @@ async function earnCoins() {
   );
 
   if (error) {
-
     alert("Error: " + error.message);
-
     btn.disabled = false;
     btn.textContent = "+ 10 Coins";
-
     return;
   }
 
@@ -482,6 +459,46 @@ async function earnCoins() {
 
   btn.disabled = false;
   btn.textContent = "+ 10 Coins";
+}
+
+
+// CLAIM DAILY BONUS
+async function claimDailyBonus() {
+
+  const email =
+  document.getElementById("userEmail")
+    .textContent;
+
+  if (!email) return;
+
+  const btn = event.target;
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = "...";
+
+  const { data, error } =
+  await supabaseClient.rpc(
+    "claim_daily_bonus",
+    { user_email: email }
+  );
+
+  if (error) {
+    alert("Error: " + error.message);
+    btn.disabled = false;
+    btn.textContent = originalText;
+    return;
+  }
+
+  if (data.success) {
+    document.getElementById("coins")
+      .textContent = data.coins;
+    alert("🎉 " + data.message);
+  } else {
+    alert("⏳ " + data.message + " (" + data.hours_left + " hours left)");
+  }
+
+  btn.disabled = false;
+  btn.textContent = originalText;
 }
 
 
@@ -507,9 +524,7 @@ async function checkUser() {
   await supabaseClient.auth.getUser();
 
   if (data.user) {
-
     showDashboard(data.user);
-
   }
 }
 
