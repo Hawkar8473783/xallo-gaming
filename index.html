@@ -257,7 +257,8 @@ const RARITY_LABELS = {
   epic: "🥇 E", legendary: "💎 L"
 };
 
-function $(id) { return document.getElementById(id); }
+// بەکارهێنانی el() لە جیاتی $() بۆ ئەوەی ناکۆکی نەبێت لەگەڵ Supabase
+function el(id) { return document.getElementById(id); }
 
 // TABS
 document.querySelectorAll(".nav-tab").forEach(tab => {
@@ -266,7 +267,7 @@ document.querySelectorAll(".nav-tab").forEach(tab => {
     document.querySelectorAll(".nav-tab").forEach(x => x.classList.remove("active"));
     tab.classList.add("active");
     ["home", "shop", "packs", "mycards", "achievements", "leaderboard"].forEach(name => {
-      $(name + "Tab").style.display = (name === t) ? "block" : "none";
+      el(name + "Tab").style.display = (name === t) ? "block" : "none";
     });
     if (t === "shop") loadShop();
     if (t === "packs") loadPacks();
@@ -278,7 +279,7 @@ document.querySelectorAll(".nav-tab").forEach(tab => {
 
 // WHEEL
 function buildWheel() {
-  const wheel = $("wheel");
+  const wheel = el("wheel");
   wheel.innerHTML = "";
   const sliceAngle = 360 / PRIZES.length;
   PRIZES.forEach((prize, i) => {
@@ -301,9 +302,9 @@ function buildWheel() {
 }
 
 let isSpinning = false;
-$("spinBtn").addEventListener("click", async (e) => {
+el("spinBtn").addEventListener("click", async (e) => {
   if (isSpinning) return;
-  const email = $("userEmail").textContent;
+  const email = el("userEmail").textContent;
   if (!email) return;
   isSpinning = true;
   const btn = e.target;
@@ -322,11 +323,11 @@ $("spinBtn").addEventListener("click", async (e) => {
   }
   const sectorAngle = 360 / PRIZES.length;
   const targetAngle = 360 * 5 + (360 - (data.prize_index * sectorAngle + sectorAngle / 2));
-  const wheel = $("wheel");
+  const wheel = el("wheel");
   wheel.style.transition = "transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)";
   wheel.style.transform = `rotate(${targetAngle}deg)`;
   setTimeout(() => {
-    $("coins").textContent = data.coins;
+    el("coins").textContent = data.coins;
     alert("🎉 You won " + data.prize + " Coins!");
     isSpinning = false; btn.disabled = false; btn.textContent = "🎡 Spin the Wheel";
     wheel.style.transition = "none";
@@ -337,7 +338,7 @@ $("spinBtn").addEventListener("click", async (e) => {
 // SHOP
 async function loadShop() {
   const { data } = await supabaseClient.from("cards").select("*").order("price");
-  const list = $("cardsList"); list.innerHTML = "";
+  const list = el("cardsList"); list.innerHTML = "";
   if (!data) return;
   data.forEach(card => {
     const rarity = card.rarity || "common";
@@ -359,13 +360,13 @@ async function loadShop() {
 }
 
 async function buyCard(cardId, price) {
-  const email = $("userEmail").textContent;
+  const email = el("userEmail").textContent;
   if (!email) return;
   if (!confirm("Buy for " + price + " Coins?")) return;
   const { data, error } = await supabaseClient.rpc("buy_card", { user_email: email, card_id_param: cardId });
   if (error) { alert("Error: " + error.message); return; }
   if (data.success) {
-    $("coins").textContent = data.coins;
+    el("coins").textContent = data.coins;
     alert("🎉 " + data.message);
     loadShop();
   } else alert("❌ " + data.message);
@@ -374,7 +375,7 @@ async function buyCard(cardId, price) {
 // PACKS
 async function loadPacks() {
   const { data } = await supabaseClient.from("packs").select("*").order("price");
-  const list = $("packsList"); list.innerHTML = "";
+  const list = el("packsList"); list.innerHTML = "";
   if (!data) return;
   data.forEach(pack => {
     const div = document.createElement("div");
@@ -394,19 +395,19 @@ async function loadPacks() {
 }
 
 async function openPack(packId, price) {
-  const email = $("userEmail").textContent;
+  const email = el("userEmail").textContent;
   if (!email) return;
   if (!confirm("Open for " + price + " Coins?")) return;
   const { data, error } = await supabaseClient.rpc("buy_pack", { user_email: email, pack_id_param: packId });
   if (error) { alert("Error: " + error.message); return; }
   if (data.success) {
-    $("coins").textContent = data.coins;
+    el("coins").textContent = data.coins;
     showPackModal(data.won_names);
   } else alert("❌ " + data.message);
 }
 
 function showPackModal(cardNames) {
-  const list = $("wonCardsList"); list.innerHTML = "";
+  const list = el("wonCardsList"); list.innerHTML = "";
   cardNames.forEach(name => {
     const div = document.createElement("div");
     div.className = "won-card";
@@ -416,20 +417,20 @@ function showPackModal(cardNames) {
     div.textContent = name;
     list.appendChild(div);
   });
-  $("packModal").classList.add("show");
+  el("packModal").classList.add("show");
 }
 
-$("closeModalBtn").addEventListener("click", () => {
-  $("packModal").classList.remove("show");
+el("closeModalBtn").addEventListener("click", () => {
+  el("packModal").classList.remove("show");
   loadMyCards();
 });
 
 // MY CARDS
 async function loadMyCards() {
-  const email = $("userEmail").textContent;
+  const email = el("userEmail").textContent;
   if (!email) return;
   const { data } = await supabaseClient.from("user_cards").select("*, cards(*)").eq("user_email", email);
-  const list = $("myCardsList"); list.innerHTML = "";
+  const list = el("myCardsList"); list.innerHTML = "";
   if (!data || data.length === 0) {
     list.innerHTML = "<p style='color:#9da8bd;grid-column:span 2;'>No cards yet.</p>";
     return;
@@ -454,13 +455,13 @@ async function loadMyCards() {
 }
 
 async function sellCard(userCardId) {
-  const email = $("userEmail").textContent;
+  const email = el("userEmail").textContent;
   if (!email) return;
   if (!confirm("Sell this card? You'll get 70% back.")) return;
   const { data, error } = await supabaseClient.rpc("sell_card", { user_email: email, user_card_id: userCardId });
   if (error) { alert("Error: " + error.message); return; }
   if (data.success) {
-    $("coins").textContent = data.coins;
+    el("coins").textContent = data.coins;
     alert("💰 " + data.message + " +" + data.refund);
     loadMyCards();
   } else alert("❌ " + data.message);
@@ -468,17 +469,17 @@ async function sellCard(userCardId) {
 
 // ACHIEVEMENTS
 async function loadAchievements() {
-  const email = $("userEmail").textContent;
+  const email = el("userEmail").textContent;
   if (!email) return;
   
-  const list = $("achievementsList");
+  const list = el("achievementsList");
   list.innerHTML = "<p style='color:#9da8bd;'>Loading...</p>";
   
   const { data: checkData } = await supabaseClient.rpc("check_achievements", { user_email: email });
   
   if (checkData && checkData.reward_total > 0) {
     const { data: u } = await supabaseClient.from("users").select("coins").eq("email", email).single();
-    if (u) $("coins").textContent = u.coins;
+    if (u) el("coins").textContent = u.coins;
     
     let msg = "🎉 New achievements!\n\n";
     checkData.unlocked.forEach(a => {
@@ -498,4 +499,122 @@ async function loadAchievements() {
   list.innerHTML = "";
   data.forEach(ach => {
     const div = document.createElement("div");
-    div.className = "ach-item" +
+    div.className = "ach-item" + (ach.unlocked ? " unlocked" : "");
+    div.innerHTML = `
+      <div class="ach-icon">${ach.icon}</div>
+      <div class="ach-info">
+        <div class="ach-name">${ach.name}</div>
+        <div class="ach-desc">${ach.description}</div>
+        <div class="ach-reward">Reward: 🪙 ${ach.reward}</div>
+      </div>
+      <div class="ach-status">${ach.unlocked ? "✅" : "🔒"}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+// LEADERBOARD
+async function loadLeaderboard() {
+  const list = el("leaderboardList");
+  list.innerHTML = "<p style='color:#9da8bd;'>Loading...</p>";
+  const { data, error } = await supabaseClient.rpc("get_leaderboard");
+  if (error || !data) {
+    list.innerHTML = "<p style='color:#ff7777;'>Error</p>";
+    return;
+  }
+  const myEmail = el("userEmail").textContent;
+  list.innerHTML = "";
+  data.forEach(row => {
+    const div = document.createElement("div");
+    div.className = "lb-row";
+    if (row.rank === 1) div.classList.add("top-1");
+    if (row.rank === 2) div.classList.add("top-2");
+    if (row.rank === 3) div.classList.add("top-3");
+    if (row.email === myEmail) div.classList.add("me");
+    let medal = row.rank === 1 ? "🥇" : row.rank === 2 ? "🥈" : row.rank === 3 ? "🥉" : "#" + row.rank;
+    div.innerHTML = `<div class="lb-rank">${medal}</div>
+      <div class="lb-email">${row.email}${row.email === myEmail ? " (You)" : ""}</div>
+      <div class="lb-coins">🪙 ${row.coins}</div>`;
+    list.appendChild(div);
+  });
+}
+
+// AUTH
+function showMessage(text, type) {
+  const m = el("message");
+  m.textContent = text;
+  m.className = "message " + type;
+}
+
+el("showSignupLink").addEventListener("click", () => {
+  el("loginBox").style.display = "none";
+  el("signupBox").style.display = "block";
+  el("message").style.display = "none";
+});
+
+el("showLoginLink").addEventListener("click", () => {
+  el("loginBox").style.display = "block";
+  el("signupBox").style.display = "none";
+  el("message").style.display = "none";
+});
+
+el("signupBtn").addEventListener("click", async () => {
+  const email = el("signupEmail").value.trim();
+  const password = el("signupPassword").value;
+  if (!email || !password) { showMessage("Enter email and password.", "error"); return; }
+  if (password.length < 6) { showMessage("Password must be at least 6 characters.", "error"); return; }
+  const { error } = await supabaseClient.auth.signUp({ email, password });
+  if (error) { showMessage(error.message, "error"); return; }
+  showMessage("Account created! You can now login.", "success");
+});
+
+el("loginBtn").addEventListener("click", async () => {
+  const email = el("loginEmail").value.trim();
+  const password = el("loginPassword").value;
+  if (!email || !password) { showMessage("Enter email and password.", "error"); return; }
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) { showMessage(error.message, "error"); return; }
+  showDashboard(data.user);
+});
+
+async function showDashboard(user) {
+  el("authBox").style.display = "none";
+  el("dashboard").style.display = "block";
+  el("userEmail").textContent = user.email;
+  const { data } = await supabaseClient.from("users").select("coins").eq("email", user.email).single();
+  if (data) el("coins").textContent = data.coins || 0;
+  else {
+    await supabaseClient.from("users").insert({ email: user.email, coins: 0 });
+    el("coins").textContent = "0";
+  }
+}
+
+el("earnBtn").addEventListener("click", async (e) => {
+  const email = el("userEmail").textContent;
+  if (!email) return;
+  const btn = e.target;
+  btn.disabled = true; btn.textContent = "...";
+  const { data, error } = await supabaseClient.rpc("add_coins", { user_email: email, amount: 10 });
+  if (error) { alert("Error: " + error.message); btn.disabled = false; btn.textContent = "+ 10 Coins"; return; }
+  el("coins").textContent = data;
+  btn.disabled = false; btn.textContent = "+ 10 Coins";
+});
+
+el("bonusBtn").addEventListener("click", async (e) => {
+  const email = el("userEmail").textContent;
+  if (!email) return;
+  const btn = e.target;
+  const original = btn.textContent;
+  btn.disabled = true; btn.textContent = "...";
+  const { data, error } = await supabaseClient.rpc("claim_daily_bonus", { user_email: email });
+  if (error) { alert("Error: " + error.message); btn.disabled = false; btn.textContent = original; return; }
+  if (data.success) { el("coins").textContent = data.coins; alert("🎉 " + data.message); }
+  else alert("⏳ " + data.message);
+  btn.disabled = false; btn.textContent = original;
+});
+
+el("logoutBtn").addEventListener("click", async () => {
+  await supabaseClient.auth.signOut();
+  el("dashboard").style.display = "none";
+  el("authBox").style.display = "block";
+  el("loginBox").style.display
