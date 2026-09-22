@@ -52,6 +52,16 @@ button:disabled { opacity: 0.6; }
 }
 .coin-number { color: #ffd54a; font-size: 40px; font-weight: bold; margin-top: 8px; }
 .logout { background: #e53935; }
+.nav-tabs {
+  display: flex; gap: 2px; margin: 20px 0;
+  background: #0c1b2e; padding: 5px; border-radius: 14px;
+}
+.nav-tab {
+  flex: 1; padding: 10px 2px; border-radius: 10px;
+  background: transparent; color: #9da8bd;
+  font-size: 9px; margin: 0; cursor: pointer;
+}
+.nav-tab.active { background: #08a9ff; color: white; }
 </style>
 </head>
 <body>
@@ -89,8 +99,37 @@ button:disabled { opacity: 0.6; }
       🪙 Your Coins
       <div class="coin-number" id="coins">0</div>
     </div>
-    <button id="earnBtn" style="background: #10b981; margin-top: 10px;">+ 10 Coins</button>
-    <button class="logout" id="logoutBtn" style="margin-top: 10px;">Logout</button>
+
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="home">🏠</button>
+      <button class="nav-tab" data-tab="shop">🛒</button>
+      <button class="nav-tab" data-tab="packs">🎁</button>
+      <button class="nav-tab" data-tab="mycards">🎴</button>
+      <button class="nav-tab" data-tab="achievements">🏅</button>
+      <button class="nav-tab" data-tab="leaderboard">🏆</button>
+    </div>
+
+    <div id="homeTab">
+      <button id="earnBtn" style="background: #10b981;">+ 10 Coins</button>
+      <p style="margin-top: 20px; color: #9da8bd;">Home Tab</p>
+    </div>
+    <div id="shopTab" style="display:none;">
+      <p style="margin-top: 20px; color: #9da8bd;">Shop Tab</p>
+    </div>
+    <div id="packsTab" style="display:none;">
+      <p style="margin-top: 20px; color: #9da8bd;">Packs Tab</p>
+    </div>
+    <div id="mycardsTab" style="display:none;">
+      <p style="margin-top: 20px; color: #9da8bd;">My Cards Tab</p>
+    </div>
+    <div id="achievementsTab" style="display:none;">
+      <p style="margin-top: 20px; color: #9da8bd;">Achievements Tab</p>
+    </div>
+    <div id="leaderboardTab" style="display:none;">
+      <p style="margin-top: 20px; color: #9da8bd;">Leaderboard Tab</p>
+    </div>
+
+    <button class="logout" id="logoutBtn" style="margin-top: 15px;">Logout</button>
   </div>
 
 </div>
@@ -112,26 +151,12 @@ function showMessage(text, type) {
 async function doLogin() {
   var email = el("loginEmail").value.trim();
   var password = el("loginPassword").value;
-
-  if (!email || !password) {
-    showMessage("Enter email and password.", "error");
-    return;
-  }
-
+  if (!email || !password) { showMessage("Enter email and password.", "error"); return; }
   var btn = el("loginBtn");
-  btn.disabled = true;
-  btn.textContent = "Loading...";
-
+  btn.disabled = true; btn.textContent = "Loading...";
   var res = await db.auth.signInWithPassword({ email: email, password: password });
-
-  btn.disabled = false;
-  btn.textContent = "Login";
-
-  if (res.error) {
-    showMessage(res.error.message, "error");
-    return;
-  }
-
+  btn.disabled = false; btn.textContent = "Login";
+  if (res.error) { showMessage(res.error.message, "error"); return; }
   showDashboard(res.data.user);
 }
 
@@ -139,30 +164,13 @@ async function doLogin() {
 async function doSignup() {
   var email = el("signupEmail").value.trim();
   var password = el("signupPassword").value;
-
-  if (!email || !password) {
-    showMessage("Enter email and password.", "error");
-    return;
-  }
-  if (password.length < 6) {
-    showMessage("Password must be 6+ characters.", "error");
-    return;
-  }
-
+  if (!email || !password) { showMessage("Enter email and password.", "error"); return; }
+  if (password.length < 6) { showMessage("Password must be 6+ characters.", "error"); return; }
   var btn = el("signupBtn");
-  btn.disabled = true;
-  btn.textContent = "Loading...";
-
+  btn.disabled = true; btn.textContent = "Loading...";
   var res = await db.auth.signUp({ email: email, password: password });
-
-  btn.disabled = false;
-  btn.textContent = "Sign Up";
-
-  if (res.error) {
-    showMessage(res.error.message, "error");
-    return;
-  }
-
+  btn.disabled = false; btn.textContent = "Sign Up";
+  if (res.error) { showMessage(res.error.message, "error"); return; }
   showMessage("Account created! You can now login.", "success");
 }
 
@@ -171,7 +179,6 @@ async function showDashboard(user) {
   el("authBox").style.display = "none";
   el("dashboard").style.display = "block";
   el("userEmail").textContent = user.email;
-
   var res = await db.from("users").select("coins").eq("email", user.email).single();
   if (res.data) {
     el("coins").textContent = res.data.coins || 0;
@@ -195,18 +202,26 @@ async function doEarn() {
   var email = el("userEmail").textContent;
   if (!email) return;
   var btn = el("earnBtn");
-  btn.disabled = true;
-  btn.textContent = "...";
+  btn.disabled = true; btn.textContent = "...";
   var res = await db.rpc("add_coins", { user_email: email, amount: 10 });
   if (res.error) {
     alert("Error: " + res.error.message);
-    btn.disabled = false;
-    btn.textContent = "+ 10 Coins";
+    btn.disabled = false; btn.textContent = "+ 10 Coins";
     return;
   }
   el("coins").textContent = res.data;
-  btn.disabled = false;
-  btn.textContent = "+ 10 Coins";
+  btn.disabled = false; btn.textContent = "+ 10 Coins";
+}
+
+// TABS
+function switchTab(name, btn) {
+  var all = document.querySelectorAll(".nav-tab");
+  for (var i = 0; i < all.length; i++) all[i].classList.remove("active");
+  if (btn) btn.classList.add("active");
+  var tabs = ["home", "shop", "packs", "mycards", "achievements", "leaderboard"];
+  for (var j = 0; j < tabs.length; j++) {
+    el(tabs[j] + "Tab").style.display = (tabs[j] === name) ? "block" : "none";
+  }
 }
 
 // EVENT LISTENERS
@@ -226,6 +241,15 @@ el("showLoginLink").addEventListener("click", function() {
   el("signupBox").style.display = "none";
   el("message").style.display = "none";
 });
+
+var tabs = document.querySelectorAll(".nav-tab");
+for (var k = 0; k < tabs.length; k++) {
+  (function(tab) {
+    tab.addEventListener("click", function() {
+      switchTab(tab.dataset.tab, tab);
+    });
+  })(tabs[k]);
+}
 
 // CHECK USER
 (async function() {
