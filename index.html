@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>XALLO-GAMING</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -17,7 +18,8 @@
 
     body {
       min-height: 100vh;
-      background: #070a18;
+      background:
+        radial-gradient(circle at top, #102a45, #050713 55%);
       color: white;
       display: flex;
       justify-content: center;
@@ -25,289 +27,479 @@
       padding: 20px;
     }
 
-    .box {
+    .container {
       width: 100%;
-      max-width: 450px;
-      background: #11162b;
-      padding: 35px 28px;
+      max-width: 430px;
+      background: rgba(17, 24, 45, 0.96);
+      border: 1px solid #263553;
       border-radius: 25px;
-      box-shadow: 0 0 40px rgba(0, 174, 255, 0.25);
+      padding: 35px 28px;
+      box-shadow:
+        0 0 40px rgba(0, 170, 255, 0.18);
     }
 
     .logo {
       text-align: center;
-      font-size: 38px;
+      font-size: 36px;
       font-weight: bold;
       margin-bottom: 8px;
     }
 
     .logo span {
-      color: #00aaff;
+      color: #08a9ff;
     }
 
     .subtitle {
       text-align: center;
-      color: #9ca3b8;
-      font-size: 20px;
-      margin-bottom: 40px;
+      color: #9da8bd;
+      font-size: 18px;
+      margin-bottom: 35px;
     }
 
     h2 {
-      font-size: 30px;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
+      font-size: 28px;
     }
 
     input {
       width: 100%;
-      padding: 18px;
+      padding: 17px;
       margin-bottom: 15px;
-      border: 1px solid #29304d;
-      border-radius: 15px;
-      background: #080b1c;
+      border-radius: 14px;
+      border: 1px solid #283653;
+      background: #070b19;
       color: white;
       font-size: 16px;
       outline: none;
     }
 
     input:focus {
-      border-color: #00aaff;
+      border-color: #08a9ff;
+      box-shadow: 0 0 10px rgba(8,169,255,.2);
     }
 
     button {
       width: 100%;
-      padding: 18px;
+      padding: 17px;
       border: none;
-      border-radius: 15px;
-      background: #08a9f5;
+      border-radius: 14px;
+      background: #08a9ff;
       color: white;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: bold;
       cursor: pointer;
       margin-top: 5px;
     }
 
     button:hover {
-      background: #008ed0;
+      background: #078fd7;
     }
 
     .switch {
       text-align: center;
       margin-top: 25px;
-      color: #aab0c5;
+      color: #9da8bd;
       font-size: 16px;
     }
 
-    .switch span {
-      color: #00aaff;
+    .switch a {
+      color: #08a9ff;
       cursor: pointer;
+      font-weight: bold;
     }
 
-    #message {
-      text-align: center;
+    .message {
       margin-top: 18px;
-      color: #00aaff;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      display: none;
+    }
+
+    .success {
+      display: block;
+      background: rgba(0, 200, 120, .12);
+      color: #55e6a5;
+    }
+
+    .error {
+      display: block;
+      background: rgba(255, 60, 60, .12);
+      color: #ff7777;
+    }
+
+    .dashboard {
+      display: none;
+      text-align: center;
+    }
+
+    .dashboard h2 {
+      color: #08a9ff;
+    }
+
+    .email {
+      color: #b8c1d4;
+      margin: 15px 0 25px;
+      word-break: break-word;
+    }
+
+    .logout {
+      background: #e53935;
+    }
+
+    .logout:hover {
+      background: #c62828;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="box">
+  <div class="container">
 
-    <div class="logo">
-      XALLO-<span>GAMING</span>
-    </div>
+    <!-- AUTH -->
+    <div id="authBox">
 
-    <div class="subtitle">
-      Play • Earn • Enjoy
-    </div>
-
-    <!-- LOGIN -->
-    <div id="loginPage">
-
-      <h2>Login</h2>
-
-      <input
-        type="email"
-        id="loginEmail"
-        placeholder="Email"
-      >
-
-      <input
-        type="password"
-        id="loginPassword"
-        placeholder="Password"
-      >
-
-      <button onclick="login()">
-        Login
-      </button>
-
-      <div class="switch">
-        Don't have an account?
-        <span onclick="showSignup()">Sign Up</span>
+      <div class="logo">
+        XALLO-<span>GAMING</span>
       </div>
 
-    </div>
-
-    <!-- SIGN UP -->
-    <div id="signupPage" style="display:none;">
-
-      <h2>Create Account</h2>
-
-      <input
-        type="email"
-        id="signupEmail"
-        placeholder="Email"
-      >
-
-      <input
-        type="password"
-        id="signupPassword"
-        placeholder="Password"
-      >
-
-      <button onclick="signup()">
-        Sign Up
-      </button>
-
-      <div class="switch">
-        Already have an account?
-        <span onclick="showLogin()">Login</span>
+      <div class="subtitle">
+        Play • Earn • Enjoy
       </div>
 
+      <!-- LOGIN -->
+      <div id="loginBox">
+
+        <h2>Login</h2>
+
+        <input
+          type="email"
+          id="loginEmail"
+          placeholder="Email"
+          autocomplete="email"
+        >
+
+        <input
+          type="password"
+          id="loginPassword"
+          placeholder="Password"
+          autocomplete="current-password"
+        >
+
+        <button onclick="login()">
+          Login
+        </button>
+
+        <div class="switch">
+          Don't have an account?
+          <a onclick="showSignup()">Sign Up</a>
+        </div>
+
+      </div>
+
+      <!-- SIGN UP -->
+      <div id="signupBox" style="display:none;">
+
+        <h2>Create Account</h2>
+
+        <input
+          type="email"
+          id="signupEmail"
+          placeholder="Email"
+          autocomplete="email"
+        >
+
+        <input
+          type="password"
+          id="signupPassword"
+          placeholder="Password"
+          autocomplete="new-password"
+        >
+
+        <button onclick="signup()">
+          Sign Up
+        </button>
+
+        <div class="switch">
+          Already have an account?
+          <a onclick="showLogin()">Login</a>
+        </div>
+
+      </div>
+
+      <div id="message" class="message"></div>
+
     </div>
 
-    <div id="message"></div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="dashboard">
+
+      <div class="logo">
+        XALLO-<span>GAMING</span>
+      </div>
+
+      <div class="subtitle">
+        Play • Earn • Enjoy
+      </div>
+
+      <h2>Welcome 🎮</h2>
+
+      <p class="email" id="userEmail"></p>
+
+      <button class="logout" onclick="logout()">
+        Logout
+      </button>
+
+    </div>
 
   </div>
 
+
 <script>
 
-const SUPABASE_URL =
-"https://vnyprsjjmmjahkisozib.supabase.co";
+  // ==============================
+  // SUPABASE CONFIG
+  // ==============================
 
-const SUPABASE_KEY =
-"sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
+  const SUPABASE_URL =
+    "https://vnyprsjjmmjahkisozib.supabase.co";
 
-const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+  const SUPABASE_KEY =
+    "sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
 
 
-// LOGIN
-async function login() {
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
 
-  const email =
-    document.getElementById("loginEmail").value;
 
-  const password =
-    document.getElementById("loginPassword").value;
+  // ==============================
+  // MESSAGE
+  // ==============================
 
-  const message =
-    document.getElementById("message");
+  function showMessage(text, type) {
 
-  if (!email || !password) {
-    message.textContent =
-      "Please enter email and password.";
-    return;
+    const message =
+      document.getElementById("message");
+
+    message.textContent = text;
+
+    message.className =
+      "message " + type;
+
   }
 
-  message.textContent = "Logging in...";
 
-  const { data, error } =
-    await supabaseClient.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
+  // ==============================
+  // SHOW LOGIN
+  // ==============================
 
-  if (error) {
-    message.textContent =
-      error.message;
-    return;
+  function showLogin() {
+
+    document.getElementById("loginBox")
+      .style.display = "block";
+
+    document.getElementById("signupBox")
+      .style.display = "none";
+
+    document.getElementById("message")
+      .style.display = "none";
   }
 
-  message.textContent =
-    "Login successful! 🎮";
 
-}
+  // ==============================
+  // SHOW SIGN UP
+  // ==============================
 
+  function showSignup() {
 
-// SIGN UP
-async function signup() {
+    document.getElementById("loginBox")
+      .style.display = "none";
 
-  const email =
-    document.getElementById("signupEmail").value;
+    document.getElementById("signupBox")
+      .style.display = "block";
 
-  const password =
-    document.getElementById("signupPassword").value;
-
-  const message =
-    document.getElementById("message");
-
-  if (!email || !password) {
-    message.textContent =
-      "Please enter email and password.";
-    return;
+    document.getElementById("message")
+      .style.display = "none";
   }
 
-  if (password.length < 6) {
-    message.textContent =
-      "Password must be at least 6 characters.";
-    return;
+
+  // ==============================
+  // SIGN UP
+  // ==============================
+
+  async function signup() {
+
+    const email =
+      document.getElementById("signupEmail")
+        .value.trim();
+
+    const password =
+      document.getElementById("signupPassword")
+        .value;
+
+
+    if (!email || !password) {
+
+      showMessage(
+        "Please enter email and password.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (password.length < 6) {
+
+      showMessage(
+        "Password must be at least 6 characters.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const { data, error } =
+      await supabaseClient.auth.signUp({
+        email: email,
+        password: password
+      });
+
+
+    if (error) {
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    showMessage(
+      "Account created! Check your email if verification is required.",
+      "success"
+    );
+
   }
 
-  message.textContent =
-    "Creating account...";
 
-  const { data, error } =
-    await supabaseClient.auth.signUp({
-      email: email,
-      password: password
-    });
+  // ==============================
+  // LOGIN
+  // ==============================
 
-  if (error) {
-    message.textContent =
-      error.message;
-    return;
+  async function login() {
+
+    const email =
+      document.getElementById("loginEmail")
+        .value.trim();
+
+    const password =
+      document.getElementById("loginPassword")
+        .value;
+
+
+    if (!email || !password) {
+
+      showMessage(
+        "Please enter email and password.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+
+    if (error) {
+
+      showMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    showDashboard(
+      data.user
+    );
+
   }
 
-  message.textContent =
-    "Account created! 🎉 Check your email.";
 
-}
+  // ==============================
+  // DASHBOARD
+  // ==============================
 
+  function showDashboard(user) {
 
-// SHOW SIGN UP
-function showSignup() {
+    document.getElementById("authBox")
+      .style.display = "none";
 
-  document.getElementById("loginPage")
-    .style.display = "none";
+    document.getElementById("dashboard")
+      .style.display = "block";
 
-  document.getElementById("signupPage")
-    .style.display = "block";
+    document.getElementById("userEmail")
+      .textContent = user.email;
 
-  document.getElementById("message")
-    .textContent = "";
-
-}
+  }
 
 
-// SHOW LOGIN
-function showLogin() {
+  // ==============================
+  // LOGOUT
+  // ==============================
 
-  document.getElementById("signupPage")
-    .style.display = "none";
+  async function logout() {
 
-  document.getElementById("loginPage")
-    .style.display = "block";
+    await supabaseClient.auth.signOut();
 
-  document.getElementById("message")
-    .textContent = "";
+    document.getElementById("dashboard")
+      .style.display = "none";
 
-}
+    document.getElementById("authBox")
+      .style.display = "block";
+
+    showLogin();
+
+  }
+
+
+  // ==============================
+  // CHECK CURRENT USER
+  // ==============================
+
+  async function checkUser() {
+
+    const { data } =
+      await supabaseClient.auth.getUser();
+
+    if (data.user) {
+
+      showDashboard(
+        data.user
+      );
+
+    }
+
+  }
+
+
+  checkUser();
 
 </script>
 
