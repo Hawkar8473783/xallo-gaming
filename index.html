@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>XALLO-GAMING</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     * {
@@ -16,25 +17,26 @@
 
     body {
       min-height: 100vh;
-      background: #080b16;
+      background: #070a18;
       color: white;
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 20px;
     }
 
-    .container {
-      width: 92%;
-      max-width: 420px;
-      padding: 30px 25px;
-      background: #111629;
-      border-radius: 20px;
-      box-shadow: 0 0 30px rgba(0, 170, 255, .25);
+    .box {
+      width: 100%;
+      max-width: 450px;
+      background: #11162b;
+      padding: 35px 28px;
+      border-radius: 25px;
+      box-shadow: 0 0 40px rgba(0, 174, 255, 0.25);
     }
 
     .logo {
       text-align: center;
-      font-size: 30px;
+      font-size: 38px;
       font-weight: bold;
       margin-bottom: 8px;
     }
@@ -45,18 +47,25 @@
 
     .subtitle {
       text-align: center;
-      color: #9da6bd;
-      margin-bottom: 28px;
+      color: #9ca3b8;
+      font-size: 20px;
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: 30px;
+      margin-bottom: 25px;
     }
 
     input {
       width: 100%;
-      padding: 14px;
-      margin-bottom: 14px;
-      border: 1px solid #29314d;
-      border-radius: 10px;
-      background: #090d1b;
+      padding: 18px;
+      margin-bottom: 15px;
+      border: 1px solid #29304d;
+      border-radius: 15px;
+      background: #080b1c;
       color: white;
+      font-size: 16px;
       outline: none;
     }
 
@@ -66,24 +75,26 @@
 
     button {
       width: 100%;
-      padding: 14px;
+      padding: 18px;
       border: none;
-      border-radius: 10px;
-      background: #00aaff;
+      border-radius: 15px;
+      background: #08a9f5;
       color: white;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
       cursor: pointer;
+      margin-top: 5px;
     }
 
     button:hover {
-      background: #008dcc;
+      background: #008ed0;
     }
 
     .switch {
       text-align: center;
-      margin-top: 20px;
-      color: #9da6bd;
+      margin-top: 25px;
+      color: #aab0c5;
+      font-size: 16px;
     }
 
     .switch span {
@@ -91,15 +102,17 @@
       cursor: pointer;
     }
 
-    .hidden {
-      display: none;
+    #message {
+      text-align: center;
+      margin-top: 18px;
+      color: #00aaff;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+  <div class="box">
 
     <div class="logo">
       XALLO-<span>GAMING</span>
@@ -110,9 +123,9 @@
     </div>
 
     <!-- LOGIN -->
-    <div id="loginBox">
+    <div id="loginPage">
 
-      <h2 style="margin-bottom:20px;">Login</h2>
+      <h2>Login</h2>
 
       <input
         type="email"
@@ -138,15 +151,9 @@
     </div>
 
     <!-- SIGN UP -->
-    <div id="signupBox" class="hidden">
+    <div id="signupPage" style="display:none;">
 
-      <h2 style="margin-bottom:20px;">Create Account</h2>
-
-      <input
-        type="text"
-        id="username"
-        placeholder="Username"
-      >
+      <h2>Create Account</h2>
 
       <input
         type="email"
@@ -161,7 +168,7 @@
       >
 
       <button onclick="signup()">
-        Create Account
+        Sign Up
       </button>
 
       <div class="switch">
@@ -171,27 +178,138 @@
 
     </div>
 
+    <div id="message"></div>
+
   </div>
 
-  <script>
-    function showSignup() {
-      document.getElementById("loginBox").classList.add("hidden");
-      document.getElementById("signupBox").classList.remove("hidden");
-    }
+<script>
 
-    function showLogin() {
-      document.getElementById("signupBox").classList.add("hidden");
-      document.getElementById("loginBox").classList.remove("hidden");
-    }
+const SUPABASE_URL =
+"https://vnyprsjjmmjahkisozib.supabase.co";
 
-    function login() {
-      alert("Login system will be connected to Supabase next.");
-    }
+const SUPABASE_KEY =
+"sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
 
-    function signup() {
-      alert("Sign Up system will be connected to Supabase next.");
-    }
-  </script>
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+// LOGIN
+async function login() {
+
+  const email =
+    document.getElementById("loginEmail").value;
+
+  const password =
+    document.getElementById("loginPassword").value;
+
+  const message =
+    document.getElementById("message");
+
+  if (!email || !password) {
+    message.textContent =
+      "Please enter email and password.";
+    return;
+  }
+
+  message.textContent = "Logging in...";
+
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+  if (error) {
+    message.textContent =
+      error.message;
+    return;
+  }
+
+  message.textContent =
+    "Login successful! 🎮";
+
+}
+
+
+// SIGN UP
+async function signup() {
+
+  const email =
+    document.getElementById("signupEmail").value;
+
+  const password =
+    document.getElementById("signupPassword").value;
+
+  const message =
+    document.getElementById("message");
+
+  if (!email || !password) {
+    message.textContent =
+      "Please enter email and password.";
+    return;
+  }
+
+  if (password.length < 6) {
+    message.textContent =
+      "Password must be at least 6 characters.";
+    return;
+  }
+
+  message.textContent =
+    "Creating account...";
+
+  const { data, error } =
+    await supabaseClient.auth.signUp({
+      email: email,
+      password: password
+    });
+
+  if (error) {
+    message.textContent =
+      error.message;
+    return;
+  }
+
+  message.textContent =
+    "Account created! 🎉 Check your email.";
+
+}
+
+
+// SHOW SIGN UP
+function showSignup() {
+
+  document.getElementById("loginPage")
+    .style.display = "none";
+
+  document.getElementById("signupPage")
+    .style.display = "block";
+
+  document.getElementById("message")
+    .textContent = "";
+
+}
+
+
+// SHOW LOGIN
+function showLogin() {
+
+  document.getElementById("signupPage")
+    .style.display = "none";
+
+  document.getElementById("loginPage")
+    .style.display = "block";
+
+  document.getElementById("message")
+    .textContent = "";
+
+}
+
+</script>
 
 </body>
 </html>
