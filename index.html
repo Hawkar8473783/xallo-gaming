@@ -563,6 +563,19 @@ button:disabled{
 .notification-read{width:auto;margin:8px 0 0;padding:7px 10px;background:#1c2c42;font-size:11px}
 .notification-badge{display:inline-flex;min-width:22px;height:22px;padding:0 6px;align-items:center;justify-content:center;border-radius:999px;background:#e91e63;color:#fff;font-size:11px;margin-left:5px}
 
+
+/* ===== XALLO MY PROFILE EDITOR ===== */
+.my-profile-box{margin-top:16px}
+.my-profile-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.my-profile-avatar,.my-profile-initial{width:82px;height:82px;border-radius:50%;flex:0 0 82px;object-fit:cover;background:#17263b;border:3px solid #08a9ff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800}
+.my-profile-label{font-size:12px;color:#9eacc0;margin:8px 0 6px}
+.my-profile-save{background:#08a9ff}
+.my-profile-upload{background:#00a878}
+.my-profile-stats-row{display:flex;gap:10px;margin:12px 0}
+.my-profile-stat{flex:1;text-align:center;background:#101d31;border:1px solid #283b55;border-radius:12px;padding:10px}
+.my-profile-stat b{display:block;font-size:18px}
+.my-profile-stat span{font-size:11px;color:#8f9db4}
+
 </style>
 
 </head>
@@ -660,6 +673,35 @@ button:disabled{
 
   <div class="email" id="userEmail"></div>
 
+  <!-- ================= MY PROFILE ================= -->
+  <div class="box my-profile-box">
+    <h3>👤 My Profile</h3>
+    <div class="my-profile-top">
+      <img id="myProfileAvatar" class="my-profile-avatar" alt="Profile picture" style="display:none">
+      <div id="myProfileInitial" class="my-profile-initial">X</div>
+      <div style="min-width:0">
+        <div id="myProfileDisplayName" class="profile-name">User</div>
+        <div class="small" style="text-align:left">Edit your public profile</div>
+      </div>
+    </div>
+
+    <div class="my-profile-label">Profile picture</div>
+    <input id="myAvatarFile" type="file" accept="image/*">
+    <button type="button" class="my-profile-upload" id="myAvatarButton" onclick="uploadMyAvatar()">🖼️ Upload Profile Picture</button>
+
+    <div class="my-profile-label">Username</div>
+    <input id="myProfileUsername" type="text" maxlength="30" placeholder="Username">
+
+    <div class="my-profile-label">Bio</div>
+    <textarea id="myProfileBio" maxlength="160" placeholder="Write something about yourself..."></textarea>
+
+    <button type="button" class="my-profile-save" id="myProfileSaveButton" onclick="saveMyProfile()">💾 Save Profile</button>
+
+    <div class="my-profile-stats-row">
+      <div class="my-profile-stat"><b id="myFollowersCount">0</b><span>Followers</span></div>
+      <div class="my-profile-stat"><b id="myFollowingCount">0</b><span>Following</span></div>
+    </div>
+  </div>
 
   <!-- COINS -->
 
@@ -1224,6 +1266,110 @@ async function login(){
 
 
 /* =========================================
+   MY PROFILE
+========================================= */
+async function loadMyProfile(email){
+  if(!email) return;
+  try{
+    const {data,error}=await supabaseClient.from("users")
+      .select("username,avatar_url,bio").eq("email",email).maybeSingle();
+    if(error) throw error;
+
+    const username=data?.username || email.split("@")[0];
+    document.getElementById("myProfileUsername").value=username;
+    document.getElementById("myProfileBio").value=data?.bio || "";
+    document.getElementById("myProfileDisplayName").textContent=username;
+
+    const avatar=document.getElementById("myProfileAvatar");
+    const initial=document.getElementById("myProfileInitial");
+    if(data?.avatar_url){
+      avatar.src=data.avatar_url; avatar.style.display="block"; initial.style.display="none";
+    }else{
+      avatar.style.display="none"; initial.style.display="flex";
+      initial.textContent=username.charAt(0).toUpperCase();
+    }
+    await loadMyFollowStats(email);
+  }catch(e){ console.warn("Profile load:",e.message); }
+}
+
+async function loadMyFollowStats(email){
+  try{
+    const [a,b]=await Promise.all([
+      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("following_email",email),
+      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("follower_email",email)
+    ]);
+    document.getElementById("myFollowersCount").textContent=Number(a.count||0);
+    document.getElementById("myFollowingCount").textContent=Number(b.count||0);
+  }catch(e){ console.warn("Follow stats:",e.message); }
+}
+
+async function saveMyProfile(){
+  const {data:userData}=await supabaseClient.auth.getUser();
+  if(!userData?.user){ dashboardMessage("Please login first.","error"); return; }
+
+  const username=(document.getElementById("myProfileUsername").value||"").trim();
+  const bio=(document.getElementById("myProfileBio").value||"").trim();
+  if(!username){ dashboardMessage("Username cannot be empty.","error"); return; }
+
+  const button=document.getElementById("myProfileSaveButton");
+  button.disabled=true; button.textContent="Saving...";
+
+  const {error}=await supabaseClient.from("users").update({username,bio})
+    .eq("email",userData.user.email);
+
+  button.disabled=false; button.textContent="💾 Save Profile";
+  if(error){ dashboardMessage("Profile save error: "+error.message,"error"); return; }
+
+  document.getElementById("myProfileDisplayName").textContent=username;
+  document.getElementById("myProfileInitial").textContent=username.charAt(0).toUpperCase();
+  dashboardMessage("✅ Profile updated successfully.","success");
+}
+
+async function uploadMyAvatar(){
+  const {data:userData}=await supabaseClient.auth.getUser();
+  if(!userData?.user){ dashboardMessage("Please login first.","error"); return; }
+
+  const input=document.getElementById("myAvatarFile");
+  const file=input?.files?.[0];
+  if(!file){ dashboardMessage("Please choose an image first.","error"); return; }
+  if(!file.type.startsWith("image/")){ dashboardMessage("Please select an image file.","error"); return; }
+  if(file.size>5*1024*1024){ dashboardMessage("Image must be smaller than 5 MB.","error"); return; }
+
+  const button=document.getElementById("myAvatarButton");
+  button.disabled=true; button.textContent="Uploading...";
+
+  try{
+    const email=userData.user.email;
+    const safeEmail=email.replace(/[^a-zA-Z0-9]/g,"_");
+    const ext=file.name.includes(".")?file.name.split(".").pop().toLowerCase():"jpg";
+    const path=safeEmail+"/avatar_"+Date.now()+"."+ext;
+
+    const {error:uploadError}=await supabaseClient.storage.from("avatars").upload(path,file,{
+      cacheControl:"3600",upsert:false,contentType:file.type
+    });
+    if(uploadError) throw new Error(uploadError.message);
+
+    const {data:urlData}=supabaseClient.storage.from("avatars").getPublicUrl(path);
+    const avatarUrl=urlData?.publicUrl;
+    if(!avatarUrl) throw new Error("Could not create avatar URL.");
+
+    const {error:updateError}=await supabaseClient.from("users")
+      .update({avatar_url:avatarUrl}).eq("email",email);
+    if(updateError) throw new Error(updateError.message);
+
+    const avatar=document.getElementById("myProfileAvatar");
+    avatar.src=avatarUrl; avatar.style.display="block";
+    document.getElementById("myProfileInitial").style.display="none";
+    input.value="";
+    dashboardMessage("✅ Profile picture updated.","success");
+  }catch(e){
+    dashboardMessage("Avatar upload error: "+(e.message||"Unknown error"),"error");
+  }finally{
+    button.disabled=false; button.textContent="🖼️ Upload Profile Picture";
+  }
+}
+
+/* =========================================
    COINS
 ========================================= */
 
@@ -1280,6 +1426,8 @@ async function showDashboard(user){
 
   document.getElementById("userEmail")
     .textContent=user.email;
+
+  await loadMyProfile(user.email);
 
   await loadCoins(user);
 
