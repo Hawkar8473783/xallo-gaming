@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>پرۆفایل | XALLO-GAMING</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #121212;
+            color: #fff;
+            padding-bottom: 70px;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #1e1e1e;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #333;
+        }
+
+        .profile-header h2 {
+            font-size: 1.2rem;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .profile-pic-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #fe2c55;
+            object-fit: cover;
+            background-color: #333;
+        }
+
+        .edit-pic-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #fe2c55;
+            border: none;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .username-display {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .bio-display {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 15px;
+            max-width: 300px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-number {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .action-buttons-profile {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 10px;
+            background-color: #fe2c55;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .settings-list {
+            padding: 0 20px;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #2a2a2a;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .settings-item:hover {
+            background-color: #1e1e1e;
+        }
+
+        .settings-item-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1rem;
+        }
+
+        .settings-item-icon {
+            font-size: 1.2rem;
+            width: 25px;
+            text-align: center;
+        }
+
+        .settings-item-arrow {
+            color: #666;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(30, 30, 30, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #333;
+            padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.7rem;
+            gap: 3px;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: #fe2c55;
+        }
+
+        .nav-item span {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-header">
+        <h2>پرۆفایل</h2>
+        <a href="index.html" class="back-btn">↩️</a>
+    </div>
+
+    <div class="profile-info">
+        <div class="profile-pic-container">
+            <img src="https://ui-avatars.com/api/?name=XALLO&background=fe2c55&color=fff&size=100" alt="Profile" class="profile-pic" id="profilePic">
+            <button class="edit-pic-btn" onclick="changeProfilePic()">✏️</button>
+        </div>
+        
+        <div class="username-display" id="usernameDisplay">XALLO_GAMER</div>
+        <div class="bio-display" id="bioDisplay">یاریزانی پیشەگەر 🎮 | XALLO-GAMING</div>
+
+        <div class="profile-stats">
+            <div class="stat-item">
+                <span class="stat-number" id="followingCount">120</span>
+                <span class="stat-label">فۆڵۆینگ</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="followersCount">1.5K</span>
+                <span class="stat-label">فۆڵۆوەر</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="likesCount">12.3K</span>
+                <span class="stat-label">لایک</span>
+            </div>
+        </div>
+
+        <div class="action-buttons-profile">
+            <button class="btn-primary" onclick="editProfile()">دەستکاری پرۆفایل</button>
+            <button class="btn-secondary" onclick="shareProfile()">هاوبەشکردن</button>
+        </div>
+    </div>
+
+    <div class="settings-list">
+        <div class="settings-item" onclick="openSettings('account')">
+            <div class="settings-item-left">
+                <span class="settings-item-icon">👤</span>
+                <span>ڕێکخستنی هەژمار</span>
+            </div>
+            <span class="settings-item-arrow">‹</span>
+        </div>
+        
+        <div class="settings-item" onclick="openSettings('privacy')">
+            <div class="settings-item-left">
+                <span class="settings-item-icon">🔒</span>
+                <span>پاراستن و تایبەتمەندی</span>
+            </div>
+            <span class="settings-item-arrow">‹</span>
+        </div>
+
+        <div class="settings-item" onclick="openSettings('notifications')">
+            <div class="settings-item-left">
+                <span class="settings-item-icon">🔔</span>
+                <span>ئاگادارکردنەوەکان</span>
+            </div>
+            <span class="settings-item-arrow">‹</span>
+        </div>
+
+        <div class="settings-item" onclick="openSettings('wallet')">
+            <div class="settings-item-left">
+                <span class="settings-item-icon">💰</span>
+                <span>جزدان و کۆینەکان</span>
+            </div>
+            <span class="settings-item-arrow">‹</span>
+        </div>
+
+        <div class="settings-item" style="border-bottom: none; margin-top: 20px;" onclick="logout()">
+            <div class="settings-item-left">
+                <span class="settings-item-icon">🚪</span>
+                <span style="color: #fe2c55;">چوونەدەرەوە</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span>🏠</span>
+            <span>ماڵەوە</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span>🔍</span>
+            <span>گەڕان</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span>➕</span>
+            <span>بڵاوکردنەوە</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span>💬</span>
+            <span>نامەکان</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <span>👤</span>
+            <span>پرۆفایل</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'لێرە_URL_ی_پرۆژەکەت_دابنێ';
+        const SUPABASE_ANON_KEY = 'لێرە_ANON_KEY_دابنێ';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function checkAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                loadUserProfile(user);
+            }
+        }
+
+        async function loadUserProfile(user) {
+            document.getElementById('usernameDisplay').textContent = user.email.split('@')[0];
+        }
+
+        async function logout() {
+            const { error } = await supabase.auth.signOut();
+            if (error) {
+                alert('هەڵە لە چوونەدەرەوە: ' + error.message);
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function changeProfilePic() {
+            alert("بەشی گۆڕینی وێنە لە داهاتوودا کارا دەکرێت.");
+        }
+
+        function editProfile() {
+            alert("بەشی دەستکاری پرۆفایل لە داهاتوودا کارا دەکرێت.");
+        }
+
+        function shareProfile() {
+            alert("بەشی هاوبەشکردنی پرۆفایل لە داهاتوودا کارا دەکرێت.");
+        }
+
+        function openSettings(section) {
+            alert("بەشی " + section + " لە داهاتوودا کارا دەکرێت.");
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>
