@@ -576,7 +576,7 @@ button:disabled{
 .my-profile-stat b{display:block;font-size:18px}
 .my-profile-stat span{font-size:11px;color:#8f9db4}
 
-</style>
+.upload-preview{width:100%;max-height:280px;object-fit:contain;border-radius:14px;background:#050a12;margin:10px 0;border:1px solid #263a55}.upload-progress-wrap{margin:10px 0}.upload-progress-track{height:9px;border-radius:999px;background:#172235;overflow:hidden}.upload-progress-bar{height:100%;width:0%;border-radius:999px;background:#08a9ff;transition:width .2s ease}.upload-progress-text{font-size:11px;color:#9eacc0;margin-top:6px;text-align:center}</style>
 
 </head>
 
@@ -745,6 +745,12 @@ button:disabled{
     <div
       id="selectedFile"
       class="file-name">
+    </div>
+
+    <video id="videoPreview" class="upload-preview" controls playsinline style="display:none"></video>
+    <div id="uploadProgressWrap" class="upload-progress-wrap" style="display:none">
+      <div class="upload-progress-track"><div id="uploadProgressBar" class="upload-progress-bar"></div></div>
+      <div id="uploadProgressText" class="upload-progress-text">Preparing upload...</div>
     </div>
 
     <textarea
@@ -1575,201 +1581,37 @@ function showSelectedFile(){
 ========================================= */
 
 async function uploadVideo(){
-
-  const {
-    data:userData,
-    error:userError
-  } =
-    await supabaseClient.auth.getUser();
-
-  if(userError || !userData.user){
-
-    dashboardMessage(
-      "Please login first.",
-      "error"
-    );
-
-    return;
-  }
-
-  const input =
-    document.getElementById(
-      "videoFile"
-    );
-
-  if(!input.files || !input.files.length){
-
-    dashboardMessage(
-      "Please choose a video.",
-      "error"
-    );
-
-    return;
-  }
-
-  const file=input.files[0];
-
-  if(!file.type.startsWith("video/")){
-
-    dashboardMessage(
-      "Please select a video file.",
-      "error"
-    );
-
-    return;
-  }
-
-  const maxSize =
-    50 * 1024 * 1024;
-
-  if(file.size > maxSize){
-
-    dashboardMessage(
-      "Video is larger than 50 MB.",
-      "error"
-    );
-
-    return;
-  }
-
-  const caption =
-    document.getElementById(
-      "videoCaption"
-    ).value.trim();
-
-  const button =
-    document.getElementById(
-      "uploadButton"
-    );
-
-  button.disabled=true;
-  button.textContent="Uploading...";
-
+  const {data:userData,error:userError}=await supabaseClient.auth.getUser();
+  if(userError || !userData.user){ dashboardMessage("Please login first.","error"); return; }
+  const input=document.getElementById("videoFile");
+  const file=input?.files?.[0];
+  if(!file){ dashboardMessage("Please choose a video.","error"); return; }
+  if(!file.type.startsWith("video/")){ dashboardMessage("Please select a video file.","error"); return; }
+  if(file.size>50*1024*1024){ dashboardMessage("Video is larger than 50 MB.","error"); return; }
+  const caption=document.getElementById("videoCaption").value.trim();
+  const button=document.getElementById("uploadButton");
+  const wrap=document.getElementById("uploadProgressWrap"), bar=document.getElementById("uploadProgressBar"), txt=document.getElementById("uploadProgressText");
+  button.disabled=true; button.textContent="Uploading..."; if(wrap) wrap.style.display="block"; if(bar) bar.style.width="10%";
   try{
-
-    const email =
-      userData.user.email;
-
-    const safeEmail =
-      email.replace(
-        /[^a-zA-Z0-9]/g,
-        "_"
-      );
-
-    const extension =
-      file.name.includes(".")
-      ? file.name.split(".").pop()
-      : "mp4";
-
-    const filePath =
-      safeEmail +
-      "/" +
-      Date.now() +
-      "_" +
-      Math.random()
-        .toString(36)
-        .substring(2,8) +
-      "." +
-      extension;
-
-    const {
-      error:uploadError
-    } =
-      await supabaseClient.storage
-        .from("videos")
-        .upload(
-          filePath,
-          file,
-          {
-            cacheControl:"3600",
-            upsert:false,
-            contentType:file.type
-          }
-        );
-
-    if(uploadError){
-
-      throw new Error(
-        "Storage Upload Error: " +
-        uploadError.message
-      );
-    }
-
-    const {
-      data:urlData
-    } =
-      supabaseClient.storage
-        .from("videos")
-        .getPublicUrl(filePath);
-
-    const videoUrl =
-      urlData.publicUrl;
-
-    if(!videoUrl){
-
-      throw new Error(
-        "Could not create video URL."
-      );
-    }
-
-    const {
-      error:dbError
-    } =
-      await supabaseClient
-        .from("videos")
-        .insert({
-          user_email:email,
-          video_url:videoUrl,
-          caption:caption,
-          likes:0
-        });
-
-    if(dbError){
-
-      await supabaseClient.storage
-        .from("videos")
-        .remove([filePath]);
-
-      throw new Error(
-        "Database Error: " +
-        dbError.message
-      );
-    }
-
-    input.value="";
-
-    document.getElementById(
-      "selectedFile"
-    ).textContent="";
-
-    document.getElementById(
-      "videoCaption"
-    ).value="";
-
-    dashboardMessage(
-      "✅ Video uploaded successfully!",
-      "success"
-    );
-
-    await loadVideos();
-
-  }catch(error){
-
-    console.error(error);
-
-    dashboardMessage(
-      error.message ||
-      "Video upload failed.",
-      "error"
-    );
-
-  }finally{
-
-    button.disabled=false;
-    button.textContent="⬆️ Upload Video";
-  }
+    const email=userData.user.email, safeEmail=email.replace(/[^a-zA-Z0-9]/g,"_");
+    const extension=file.name.includes(".")?file.name.split(".").pop().toLowerCase():"mp4";
+    const filePath=safeEmail+"/"+Date.now()+"_"+Math.random().toString(36).substring(2,8)+"."+extension;
+    if(txt) txt.textContent="Uploading video to storage..."; if(bar) bar.style.width="25%";
+    const {error:uploadError}=await supabaseClient.storage.from("videos").upload(filePath,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+    if(uploadError) throw new Error("Storage Upload Error: "+uploadError.message);
+    if(txt) txt.textContent="Saving video information..."; if(bar) bar.style.width="70%";
+    const {data:urlData}=supabaseClient.storage.from("videos").getPublicUrl(filePath);
+    const videoUrl=urlData?.publicUrl; if(!videoUrl) throw new Error("Could not create video URL.");
+    const {error:dbError}=await supabaseClient.from("videos").insert({user_email:email,video_url:videoUrl,caption:caption,likes:0,views:0});
+    if(dbError){ await supabaseClient.storage.from("videos").remove([filePath]); throw new Error("Database Error: "+dbError.message); }
+    if(bar) bar.style.width="100%"; if(txt) txt.textContent="Upload complete!";
+    input.value=""; document.getElementById("selectedFile").textContent=""; document.getElementById("videoCaption").value="";
+    const preview=document.getElementById("videoPreview"); if(preview){ preview.pause(); preview.removeAttribute("src"); preview.load(); preview.style.display="none"; }
+    dashboardMessage("✅ Video uploaded successfully!","success");
+    await loadVideos(); await loadTikTokFeed();
+  }catch(error){ console.error(error); dashboardMessage(error.message||"Video upload failed.","error"); if(txt) txt.textContent="Upload failed."; }
+  finally{ button.disabled=false; button.textContent="⬆️ Upload Video"; setTimeout(()=>{if(wrap) wrap.style.display="none"; if(bar) bar.style.width="0%";},1200); }
 }
-
 
 /* =========================================
    LOAD VIDEOS
