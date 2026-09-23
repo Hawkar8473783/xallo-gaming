@@ -459,6 +459,73 @@ button:disabled{
   font-size:13px;
 }
 
+
+/* ================= SEARCH ================= */
+.search-box{
+  margin:20px 0;
+  padding:14px;
+  background:#0c1b2e;
+  border:1px solid #315174;
+  border-radius:18px;
+}
+
+.search-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.search-row input{
+  flex:1;
+  margin:0;
+}
+
+.search-button{
+  width:auto;
+  margin:0;
+  padding:13px 16px;
+  white-space:nowrap;
+}
+
+.search-results{
+  margin-top:12px;
+}
+
+.search-result{
+  padding:12px;
+  margin-top:8px;
+  background:#070b19;
+  border:1px solid #283653;
+  border-radius:12px;
+}
+
+.search-result-user{
+  color:#08a9ff;
+  font-weight:bold;
+}
+
+.search-result-caption{
+  margin-top:5px;
+  color:#ddd;
+}
+
+.search-result-stats{
+  margin-top:7px;
+  color:#8d9bb0;
+  font-size:12px;
+}
+
+@media(max-width:520px){
+  .search-row{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .search-button{
+    width:100%;
+  }
+}
+
 </style>
 </head>
 
@@ -1825,6 +1892,291 @@ async function uploadVideo(){
 }
 
 
+
+/* =========================================
+   SEARCH VIDEOS
+========================================= */
+
+let searchTimer = null;
+
+function searchVideos(){
+
+  clearTimeout(searchTimer);
+
+  searchTimer = setTimeout(async () => {
+
+    const input =
+      document.getElementById("searchInput");
+
+    const results =
+      document.getElementById("searchResults");
+
+    if(!input || !results){
+      return;
+    }
+
+    const query =
+      input.value.trim().toLowerCase();
+
+    if(!query){
+      results.innerHTML = "";
+      return;
+    }
+
+    results.innerHTML =
+      '<div class="small">Searching...</div>';
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("videos")
+      .select(
+        "id,user_email,video_url,caption,likes,views,created_at"
+      )
+      .order(
+        "created_at",
+        {ascending:false}
+      )
+      .limit(100);
+
+    if(error){
+
+      results.innerHTML =
+        '<div class="small">Search error: ' +
+        escapeHtml(error.message) +
+        '</div>';
+
+      return;
+    }
+
+    const matches = (data || []).filter(video => {
+
+      const username =
+        String(video.user_email || "").toLowerCase();
+
+      const caption =
+        String(video.caption || "").toLowerCase();
+
+      return (
+        username.includes(query) ||
+        caption.includes(query)
+      );
+    });
+
+    if(!matches.length){
+
+      results.innerHTML =
+        '<div class="small">No videos found 🔎</div>';
+
+      return;
+    }
+
+    results.innerHTML = matches.map(video => `
+
+      <div class="search-result">
+
+        <div class="search-result-user">
+          👤 ${escapeHtml(video.user_email)}
+        </div>
+
+        <div class="search-result-caption">
+          ${escapeHtml(video.caption || "No caption")}
+        </div>
+
+        <div class="search-result-stats">
+          ❤️ ${Number(video.likes) || 0}
+          &nbsp; • &nbsp;
+          👁️ ${Number(video.views) || 0}
+          &nbsp; • &nbsp;
+          ${new Date(video.created_at).toLocaleString()}
+        </div>
+
+        <button
+          class="search-button"
+          onclick="openSearchVideo('${video.id}')">
+          ▶️ Watch Video
+        </button>
+
+      </div>
+
+    `).join("");
+
+  }, 250);
+}
+
+
+function openSearchVideo(videoId){
+
+  const videoElement =
+    document.querySelector(
+      `video[src*="${CSS.escape(videoId)}"]`
+    );
+
+  /* Search results don't contain the video element.
+     Find the matching video card through its data id. */
+  const cards =
+    document.querySelectorAll(".video-card");
+
+  let target = null;
+
+  cards.forEach(card => {
+
+    const video = card.querySelector("video");
+
+    if(video && video.getAttribute("data-video-id") === videoId){
+      target = card;
+    }
+
+  });
+
+  if(target){
+
+    target.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+
+    target.style.outline = "2px solid #08a9ff";
+
+    setTimeout(() => {
+      target.style.outline = "";
+    }, 1800);
+
+    return;
+  }
+
+  /* If the video is outside the current feed, load it directly. */
+  loadSingleSearchVideo(videoId);
+}
+
+
+async function loadSingleSearchVideo(videoId){
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("videos")
+    .select(
+      "id,user_email,video_url,caption,likes,views,created_at"
+    )
+    .eq("id",videoId)
+    .maybeSingle();
+
+  if(error || !data){
+
+    dashboardMessage(
+      "Video could not be opened.",
+      "error"
+    );
+
+    return;
+  }
+
+  const feed =
+    document.getElementById("videoFeed");
+
+  if(!feed){
+    return;
+  }
+
+  const existing =
+    document.querySelector(
+      `.video-card[data-video-card-id="${CSS.escape(videoId)}"]`
+    );
+
+  if(existing){
+
+    existing.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+
+    return;
+  }
+
+  const card = document.createElement("div");
+
+  card.className = "video-card";
+  card.dataset.videoCardId = videoId;
+
+  card.innerHTML = `
+
+    <video
+      controls
+      playsinline
+      preload="metadata"
+      data-video-id="${escapeHtml(data.id)}"
+      onplay="registerVideoView('${escapeHtml(data.id)}',this)"
+      src="${escapeHtml(data.video_url)}">
+    </video>
+
+    <div class="video-info">
+
+      <div class="video-user">
+        👤 ${escapeHtml(data.user_email)}
+      </div>
+
+      <div class="caption">
+        ${escapeHtml(data.caption || "")}
+      </div>
+
+      <div class="video-date">
+        ${new Date(data.created_at).toLocaleString()}
+      </div>
+
+      <div class="video-stats">
+
+        <span class="video-stat">
+          ❤️ ${Number(data.likes) || 0}
+        </span>
+
+        <span
+          class="video-stat"
+          id="views-${escapeHtml(data.id)}">
+          👁️ ${Number(data.views) || 0}
+        </span>
+
+      </div>
+
+      <button
+        class="like-button"
+        onclick="likeVideo('${escapeHtml(data.id)}',this)">
+        ❤️ ${Number(data.likes) || 0}
+      </button>
+
+      <div class="comment-area">
+
+        <input
+          class="comment-input"
+          id="comment-${escapeHtml(data.id)}"
+          type="text"
+          maxlength="500"
+          placeholder="Write a comment...">
+
+        <button
+          class="comment-button"
+          onclick="addComment('${escapeHtml(data.id)}')">
+          💬 Add Comment
+        </button>
+
+        <div class="comments-list"></div>
+
+      </div>
+
+    </div>
+  `;
+
+  feed.prepend(card);
+
+  card.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+}
+
+
 /* =========================================
    LOAD VIDEOS
 ========================================= */
@@ -1967,12 +2319,13 @@ async function loadVideos(){
 
       return `
 
-        <div class="video-card">
+        <div class="video-card" data-video-card-id="${video.id}">
 
           <video
             controls
             playsinline
             preload="metadata"
+            data-video-id="${video.id}"
             onplay="registerVideoView('${video.id}',this)"
             src="${escapeHtml(video.video_url)}">
           </video>
