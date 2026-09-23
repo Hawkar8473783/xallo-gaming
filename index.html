@@ -577,7 +577,18 @@ button:disabled{
 .my-profile-stat b{display:block;font-size:18px}
 .my-profile-stat span{font-size:11px;color:#8f9db4}
 
-.upload-preview{width:100%;max-height:280px;object-fit:contain;border-radius:14px;background:#050a12;margin:10px 0;border:1px solid #263a55}.upload-progress-wrap{margin:10px 0}.upload-progress-track{height:9px;border-radius:999px;background:#172235;overflow:hidden}.upload-progress-bar{height:100%;width:0%;border-radius:999px;background:#08a9ff;transition:width .2s ease}.upload-progress-text{font-size:11px;color:#9eacc0;margin-top:6px;text-align:center}</style>
+.upload-preview{width:100%;max-height:280px;object-fit:contain;border-radius:14px;background:#050a12;margin:10px 0;border:1px solid #263a55}.upload-progress-wrap{margin:10px 0}.upload-progress-track{height:9px;border-radius:999px;background:#172235;overflow:hidden}.upload-progress-bar{height:100%;width:0%;border-radius:999px;background:#08a9ff;transition:width .2s ease}.upload-progress-text{font-size:11px;color:#9eacc0;margin-top:6px;text-align:center}
+.settings-box{margin-top:15px;}
+.settings-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #263553;color:#ddd;}
+.settings-row:last-child{border-bottom:0;}
+.settings-toggle,.settings-danger{width:auto;min-width:76px;padding:10px 14px;margin:0;background:#263b63;font-size:13px;}
+.settings-danger{background:#e53935;}
+.light-mode{background:#eef3f8!important;color:#172033!important;}
+.light-mode .container{background:#fff!important;border-color:#cbd5e1!important;}
+.light-mode input,.light-mode select,.light-mode textarea{background:#f8fafc!important;color:#172033!important;border-color:#cbd5e1!important;}
+.light-mode .box,.light-mode .coins,.light-mode .video-card,.light-mode .comment{background:#f8fafc!important;color:#172033!important;}
+
+</style>
 
 </head>
 
@@ -701,6 +712,24 @@ button:disabled{
     <div class="my-profile-stats-row">
       <div class="my-profile-stat"><b id="myFollowersCount">0</b><span>Followers</span></div>
       <div class="my-profile-stat"><b id="myFollowingCount">0</b><span>Following</span></div>
+    </div>
+  </div>
+
+
+  <!-- ================= SETTINGS ================= -->
+  <div class="box settings-box">
+    <h3>⚙️ Settings</h3>
+    <div class="settings-row">
+      <div>🌙 Dark Mode</div>
+      <button type="button" id="themeButton" class="settings-toggle" onclick="toggleTheme()">ON</button>
+    </div>
+    <div class="settings-row">
+      <div>🔔 Notifications</div>
+      <button type="button" class="settings-toggle" onclick="scrollToNotifications()">Open</button>
+    </div>
+    <div class="settings-row">
+      <div>🚪 Account</div>
+      <button type="button" class="settings-danger" onclick="logout()">Logout</button>
     </div>
   </div>
 
@@ -1041,6 +1070,28 @@ function dashboardMessage(text,type){
     "message " + type;
 }
 
+
+
+/* =========================================
+   SETTINGS
+========================================= */
+function toggleTheme(){
+  const enabled=document.body.classList.toggle("light-mode");
+  localStorage.setItem("xallo_theme", enabled?"light":"dark");
+  const b=document.getElementById("themeButton");
+  if(b) b.textContent=enabled?"OFF":"ON";
+}
+function loadTheme(){
+  const light=localStorage.getItem("xallo_theme")==="light";
+  document.body.classList.toggle("light-mode",light);
+  const b=document.getElementById("themeButton");
+  if(b) b.textContent=light?"OFF":"ON";
+}
+function scrollToNotifications(){
+  const el=document.getElementById("notificationsBox") || document.getElementById("notificationBox");
+  if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+loadTheme();
 
 /* =========================================
    LOGIN / SIGNUP UI
