@@ -48,12 +48,41 @@
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; text-decoration: none; font-size: 0.6rem; gap: 2px; }
         .nav-item.active { color: #fe2c55; }
         .nav-item span { font-size: 1rem; }
+    
+        .auth-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.78); padding: 20px; }
+        .auth-modal.show { display: flex; }
+        .auth-box { width: min(420px, 100%); background: #171717; border: 1px solid #333; border-radius: 18px; padding: 24px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.55); text-align: right; }
+        .auth-box h2 { font-size: 1.35rem; margin-bottom: 8px; }
+        .auth-box p { color: #aaa; font-size: .85rem; line-height: 1.6; margin-bottom: 18px; }
+        .auth-box input { width: 100%; border: 1px solid #444; background: #0c0c0c; color: #fff; border-radius: 10px; padding: 13px; margin: 6px 0; outline: none; direction: ltr; }
+        .auth-box input:focus { border-color: #fe2c55; }
+        .auth-main { width: 100%; border: 0; background: #fe2c55; color: #fff; padding: 13px; border-radius: 10px; margin-top: 10px; font-weight: bold; cursor: pointer; }
+        .auth-switch { width: 100%; border: 0; background: transparent; color: #ddd; padding: 12px 4px 2px; cursor: pointer; }
+        .auth-close { position: absolute; left: 12px; top: 10px; border: 0; background: transparent; color: #fff; font-size: 1.6rem; cursor: pointer; }
+        #authMessage { min-height: 22px; margin-top: 10px; color: #ffd1da; font-size: .8rem; line-height: 1.5; }
+        .account-btn { background: rgba(0,0,0,.5); border: 1px solid #444; color: #fff; font-size: .75rem; min-width: 90px; height: 32px; border-radius: 18px; cursor: pointer; padding: 0 10px; backdrop-filter: blur(5px); }
+
     </style>
 </head>
 <body>
 
+
+    <div id="authModal" class="auth-modal" aria-hidden="true">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeAuth()">×</button>
+            <h2 id="authTitle">چوونەژوورەوە</h2>
+            <p id="authHint">بۆ بەردەوامبوون بچۆ ژوورەوە یان هەژمارێک دروست بکە.</p>
+            <input id="authEmail" type="email" placeholder="ئیمەیڵ" autocomplete="email">
+            <input id="authPassword" type="password" placeholder="وشەی نهێنی" autocomplete="current-password">
+            <button class="auth-main" onclick="submitAuth()">چوونەژوورەوە</button>
+            <button class="auth-switch" onclick="toggleAuthMode()" id="authSwitch">هەژمارت نییە؟ هەژمار دروست بکە</button>
+            <div id="authMessage"></div>
+        </div>
+    </div>
+
     <div class="top-controls">
         <button class="top-btn" id="muteBtn" onclick="toggleMute()">🔇</button>
+        <button class="account-btn" id="accountBtn" onclick="handleAccount()">چوونەژوورەوە</button>
     </div>
 
     <div class="video-feed" id="videoFeed">
@@ -97,10 +126,14 @@
         <a href="profile.html" class="nav-item"><span>👤</span><span>پرۆفایل</span></a>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ⚠️ Supabase لە ئێستادا چالاک نییە
-        // کاتێک پرۆژەیەکی نوێت دروست کرد، ئەم بەشە دەگۆڕین
+        // Supabase configuration
+        const SUPABASE_URL = "https://vnyprsjjmmjahkisozib.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueXByc2pqbW1qYWhraXNvemliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5OTE0MjEsImV4cCI6MjEwNTU2NzQyMX0.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let authMode = "login";
         let isMuted = true;
         const videos = document.querySelectorAll('video');
         const muteBtn = document.getElementById('muteBtn');
@@ -136,6 +169,90 @@
         function toggleFollow(btn) { btn.textContent = btn.textContent === '+' ? '✓' : '+'; }
         function openComments() { alert("بەشی کۆمێنتەکان لە داهاتوودا دروست دەکرێت!"); }
         function shareVideo() { alert("بەشی هاوبەشکردن لە داهاتوودا دروست دەکرێت!"); }
+
+        function openAuth(mode = "login") {
+            authMode = mode;
+            document.getElementById("authTitle").textContent = mode === "login" ? "چوونەژوورەوە" : "دروستکردنی هەژمار";
+            document.getElementById("authHint").textContent = mode === "login"
+                ? "ئیمەیڵ و وشەی نهێنییەکەت بنووسە."
+                : "ئیمەیڵ و وشەی نهێنییەکەت بنووسە بۆ دروستکردنی هەژمار.";
+            document.getElementById("authSwitch").textContent = mode === "login"
+                ? "هەژمارت نییە؟ هەژمار دروست بکە"
+                : "هەژمارت هەیە؟ بچۆ ژوورەوە";
+            document.getElementById("authMessage").textContent = "";
+            document.getElementById("authModal").classList.add("show");
+            document.getElementById("authModal").setAttribute("aria-hidden", "false");
+        }
+
+        function closeAuth() {
+            document.getElementById("authModal").classList.remove("show");
+            document.getElementById("authModal").setAttribute("aria-hidden", "true");
+        }
+
+        function toggleAuthMode() {
+            openAuth(authMode === "login" ? "signup" : "login");
+        }
+
+        async function submitAuth() {
+            const email = document.getElementById("authEmail").value.trim();
+            const password = document.getElementById("authPassword").value;
+            const message = document.getElementById("authMessage");
+
+            if (!email || !password) {
+                message.textContent = "تکایە ئیمەیڵ و وشەی نهێنی پڕ بکەرەوە.";
+                return;
+            }
+            if (password.length < 6) {
+                message.textContent = "وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.";
+                return;
+            }
+
+            message.textContent = "تکایە چاوەڕێ بکە...";
+
+            if (authMode === "login") {
+                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) {
+                    message.textContent = error.message;
+                    return;
+                }
+                closeAuth();
+            } else {
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                if (error) {
+                    message.textContent = error.message;
+                    return;
+                }
+                if (data.session) {
+                    closeAuth();
+                } else {
+                    message.textContent = "هەژمار دروستکرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە.";
+                }
+            }
+            updateAccountButton();
+        }
+
+        async function handleAccount() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                if (confirm("دەتەوێت لە هەژمارەکەت بچیتە دەرەوە؟")) {
+                    await supabaseClient.auth.signOut();
+                    updateAccountButton();
+                }
+            } else {
+                openAuth("login");
+            }
+        }
+
+        async function updateAccountButton() {
+            const btn = document.getElementById("accountBtn");
+            if (!btn) return;
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            btn.textContent = session ? "دەرچوون" : "چوونەژوورەوە";
+        }
+
+        supabaseClient.auth.onAuthStateChange(() => updateAccountButton());
+        updateAccountButton();
+
     </script>
 </body>
 </html>
