@@ -1,123 +1,295 @@
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>XALLO-GAMING | Profile</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,sans-serif}
-body{background:#000;color:#fff;min-height:100vh}
-.page{max-width:620px;margin:auto;min-height:100vh;background:#080808;padding-bottom:80px}
-.header{padding:18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #222}
-.header h1{font-size:1rem}.back{color:#fff;text-decoration:none;font-size:1.3rem}
-.profile{padding:24px 18px 16px;text-align:center}
-.avatar{width:82px;height:82px;border-radius:50%;background:#222;border:2px solid #444;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 12px}
-.username{font-size:1.1rem;font-weight:bold}.bio{color:#aaa;font-size:.8rem;margin:7px auto;max-width:360px;line-height:1.5}
-.stats{display:flex;justify-content:center;gap:34px;margin:18px 0}.stat strong{display:block;font-size:1rem}.stat span{color:#888;font-size:.7rem}
-.actions{display:flex;gap:8px;justify-content:center}.btn{border:0;border-radius:10px;padding:10px 22px;background:#fe2c55;color:#fff;font-weight:bold}.btn.alt{background:#292929}
-.tabs{display:flex;border-top:1px solid #222;border-bottom:1px solid #222}.tab{flex:1;padding:12px;text-align:center;color:#aaa}.tab.active{color:#fff;border-bottom:2px solid #fe2c55}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:2px}.tile{aspect-ratio:9/14;background:#151515;overflow:hidden}.tile video{width:100%;height:100%;object-fit:cover}.empty{text-align:center;color:#777;padding:50px 20px;font-size:.85rem}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.show{display:flex}.box{width:min(420px,100%);background:#171717;border:1px solid #333;border-radius:16px;padding:20px}.box h2{font-size:1rem;margin-bottom:14px}.box input,.box textarea{width:100%;margin:5px 0;background:#090909;color:#fff;border:1px solid #444;border-radius:9px;padding:11px;direction:rtl}.box textarea{min-height:90px}.close{float:left;background:none;border:0;color:#fff;font-size:1.4rem}.save{width:100%;margin-top:10px;background:#fe2c55;border:0;color:#fff;padding:12px;border-radius:9px;font-weight:bold}.msg{font-size:.75rem;color:#aaa;margin-top:8px}
-.nav{position:fixed;bottom:0;left:0;right:0;max-width:620px;margin:auto;background:rgba(25,25,25,.97);border-top:1px solid #333;display:flex;justify-content:space-around;padding:8px 0}.nav a{color:#888;text-decoration:none;text-align:center;font-size:.65rem}.nav a span{display:block;font-size:1rem}.nav .active{color:#fe2c55}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XALLO-GAMING | پرۆفایل</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:#080808;color:#fff;font-family:Arial,"Noto Sans Arabic",sans-serif}
+    body{padding-bottom:76px}
+    button,input,textarea{font:inherit}
+    .top{height:62px;border-bottom:1px solid #252525;display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-weight:800}
+    .top .brand{font-size:19px}
+    .top .back{color:#aaa;text-decoration:none;font-size:15px}
+    .profile{text-align:center;padding:32px 16px 22px}
+    .avatar{width:116px;height:116px;border-radius:50%;margin:auto;background:#202020;border:3px solid #3a3a3a;display:flex;align-items:center;justify-content:center;font-size:48px}
+    .name{font-size:23px;font-weight:800;margin-top:14px}
+    .username{color:#999;margin-top:5px}
+    .bio{max-width:520px;margin:12px auto;color:#bbb;line-height:1.7}
+    .stats{display:flex;justify-content:center;gap:42px;margin:22px 0}
+    .stat strong{display:block;font-size:21px}
+    .stat span{display:block;color:#999;font-size:13px;margin-top:5px}
+    .actions{display:flex;justify-content:center;gap:10px}
+    .btn{border:0;border-radius:13px;padding:12px 22px;font-weight:800;cursor:pointer}
+    .btn.dark{background:#292929;color:#fff}
+    .btn.pink{background:#ff174f;color:#fff}
+    .section-title{border-top:1px solid #252525;border-bottom:2px solid #ff174f;padding:16px;text-align:center;font-size:18px;font-weight:800}
+    .empty{text-align:center;color:#777;padding:70px 20px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:2px}
+    .video{aspect-ratio:9/14;background:#151515;position:relative;overflow:hidden}
+    .video video{width:100%;height:100%;object-fit:cover}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:20;padding:22px}
+    .box{max-width:520px;margin:55px auto 0;background:#171717;border:1px solid #303030;border-radius:18px;padding:22px}
+    .box h2{margin-top:0}
+    label{display:block;color:#aaa;font-size:14px;margin:14px 0 7px}
+    input,textarea{width:100%;background:#0d0d0d;color:#fff;border:1px solid #383838;border-radius:12px;padding:12px;outline:none}
+    textarea{min-height:110px;resize:vertical}
+    .modal-actions{display:flex;gap:10px;margin-top:18px}
+    .modal-actions button{flex:1}
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:#141414;border-top:1px solid #303030;display:flex;z-index:10}
+    .nav a{flex:1;color:#999;text-decoration:none;text-align:center;padding-top:10px;font-size:12px}
+    .nav a.active{color:#ff174f}
+    .nav .icon{display:block;font-size:22px;margin-bottom:4px}
+    .loading{text-align:center;color:#999;padding:60px 20px}
+    @media(max-width:430px){
+      .stats{gap:28px}
+      .stat span{font-size:12px}
+      .actions .btn{padding:11px 16px}
+    }
+  </style>
 </head>
 <body>
-<div class="page">
-  <div class="header"><a class="back" href="index.html">â€¹</a><h1>Ù¾Ø±Û†ÙØ§ÛŒÙ„</h1><span></span></div>
+
+<header class="top">
+  <a class="back" href="index.html">← گەڕانەوە</a>
+  <div class="brand">XALLO-GAMING</div>
+  <div style="width:70px"></div>
+</header>
+
+<main>
   <section class="profile">
-    <div class="avatar">ðŸ‘¤</div>
-    <div class="username" id="username">Ú†Ø§ÙˆÛ•Ú•ÛŽ Ø¨Ú©Û•...</div>
+    <div class="avatar" id="avatar">🎮</div>
+    <div class="name" id="displayName">چاوەڕوان بە...</div>
+    <div class="username" id="username"></div>
     <div class="bio" id="bio"></div>
+
     <div class="stats">
-      <div class="stat"><strong id="followers">0</strong><span>ÙÛ†ÚµÛ†ÙˆÛ•Ø±</span></div>
-      <div class="stat"><strong id="following">0</strong><span>ÙÛ†ÚµÛ†ÙˆÛŒÙ†Ú¯</span></div>
-      <div class="stat"><strong id="videosCount">0</strong><span>Ú¤ÛŒØ¯ÛŒÛ†</span></div>
+      <div class="stat"><strong id="followers">0</strong><span>شوێنکەوتوو</span></div>
+      <div class="stat"><strong id="following">0</strong><span>شوێنکەوتووم</span></div>
+      <div class="stat"><strong id="videoCount">0</strong><span>ڤیدیۆ</span></div>
     </div>
-    <div class="actions"><button class="btn" id="editBtn" onclick="openEdit()">Ø¯Û•Ø³ØªÚ©Ø§Ø±ÛŒÚ©Ø±Ø¯Ù†</button><button class="btn alt" onclick="logout()">Ø¯Û•Ø±Ú†ÙˆÙˆÙ†</button></div>
+
+    <div class="actions">
+      <button class="btn dark" onclick="openEdit()">✏️ دەستکاری پرۆفایل</button>
+      <button class="btn pink" onclick="logout()">🚪 دەرچوون</button>
+    </div>
   </section>
-  <div class="tabs"><div class="tab active">Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù†</div></div>
-  <div class="grid" id="grid"></div>
-</div>
+
+  <div class="section-title">🎬 ڤیدیۆکانی من</div>
+  <div id="videos" class="loading">چاوەڕوان بە...</div>
+</main>
 
 <div class="modal" id="editModal">
   <div class="box">
-    <button class="close" onclick="closeEdit()">Ã—</button>
-    <h2>Ø¯Û•Ø³ØªÚ©Ø§Ø±ÛŒÚ©Ø±Ø¯Ù†ÛŒ Ù¾Ø±Û†ÙØ§ÛŒÙ„</h2>
-    <input id="editUsername" maxlength="30" placeholder="Ù†Ø§ÙˆÛŒ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±">
-    <input id="editDisplay" maxlength="60" placeholder="Ù†Ø§ÙˆÛŒ Ù¾ÛŒØ´Ø§Ù†Ø¯Ø§Ù†">
-    <textarea id="editBio" maxlength="200" placeholder="Bio"></textarea>
-    <button class="save" onclick="saveProfile()">Ù¾Ø§Ø´Û•Ú©Û•ÙˆØªÚ©Ø±Ø¯Ù†</button>
-    <div class="msg" id="editMsg"></div>
+    <h2>دەستکاری پرۆفایل</h2>
+
+    <label>ناوی پیشاندان</label>
+    <input id="editDisplayName" maxlength="40" placeholder="ناوت">
+
+    <label>ناوی بەکارهێنەر</label>
+    <input id="editUsername" maxlength="30" placeholder="username">
+
+    <label>بایۆ</label>
+    <textarea id="editBio" maxlength="160" placeholder="کەمێک دەربارەی خۆت بنووسە..."></textarea>
+
+    <div class="modal-actions">
+      <button class="btn dark" onclick="closeEdit()">پاشگەزبوونەوە</button>
+      <button class="btn pink" onclick="saveProfile()">پاشەکەوتکردن</button>
+    </div>
   </div>
 </div>
 
-<div class="nav">
-  <a href="index.html"><span>ðŸ </span>Ù…Ø§ÚµÛ•ÙˆÛ•</a>
-  <a href="index.html"><span>ðŸ”</span>Ú¯Û•Ú•Ø§Ù†</a>
-  <a href="index.html"><span>âž•</span>Ø¨ÚµØ§ÙˆÚ©Ø±Ø¯Ù†Û•ÙˆÛ•</a>
-  <a href="#"><span>ðŸ’¬</span>Ù†Ø§Ù…Û•Ú©Ø§Ù†</a>
-  <a class="active" href="profile.html"><span>ðŸ‘¤</span>Ù¾Ø±Û†ÙØ§ÛŒÙ„</a>
-</div>
+<nav class="nav">
+  <a href="index.html"><span class="icon">🏠</span>سەرەکی</a>
+  <a href="index.html"><span class="icon">🔎</span>گەڕان</a>
+  <a href="index.html"><span class="icon">➕</span>بڵاوکردنەوە</a>
+  <a href="index.html"><span class="icon">🔔</span>ئاگادارکردنەوە</a>
+  <a class="active" href="profile.html"><span class="icon">👤</span>پرۆفایل</a>
+</nav>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL="https://vnyprsjjmmjahkisozib.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZXMiLCJyZWYiOiJ2bnlwcnNqam1tamFoa2lzb3ppYiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzg5OTkxNDIxLCJleHAiOjIxMDU1Njc0MjF9.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let session=null;
+const SUPABASE_URL = "https://vnyprsjjmmjahkisozib.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueXByc2pqbW1qYWhraXNvemliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5OTE0MjEsImV4cCI6MjEwNTU2NzQyMX0.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentUser = null;
+let profileData = null;
 
 async function init(){
- const r=await sb.auth.getSession(); session=r.data.session;
- if(!session){location.href="index.html";return;}
- await loadProfile(); await loadStats(); await loadVideos();
+  const {data:{session}} = await supabaseClient.auth.getSession();
+
+  if(!session){
+    location.href = "index.html";
+    return;
+  }
+
+  currentUser = session.user;
+  await loadProfile();
+  await loadVideos();
 }
+
 async function loadProfile(){
- let {data}=await sb.from("profiles").select("username,display_name,bio").eq("id",session.user.id).maybeSingle();
- if(!data){
-   await sb.from("profiles").insert({id:session.user.id,username:(session.user.email||"user").split("@")[0],display_name:(session.user.email||"user").split("@")[0]});
-   ({data}=await sb.from("profiles").select("username,display_name,bio").eq("id",session.user.id).maybeSingle());
- }
- document.getElementById("username").textContent="@"+(data?.username||"user");
- document.getElementById("bio").textContent=data?.bio||"";
+  const {data,error} = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", currentUser.id)
+    .maybeSingle();
+
+  if(error){
+    console.error(error);
+    document.getElementById("displayName").textContent = "هەڵەیەک ڕوویدا";
+    return;
+  }
+
+  if(!data){
+    const newProfile = {
+      id: currentUser.id,
+      username: currentUser.email ? currentUser.email.split("@")[0] : "user",
+      display_name: currentUser.email ? currentUser.email.split("@")[0] : "user",
+      bio: ""
+    };
+
+    const {data:created,error:createError} = await supabaseClient
+      .from("profiles")
+      .insert(newProfile)
+      .select()
+      .single();
+
+    if(createError){
+      console.error(createError);
+      profileData = newProfile;
+    }else{
+      profileData = created;
+    }
+  }else{
+    profileData = data;
+  }
+
+  renderProfile();
 }
-async function loadStats(){
- const [v,f,fo]=await Promise.all([
-  sb.from("videos").select("*",{count:"exact",head:true}).eq("user_id",session.user.id),
-  sb.from("follows").select("*",{count:"exact",head:true}).eq("following_id",session.user.id),
-  sb.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",session.user.id)
- ]);
- document.getElementById("videosCount").textContent=v.count||0;
- document.getElementById("followers").textContent=f.count||0;
- document.getElementById("following").textContent=fo.count||0;
+
+async function renderProfile(){
+  const p = profileData || {};
+
+  document.getElementById("displayName").textContent =
+    p.display_name || p.username || "بەکارهێنەر";
+
+  document.getElementById("username").textContent =
+    p.username ? "@" + p.username : "";
+
+  document.getElementById("bio").textContent =
+    p.bio || "";
+
+  const {count:followersCount} = await supabaseClient
+    .from("follows")
+    .select("*",{count:"exact",head:true})
+    .eq("following_id", currentUser.id);
+
+  const {count:followingCount} = await supabaseClient
+    .from("follows")
+    .select("*",{count:"exact",head:true})
+    .eq("follower_id", currentUser.id);
+
+  document.getElementById("followers").textContent = followersCount || 0;
+  document.getElementById("following").textContent = followingCount || 0;
 }
+
 async function loadVideos(){
- const {data}=await sb.from("videos").select("video_url,caption").eq("user_id",session.user.id).order("created_at",{ascending:false});
- const grid=document.getElementById("grid");
- if(!data?.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">Ù‡ÛŽØ´ØªØ§ Ù‡ÛŒÚ† Ú¤ÛŒØ¯ÛŒÛ†ÛŒÛ•Ú©Øª Ù†ÛŒÛŒÛ• ðŸŽ¥</div>';return;}
- grid.innerHTML=data.map(v=>`<div class="tile"><video src="${esc(v.video_url)}" muted playsinline loop onclick="this.paused?this.play():this.pause()"></video></div>`).join("");
+  const container = document.getElementById("videos");
+
+  const {data,error} = await supabaseClient
+    .from("videos")
+    .select("*")
+    .eq("user_id", currentUser.id)
+    .order("created_at",{ascending:false});
+
+  if(error){
+    console.error(error);
+    container.className = "empty";
+    container.textContent = "نەتوانرا ڤیدیۆکان باربکرێن.";
+    return;
+  }
+
+  document.getElementById("videoCount").textContent = data.length;
+
+  if(!data.length){
+    container.className = "empty";
+    container.textContent = "هیچ ڤیدیۆیەکت نییە لە ئێستادا.";
+    return;
+  }
+
+  container.className = "grid";
+  container.innerHTML = data.map(v => `
+    <div class="video">
+      <video src="${escapeHtml(v.video_url || "")}" muted playsinline controls preload="metadata"></video>
+    </div>
+  `).join("");
 }
+
+function escapeHtml(value){
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
 function openEdit(){
- sb.from("profiles").select("username,display_name,bio").eq("id",session.user.id).maybeSingle().then(({data})=>{
-  document.getElementById("editUsername").value=data?.username||"";
-  document.getElementById("editDisplay").value=data?.display_name||"";
-  document.getElementById("editBio").value=data?.bio||"";
-  document.getElementById("editMsg").textContent="";
-  document.getElementById("editModal").classList.add("show");
- });
+  const p = profileData || {};
+  document.getElementById("editDisplayName").value = p.display_name || "";
+  document.getElementById("editUsername").value = p.username || "";
+  document.getElementById("editBio").value = p.bio || "";
+  document.getElementById("editModal").style.display = "block";
 }
-function closeEdit(){document.getElementById("editModal").classList.remove("show")}
+
+function closeEdit(){
+  document.getElementById("editModal").style.display = "none";
+}
+
 async function saveProfile(){
- const username=document.getElementById("editUsername").value.trim();
- const display=document.getElementById("editDisplay").value.trim();
- const bio=document.getElementById("editBio").value.trim();
- const msg=document.getElementById("editMsg");
- if(!username){msg.textContent="Ù†Ø§ÙˆÛŒ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø± Ù¾Ú• Ø¨Ú©Û•Ø±Û•ÙˆÛ•.";return;}
- const {error}=await sb.from("profiles").update({username,display_name:display,bio}).eq("id",session.user.id);
- if(error){msg.textContent=error.message;return;}
- closeEdit(); await loadProfile();
+  const display_name = document.getElementById("editDisplayName").value.trim();
+  const username = document.getElementById("editUsername").value.trim().replace(/\s+/g,"");
+  const bio = document.getElementById("editBio").value.trim();
+
+  if(!username){
+    alert("تکایە ناوی بەکارهێنەر بنووسە.");
+    return;
+  }
+
+  const {data,error} = await supabaseClient
+    .from("profiles")
+    .upsert({
+      id: currentUser.id,
+      display_name,
+      username,
+      bio
+    })
+    .select()
+    .single();
+
+  if(error){
+    console.error(error);
+    alert("پاشەکەوتکردن سەرکەوتوو نەبوو.");
+    return;
+  }
+
+  profileData = data;
+  closeEdit();
+  await renderProfile();
 }
-async function logout(){await sb.auth.signOut();location.href="index.html"}
-function esc(v){return String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+
+async function logout(){
+  await supabaseClient.auth.signOut();
+  location.href = "index.html";
+}
+
+document.getElementById("editModal").addEventListener("click",function(e){
+  if(e.target === this) closeEdit();
+});
+
 init();
 </script>
 </body>
