@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>XALLO-GAMING | گەڕان</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080808;color:#fff;font-family:Arial,"Noto Sans Arabic",sans-serif;padding-bottom:75px}
+header{height:62px;border-bottom:1px solid #252525;display:flex;align-items:center;padding:0 16px;font-weight:800}
+.brand{font-size:19px}
+main{max-width:800px;margin:auto;padding:18px 14px}
+.search{display:flex;gap:8px}
+.search input{flex:1;background:#171717;border:1px solid #333;color:#fff;border-radius:14px;padding:14px 16px;outline:none}
+.search button{border:0;border-radius:14px;background:#ff174f;color:#fff;padding:0 18px;font-weight:800}
+.tabs{display:flex;gap:8px;margin:18px 0}
+.tab{flex:1;background:#171717;border:1px solid #292929;color:#aaa;padding:11px;border-radius:12px;cursor:pointer}
+.tab.active{background:#ff174f;color:#fff;border-color:#ff174f}
+.title{font-size:18px;font-weight:800;margin:18px 0 12px}
+.user{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid #202020}
+.avatar{width:48px;height:48px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;font-size:22px}
+.user-info{flex:1}
+.user-name{font-weight:800}
+.user-handle{color:#888;font-size:13px;margin-top:4px}
+.user button{background:#ff174f;color:#fff;border:0;border-radius:10px;padding:9px 14px;font-weight:800}
+.videos{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.video{background:#151515;aspect-ratio:9/14;overflow:hidden}
+.video video{width:100%;height:100%;object-fit:cover}
+.empty{text-align:center;color:#777;padding:55px 10px}
+.loading{text-align:center;color:#888;padding:40px}
+.nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:#141414;border-top:1px solid #303030;display:flex;z-index:10}
+.nav a{flex:1;color:#999;text-decoration:none;text-align:center;padding-top:9px;font-size:12px}
+.nav a.active{color:#ff174f}
+.icon{display:block;font-size:22px;margin-bottom:4px}
+@media(max-width:430px){.videos{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="brand">XALLO-GAMING 🔥</div></header>
+
+<main>
+  <div class="search">
+    <input id="searchInput" type="search" placeholder="گەڕان بە ناوی بەکارهێنەر..." autocomplete="off">
+    <button onclick="searchNow()">گەڕان</button>
+  </div>
+
+  <div class="tabs">
+    <button id="usersTab" class="tab active" onclick="switchTab('users')">👤 بەکارهێنەران</button>
+    <button id="videosTab" class="tab" onclick="switchTab('videos')">🎬 ڤیدیۆکان</button>
+  </div>
+
+  <section id="usersSection">
+    <div class="title">بەکارهێنەرەکان</div>
+    <div id="users" class="empty">وشەیەک بنووسە بۆ گەڕان.</div>
+  </section>
+
+  <section id="videosSection" style="display:none">
+    <div class="title">ڤیدیۆکان</div>
+    <div id="videos" class="empty">وشەیەک بنووسە بۆ گەڕان.</div>
+  </section>
+</main>
+
+<nav class="nav">
+  <a href="index.html"><span class="icon">🏠</span>سەرەکی</a>
+  <a class="active" href="search.html"><span class="icon">🔎</span>گەڕان</a>
+  <a href="index.html"><span class="icon">➕</span>بڵاوکردنەوە</a>
+  <a href="index.html"><span class="icon">🔔</span>ئاگادارکردنەوە</a>
+  <a href="profile.html"><span class="icon">👤</span>پرۆفایل</a>
+</nav>
+
+<script>
+const SUPABASE_URL="https://vnyprsjjmmjahkisozib.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueXByc2pqbW1qYWhraXNvemliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5OTE0MjEsImV4cCI6MjEwNTU2NzQyMX0.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let currentTab="users";
+
+function escapeHtml(v){
+ return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+function switchTab(tab){
+ currentTab=tab;
+ document.getElementById("usersTab").classList.toggle("active",tab==="users");
+ document.getElementById("videosTab").classList.toggle("active",tab==="videos");
+ document.getElementById("usersSection").style.display=tab==="users"?"block":"none";
+ document.getElementById("videosSection").style.display=tab==="videos"?"block":"none";
+}
+async function searchNow(){
+ const q=document.getElementById("searchInput").value.trim();
+ if(!q){document.getElementById("users").className="empty";document.getElementById("users").textContent="وشەیەک بنووسە بۆ گەڕان.";return;}
+ if(currentTab==="users") await searchUsers(q);
+ else await searchVideos(q);
+}
+async function searchUsers(q){
+ const box=document.getElementById("users");
+ box.className="loading";box.textContent="گەڕان...";
+ const {data,error}=await supabaseClient.from("profiles").select("id,username,display_name,bio").or(`username.ilike.%${q}%,display_name.ilike.%${q}%`).limit(30);
+ if(error){box.className="empty";box.textContent="هەڵەیەک ڕوویدا.";console.error(error);return;}
+ if(!data.length){box.className="empty";box.textContent="هیچ بەکارهێنەرێک نەدۆزرایەوە.";return;}
+ box.className="";
+ box.innerHTML=data.map(p=>`
+  <div class="user">
+    <div class="avatar">👤</div>
+    <div class="user-info">
+      <div class="user-name">${escapeHtml(p.display_name||p.username||"بەکارهێنەر")}</div>
+      <div class="user-handle">${p.username?"@"+escapeHtml(p.username):""}</div>
+    </div>
+    <button onclick="openProfile('${escapeHtml(p.id)}')">بینین</button>
+  </div>`).join("");
+}
+async function searchVideos(q){
+ const box=document.getElementById("videos");
+ box.className="loading";box.textContent="گەڕان...";
+ const {data,error}=await supabaseClient.from("videos").select("*").ilike("caption",`%${q}%`).order("created_at",{ascending:false}).limit(30);
+ if(error){box.className="empty";box.textContent="هەڵەیەک ڕوویدا.";console.error(error);return;}
+ if(!data.length){box.className="empty";box.textContent="هیچ ڤیدیۆیەک نەدۆزرایەوە.";return;}
+ box.className="videos";
+ box.innerHTML=data.map(v=>`<div class="video"><video src="${escapeHtml(v.video_url)}" muted playsinline controls preload="metadata"></video></div>`).join("");
+}
+function openProfile(id){
+ // The current profile page is the signed-in user's profile.
+ // Public user profiles can be added as a dedicated route later.
+ alert("پرۆفایلی بەکارهێنەر دواتر زیاد دەکرێت.");
+}
+document.getElementById("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchNow();});
+</script>
+</body>
+</html>
