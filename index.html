@@ -702,7 +702,59 @@ button:disabled{
   </div>
 
 
+
+  <!-- ================= SEARCH ================= -->
+  <div class="search-box">
+    <div class="section-title">🔎 Search Videos</div>
+
+    <div class="search-row">
+      <input
+        id="searchInput"
+        type="search"
+        maxlength="100"
+        placeholder="Search username or caption..."
+        oninput="searchVideos()">
+
+      <button
+        class="search-button"
+        onclick="searchVideos()">
+        🔎 Search
+      </button>
+    </div>
+
+    <div id="searchResults" class="search-results"></div>
+  </div>
+
   <!-- ================= PROFILE ================= -->
+
+  <!-- ================= PUBLIC PROFILE ================= -->
+  <div id="publicProfileBox" class="public-profile-box">
+
+    <button
+      class="public-profile-close"
+      onclick="closePublicProfile()">
+      ✕ Close
+    </button>
+
+    <div class="public-profile-head">
+      <img
+        id="publicProfileAvatar"
+        class="public-profile-avatar"
+        alt="Profile picture">
+
+      <div>
+        <div id="publicProfileName" class="public-profile-name">
+          User
+        </div>
+        <div class="small">Public Profile</div>
+      </div>
+    </div>
+
+    <div id="publicProfileBio" class="public-profile-bio"></div>
+
+    <div id="publicProfileVideos" class="public-profile-videos"></div>
+  </div>
+
   <div class="profile-box">
     <h3>&#x1F464; My Profile</h3>
     <div class="profile-top">
@@ -2400,6 +2452,179 @@ async function loadSingleSearchVideo(videoId){
     behavior:"smooth",
     block:"center"
   });
+}
+
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+let searchTimer = null;
+
+function searchVideos(){
+
+  clearTimeout(searchTimer);
+
+  searchTimer = setTimeout(async () => {
+
+    const input = document.getElementById("searchInput");
+    const results = document.getElementById("searchResults");
+
+    if(!input || !results) return;
+
+    const q = input.value.trim().toLowerCase();
+
+    if(!q){
+      results.innerHTML = "";
+      return;
+    }
+
+    results.innerHTML = '<div class="small">Searching...</div>';
+
+    const {data,error} = await supabaseClient
+      .from("videos")
+      .select("id,user_email,video_url,caption,likes,views,created_at")
+      .order("created_at",{ascending:false})
+      .limit(100);
+
+    if(error){
+      results.innerHTML = '<div class="small">Search error.</div>';
+      return;
+    }
+
+    const matches = (data || []).filter(v =>
+      String(v.user_email || "").toLowerCase().includes(q) ||
+      String(v.caption || "").toLowerCase().includes(q)
+    );
+
+    if(!matches.length){
+      results.innerHTML = '<div class="small">No videos found 🔎</div>';
+      return;
+    }
+
+    results.innerHTML = matches.map(v => `
+      <div class="search-result">
+        <div class="search-result-user">
+          👤 ${escapeHtml(v.user_email)}
+        </div>
+
+        <div class="search-result-caption">
+          ${escapeHtml(v.caption || "No caption")}
+        </div>
+
+        <div class="search-result-stats">
+          ❤️ ${Number(v.likes)||0}
+          &nbsp; • &nbsp;
+          👁️ ${Number(v.views)||0}
+        </div>
+
+        <button
+          class="search-button"
+          onclick="openPublicProfile('${escapeHtml(v.user_email)}')">
+          👤 View Profile
+        </button>
+      </div>
+    `).join("");
+
+  },200);
+}
+
+
+/* =========================================
+   PUBLIC PROFILE
+========================================= */
+
+async function openPublicProfile(email){
+
+  const box = document.getElementById("publicProfileBox");
+  const name = document.getElementById("publicProfileName");
+  const avatar = document.getElementById("publicProfileAvatar");
+  const bio = document.getElementById("publicProfileBio");
+  const videosBox = document.getElementById("publicProfileVideos");
+
+  if(!box) return;
+
+  box.style.display = "block";
+  name.textContent = "Loading...";
+  bio.textContent = "";
+  videosBox.innerHTML = '<div class="small">Loading videos...</div>';
+
+  box.scrollIntoView({behavior:"smooth",block:"start"});
+
+  const {data:profile,error} = await supabaseClient.rpc(
+    "get_public_profile",
+    {p_email:email}
+  );
+
+  if(error || !profile){
+    name.textContent = "Profile not found";
+    bio.textContent = "";
+    videosBox.innerHTML = '<div class="small">Could not load this profile.</div>';
+    return;
+  }
+
+  name.textContent = profile.username || "User";
+  bio.textContent = profile.bio || "No bio yet.";
+
+  if(profile.avatar_url){
+    avatar.src = profile.avatar_url;
+  }else{
+    avatar.removeAttribute("src");
+  }
+
+  const {data:videos,error:videosError} = await supabaseClient
+    .from("videos")
+    .select("id,video_url,caption,likes,views,created_at")
+    .eq("user_email",email)
+    .order("created_at",{ascending:false})
+    .limit(30);
+
+  if(videosError){
+    videosBox.innerHTML = '<div class="small">Could not load videos.</div>';
+    return;
+  }
+
+  if(!videos || !videos.length){
+    videosBox.innerHTML = '<div class="small">No videos yet 🎬</div>';
+    return;
+  }
+
+  videosBox.innerHTML = `
+    <div class="section-title">🎬 Videos (${videos.length})</div>
+    ${videos.map(v => `
+      <div class="public-profile-video">
+        <video
+          controls
+          playsinline
+          preload="metadata"
+          data-video-id="${escapeHtml(v.id)}"
+          onplay="registerVideoView('${escapeHtml(v.id)}',this)"
+          src="${escapeHtml(v.video_url)}">
+        </video>
+
+        <div class="caption">
+          ${escapeHtml(v.caption || "")}
+        </div>
+
+        <div class="video-stats">
+          <span class="video-stat">
+            ❤️ ${Number(v.likes)||0}
+          </span>
+
+          <span class="video-stat" id="views-${escapeHtml(v.id)}">
+            👁️ ${Number(v.views)||0}
+          </span>
+        </div>
+      </div>
+    `).join("")}
+  `;
+}
+
+
+function closePublicProfile(){
+  const box = document.getElementById("publicProfileBox");
+  if(box) box.style.display = "none";
 }
 
 
