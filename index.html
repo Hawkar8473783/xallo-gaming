@@ -553,6 +553,7 @@ button:disabled{
 .notifications-box{margin-top:16px}
 .notifications-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .notifications-head h3{margin:0}
+.notifications-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
 .notifications-refresh{width:auto;margin:0;padding:8px 12px;background:#26384e;font-size:12px}
 .notifications-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto}
 .notification-item{padding:12px;border:1px solid #283653;background:#0b1425;border-radius:13px}
@@ -806,7 +807,10 @@ button:disabled{
   <div class="box notifications-box">
     <div class="notifications-head">
       <h3>🔔 Notifications <span id="notificationBadge" class="notification-badge" style="display:none">0</span></h3>
-      <button type="button" class="notifications-refresh" onclick="loadNotifications()">Refresh</button>
+      <div class="notifications-actions">
+        <button type="button" class="notifications-refresh" onclick="loadNotifications()">🔄 Refresh</button>
+        <button type="button" class="notifications-refresh" onclick="markAllNotificationsRead()">✓ Mark all read</button>
+      </div>
     </div>
     <div id="notificationsList" class="notifications-list">
       <div class="users-empty">Loading notifications...</div>
@@ -3164,10 +3168,37 @@ async function markNotificationRead(id){
   await loadNotifications();
 }
 
+async function markAllNotificationsRead(){
+  const {data:userData,error:userError} = await supabaseClient.auth.getUser();
+  if(userError || !userData.user){
+    dashboardMessage("Please login first.","error");
+    return;
+  }
+
+  const {error} = await supabaseClient
+    .from("notifications")
+    .update({is_read:true})
+    .eq("user_email",userData.user.email)
+    .eq("is_read",false);
+
+  if(error){
+    dashboardMessage("Notification error: " + (error.message || "Unknown error"),"error");
+    return;
+  }
+
+  await loadNotifications();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     if(typeof supabaseClient !== "undefined") loadNotifications();
   }, 900);
+
+  setInterval(() => {
+    if(document.visibilityState === "visible" && typeof supabaseClient !== "undefined") {
+      loadNotifications();
+    }
+  }, 20000);
 });
 </script>
 
