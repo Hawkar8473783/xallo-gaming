@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>XALLO-GAMING</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
   box-sizing:border-box;
   margin:0;
@@ -238,6 +240,54 @@ button:disabled{
   margin-top:12px;
 }
 
+.comment-area{
+  margin-top:12px;
+}
+
+.comment-input{
+  margin-bottom:8px;
+  padding:12px;
+  font-size:14px;
+}
+
+.comment-button{
+  background:#263b63;
+  padding:12px;
+  margin-top:0;
+}
+
+.comments-list{
+  margin-top:12px;
+}
+
+.comment{
+  background:#101a2d;
+  border:1px solid #263553;
+  border-radius:10px;
+  padding:10px;
+  margin-top:8px;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.comment-user{
+  color:#08a9ff;
+  font-weight:bold;
+  margin-bottom:4px;
+  word-break:break-word;
+}
+
+.comment-text{
+  color:#ddd;
+  word-break:break-word;
+}
+
+.comment-date{
+  color:#77839a;
+  font-size:10px;
+  margin-top:5px;
+}
+
 .history{
   margin-top:22px;
 }
@@ -299,6 +349,7 @@ button:disabled{
   margin:5px 0 10px;
   word-break:break-word;
 }
+
 </style>
 </head>
 
@@ -345,7 +396,6 @@ button:disabled{
     </div>
 
   </div>
-
 
   <div id="signupBox" style="display:none">
 
@@ -574,7 +624,7 @@ button:disabled{
   </div>
 
 
-  <!-- ================= ADMIN ================= -->
+  <!-- ADMIN -->
 
   <div
     id="adminBox"
@@ -636,7 +686,6 @@ function showMessage(text,type){
 
   box.className =
     "message " + type;
-
 }
 
 
@@ -651,7 +700,6 @@ function dashboardMessage(text,type){
 
   box.className =
     "message " + type;
-
 }
 
 
@@ -669,7 +717,6 @@ function showLogin(){
 
   document.getElementById("message")
     .style.display="none";
-
 }
 
 
@@ -683,7 +730,6 @@ function showSignup(){
 
   document.getElementById("message")
     .style.display="none";
-
 }
 
 
@@ -704,12 +750,10 @@ async function createUserProfile(email){
       .maybeSingle();
 
   if(error){
-
     console.log(
       "Profile error:",
       error.message
     );
-
     return;
   }
 
@@ -728,13 +772,11 @@ async function createUserProfile(email){
       });
 
   if(insertError){
-
     console.log(
       "Profile insert:",
       insertError.message
     );
   }
-
 }
 
 
@@ -821,7 +863,6 @@ async function signup(){
     "Account created. Check your email, then login.",
     "success"
   );
-
 }
 
 
@@ -892,7 +933,6 @@ async function login(){
       data.user
     );
   }
-
 }
 
 
@@ -911,7 +951,6 @@ function setCoins(amount){
   document.getElementById(
     "withdrawCoins"
   ).textContent=value;
-
 }
 
 
@@ -1009,7 +1048,6 @@ async function checkDailyRewardButton(user){
     button.textContent =
       "🎁 Daily Reward +10";
   }
-
 }
 
 
@@ -1173,8 +1211,10 @@ async function uploadVideo(){
       userData.user.email;
 
     const safeEmail =
-      email
-        .replace(/[^a-zA-Z0-9]/g,"_");
+      email.replace(
+        /[^a-zA-Z0-9]/g,
+        "_"
+      );
 
     const extension =
       file.name.includes(".")
@@ -1191,8 +1231,6 @@ async function uploadVideo(){
         .substring(2,8) +
       "." +
       extension;
-
-    /* UPLOAD TO STORAGE */
 
     const {
       error:uploadError
@@ -1217,8 +1255,6 @@ async function uploadVideo(){
       );
     }
 
-    /* GET PUBLIC URL */
-
     const {
       data:urlData
     } =
@@ -1236,8 +1272,6 @@ async function uploadVideo(){
       );
     }
 
-    /* SAVE VIDEO INFORMATION */
-
     const {
       error:dbError
     } =
@@ -1252,9 +1286,6 @@ async function uploadVideo(){
 
     if(dbError){
 
-      /* Remove uploaded file
-         if database insert fails */
-
       await supabaseClient.storage
         .from("videos")
         .remove([filePath]);
@@ -1264,8 +1295,6 @@ async function uploadVideo(){
         dbError.message
       );
     }
-
-    /* SUCCESS */
 
     input.value="";
 
@@ -1299,7 +1328,6 @@ async function uploadVideo(){
     button.disabled=false;
     button.textContent="⬆️ Upload Video";
   }
-
 }
 
 
@@ -1352,45 +1380,170 @@ async function loadVideos(){
     return;
   }
 
+
+  /* LOAD COMMENTS */
+
+  const videoIds =
+    data.map(video => video.id);
+
+  const {
+    data:comments,
+    error:commentsError
+  } =
+    await supabaseClient
+      .from("comments")
+      .select(
+        "id,video_id,user_email,comment,created_at"
+      )
+      .in(
+        "video_id",
+        videoIds
+      )
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
+
+
+  if(commentsError){
+
+    console.error(
+      "Comments error:",
+      commentsError.message
+    );
+  }
+
+
+  /* GROUP COMMENTS BY VIDEO */
+
+  const commentsByVideo = {};
+
+  (comments || []).forEach(comment => {
+
+    if(!commentsByVideo[comment.video_id]){
+      commentsByVideo[comment.video_id] = [];
+    }
+
+    commentsByVideo[comment.video_id].push(
+      comment
+    );
+
+  });
+
+
   box.innerHTML =
-    data.map(video => `
+    data.map(video => {
 
-      <div class="video-card">
+      const videoComments =
+        commentsByVideo[video.id] || [];
 
-        <video
-          controls
-          playsinline
-          preload="metadata"
-          src="${escapeHtml(video.video_url)}">
-        </video>
+      const commentsHtml =
+        videoComments.length
 
-        <div class="video-info">
+        ? videoComments.map(comment => `
 
-          <div class="video-user">
-            👤 ${escapeHtml(video.user_email)}
+            <div class="comment">
+
+              <div class="comment-user">
+                👤 ${escapeHtml(comment.user_email)}
+              </div>
+
+              <div class="comment-text">
+                ${escapeHtml(comment.comment)}
+              </div>
+
+              <div class="comment-date">
+                ${new Date(
+                  comment.created_at
+                ).toLocaleString()}
+              </div>
+
+            </div>
+
+          `).join("")
+
+        : `
+            <div class="small">
+              No comments yet.
+            </div>
+          `;
+
+
+      return `
+
+        <div class="video-card">
+
+          <video
+            controls
+            playsinline
+            preload="metadata"
+            src="${escapeHtml(video.video_url)}">
+          </video>
+
+          <div class="video-info">
+
+            <div class="video-user">
+              👤 ${escapeHtml(video.user_email)}
+            </div>
+
+            <div class="caption">
+              ${escapeHtml(video.caption || "")}
+            </div>
+
+            <div class="video-date">
+              ${new Date(
+                video.created_at
+              ).toLocaleString()}
+            </div>
+
+
+            <!-- LIKE -->
+
+            <button
+              class="like-button"
+              onclick="likeVideo('${video.id}',this)">
+
+              ❤️ ${Number(video.likes) || 0}
+
+            </button>
+
+
+            <!-- COMMENT -->
+
+            <div class="comment-area">
+
+              <input
+                class="comment-input"
+                id="comment-${video.id}"
+                type="text"
+                maxlength="500"
+                placeholder="Write a comment...">
+
+              <button
+                class="comment-button"
+                onclick="addComment('${video.id}')">
+
+                💬 Add Comment
+
+              </button>
+
+              <div class="comments-list">
+
+                ${commentsHtml}
+
+              </div>
+
+            </div>
+
           </div>
-
-          <div class="caption">
-            ${escapeHtml(video.caption || "")}
-          </div>
-
-          <div class="video-date">
-            ${new Date(video.created_at).toLocaleString()}
-          </div>
-
-          <button
-            class="like-button"
-            onclick="likeVideo('${video.id}',this)">
-
-            ❤️ ${Number(video.likes) || 0}
-
-          </button>
 
         </div>
 
-      </div>
+      `;
 
-    `).join("");
+    }).join("");
 
 }
 
@@ -1436,6 +1589,126 @@ async function likeVideo(id,button){
 
 
 /* =========================================
+   ADD COMMENT
+========================================= */
+
+async function addComment(videoId){
+
+  const {
+    data:userData,
+    error:userError
+  } =
+    await supabaseClient.auth.getUser();
+
+  if(
+    userError ||
+    !userData.user
+  ){
+
+    dashboardMessage(
+      "Please login first.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const input =
+    document.getElementById(
+      "comment-" + videoId
+    );
+
+  if(!input){
+
+    return;
+  }
+
+
+  const comment =
+    input.value.trim();
+
+
+  if(!comment){
+
+    dashboardMessage(
+      "Write a comment first.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if(comment.length > 500){
+
+    dashboardMessage(
+      "Comment is too long.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const button =
+    input.nextElementSibling;
+
+  button.disabled=true;
+  button.textContent="Sending...";
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("comments")
+      .insert({
+
+        video_id:videoId,
+
+        user_email:
+          userData.user.email,
+
+        comment:comment
+
+      });
+
+
+  if(error){
+
+    console.error(error);
+
+    button.disabled=false;
+    button.textContent="💬 Add Comment";
+
+    dashboardMessage(
+      "Comment error: " +
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  input.value="";
+
+  button.disabled=false;
+  button.textContent="💬 Add Comment";
+
+
+  dashboardMessage(
+    "✅ Comment added!",
+    "success"
+  );
+
+
+  await loadVideos();
+}
+
+
+/* =========================================
    WITHDRAW
 ========================================= */
 
@@ -1473,7 +1746,11 @@ async function requestWithdraw(){
       "withdrawPhone"
     ).value.trim();
 
-  if(!["Korek","Asiacell"].includes(method)){
+
+  if(
+    !["Korek","Asiacell"]
+      .includes(method)
+  ){
 
     dashboardMessage(
       "Select Korek or Asiacell.",
@@ -1483,7 +1760,11 @@ async function requestWithdraw(){
     return;
   }
 
-  if(![1000,5000,10000].includes(coins)){
+
+  if(
+    ![1000,5000,10000]
+      .includes(coins)
+  ){
 
     dashboardMessage(
       "Select a valid amount.",
@@ -1493,7 +1774,10 @@ async function requestWithdraw(){
     return;
   }
 
-  if(!/^[0-9+\s-]{10,15}$/.test(phone)){
+
+  if(
+    !/^[0-9+\s-]{10,15}$/.test(phone)
+  ){
 
     dashboardMessage(
       "Enter a valid phone number.",
@@ -1503,6 +1787,7 @@ async function requestWithdraw(){
     return;
   }
 
+
   const button =
     document.getElementById(
       "withdrawButton"
@@ -1510,6 +1795,7 @@ async function requestWithdraw(){
 
   button.disabled=true;
   button.textContent="Sending...";
+
 
   const {
     data,
@@ -1525,9 +1811,12 @@ async function requestWithdraw(){
         }
       );
 
+
   button.disabled=false;
-  button.textContent=
+
+  button.textContent =
     "💰 Request Withdraw";
+
 
   if(error){
 
@@ -1539,9 +1828,11 @@ async function requestWithdraw(){
     return;
   }
 
+
   setCoins(
     data?.new_balance ?? 0
   );
+
 
   document.getElementById(
     "withdrawMethod"
@@ -1555,10 +1846,12 @@ async function requestWithdraw(){
     "withdrawPhone"
   ).value="";
 
+
   dashboardMessage(
     "✅ Withdrawal request sent.",
     "success"
   );
+
 
   await loadWithdrawHistory(
     userData.user
@@ -1591,6 +1884,7 @@ async function loadWithdrawHistory(user){
       "withdrawHistory"
     );
 
+
   const {
     data,
     error
@@ -1612,6 +1906,7 @@ async function loadWithdrawHistory(user){
       )
       .limit(20);
 
+
   if(error){
 
     box.innerHTML =
@@ -1620,6 +1915,7 @@ async function loadWithdrawHistory(user){
     return;
   }
 
+
   if(!data || !data.length){
 
     box.innerHTML =
@@ -1627,6 +1923,7 @@ async function loadWithdrawHistory(user){
 
     return;
   }
+
 
   box.innerHTML =
     data.map(r => `
@@ -1649,6 +1946,7 @@ async function loadWithdrawHistory(user){
         <br>
 
         Status:
+
         <span class="${statusClass(r.status)}">
           ${escapeHtml(r.status)}
         </span>
@@ -1676,9 +1974,11 @@ async function checkAdmin(){
   } =
     await supabaseClient.auth.getUser();
 
+
   if(!userData.user){
     return;
   }
+
 
   const {
     data,
@@ -1693,10 +1993,12 @@ async function checkAdmin(){
       )
       .maybeSingle();
 
+
   const box =
     document.getElementById(
       "adminBox"
     );
+
 
   if(!error && data){
 
@@ -1707,6 +2009,7 @@ async function checkAdmin(){
   }else{
 
     box.style.display="none";
+
   }
 }
 
@@ -1717,6 +2020,7 @@ async function loadAdminRequests(){
     document.getElementById(
       "adminRequests"
     );
+
 
   const {
     data,
@@ -1735,6 +2039,7 @@ async function loadAdminRequests(){
       )
       .limit(50);
 
+
   if(error){
 
     box.innerHTML =
@@ -1743,6 +2048,7 @@ async function loadAdminRequests(){
     return;
   }
 
+
   if(!data || !data.length){
 
     box.innerHTML =
@@ -1750,6 +2056,7 @@ async function loadAdminRequests(){
 
     return;
   }
+
 
   box.innerHTML =
     data.map(r => `
@@ -1782,8 +2089,10 @@ async function loadAdminRequests(){
           ${escapeHtml(r.status)}
         </span>
 
+
         ${
           r.status === "pending"
+
           ? `
 
             <div class="admin-actions">
@@ -1807,7 +2116,9 @@ async function loadAdminRequests(){
             </div>
 
           `
+
           : ""
+
         }
 
       </div>
@@ -1816,7 +2127,10 @@ async function loadAdminRequests(){
 }
 
 
-async function adminDecision(id,status){
+async function adminDecision(
+  id,
+  status
+){
 
   if(!confirm(
     status === "approved"
@@ -1826,6 +2140,7 @@ async function adminDecision(id,status){
 
     return;
   }
+
 
   const {
     error
@@ -1839,6 +2154,7 @@ async function adminDecision(id,status){
         }
       );
 
+
   if(error){
 
     dashboardMessage(
@@ -1849,17 +2165,21 @@ async function adminDecision(id,status){
     return;
   }
 
+
   dashboardMessage(
     "✅ Withdrawal status updated.",
     "success"
   );
 
+
   await loadAdminRequests();
+
 
   const {
     data:userData
   } =
     await supabaseClient.auth.getUser();
+
 
   if(userData.user){
 
@@ -1903,13 +2223,16 @@ async function logout(){
 
   await supabaseClient.auth.signOut();
 
+
   document.getElementById(
     "dashboard"
   ).style.display="none";
 
+
   document.getElementById(
     "authBox"
   ).style.display="block";
+
 
   showLogin();
 }
@@ -1925,6 +2248,7 @@ async function checkUser(){
     data
   } =
     await supabaseClient.auth.getUser();
+
 
   if(data && data.user){
 
