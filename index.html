@@ -483,6 +483,23 @@ button:disabled{
 /* ===== XALLO TIKTOK: hide legacy feed if present ===== */
 .video-feed{display:none !important;}
 
+
+/* =========================================
+   FOLLOW / PUBLIC PROFILE
+========================================= */
+.profile-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px}
+.profile-card{width:min(420px,100%);background:#0c1a2b;border:1px solid #31506f;border-radius:22px;padding:22px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.5);position:relative}
+.profile-close{position:absolute;right:12px;top:10px;width:40px;height:40px;border-radius:50%;background:#182a40;color:#fff;border:1px solid #38516d;font-size:20px}
+.profile-avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;background:#16263a;border:3px solid #fff;margin:8px auto 12px;display:block}
+.profile-name{font-size:21px;font-weight:800;color:#fff;word-break:break-word}
+.profile-email{font-size:12px;color:#9eacc0;margin-top:5px;word-break:break-word}
+.profile-bio{color:#d7deea;margin:14px 8px;line-height:1.5;word-break:break-word}
+.profile-stats{display:flex;justify-content:center;gap:34px;margin:16px 0;color:#fff}
+.profile-stats b{display:block;font-size:19px}.profile-stats span{font-size:12px;color:#9eacc0}
+.follow-button{width:100%;margin:6px 0 0;padding:13px;border-radius:13px;border:0;background:#e91e63;color:#fff;font-weight:800;font-size:16px}
+.follow-button.following{background:#26384e;border:1px solid #52657c}
+.tiktok-follow-button{background:rgba(233,30,99,.9)!important}
+
 </style>
 
 /* XALLO TikTok Feed final mobile layout */
@@ -762,6 +779,23 @@ button:disabled{
 
   </div>
 
+
+
+  <!-- ================= PUBLIC PROFILE MODAL ================= -->
+  <div id="profileModal" class="profile-modal" onclick="closeProfileModal(event)">
+    <div class="profile-card" onclick="event.stopPropagation()">
+      <button class="profile-close" type="button" onclick="closeProfileModal()">×</button>
+      <img id="profileAvatar" class="profile-avatar" src="" alt="Profile">
+      <div id="profileName" class="profile-name">Profile</div>
+      <div id="profileEmail" class="profile-email"></div>
+      <div id="profileBio" class="profile-bio"></div>
+      <div class="profile-stats">
+        <div><b id="profileFollowers">0</b><span>Followers</span></div>
+        <div><b id="profileFollowing">0</b><span>Following</span></div>
+      </div>
+      <button id="profileFollowButton" class="follow-button" type="button">Follow</button>
+    </div>
+  </div>
 
   <!-- ADMIN -->
 
@@ -2443,7 +2477,11 @@ async function loadTikTokFeed(){
               👁️ <span class="count tiktok-view-count">${views}</span>
             </button>
 
-            <button type="button" onclick="openTikTokProfile('${email}')">
+            <button type="button" class="tiktok-follow-button" onclick="openTikTokProfile('${escapeHtml(email)}')">
+              ➕ <span class="count">Follow</span>
+            </button>
+
+            <button type="button" onclick="openTikTokProfile('${escapeHtml(email)}')">
               👤 <span class="count">Profile</span>
             </button>
           </div>
@@ -2593,20 +2631,170 @@ function focusTikTokComment(videoId){
   }
 }
 
-function openTikTokProfile(email){
 
-  if(typeof openPublicProfile === "function"){
+/* =========================================
+   FOLLOW / PUBLIC PROFILE
+========================================= */
 
-    openPublicProfile(email);
+let activeProfileEmail = "";
 
-  }else{
+async function openTikTokProfile(email){
 
-    dashboardMessage(
-      "Profile feature is not available in this version.",
-      "error"
+  const targetEmail = String(email || "").trim();
+  if(!targetEmail) return;
+
+  const {data:authData} = await supabaseClient.auth.getUser();
+  const currentEmail = authData && authData.user ? authData.user.email : "";
+
+  activeProfileEmail = targetEmail;
+
+  const modal = document.getElementById("profileModal");
+  const nameBox = document.getElementById("profileName");
+  const emailBox = document.getElementById("profileEmail");
+  const bioBox = document.getElementById("profileBio");
+  const avatar = document.getElementById("profileAvatar");
+  const followButton = document.getElementById("profileFollowButton");
+
+  modal.style.display = "flex";
+  nameBox.textContent = "Loading profile...";
+  emailBox.textContent = targetEmail;
+  bioBox.textContent = "";
+  avatar.src = "";
+  followButton.disabled = true;
+  followButton.textContent = "Loading...";
+
+  try{
+    const {data:profile,error:profileError} = await supabaseClient.rpc(
+      "get_public_profile",
+      {p_email:targetEmail}
     );
+
+    if(profileError) throw profileError;
+
+    const profileData = profile || {};
+    nameBox.textContent = profileData.username || targetEmail.split("@")[0];
+    emailBox.textContent = targetEmail;
+    bioBox.textContent = profileData.bio || "";
+
+    avatar.src = profileData.avatar_url || "";
+    avatar.onerror = () => {
+      avatar.style.display = "none";
+    };
+    avatar.onload = () => {
+      avatar.style.display = "block";
+    };
+    if(!profileData.avatar_url) avatar.style.display = "none";
+
+    const [{count:followerCount,error:followerError},{count:followingCount,error:followingError}] = await Promise.all([
+      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("following_email",targetEmail),
+      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("follower_email",targetEmail)
+    ]);
+
+    if(followerError) throw followerError;
+    if(followingError) throw followingError;
+
+    document.getElementById("profileFollowers").textContent = Number(followerCount || 0);
+    document.getElementById("profileFollowing").textContent = Number(followingCount || 0);
+
+    if(currentEmail && currentEmail.toLowerCase() === targetEmail.toLowerCase()){
+      followButton.disabled = true;
+      followButton.textContent = "Your Profile";
+      followButton.classList.remove("following");
+      return;
+    }
+
+    const {data:existing,error:followCheckError} = await supabaseClient
+      .from("follows")
+      .select("id")
+      .eq("follower_email",currentEmail)
+      .eq("following_email",targetEmail)
+      .maybeSingle();
+
+    if(followCheckError) throw followCheckError;
+
+    setFollowButton(existing ? true : false);
+    followButton.disabled = false;
+    followButton.onclick = () => toggleFollow(targetEmail);
+
+  }catch(error){
+    nameBox.textContent = "Profile unavailable";
+    bioBox.textContent = error.message || "Could not load profile.";
+    followButton.disabled = true;
+    followButton.textContent = "Follow unavailable";
   }
 }
+
+function setFollowButton(isFollowing){
+  const button = document.getElementById("profileFollowButton");
+  button.classList.toggle("following",!!isFollowing);
+  button.textContent = isFollowing ? "✓ Following" : "＋ Follow";
+}
+
+async function toggleFollow(targetEmail){
+
+  const button = document.getElementById("profileFollowButton");
+  const {data:authData} = await supabaseClient.auth.getUser();
+  const currentEmail = authData && authData.user ? authData.user.email : "";
+
+  if(!currentEmail){
+    dashboardMessage("Please login first.","error");
+    return;
+  }
+
+  if(currentEmail.toLowerCase() === targetEmail.toLowerCase()) return;
+
+  button.disabled = true;
+
+  try{
+    const {data:existing,error:checkError} = await supabaseClient
+      .from("follows")
+      .select("id")
+      .eq("follower_email",currentEmail)
+      .eq("following_email",targetEmail)
+      .maybeSingle();
+
+    if(checkError) throw checkError;
+
+    if(existing){
+      const {error} = await supabaseClient
+        .from("follows")
+        .delete()
+        .eq("id",existing.id)
+        .eq("follower_email",currentEmail);
+      if(error) throw error;
+      setFollowButton(false);
+    }else{
+      const {error} = await supabaseClient
+        .from("follows")
+        .insert({
+          follower_email:currentEmail,
+          following_email:targetEmail
+        });
+      if(error) throw error;
+      setFollowButton(true);
+    }
+
+    const {count} = await supabaseClient
+      .from("follows")
+      .select("id",{count:"exact",head:true})
+      .eq("following_email",targetEmail);
+
+    document.getElementById("profileFollowers").textContent = Number(count || 0);
+
+  }catch(error){
+    dashboardMessage("Follow error: " + (error.message || "Unknown error"),"error");
+  }finally{
+    button.disabled = false;
+  }
+}
+
+function closeProfileModal(event){
+  if(event && event.target && event.target.id !== "profileModal") return;
+  const modal = document.getElementById("profileModal");
+  if(modal) modal.style.display = "none";
+  activeProfileEmail = "";
+}
+
 
 
 /* =========================================
