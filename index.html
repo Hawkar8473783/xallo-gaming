@@ -198,19 +198,46 @@ button:disabled{
   margin-top:20px;
 }
 
+/* TikTok-style vertical feed */
+#videoFeed{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  scroll-snap-type:y mandatory;
+}
+
 .video-card{
   background:#070b19;
   border:1px solid #283653;
   border-radius:18px;
   overflow:hidden;
-  margin-top:15px;
+  margin-top:0;
+  scroll-snap-align:start;
+  scroll-margin-top:12px;
+  box-shadow:0 12px 35px rgba(0,0,0,.28);
 }
 
 .video-card video{
   width:100%;
   display:block;
-  max-height:600px;
-  background:black;
+  height:min(72vh,680px);
+  min-height:420px;
+  object-fit:cover;
+  background:#000;
+}
+
+@media (max-width:600px){
+  #videoFeed{
+    gap:12px;
+  }
+  .video-card{
+    border-radius:16px;
+  }
+  .video-card video{
+    height:70vh;
+    min-height:420px;
+    max-height:none;
+  }
 }
 
 .video-info{
@@ -2659,6 +2686,7 @@ async function loadVideos(){
           <video
             controls
             playsinline
+            muted
             preload="metadata"
             data-video-id="${video.id}"
             onplay="registerVideoView('${video.id}',this)"
@@ -2740,6 +2768,54 @@ async function loadVideos(){
 
     }).join("");
 
+  setupTikTokFeed();
+}
+
+/* =========================================
+   TIKTOK-STYLE VIDEO FEED
+========================================= */
+
+function setupTikTokFeed(){
+
+  const videos =
+    Array.from(
+      document.querySelectorAll("#videoFeed video")
+    );
+
+  if(!videos.length) return;
+
+  if(window.__xalloFeedObserver){
+    window.__xalloFeedObserver.disconnect();
+  }
+
+  window.__xalloFeedObserver =
+    new IntersectionObserver((entries)=>{
+
+      entries.forEach(entry=>{
+
+        const video = entry.target;
+
+        if(entry.isIntersecting && entry.intersectionRatio >= 0.65){
+          videos.forEach(other=>{
+            if(other !== video){
+              other.pause();
+            }
+          });
+
+          video.muted = true;
+          video.play().catch(()=>{});
+        }else{
+          video.pause();
+        }
+      });
+
+    },{
+      threshold:[0.25,0.65,0.9] 
+    });
+
+  videos.forEach(video=>{
+    window.__xalloFeedObserver.observe(video);
+  });
 }
 
 
