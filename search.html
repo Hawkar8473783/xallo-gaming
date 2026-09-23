@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>XALLO-GAMING | گەڕان</title>
+<title>XALLO-GAMING | Ú¯Û•Ú•Ø§Ù†</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
@@ -37,36 +37,36 @@ main{max-width:800px;margin:auto;padding:18px 14px}
 </style>
 </head>
 <body>
-<header><div class="brand">XALLO-GAMING 🔥</div></header>
+<header><div class="brand">XALLO-GAMING ðŸ”¥</div></header>
 
 <main>
   <div class="search">
-    <input id="searchInput" type="search" placeholder="گەڕان بە ناوی بەکارهێنەر..." autocomplete="off">
-    <button onclick="searchNow()">گەڕان</button>
+    <input id="searchInput" type="search" placeholder="Ú¯Û•Ú•Ø§Ù† Ø¨Û• Ù†Ø§ÙˆÛŒ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±..." autocomplete="off">
+    <button onclick="searchNow()">Ú¯Û•Ú•Ø§Ù†</button>
   </div>
 
   <div class="tabs">
-    <button id="usersTab" class="tab active" onclick="switchTab('users')">👤 بەکارهێنەران</button>
-    <button id="videosTab" class="tab" onclick="switchTab('videos')">🎬 ڤیدیۆکان</button>
+    <button id="usersTab" class="tab active" onclick="switchTab('users')">ðŸ‘¤ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±Ø§Ù†</button>
+    <button id="videosTab" class="tab" onclick="switchTab('videos')">ðŸŽ¬ Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù†</button>
   </div>
 
   <section id="usersSection">
-    <div class="title">بەکارهێنەرەکان</div>
-    <div id="users" class="empty">وشەیەک بنووسە بۆ گەڕان.</div>
+    <div class="title">Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±Û•Ú©Ø§Ù†</div>
+    <div id="users" class="empty">ÙˆØ´Û•ÛŒÛ•Ú© Ø¨Ù†ÙˆÙˆØ³Û• Ø¨Û† Ú¯Û•Ú•Ø§Ù†.</div>
   </section>
 
   <section id="videosSection" style="display:none">
-    <div class="title">ڤیدیۆکان</div>
-    <div id="videos" class="empty">وشەیەک بنووسە بۆ گەڕان.</div>
+    <div class="title">Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù†</div>
+    <div id="videos" class="empty">ÙˆØ´Û•ÛŒÛ•Ú© Ø¨Ù†ÙˆÙˆØ³Û• Ø¨Û† Ú¯Û•Ú•Ø§Ù†.</div>
   </section>
 </main>
 
 <nav class="nav">
-  <a href="index.html"><span class="icon">🏠</span>سەرەکی</a>
-  <a class="active" href="search.html"><span class="icon">🔎</span>گەڕان</a>
-  <a href="index.html"><span class="icon">➕</span>بڵاوکردنەوە</a>
-  <a href="index.html"><span class="icon">🔔</span>ئاگادارکردنەوە</a>
-  <a href="profile.html"><span class="icon">👤</span>پرۆفایل</a>
+  <a href="index.html"><span class="icon">ðŸ </span>Ø³Û•Ø±Û•Ú©ÛŒ</a>
+  <a class="active" href="search.html"><span class="icon">ðŸ”Ž</span>Ú¯Û•Ú•Ø§Ù†</a>
+  <a href="index.html"><span class="icon">âž•</span>Ø¨ÚµØ§ÙˆÚ©Ø±Ø¯Ù†Û•ÙˆÛ•</a>
+  <a href="index.html"><span class="icon">ðŸ””</span>Ø¦Ø§Ú¯Ø§Ø¯Ø§Ø±Ú©Ø±Ø¯Ù†Û•ÙˆÛ•</a>
+  <a href="profile.html"><span class="icon">ðŸ‘¤</span>Ù¾Ø±Û†ÙØ§ÛŒÙ„</a>
 </nav>
 
 <script>
@@ -87,40 +87,38 @@ function switchTab(tab){
 }
 async function searchNow(){
  const q=document.getElementById("searchInput").value.trim();
- if(!q){document.getElementById("users").className="empty";document.getElementById("users").textContent="وشەیەک بنووسە بۆ گەڕان.";return;}
+ if(!q){document.getElementById("users").className="empty";document.getElementById("users").textContent="ÙˆØ´Û•ÛŒÛ•Ú© Ø¨Ù†ÙˆÙˆØ³Û• Ø¨Û† Ú¯Û•Ú•Ø§Ù†.";return;}
  if(currentTab==="users") await searchUsers(q);
  else await searchVideos(q);
 }
 async function searchUsers(q){
  const box=document.getElementById("users");
- box.className="loading";box.textContent="گەڕان...";
+ box.className="loading";box.textContent="Ú¯Û•Ú•Ø§Ù†...";
  const {data,error}=await supabaseClient.from("profiles").select("id,username,display_name,bio").or(`username.ilike.%${q}%,display_name.ilike.%${q}%`).limit(30);
- if(error){box.className="empty";box.textContent="هەڵەیەک ڕوویدا.";console.error(error);return;}
- if(!data.length){box.className="empty";box.textContent="هیچ بەکارهێنەرێک نەدۆزرایەوە.";return;}
+ if(error){box.className="empty";box.textContent="Ù‡Û•ÚµÛ•ÛŒÛ•Ú© Ú•ÙˆÙˆÛŒØ¯Ø§.";console.error(error);return;}
+ if(!data.length){box.className="empty";box.textContent="Ù‡ÛŒÚ† Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±ÛŽÚ© Ù†Û•Ø¯Û†Ø²Ø±Ø§ÛŒÛ•ÙˆÛ•.";return;}
  box.className="";
  box.innerHTML=data.map(p=>`
   <div class="user">
-    <div class="avatar">👤</div>
+    <div class="avatar">ðŸ‘¤</div>
     <div class="user-info">
-      <div class="user-name">${escapeHtml(p.display_name||p.username||"بەکارهێنەر")}</div>
+      <div class="user-name">${escapeHtml(p.display_name||p.username||"Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±")}</div>
       <div class="user-handle">${p.username?"@"+escapeHtml(p.username):""}</div>
     </div>
-    <button onclick="openProfile('${escapeHtml(p.id)}')">بینین</button>
+    <button onclick="openProfile('${escapeHtml(p.id)}')">Ø¨ÛŒÙ†ÛŒÙ†</button>
   </div>`).join("");
 }
 async function searchVideos(q){
  const box=document.getElementById("videos");
- box.className="loading";box.textContent="گەڕان...";
+ box.className="loading";box.textContent="Ú¯Û•Ú•Ø§Ù†...";
  const {data,error}=await supabaseClient.from("videos").select("*").ilike("caption",`%${q}%`).order("created_at",{ascending:false}).limit(30);
- if(error){box.className="empty";box.textContent="هەڵەیەک ڕوویدا.";console.error(error);return;}
- if(!data.length){box.className="empty";box.textContent="هیچ ڤیدیۆیەک نەدۆزرایەوە.";return;}
+ if(error){box.className="empty";box.textContent="Ù‡Û•ÚµÛ•ÛŒÛ•Ú© Ú•ÙˆÙˆÛŒØ¯Ø§.";console.error(error);return;}
+ if(!data.length){box.className="empty";box.textContent="Ù‡ÛŒÚ† Ú¤ÛŒØ¯ÛŒÛ†ÛŒÛ•Ú© Ù†Û•Ø¯Û†Ø²Ø±Ø§ÛŒÛ•ÙˆÛ•.";return;}
  box.className="videos";
  box.innerHTML=data.map(v=>`<div class="video"><video src="${escapeHtml(v.video_url)}" muted playsinline controls preload="metadata"></video></div>`).join("");
 }
 function openProfile(id){
- // The current profile page is the signed-in user's profile.
- // Public user profiles can be added as a dedicated route later.
- alert("پرۆفایلی بەکارهێنەر دواتر زیاد دەکرێت.");
+  location.href = "user-profile.html?id=" + encodeURIComponent(id);
 }
 document.getElementById("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchNow();});
 </script>
