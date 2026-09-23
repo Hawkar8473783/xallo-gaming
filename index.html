@@ -588,6 +588,12 @@ button:disabled{
   background:#263b63;
 }
 
+
+/* ================= FOLLOW SYSTEM ================= */
+.follow-button{width:auto;margin:10px 0 0 0;padding:10px 18px;background:#08a9ff;color:#fff;border-radius:12px}
+.follow-button.following{background:#263b63}
+.follow-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.follow-stat{padding:8px 12px;border-radius:12px;background:#18243b;color:#dce7f7;font-size:13px}
 </style>
 </head>
 
@@ -2008,11 +2014,59 @@ async function uploadVideo(){
 
 
 
+
+/* =========================================
+   FOLLOW SYSTEM
+========================================= */
+let activePublicProfileEmail = "";
+
+async function loadFollowStats(email){
+  const followersBox=document.getElementById("publicFollowers");
+  const followingBox=document.getElementById("publicFollowing");
+  const button=document.getElementById("publicFollowButton");
+  const {count:fc,error:fe}=await supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("following_email",email);
+  const {count:gc,error:ge}=await supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("follower_email",email);
+  if(followersBox) followersBox.textContent=fe?"0":String(fc||0);
+  if(followingBox) followingBox.textContent=ge?"0":String(gc||0);
+  const {data:userData}=await supabaseClient.auth.getUser();
+  if(!button||!userData||!userData.user) return;
+  if(userData.user.email===email){button.style.display="none";return;}
+  button.style.display="inline-block";
+  const {data:follow}=await supabaseClient.from("follows").select("id").eq("follower_email",userData.user.email).eq("following_email",email).maybeSingle();
+  if(follow){button.textContent="✓ Following";button.classList.add("following");}else{button.textContent="➕ Follow";button.classList.remove("following");}
+}
+
+async function toggleFollowFromProfile(){
+  if(!activePublicProfileEmail)return;
+  const {data:userData}=await supabaseClient.auth.getUser();
+  if(!userData||!userData.user)return;
+  const me=userData.user.email;
+  if(me===activePublicProfileEmail)return;
+  const button=document.getElementById("publicFollowButton");
+  button.disabled=true;
+  const {data:existing}=await supabaseClient.from("follows").select("id").eq("follower_email",me).eq("following_email",activePublicProfileEmail).maybeSingle();
+  if(existing){
+    const {error}=await supabaseClient.from("follows").delete().eq("id",existing.id).eq("follower_email",me);
+    button.disabled=false;
+    if(error){dashboardMessage("Could not unfollow this user.","error");return;}
+    dashboardMessage("✓ Unfollowed.","success");
+  }else{
+    const {error}=await supabaseClient.from("follows").insert({follower_email:me,following_email:activePublicProfileEmail});
+    button.disabled=false;
+    if(error){dashboardMessage("Could not follow this user.","error");return;}
+    dashboardMessage("✓ Following.","success");
+    await createNotification(activePublicProfileEmail,"👥 New Follower","Someone started following you.","follow");
+  }
+  await loadFollowStats(activePublicProfileEmail);
+}
+
 /* =========================================
    PUBLIC PROFILE
 ========================================= */
 
 async function openPublicProfile(email){
+
+  activePublicProfileEmail = email;
 
   if(!email){
     return;
@@ -2081,6 +2135,8 @@ async function openPublicProfile(email){
     avatar.removeAttribute("src");
 
   }
+
+  await loadFollowStats(email);
 
   const {
     data:videos,
