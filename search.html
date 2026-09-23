@@ -1,126 +1,92 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>XALLO-GAMING | Ú¯Û•Ú•Ø§Ù†</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XALLO-GAMING - Ú¯Û•Ú•Ø§Ù†</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080808;color:#fff;font-family:Arial,"Noto Sans Arabic",sans-serif;padding-bottom:75px}
-header{height:62px;border-bottom:1px solid #252525;display:flex;align-items:center;padding:0 16px;font-weight:800}
-.brand{font-size:19px}
-main{max-width:800px;margin:auto;padding:18px 14px}
+body{margin:0;background:#080808;color:#fff;font-family:Arial,sans-serif;padding-bottom:80px}
+header{padding:20px;text-align:center;border-bottom:1px solid #222;font-weight:bold;font-size:20px}
+main{max-width:700px;margin:auto;padding:18px}
 .search{display:flex;gap:8px}
-.search input{flex:1;background:#171717;border:1px solid #333;color:#fff;border-radius:14px;padding:14px 16px;outline:none}
-.search button{border:0;border-radius:14px;background:#ff174f;color:#fff;padding:0 18px;font-weight:800}
-.tabs{display:flex;gap:8px;margin:18px 0}
-.tab{flex:1;background:#171717;border:1px solid #292929;color:#aaa;padding:11px;border-radius:12px;cursor:pointer}
-.tab.active{background:#ff174f;color:#fff;border-color:#ff174f}
-.title{font-size:18px;font-weight:800;margin:18px 0 12px}
-.user{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid #202020}
-.avatar{width:48px;height:48px;border-radius:50%;background:#222;display:flex;align-items:center;justify-content:center;font-size:22px}
-.user-info{flex:1}
-.user-name{font-weight:800}
-.user-handle{color:#888;font-size:13px;margin-top:4px}
-.user button{background:#ff174f;color:#fff;border:0;border-radius:10px;padding:9px 14px;font-weight:800}
-.videos{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
-.video{background:#151515;aspect-ratio:9/14;overflow:hidden}
-.video video{width:100%;height:100%;object-fit:cover}
-.empty{text-align:center;color:#777;padding:55px 10px}
-.loading{text-align:center;color:#888;padding:40px}
-.nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:#141414;border-top:1px solid #303030;display:flex;z-index:10}
-.nav a{flex:1;color:#999;text-decoration:none;text-align:center;padding-top:9px;font-size:12px}
-.nav a.active{color:#ff174f}
-.icon{display:block;font-size:22px;margin-bottom:4px}
-@media(max-width:430px){.videos{grid-template-columns:repeat(3,1fr)}}
+input{flex:1;background:#171717;color:#fff;border:1px solid #333;border-radius:14px;padding:15px;font-size:16px}
+button{border:0;border-radius:13px;padding:12px 18px;font-weight:bold;cursor:pointer}
+.search button{background:#ff174f;color:#fff}
+.tabs{display:flex;gap:8px;margin:16px 0}
+.tabs button{flex:1;background:#181818;color:#aaa;border:1px solid #333}
+.tabs button.active{background:#ff174f;color:#fff}
+.item{display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid #222}
+.avatar{width:48px;height:48px;border-radius:50%;background:#252525;display:flex;align-items:center;justify-content:center;font-size:22px}
+.info{flex:1}.name{font-weight:bold}.handle{color:#888;font-size:13px;margin-top:4px}
+.view{background:#ff174f;color:white;padding:9px 15px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.grid video{width:100%;aspect-ratio:9/14;object-fit:cover;background:#151515}
+.message{text-align:center;color:#888;padding:60px 10px}
+.nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:#141414;border-top:1px solid #333;display:flex}
+.nav a{flex:1;text-align:center;text-decoration:none;color:#aaa;font-size:12px;padding:9px 2px}
+.nav a.active{color:#ff174f}.icon{display:block;font-size:22px;margin-bottom:4px}
 </style>
 </head>
 <body>
-<header><div class="brand">XALLO-GAMING ðŸ”¥</div></header>
-
+<header>XALLO-GAMING ðŸŽ®</header>
 <main>
-  <div class="search">
-    <input id="searchInput" type="search" placeholder="Ú¯Û•Ú•Ø§Ù† Ø¨Û• Ù†Ø§ÙˆÛŒ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±..." autocomplete="off">
-    <button onclick="searchNow()">Ú¯Û•Ú•Ø§Ù†</button>
-  </div>
+<div class="search">
+<input id="q" type="search" placeholder="Ø¨Ú¯Û•Ú•ÛŽ Ø¨Û• Ù†Ø§ÙˆÛŒ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±..." autocomplete="off">
+<button onclick="runSearch()">Ú¯Û•Ú•Ø§Ù†</button>
+</div>
 
-  <div class="tabs">
-    <button id="usersTab" class="tab active" onclick="switchTab('users')">ðŸ‘¤ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±Ø§Ù†</button>
-    <button id="videosTab" class="tab" onclick="switchTab('videos')">ðŸŽ¬ Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù†</button>
-  </div>
+<div class="tabs">
+<button id="uTab" class="active" onclick="setTab('users')">ðŸ‘¤ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±Û•Ú©Ø§Ù†</button>
+<button id="vTab" onclick="setTab('videos')">ðŸŽ¬ Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù†</button>
+</div>
 
-  <section id="usersSection">
-    <div class="title">Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±Û•Ú©Ø§Ù†</div>
-    <div id="users" class="empty">ÙˆØ´Û•ÛŒÛ•Ú© Ø¨Ù†ÙˆÙˆØ³Û• Ø¨Û† Ú¯Û•Ú•Ø§Ù†.</div>
-  </section>
-
-  <section id="videosSection" style="display:none">
-    <div class="title">Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù†</div>
-    <div id="videos" class="empty">ÙˆØ´Û•ÛŒÛ•Ú© Ø¨Ù†ÙˆÙˆØ³Û• Ø¨Û† Ú¯Û•Ú•Ø§Ù†.</div>
-  </section>
+<div id="result" class="message">ÙˆØ´Û•ÛŒÛ•Ú© Ø¨Ù†ÙˆÙˆØ³Û• Ùˆ Ú¯Û•Ú•Ø§Ù† Ø¨Ú©Û•.</div>
 </main>
 
 <nav class="nav">
-  <a href="index.html"><span class="icon">ðŸ </span>Ø³Û•Ø±Û•Ú©ÛŒ</a>
-  <a class="active" href="search.html"><span class="icon">ðŸ”Ž</span>Ú¯Û•Ú•Ø§Ù†</a>
-  <a href="index.html"><span class="icon">âž•</span>Ø¨ÚµØ§ÙˆÚ©Ø±Ø¯Ù†Û•ÙˆÛ•</a>
-  <a href="index.html"><span class="icon">ðŸ””</span>Ø¦Ø§Ú¯Ø§Ø¯Ø§Ø±Ú©Ø±Ø¯Ù†Û•ÙˆÛ•</a>
-  <a href="profile.html"><span class="icon">ðŸ‘¤</span>Ù¾Ø±Û†ÙØ§ÛŒÙ„</a>
+<a href="index.html"><span class="icon">ðŸ </span>Ø³Û•Ø±Û•Ú©ÛŒ</a>
+<a class="active" href="search.html"><span class="icon">ðŸ”Ž</span>Ú¯Û•Ú•Ø§Ù†</a>
+<a href="index.html"><span class="icon">âž•</span>Ø¨ÚµØ§ÙˆÚ©Ø±Ø¯Ù†Û•ÙˆÛ•</a>
+<a href="profile.html"><span class="icon">ðŸ‘¤</span>Ù¾Ø±Û†ÙØ§ÛŒÙ„</a>
 </nav>
 
 <script>
-const SUPABASE_URL="https://vnyprsjjmmjahkisozib.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueXByc2pqbW1qYWhraXNvemliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5OTE0MjEsImV4cCI6MjEwNTU2NzQyMX0.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let currentTab="users";
+const URL="https://vnyprsjjmmjahkisozib.supabase.co";
+const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueXByc2pqbW1qYWhraXNvemliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5OTE0MjEsImV4cCI6MjEwNTU2NzQyMX0.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
+const db=supabase.createClient(URL,KEY);
+let tab="users";
 
-function escapeHtml(v){
- return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function setTab(x){
+ tab=x;
+ uTab.classList.toggle("active",x==="users");
+ vTab.classList.toggle("active",x==="videos");
+ runSearch();
 }
-function switchTab(tab){
- currentTab=tab;
- document.getElementById("usersTab").classList.toggle("active",tab==="users");
- document.getElementById("videosTab").classList.toggle("active",tab==="videos");
- document.getElementById("usersSection").style.display=tab==="users"?"block":"none";
- document.getElementById("videosSection").style.display=tab==="videos"?"block":"none";
+async function runSearch(){
+ const q=document.getElementById("q").value.trim();
+ const box=document.getElementById("result");
+ if(!q){box.className="message";box.textContent="ÙˆØ´Û•ÛŒÛ•Ú© Ø¨Ù†ÙˆÙˆØ³Û• Ùˆ Ú¯Û•Ú•Ø§Ù† Ø¨Ú©Û•.";return}
+ box.className="message";box.textContent="Ú¯Û•Ú•Ø§Ù† Ø¯Û•Ú©Ø§Øª...";
+ if(tab==="users"){
+  const r=await db.from("profiles").select("id,username,display_name,bio").or("username.ilike.%"+q+"%,display_name.ilike.%"+q+"%").limit(30);
+  if(r.error){console.error(r.error);box.textContent="Ù‡Û•ÚµÛ•ÛŒÛ•Ú© Ú•ÙˆÙˆÛŒØ¯Ø§ Ù„Û• Ú¯Û•Ú•Ø§Ù†.";return}
+  if(!r.data.length){box.textContent="Ù‡ÛŒÚ† Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±ÛŽÚ© Ù†Û•Ø¯Û†Ø²Ø±Ø§ÛŒÛ•ÙˆÛ•.";return}
+  box.className="";
+  box.innerHTML=r.data.map(p=>'<div class="item"><div class="avatar">ðŸ‘¤</div><div class="info"><div class="name">'+esc(p.display_name||p.username||"Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±")+'</div><div class="handle">'+(p.username?"@"+esc(p.username):"")+'</div></div><button class="view" onclick="openUser(''+esc(p.id)+'')">Ø¨ÛŒÙ†ÛŒÙ†</button></div>').join("");
+ }else{
+  const r=await db.from("videos").select("*").ilike("caption","%"+q+"%").order("created_at",{ascending:false}).limit(30);
+  if(r.error){console.error(r.error);box.textContent="Ù‡Û•ÚµÛ•ÛŒÛ•Ú© Ú•ÙˆÙˆÛŒØ¯Ø§ Ù„Û• Ú¯Û•Ú•Ø§Ù†ÛŒ Ú¤ÛŒØ¯ÛŒÛ†.";return}
+  if(!r.data.length){box.textContent="Ù‡ÛŒÚ† Ú¤ÛŒØ¯ÛŒÛ†ÛŒÛ•Ú© Ù†Û•Ø¯Û†Ø²Ø±Ø§ÛŒÛ•ÙˆÛ•.";return}
+  box.className="grid";
+  box.innerHTML=r.data.map(v=>'<video src="'+esc(v.video_url)+'" controls muted playsinline preload="metadata"></video>').join("");
+ }
 }
-async function searchNow(){
- const q=document.getElementById("searchInput").value.trim();
- if(!q){document.getElementById("users").className="empty";document.getElementById("users").textContent="ÙˆØ´Û•ÛŒÛ•Ú© Ø¨Ù†ÙˆÙˆØ³Û• Ø¨Û† Ú¯Û•Ú•Ø§Ù†.";return;}
- if(currentTab==="users") await searchUsers(q);
- else await searchVideos(q);
-}
-async function searchUsers(q){
- const box=document.getElementById("users");
- box.className="loading";box.textContent="Ú¯Û•Ú•Ø§Ù†...";
- const {data,error}=await supabaseClient.from("profiles").select("id,username,display_name,bio").or(`username.ilike.%${q}%,display_name.ilike.%${q}%`).limit(30);
- if(error){box.className="empty";box.textContent="Ù‡Û•ÚµÛ•ÛŒÛ•Ú© Ú•ÙˆÙˆÛŒØ¯Ø§.";console.error(error);return;}
- if(!data.length){box.className="empty";box.textContent="Ù‡ÛŒÚ† Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±ÛŽÚ© Ù†Û•Ø¯Û†Ø²Ø±Ø§ÛŒÛ•ÙˆÛ•.";return;}
- box.className="";
- box.innerHTML=data.map(p=>`
-  <div class="user">
-    <div class="avatar">ðŸ‘¤</div>
-    <div class="user-info">
-      <div class="user-name">${escapeHtml(p.display_name||p.username||"Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±")}</div>
-      <div class="user-handle">${p.username?"@"+escapeHtml(p.username):""}</div>
-    </div>
-    <button onclick="openProfile('${escapeHtml(p.id)}')">Ø¨ÛŒÙ†ÛŒÙ†</button>
-  </div>`).join("");
-}
-async function searchVideos(q){
- const box=document.getElementById("videos");
- box.className="loading";box.textContent="Ú¯Û•Ú•Ø§Ù†...";
- const {data,error}=await supabaseClient.from("videos").select("*").ilike("caption",`%${q}%`).order("created_at",{ascending:false}).limit(30);
- if(error){box.className="empty";box.textContent="Ù‡Û•ÚµÛ•ÛŒÛ•Ú© Ú•ÙˆÙˆÛŒØ¯Ø§.";console.error(error);return;}
- if(!data.length){box.className="empty";box.textContent="Ù‡ÛŒÚ† Ú¤ÛŒØ¯ÛŒÛ†ÛŒÛ•Ú© Ù†Û•Ø¯Û†Ø²Ø±Ø§ÛŒÛ•ÙˆÛ•.";return;}
- box.className="videos";
- box.innerHTML=data.map(v=>`<div class="video"><video src="${escapeHtml(v.video_url)}" muted playsinline controls preload="metadata"></video></div>`).join("");
-}
-function openProfile(id){
-  location.href = "user-profile.html?id=" + encodeURIComponent(id);
-}
-document.getElementById("searchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchNow();});
+function openUser(id){location.href="user-profile.html?id="+encodeURIComponent(id)}
+q.addEventListener("keydown",e=>{if(e.key==="Enter")runSearch()});
 </script>
 </body>
 </html>
