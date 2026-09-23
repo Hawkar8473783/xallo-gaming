@@ -565,6 +565,20 @@ button:disabled{
 
 
 /* ===== XALLO MY PROFILE EDITOR ===== */
+/* ===== XALLO HOME / EXPLORE NAV ===== */
+.xallo-nav{display:flex;gap:8px;margin:16px 0;position:sticky;top:8px;z-index:50;background:rgba(8,19,33,.94);padding:8px;border:1px solid #263c58;border-radius:16px;backdrop-filter:blur(10px)}
+.xallo-nav button{flex:1;margin:0;padding:11px 8px;border-radius:12px;background:#101d31;color:#cbd6e6;border:1px solid #2b405c;font-weight:800;font-size:13px}
+.xallo-nav button.active{background:#08a9ff;color:#fff;border-color:#08a9ff}
+.explore-box{display:none;margin:0 0 16px;background:#0b1626;border:1px solid #263c58;border-radius:18px;padding:14px}
+.explore-box.show{display:block}
+.explore-search{display:flex;gap:8px}
+.explore-search input{flex:1;margin:0}
+.explore-search button{width:auto;margin:0;padding:10px 16px;background:#08a9ff}
+.explore-hints{display:flex;gap:8px;overflow-x:auto;margin-top:10px;scrollbar-width:none}
+.explore-hints::-webkit-scrollbar{display:none}
+.explore-hints button{width:auto;flex:0 0 auto;margin:0;padding:8px 12px;border-radius:999px;background:#17263b;border:1px solid #304864;color:#dce5f2;font-size:12px}
+@media(max-width:520px){.xallo-nav{top:4px}.xallo-nav button{font-size:12px;padding:10px 5px}}
+
 .my-profile-box{margin-top:16px}
 .my-profile-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
 .my-profile-avatar,.my-profile-initial{width:82px;height:82px;border-radius:50%;flex:0 0 82px;object-fit:cover;background:#17263b;border:3px solid #08a9ff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800}
@@ -672,6 +686,29 @@ button:disabled{
   <h2>Welcome 🎮</h2>
 
   <div class="email" id="userEmail"></div>
+
+  <!-- ================= HOME / EXPLORE NAV ================= -->
+  <div class="xallo-nav" aria-label="XALLO navigation">
+    <button id="homeNavButton" class="active" type="button" onclick="xalloGoHome()">🏠 Home</button>
+    <button id="exploreNavButton" type="button" onclick="xalloGoExplore()">🔎 Explore</button>
+    <button type="button" onclick="xalloGoProfile()">👤 Profile</button>
+    <button type="button" onclick="xalloGoMessages()">💬 Messages</button>
+  </div>
+
+  <div id="exploreBox" class="explore-box">
+    <h3 style="margin-top:0">🔎 Explore XALLO</h3>
+    <div class="small" style="margin-bottom:10px">Search videos by caption or creator email.</div>
+    <div class="explore-search">
+      <input id="exploreSearchInput" type="search" placeholder="Search videos..." onkeydown="if(event.key==='Enter') searchExploreVideos()">
+      <button type="button" onclick="searchExploreVideos()">Search</button>
+    </div>
+    <div class="explore-hints">
+      <button type="button" onclick="setExploreSearch('')">🔥 All</button>
+      <button type="button" onclick="setExploreSearch('gaming')">🎮 Gaming</button>
+      <button type="button" onclick="setExploreSearch('pubg')">🔫 PUBG</button>
+      <button type="button" onclick="setExploreSearch('fun')">😂 Fun</button>
+    </div>
+  </div>
 
   <!-- ================= MY PROFILE ================= -->
   <div class="box my-profile-box">
@@ -2639,7 +2676,7 @@ async function adminDecision(
    TIKTOK STYLE FEED
 ========================================= */
 
-async function loadTikTokFeed(){
+async function loadTikTokFeed(searchTerm=""){
 
   const box = document.getElementById("tiktokFeed");
   if(!box) return;
@@ -2686,12 +2723,20 @@ async function loadTikTokFeed(){
       throw new Error(error.message || "Could not load videos.");
     }
 
+    const term = String(searchTerm || "").trim().toLowerCase();
+    if(term){
+      data = (data || []).filter(video => {
+        const haystack = `${video.caption || ""} ${video.user_email || ""}`.toLowerCase();
+        return haystack.includes(term);
+      });
+    }
+
     if(!data || !data.length){
       box.innerHTML = `
         <div class="tiktok-empty">
           <div style="font-size:42px">🎬</div>
-          <div>No videos yet.</div>
-          <div class="small">Upload a video and it will appear here.</div>
+          <div>${term ? "No matching videos found." : "No videos yet."}</div>
+          <div class="small">${term ? "Try another search." : "Upload a video and it will appear here."}</div>
         </div>`;
       return;
     }
@@ -3322,6 +3367,49 @@ document.addEventListener("DOMContentLoaded", () => {
     if(typeof supabaseClient !== "undefined") loadNotifications();
   }, 900);
 });
+/* ===== XALLO HOME / EXPLORE NAV ===== */
+function xalloSetNav(active){
+  document.getElementById("homeNavButton")?.classList.toggle("active",active==="home");
+  document.getElementById("exploreNavButton")?.classList.toggle("active",active==="explore");
+}
+
+function xalloGoHome(){
+  const explore=document.getElementById("exploreBox");
+  if(explore) explore.classList.remove("show");
+  xalloSetNav("home");
+  document.getElementById("tiktokFeed")?.scrollIntoView({behavior:"smooth",block:"start"});
+  setTimeout(()=>loadTikTokFeed(""),250);
+}
+
+function xalloGoExplore(){
+  const explore=document.getElementById("exploreBox");
+  if(explore) explore.classList.add("show");
+  xalloSetNav("explore");
+  document.getElementById("exploreSearchInput")?.focus();
+  document.getElementById("tiktokFeed")?.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function searchExploreVideos(){
+  const q=(document.getElementById("exploreSearchInput")?.value || "").trim();
+  loadTikTokFeed(q);
+}
+
+function setExploreSearch(value){
+  const input=document.getElementById("exploreSearchInput");
+  if(input) input.value=value;
+  loadTikTokFeed(value);
+}
+
+function xalloGoProfile(){
+  document.getElementById("my-profile-box")?.scrollIntoView({behavior:"smooth",block:"start"});
+  document.querySelector(".my-profile-box")?.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function xalloGoMessages(){
+  document.querySelector(".chat-box")?.scrollIntoView({behavior:"smooth",block:"start"});
+  setTimeout(()=>openChat(),300);
+}
+
 </script>
 
 <script>
@@ -3441,27 +3529,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-
-<script>
-/* ===== XALLO CHAT UNREAD BADGE ===== */
-async function updateChatUnread(){
-  try{
-    const {data:u}=await supabaseClient.auth.getUser();
-    const email=u?.user?.email;
-    if(!email) return;
-    const {count,error}=await supabaseClient.from("messages")
-      .select("id",{count:"exact",head:true})
-      .eq("receiver_email",email).eq("is_read",false);
-    if(error) return;
-    const btn=document.querySelector(".chat-head h3");
-    if(!btn) return;
-    let badge=document.getElementById("chatUnreadBadge");
-    if(!badge){badge=document.createElement("span");badge.id="chatUnreadBadge";badge.style.cssText="display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;margin-left:6px;border-radius:999px;background:#e91e63;color:#fff;font-size:11px;vertical-align:middle;";btn.appendChild(badge);}
-    badge.textContent=String(count||0); badge.style.display=count?"inline-flex":"none";
-  }catch(e){}
-}
-setInterval(updateChatUnread,5000);
-setTimeout(updateChatUnread,1200);
-</script>
 </body>
 </html>
