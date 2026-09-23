@@ -439,6 +439,26 @@ button:disabled{
   margin-top:8px;
 }
 
+
+/* ================= VIDEO VIEWS ================= */
+.video-stats{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:10px 0;
+}
+
+.video-stat{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:7px 10px;
+  border-radius:12px;
+  background:#18243b;
+  color:#dce7f7;
+  font-size:13px;
+}
+
 </style>
 </head>
 
@@ -1754,7 +1774,8 @@ async function uploadVideo(){
           user_email:email,
           video_url:videoUrl,
           caption:caption,
-          likes:0
+          likes:0,
+          views:0
         });
 
     if(dbError){
@@ -1825,7 +1846,7 @@ async function loadVideos(){
     await supabaseClient
       .from("videos")
       .select(
-        "id,user_email,video_url,caption,likes,created_at"
+        "id,user_email,video_url,caption,likes,views,created_at"
       )
       .order(
         "created_at",
@@ -1952,6 +1973,7 @@ async function loadVideos(){
             controls
             playsinline
             preload="metadata"
+            onplay="registerVideoView('${video.id}',this)"
             src="${escapeHtml(video.video_url)}">
           </video>
 
@@ -1969,6 +1991,18 @@ async function loadVideos(){
               ${new Date(
                 video.created_at
               ).toLocaleString()}
+            </div>
+
+            <div class="video-stats">
+              <span class="video-stat">
+                ❤️ ${Number(video.likes) || 0}
+              </span>
+
+              <span
+                class="video-stat"
+                id="views-${video.id}">
+                👁️ ${Number(video.views) || 0}
+              </span>
             </div>
 
 
@@ -2018,6 +2052,49 @@ async function loadVideos(){
 
     }).join("");
 
+}
+
+
+
+/* =========================================
+   VIDEO VIEWS
+========================================= */
+
+async function registerVideoView(videoId, videoElement){
+
+  if(!videoId || !videoElement){
+    return;
+  }
+
+  /* Count once per video per page session */
+  if(videoElement.dataset.viewed === "true"){
+    return;
+  }
+
+  videoElement.dataset.viewed = "true";
+
+  const {
+    data,
+    error
+  } = await supabaseClient.rpc(
+    "view_video",
+    {
+      p_video_id:videoId
+    }
+  );
+
+  if(error){
+    console.error("View error:",error.message);
+    return;
+  }
+
+  const countElement =
+    document.getElementById("views-" + videoId);
+
+  if(countElement){
+    countElement.textContent =
+      "👁️ " + Number(data || 0).toLocaleString();
+  }
 }
 
 
