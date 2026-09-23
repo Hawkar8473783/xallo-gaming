@@ -31,7 +31,6 @@
             cursor: pointer; margin-top: 10px; transition: background 0.3s;
         }
         .btn:hover { background-color: #e0254a; }
-        .btn:disabled { background-color: #555; cursor: not-allowed; }
         .toggle-text { margin-top: 20px; font-size: 0.9rem; color: #aaa; }
         .toggle-text span { color: #fe2c55; cursor: pointer; font-weight: bold; }
     </style>
@@ -39,7 +38,7 @@
 <body>
 
     <div class="auth-container">
-        <h2 id="formTitle">چوونەژوورەوە</h2>
+        <h2>چوونەژوورەوە</h2>
         
         <form id="authForm">
             <div class="input-group">
@@ -48,66 +47,20 @@
             </div>
             <div class="input-group">
                 <label for="password">پاسوۆرد</label>
-                <input type="password" id="password" placeholder="********" required minlength="6">
+                <input type="password" id="password" placeholder="********" required>
             </div>
             <button type="submit" class="btn" id="submitBtn">چوونەژوورەوە</button>
         </form>
-
-        <div class="toggle-text">
-            هەژمارت نییە؟ <span id="toggleAuth">تۆمارکردن</span>
-        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const SUPABASE_URL = 'https://vnyprsjjmmjahkisozib.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp';
+        // ⚠️ Supabase لە ئێستادا چالاک نییە
+        // ئەم فۆرمە بۆ تاقیکردنەوەیە
 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        const formTitle = document.getElementById('formTitle');
-        const authForm = document.getElementById('authForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const toggleAuth = document.getElementById('toggleAuth');
-        let isLogin = true;
-
-        toggleAuth.addEventListener('click', () => {
-            isLogin = !isLogin;
-            formTitle.textContent = isLogin ? 'چوونەژوورەوە' : 'تۆمارکردن';
-            submitBtn.textContent = isLogin ? 'چوونەژوورەوە' : 'تۆمارکردن';
-            toggleAuth.textContent = isLogin ? 'تۆمارکردن' : 'چوونەژوورەوە';
-            toggleAuth.previousSibling.textContent = isLogin ? 'هەژمارت نییە؟ ' : 'هەژمارت هەیە؟ ';
-        });
-
-        authForm.addEventListener('submit', async (e) => {
+        document.getElementById('authForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'تکایە چاوەڕوان بە...';
-
-            try {
-                if (isLogin) {
-                    const { error } = await supabase.auth.signInWithPassword({ email, password });
-                    if (error) throw error;
-                    window.location.href = 'index.html';
-                } else {
-                    const { error } = await supabase.auth.signUp({ email, password });
-                    if (error) throw error;
-                    alert('تۆمارکردن سەرکەوتوو بوو! ئێستا بچۆ ژوورەوە.');
-                    toggleAuth.click();
-                }
-            } catch (error) {
-                alert('هەڵە: ' + error.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = isLogin ? 'چوونەژوورەوە' : 'تۆمارکردن';
-            }
-        });
-
-        supabase.auth.getUser().then(({ data: { user } }) => {
-            if (user) window.location.href = 'index.html';
+            alert('چوونەژوورەوە تەواو بوو!');
+            window.location.href = 'index.html';
         });
     </script>
 </body>
