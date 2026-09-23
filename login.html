@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>چوونەژوورەوە | XALLO-GAMING</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body {
+            background-color: #121212; color: #fff;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px;
+        }
+        .auth-container {
+            background-color: #1e1e1e; padding: 30px 20px; border-radius: 16px;
+            width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            text-align: center; border: 1px solid #333;
+        }
+        .auth-container h2 { margin-bottom: 25px; color: #fe2c55; font-size: 1.5rem; }
+        .input-group { margin-bottom: 18px; text-align: right; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #ccc; }
+        .input-group input {
+            width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #333;
+            background-color: #2a2a2a; color: #fff; font-size: 1rem; outline: none;
+            transition: border 0.3s;
+        }
+        .input-group input:focus { border-color: #fe2c55; }
+        .btn {
+            width: 100%; padding: 14px; border: none; border-radius: 10px;
+            background-color: #fe2c55; color: #fff; font-size: 1rem; font-weight: bold;
+            cursor: pointer; margin-top: 10px; transition: background 0.3s;
+        }
+        .btn:hover { background-color: #e0254a; }
+        .btn:disabled { background-color: #555; cursor: not-allowed; }
+        .toggle-text { margin-top: 20px; font-size: 0.9rem; color: #aaa; }
+        .toggle-text span { color: #fe2c55; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <h2 id="formTitle">چوونەژوورەوە</h2>
+        
+        <form id="authForm">
+            <div class="input-group">
+                <label for="email">ئیمەیڵ</label>
+                <input type="email" id="email" placeholder="example@email.com" required>
+            </div>
+            <div class="input-group">
+                <label for="password">پاسوۆرد</label>
+                <input type="password" id="password" placeholder="********" required minlength="6">
+            </div>
+            <button type="submit" class="btn" id="submitBtn">چوونەژوورەوە</button>
+        </form>
+
+        <div class="toggle-text">
+            هەژمارت نییە؟ <span id="toggleAuth">تۆمارکردن</span>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // ⚠️ ئەم دوو دێرە بگۆڕە بە زانیارییەکانی خۆت
+        const SUPABASE_URL = 'لێرە_URL_ی_پرۆژەکەت_دابنێ';
+        const SUPABASE_ANON_KEY = 'لێرە_ANON_KEY_دابنێ';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const formTitle = document.getElementById('formTitle');
+        const authForm = document.getElementById('authForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const toggleAuth = document.getElementById('toggleAuth');
+        let isLogin = true;
+
+        toggleAuth.addEventListener('click', () => {
+            isLogin = !isLogin;
+            formTitle.textContent = isLogin ? 'چوونەژوورەوە' : 'تۆمارکردن';
+            submitBtn.textContent = isLogin ? 'چوونەژوورەوە' : 'تۆمارکردن';
+            toggleAuth.textContent = isLogin ? 'تۆمارکردن' : 'چوونەژوورەوە';
+            toggleAuth.previousSibling.textContent = isLogin ? 'هەژمارت نییە؟ ' : 'هەژمارت هەیە؟ ';
+        });
+
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'تکایە چاوەڕوان بە...';
+
+            try {
+                if (isLogin) {
+                    const { error } = await supabase.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                    window.location.href = 'index.html';
+                } else {
+                    const { error } = await supabase.auth.signUp({ email, password });
+                    if (error) throw error;
+                    alert('تۆمارکردن سەرکەوتوو بوو! ئێستا بچۆ ژوورەوە.');
+                    toggleAuth.click();
+                }
+            } catch (error) {
+                alert('هەڵە: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = isLogin ? 'چوونەژوورەوە' : 'تۆمارکردن';
+            }
+        });
+
+        // ئەگەر پێشتر چووبێتە ژوورەوە، ڕاستەوخۆ بۆ index.html
+        supabase.auth.getUser().then(({ data: { user } }) => {
+            if (user) window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
