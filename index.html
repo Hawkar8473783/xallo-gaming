@@ -2,7 +2,8 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- ئەم مێتا وێوپۆرتە چاککراوە بۆ پاراستنی ناوچەکانی مۆبایل -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>XALLO-GAMING | TikTok Feed</title>
     <style>
         /* ڕێکخستنی گشتی */
@@ -11,12 +12,13 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* لابردنی ڕەنگی شین کاتێک کلیک دەکەیت لەسەر مۆبایل */
         }
 
         body {
             background-color: #000;
             color: #fff;
-            overflow: hidden; /* ڕاگرتنی سکرۆلی ئاسایی */
+            overflow: hidden;
             height: 100vh;
             width: 100vw;
         }
@@ -27,11 +29,11 @@
             width: 100%;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
-            scrollbar-width: none; /* شاردنەوەی سکرۆڵبار لە فایەرفۆکس */
+            scrollbar-width: none;
         }
 
         .video-feed::-webkit-scrollbar {
-            display: none; /* شاردنەوەی سکرۆڵبار لە کرۆم */
+            display: none;
         }
 
         /* کارتی ڤیدیۆ */
@@ -44,13 +46,14 @@
             justify-content: center;
             align-items: center;
             background-color: #111;
+            overflow: hidden;
         }
 
         /* ڤیدیۆکە خۆی */
         .video-card video {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* بۆ پڕکردنەوەی شاشەکە */
+            object-fit: cover;
             position: absolute;
             top: 0;
             left: 0;
@@ -63,106 +66,115 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 40%;
+            height: 60%; /* بەرزی زیادکرا بۆ ئەوەی شتەکان جێی هەبێت */
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             z-index: 2;
             display: flex;
             justify-content: space-between;
             padding: 20px;
-            pointer-events: none; /* بۆ ئەوەی کلیک لەسەر ڤیدیۆ کار بکات */
+            /* ئەمە گرنگترین بەشە: دوگمەکان لە ژێر دوگمەی مۆبایلەکە دەرناچن */
+            padding-bottom: calc(40px + env(safe-area-inset-bottom)); 
+            pointer-events: none;
         }
 
         .overlay * {
-            pointer-events: auto; /* چالاککردنەوەی کلیک بۆ ناوەوە */
+            pointer-events: auto;
         }
 
-        /* بەشی چەپ (ناو و وەسف) */
+        /* بەشی ناو و وەسف (لای چەپ) */
         .user-info {
-            width: 70%;
+            width: 65%;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 20px;
+            text-align: right; /* نووسینەکان بۆ لای ڕاست */
         }
 
         .username {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             display: flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
         }
 
         .caption {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             line-height: 1.4;
-            color: #ddd;
+            color: #eee;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
-        /* بەشی ڕاست (دوگمەکان) */
+        /* بەشی دوگمەکان (لای ڕاست) */
         .action-buttons {
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
-            gap: 20px;
+            gap: 18px;
             margin-bottom: 20px;
         }
 
         .action-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             border: none;
             color: #fff;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             justify-content: center;
-            transition: transform 0.2s;
+            backdrop-filter: blur(5px); /* شێوازی شووشەیی */
+            transition: transform 0.2s, background 0.2s;
         }
 
-        .action-btn:hover {
-            transform: scale(1.1);
+        .action-btn:active {
+            transform: scale(0.9);
         }
 
         .action-btn span {
             font-size: 0.7rem;
             font-weight: bold;
+            margin-top: 2px;
         }
 
         /* دوگمەی فۆڵۆ */
         .follow-btn {
             background: #fe2c55;
-            border-radius: 5px;
-            width: 40px;
-            height: 40px;
-            font-size: 1.2rem;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
             border: none;
             cursor: pointer;
-            margin-bottom: 5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(254, 44, 85, 0.5);
         }
 
         .follow-btn.following {
             background: #333;
             color: #fff;
+            box-shadow: none;
         }
 
-        /* دوگمەکانی سەرەوە (دەنگ و گەورەکردن) */
+        /* دوگمەکانی سەرەوە (دەنگ) */
         .top-controls {
             position: absolute;
             top: 20px;
@@ -170,6 +182,8 @@
             z-index: 3;
             display: flex;
             gap: 15px;
+            /* پاراستن لە کاتژمێری مۆبایل */
+            padding-top: env(safe-area-inset-top); 
         }
 
         .top-btn {
@@ -184,11 +198,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        /* شاردنەوەی دوگمەی دەنگ کاتێک ڤیدیۆ دەنگ نییە */
-        .hidden {
-            display: none !important;
+            backdrop-filter: blur(5px);
         }
     </style>
 </head>
@@ -204,8 +214,8 @@
         
         <!-- ڤیدیۆی یەکەم -->
         <div class="video-card">
-            <!-- لە جیاتی لینکی نموونە، لینکی ڤیدیۆکەت لێرە دابنێ -->
-            <video src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline></video>
+            <!-- لینکی ڤیدیۆکەت لێرە دابنێ -->
+            <video src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline muted></video>
             
             <div class="overlay">
                 <div class="user-info">
@@ -234,7 +244,7 @@
 
         <!-- ڤیدیۆی دووەم (بۆ تاقیکردنەوەی سکرۆڵ) -->
         <div class="video-card">
-            <video src="https://www.w3schools.com/html/movie.mp4" loop playsinline></video>
+            <video src="https://www.w3schools.com/html/movie.mp4" loop playsinline muted></video>
             
             <div class="overlay">
                 <div class="user-info">
@@ -265,9 +275,14 @@
 
     <script>
         // ١. کۆنترۆڵی دەنگ (Mute / Unmute)
-        let isMuted = false;
+        let isMuted = false; // دەنگەکە کراوەیە بە شێوەی سەرەتایی
         const videos = document.querySelectorAll('video');
         const muteBtn = document.getElementById('muteBtn');
+
+        // چونکە وێبگەڕەکان ڕێگە نادەن ڤیدیۆ بە دەنگ لێبدرێت بەبێ کلیکی بەکارهێنەر،
+        // ئێمە بە شێوەی سەرەتایی دەنگ دەکەینەوە کاتێک کلیک دەکەن.
+        // بەڵام بۆ ئەم کۆدە، وەک خۆی دەیهێڵینەوە و دوگمەکە کاری پێدەکەین.
+        videos.forEach(v => v.muted = isMuted);
 
         function toggleMute() {
             isMuted = !isMuted;
@@ -282,12 +297,18 @@
             entries.forEach(entry => {
                 const video = entry.target.querySelector('video');
                 if (entry.isIntersecting) {
-                    video.play().catch(e => console.log("پێویستە بەکارهێنەر کلیک بکات بۆ لێدان"));
-                    // دڵنیابوونەوە لەوەی دەنگەکە لەسەر حاڵەتی ئێستایە
-                    video.muted = isMuted; 
+                    // کاتێک ڤیدیۆکە دەرکەوت، لێیبدە
+                    video.play().catch(e => {
+                        console.log("پێویستە بەکارهێنەر کلیک بکات بۆ لێدان");
+                        // ئەگەر وێبگەڕەکە ڕێگەی نەدا، دەنگ دەکەینەوە بە زۆر
+                        video.muted = true; 
+                        isMuted = true;
+                        muteBtn.textContent = '🔇';
+                    });
                 } else {
+                    // کاتێک ڤیدیۆکە لە شاشەکە دەرچوو، بیوەستێنە
                     video.pause();
-                    video.currentTime = 0; // گەڕاندنەوە بۆ سەرەتا
+                    video.currentTime = 0; 
                 }
             });
         }, { threshold: 0.6 }); // کاتێک ٦٠٪ ی ڤیدیۆکە دیار بوو، لێیبدە
@@ -298,7 +319,24 @@
 
         // ٣. لایککردن
         function likeVideo(btn) {
-            btn.style.color = btn.style.color === 'red' ? 'white' : 'red';
+            const isLiked = btn.style.color === 'red';
+            if (isLiked) {
+                btn.style.color = 'white';
+                // کەمکردنەوەی ژمارە
+                let span = btn.querySelector('span');
+                let num = parseFloat(span.textContent);
+                if (span.textContent.includes('K')) num = num * 1000;
+                num -= 1;
+                span.textContent = num >= 1000 ? (num/1000).toFixed(1) + 'K' : num;
+            } else {
+                btn.style.color = 'red';
+                // زیادکردنی ژمارە
+                let span = btn.querySelector('span');
+                let num = parseFloat(span.textContent);
+                if (span.textContent.includes('K')) num = num * 1000;
+                num += 1;
+                span.textContent = num >= 1000 ? (num/1000).toFixed(1) + 'K' : num;
+            }
         }
 
         // ٤. فۆڵۆکردن
