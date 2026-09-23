@@ -60,9 +60,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ⚠️ ئەم دوو دێرە بگۆڕە بە زانیارییەکانی خۆت
-        const SUPABASE_URL = 'لێرە_URL_ی_پرۆژەکەت_دابنێ';
-        const SUPABASE_ANON_KEY = 'لێرە_ANON_KEY_دابنێ';
+        const SUPABASE_URL = 'https://vnyprsjmmjahkisozib.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp';
+
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const formTitle = document.getElementById('formTitle');
@@ -106,7 +106,6 @@
             }
         });
 
-        // ئەگەر پێشتر چووبێتە ژوورەوە، ڕاستەوخۆ بۆ index.html
         supabase.auth.getUser().then(({ data: { user } }) => {
             if (user) window.location.href = 'index.html';
         });
