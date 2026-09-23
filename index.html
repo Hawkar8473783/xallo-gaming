@@ -588,6 +588,20 @@ button:disabled{
 .light-mode input,.light-mode select,.light-mode textarea{background:#f8fafc!important;color:#172033!important;border-color:#cbd5e1!important;}
 .light-mode .box,.light-mode .coins,.light-mode .video-card,.light-mode .comment{background:#f8fafc!important;color:#172033!important;}
 
+
+.main-nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0 0 18px;}
+.main-nav-btn{margin:0;padding:11px 8px;background:#17243b;border:1px solid #2b3d5d;font-size:13px;}
+.main-nav-btn.active{background:#08a9ff;}
+.main-section{width:100%;}
+.explore-results{margin-top:12px;}
+.explore-card{background:#070b19;border:1px solid #283653;border-radius:14px;padding:12px;margin-top:10px;}
+.explore-card video{width:100%;max-height:300px;background:#000;border-radius:10px;display:block;}
+.explore-card .explore-meta{margin-top:9px;color:#9da8bd;font-size:12px;line-height:1.5;}
+.explore-card .explore-caption{color:#fff;margin-top:5px;word-break:break-word;}
+.explore-actions{display:flex;gap:8px;margin-top:8px;}
+.explore-actions button{margin:0;padding:10px;font-size:13px;background:#18243b;}
+@media(max-width:420px){.main-nav-btn{font-size:12px;padding:10px 5px;}}
+
 </style>
 
 </head>
@@ -684,6 +698,13 @@ button:disabled{
   <h2>Welcome 🎮</h2>
 
   <div class="email" id="userEmail"></div>
+
+  <!-- ================= HOME / EXPLORE NAV ================= -->
+  <div class="main-nav" id="mainNav">
+    <button type="button" class="main-nav-btn active" id="homeNavBtn" onclick="showMainSection('home')">🏠 Home</button>
+    <button type="button" class="main-nav-btn" id="exploreNavBtn" onclick="showMainSection('explore')">🔎 Explore</button>
+    <button type="button" class="main-nav-btn" onclick="scrollToProfileSection()">👤 Profile</button>
+  </div>
 
   <!-- ================= MY PROFILE ================= -->
   <div class="box my-profile-box">
@@ -803,6 +824,9 @@ button:disabled{
   </div>
 
 
+  <!-- ================= HOME SECTION ================= -->
+  <div id="homeSection" class="main-section">
+
   <!-- ================= XALLO TIKTOK FEED ================= -->
 
   <div class="tiktok-section">
@@ -843,6 +867,19 @@ button:disabled{
     </div>
     <div id="notificationsList" class="notifications-list">
       <div class="users-empty">Loading notifications...</div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- ================= EXPLORE SECTION ================= -->
+  <div id="exploreSection" class="main-section" style="display:none">
+    <div class="box explore-box">
+      <h3>🔎 Explore XALLO</h3>
+      <input id="exploreInput" type="search" placeholder="Search videos, captions or users..." oninput="searchExplore()">
+      <div id="exploreResults" class="explore-results">
+        <div class="users-empty">Type something to explore videos.</div>
+      </div>
     </div>
   </div>
 
@@ -2536,6 +2573,80 @@ async function adminDecision(
 }
 
 
+
+
+/* =========================================
+   HOME / EXPLORE NAVIGATION
+========================================= */
+function showMainSection(section){
+  const home=document.getElementById('homeSection');
+  const explore=document.getElementById('exploreSection');
+  const homeBtn=document.getElementById('homeNavBtn');
+  const exploreBtn=document.getElementById('exploreNavBtn');
+  if(!home || !explore) return;
+  const isHome=section==='home';
+  home.style.display=isHome?'block':'none';
+  explore.style.display=isHome?'none':'block';
+  if(homeBtn) homeBtn.classList.toggle('active',isHome);
+  if(exploreBtn) exploreBtn.classList.toggle('active',!isHome);
+  if(!isHome){
+    setTimeout(()=>document.getElementById('exploreInput')?.focus(),50);
+  }
+}
+
+function scrollToProfileSection(){
+  const el=document.getElementById('myProfileBox') || document.getElementById('profileBox') || document.querySelector('.profile-box');
+  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  else window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}
+
+let exploreTimer=null;
+async function searchExplore(){
+  clearTimeout(exploreTimer);
+  exploreTimer=setTimeout(async()=>{
+    const q=(document.getElementById('exploreInput')?.value || '').trim().toLowerCase();
+    const box=document.getElementById('exploreResults');
+    if(!box) return;
+    if(!q){ box.innerHTML='<div class="users-empty">Type something to explore videos.</div>'; return; }
+    box.innerHTML='<div class="users-empty">Searching...</div>';
+    try{
+      const {data,error}=await supabaseClient.from('videos').select('id,user_email,video_url,caption,likes,created_at').order('created_at',{ascending:false}).limit(100);
+      if(error) throw error;
+      const rows=(data||[]).filter(v => (v.caption||'').toLowerCase().includes(q) || (v.user_email||'').toLowerCase().includes(q));
+      if(!rows.length){ box.innerHTML='<div class="users-empty">No matching videos found.</div>'; return; }
+      box.innerHTML=rows.map(v=>{
+        const id=escapeHtml(String(v.id));
+        const url=escapeHtml(v.video_url||'');
+        const email=escapeHtml(v.user_email||'');
+        const cap=escapeHtml(v.caption||'');
+        return `<div class="explore-card">
+          <video src="${url}" controls playsinline preload="metadata"></video>
+          <div class="explore-meta">👤 ${email} · ❤️ ${Number(v.likes)||0}</div>
+          <div class="explore-caption">${cap}</div>
+          <div class="explore-actions">
+            <button type="button" onclick="likeExploreVideo('${id}',this)">❤️ Like</button>
+            <button type="button" onclick="openTikTokProfile('${email}')">👤 Profile</button>
+          </div>
+        </div>`;
+      }).join('');
+    }catch(e){
+      console.error(e);
+      box.innerHTML='<div class="users-empty">Explore error: '+escapeHtml(e.message||'Unknown error')+'</div>';
+    }
+  },250);
+}
+
+async function likeExploreVideo(id,button){
+  if(!button) return;
+  button.disabled=true;
+  const {data,error}=await supabaseClient.rpc('like_video',{p_video_id:id});
+  if(error){
+    button.disabled=false;
+    dashboardMessage('Like error: '+error.message,'error');
+    return;
+  }
+  button.textContent='❤️ Liked · '+(Number(data)||0);
+}
 
 /* =========================================
    TIKTOK STYLE FEED
