@@ -351,327 +351,103 @@ button:disabled{
 }
 
 
-/* ================= PROFILE ================= */
-.profile-box{
-  margin-top:20px;padding:18px;background:#0c1b2e;
-  border:1px solid #315174;border-radius:18px;
+/* ================= TIKTOK STYLE FEED ================= */
+.tiktok-section{
+  margin-top:24px;
+  padding:0;
 }
-.profile-top{display:flex;align-items:center;gap:14px;margin-bottom:15px}
-.profile-avatar,.profile-initial{
-  width:82px;height:82px;border-radius:50%;
+.tiktok-title{
+  text-align:center;
+  margin-bottom:12px;
 }
-.profile-avatar{object-fit:cover;background:#070b19;border:2px solid #08a9ff;display:none}
-.profile-initial{
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#08a9ff,#9c27b0);
-  font-size:30px;font-weight:bold;border:2px solid #08a9ff;
-}
-.profile-name{font-size:20px;font-weight:bold}
-.profile-label{color:#9da8bd;font-size:13px;margin:4px 0 7px}
-.avatar-actions{display:flex;gap:8px;align-items:center}
-.avatar-actions input{margin:0;padding:10px;font-size:13px}
-.profile-save{background:#08a9ff}
-
-
-/* ================= NOTIFICATIONS ================= */
-.notification-box{
-  margin-top:20px;
-  padding:12px;
-  background:#0c1b2e;
-  border:1px solid #315174;
-  border-radius:18px;
-}
-
-.notification-button{
-  background:#18243b;
-  margin:0;
-  position:relative;
-}
-
-#notificationCount{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:24px;
-  height:24px;
-  padding:0 7px;
-  margin-left:6px;
-  border-radius:20px;
-  background:#e53935;
-  color:white;
-  font-size:12px;
-}
-
-.notification{
-  background:#070b19;
-  border:1px solid #283653;
-  border-radius:12px;
-  padding:12px;
-  margin-top:10px;
-  text-align:left;
-}
-
-.notification.unread{
-  border-color:#08a9ff;
-}
-
-.notification-title{
-  color:#08a9ff;
-  font-weight:bold;
-  margin-bottom:5px;
-}
-
-.notification-message{
-  color:#ddd;
-  line-height:1.5;
-}
-
-.notification-date{
-  color:#77839a;
-  font-size:10px;
-  margin-top:6px;
-}
-
-.read-button{
-  background:#263b63;
-  padding:9px;
-  font-size:12px;
-  margin-top:8px;
-}
-
-
-/* ================= VIDEO VIEWS ================= */
-.video-stats{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin:10px 0;
-}
-
-.video-stat{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:7px 10px;
-  border-radius:12px;
-  background:#18243b;
-  color:#dce7f7;
-  font-size:13px;
-}
-
-
-/* ================= SEARCH ================= */
-.search-box{
-  margin:20px 0;
-  padding:14px;
-  background:#0c1b2e;
-  border:1px solid #315174;
-  border-radius:18px;
-}
-
-.search-row{
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-.search-row input{
-  flex:1;
-  margin:0;
-}
-
-.search-button{
-  width:auto;
-  margin:0;
-  padding:13px 16px;
-  white-space:nowrap;
-}
-
-.search-results{
-  margin-top:12px;
-}
-
-.search-result{
-  padding:12px;
-  margin-top:8px;
-  background:#070b19;
-  border:1px solid #283653;
-  border-radius:12px;
-}
-
-.search-result-user{
-  color:#08a9ff;
-  font-weight:bold;
-}
-
-.search-result-caption{
-  margin-top:5px;
-  color:#ddd;
-}
-
-.search-result-stats{
-  margin-top:7px;
-  color:#8d9bb0;
-  font-size:12px;
-}
-
-@media(max-width:520px){
-  .search-row{
-    flex-direction:column;
-    align-items:stretch;
-  }
-
-  .search-button{
-    width:100%;
-  }
-}
-
-
-/* ================= PUBLIC PROFILE ================= */
-.public-profile-box{
-  display:none;
-  margin:20px 0;
-  padding:18px;
-  background:#0c1b2e;
-  border:1px solid #315174;
-  border-radius:18px;
-}
-
-.public-profile-head{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-.public-profile-avatar{
-  width:78px;
-  height:78px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid #08a9ff;
-  background:#17243b;
-}
-
-.public-profile-name{
-  font-size:22px;
-  font-weight:700;
-}
-
-.public-profile-bio{
-  margin-top:12px;
-  color:#b9c4d4;
-  line-height:1.5;
-}
-
-.public-profile-videos{
-  margin-top:16px;
-}
-
-.public-profile-video{
-  margin-top:10px;
-  padding:12px;
-  border-radius:14px;
-  background:#070b19;
-  border:1px solid #283653;
-}
-
-.public-profile-video video{
-  width:100%;
-  max-height:360px;
-  border-radius:12px;
-}
-
-.public-profile-close{
-  width:auto;
-  margin:0 0 14px auto;
-  padding:9px 14px;
-  background:#263b63;
-}
-
-
-/* ================= FOLLOW SYSTEM ================= */
-.follow-button{width:auto;margin:10px 0 0 0;padding:10px 18px;background:#08a9ff;color:#fff;border-radius:12px}
-.follow-button.following{background:#263b63}
-.follow-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.follow-stat{padding:8px 12px;border-radius:12px;background:#18243b;color:#dce7f7;font-size:13px}
-
-
-/* =========================================
-   TIKTOK STYLE VIDEO FEED
-========================================= */
-
-.video-feed.tiktok-mode{
-  margin-top:20px;
-}
-
-.video-feed.tiktok-mode > h3{
-  position:sticky;
-  top:0;
-  z-index:20;
-  margin:0;
-  padding:12px 0;
-  background:#050814;
-}
-
-.video-feed.tiktok-mode #videoFeed{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
-.video-feed.tiktok-mode .video-card{
-  position:relative;
-  min-height:72vh;
-  margin:0;
-  border-radius:18px;
-  overflow:hidden;
-  scroll-snap-align:start;
-  background:#05070d;
-}
-
-.video-feed.tiktok-mode .video-card video{
+.tiktok-feed{
   width:100%;
   height:72vh;
-  max-height:none;
-  object-fit:contain;
+  min-height:520px;
+  max-height:760px;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  background:#000;
+  border-radius:20px;
+  border:1px solid #283653;
+  scrollbar-width:none;
+}
+.tiktok-feed::-webkit-scrollbar{display:none}
+.tiktok-item{
+  position:relative;
+  height:72vh;
+  min-height:520px;
+  max-height:760px;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  background:#000;
+  overflow:hidden;
+}
+.tiktok-item video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
   background:#000;
 }
-
-.video-feed.tiktok-mode .video-info{
+.tiktok-gradient{
   position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  z-index:5;
-  padding:50px 14px 14px;
+  inset:45% 0 0;
   background:linear-gradient(transparent,rgba(0,0,0,.9));
+  pointer-events:none;
 }
-
-.video-feed.tiktok-mode .video-user,
-.video-feed.tiktok-mode .caption,
-.video-feed.tiktok-mode .video-date,
-.video-feed.tiktok-mode .video-stats{
-  text-shadow:0 1px 4px #000;
+.tiktok-info{
+  position:absolute;
+  left:14px;
+  right:76px;
+  bottom:18px;
+  z-index:2;
 }
-
-.video-feed.tiktok-mode .comment-area{
-  display:none;
+.tiktok-user{
+  color:#fff;
+  font-weight:bold;
+  margin-bottom:8px;
+  word-break:break-word;
 }
-
-.video-feed.tiktok-mode .like-button{
-  width:auto;
-  display:inline-block;
-  padding:10px 16px;
-  border-radius:22px;
-  margin-top:8px;
+.tiktok-caption{
+  color:#fff;
+  line-height:1.45;
+  word-break:break-word;
 }
-
-@media(max-width:600px){
-  .video-feed.tiktok-mode .video-card{
-    min-height:68vh;
-  }
-  .video-feed.tiktok-mode .video-card video{
-    height:68vh;
+.tiktok-actions{
+  position:absolute;
+  right:10px;
+  bottom:18px;
+  width:58px;
+  z-index:3;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.tiktok-actions button{
+  width:58px;
+  height:58px;
+  margin:0;
+  padding:4px;
+  border-radius:50%;
+  background:rgba(20,28,45,.85);
+  border:1px solid rgba(255,255,255,.18);
+  font-size:12px;
+}
+.tiktok-actions .count{
+  display:block;
+  font-size:11px;
+  margin-top:2px;
+}
+.tiktok-empty{
+  padding:35px 18px;
+  text-align:center;
+  color:#9da8bd;
+}
+@media(max-width:520px){
+  .tiktok-feed,.tiktok-item{
+    height:74vh;
+    min-height:500px;
   }
 }
 
@@ -691,7 +467,7 @@ button:disabled{
   </div>
 
   <div class="subtitle">
-    Play &#x2022; Earn &#x2022; Enjoy
+    Play • Earn • Enjoy
   </div>
 
   <div id="loginBox">
@@ -764,117 +540,19 @@ button:disabled{
   </div>
 
   <div class="subtitle">
-    Play &#x2022; Earn &#x2022; Enjoy
+    Play • Earn • Enjoy
   </div>
 
-  <h2>Welcome &#x1F3AE;</h2>
+  <h2>Welcome 🎮</h2>
 
   <div class="email" id="userEmail"></div>
-
-
-  <!-- ================= NOTIFICATIONS ================= -->
-  <div class="notification-box">
-    <button
-      class="notification-button"
-      onclick="toggleNotifications()">
-      &#x1F514; Notifications
-      <span id="notificationCount">0</span>
-    </button>
-
-    <div id="notificationsPanel" style="display:none;">
-      <div id="notificationsList">
-        <div class="small">Loading notifications...</div>
-      </div>
-    </div>
-  </div>
-
-
-
-  <!-- ================= SEARCH ================= -->
-  <div class="search-box">
-    <div class="section-title">🔎 Search Videos</div>
-
-    <div class="search-row">
-      <input
-        id="searchInput"
-        type="search"
-        maxlength="100"
-        placeholder="Search username or caption..."
-        oninput="searchVideos()">
-
-      <button
-        class="search-button"
-        onclick="searchVideos()">
-        🔎 Search
-      </button>
-    </div>
-
-    <div id="searchResults" class="search-results"></div>
-  </div>
-
-  <!-- ================= PROFILE ================= -->
-
-  <!-- ================= PUBLIC PROFILE ================= -->
-  <div id="publicProfileBox" class="public-profile-box">
-
-    <button
-      class="public-profile-close"
-      onclick="closePublicProfile()">
-      ✕ Close
-    </button>
-
-    <div class="public-profile-head">
-      <img
-        id="publicProfileAvatar"
-        class="public-profile-avatar"
-        alt="Profile picture">
-
-      <div>
-        <div id="publicProfileName" class="public-profile-name">
-          User
-        </div>
-        <div class="small">Public Profile</div>
-      </div>
-    </div>
-
-    <div id="publicProfileBio" class="public-profile-bio"></div>
-
-    <div id="publicProfileVideos" class="public-profile-videos"></div>
-  </div>
-
-  <div class="profile-box">
-    <h3>&#x1F464; My Profile</h3>
-    <div class="profile-top">
-      <img id="profileAvatar" class="profile-avatar" alt="Profile">
-      <div id="profileInitial" class="profile-initial">X</div>
-      <div>
-        <div id="profileDisplayName" class="profile-name">User</div>
-        <div class="small" style="text-align:left;margin-top:4px;">Edit your profile</div>
-      </div>
-    </div>
-
-    <div class="profile-label">Profile picture</div>
-    <div class="avatar-actions">
-      <input id="avatarFile" type="file" accept="image/*">
-    </div>
-
-    <div class="profile-label">Username</div>
-    <input id="profileUsername" type="text" maxlength="30" placeholder="Username">
-
-    <div class="profile-label">Bio</div>
-    <textarea id="profileBio" maxlength="160" placeholder="Write something about yourself..."></textarea>
-
-    <button class="profile-save" id="saveProfileButton" onclick="saveProfile()">&#x1F4BE; Save Profile</button>
-    <button class="upload-button" id="uploadAvatarButton" onclick="uploadAvatar()">&#x1F5BC;&#xFE0F; Upload Profile Picture</button>
-  </div>
-
 
 
   <!-- COINS -->
 
   <div class="coins">
 
-    &#x1FA99; Your Coins
+    🪙 Your Coins
 
     <div
       class="coin-number"
@@ -892,7 +570,7 @@ button:disabled{
     id="rewardButton"
     onclick="dailyReward()">
 
-    &#x1F381; Daily Reward +10
+    🎁 Daily Reward +10
 
   </button>
 
@@ -901,7 +579,7 @@ button:disabled{
 
   <div class="box">
 
-    <h3>&#x1F4F9; Upload Video</h3>
+    <h3>📹 Upload Video</h3>
 
     <input
       id="videoFile"
@@ -923,7 +601,7 @@ button:disabled{
       id="uploadButton"
       onclick="uploadVideo()">
 
-      &#x2B06;&#xFE0F; Upload Video
+      ⬆️ Upload Video
 
     </button>
 
@@ -938,7 +616,7 @@ button:disabled{
 
   <div class="video-feed">
 
-    <h3>&#x1F3AC; XALLO Videos</h3>
+    <h3>🎬 XALLO Videos</h3>
 
     <div id="videoFeed">
 
@@ -951,11 +629,25 @@ button:disabled{
   </div>
 
 
+  <!-- ================= TIKTOK STYLE FEED ================= -->
+
+  <div class="tiktok-section">
+    <h3 class="tiktok-title">🎬 XALLO TikTok Feed</h3>
+    <div class="small">
+      Swipe up/down to change videos
+    </div>
+
+    <div id="tiktokFeed" class="tiktok-feed">
+      <div class="tiktok-empty">Loading TikTok Feed...</div>
+    </div>
+  </div>
+
+
   <!-- ================= WITHDRAW ================= -->
 
   <div class="box">
 
-    <h3>&#x1F4B3; Withdraw</h3>
+    <h3>💳 Withdraw</h3>
 
     <div class="balance">
 
@@ -974,11 +666,11 @@ button:disabled{
       </option>
 
       <option value="Korek">
-        &#x1F4F1; Korek
+        📱 Korek
       </option>
 
       <option value="Asiacell">
-        &#x1F4F1; Asiacell
+        📱 Asiacell
       </option>
 
     </select>
@@ -1013,7 +705,7 @@ button:disabled{
       id="withdrawButton"
       onclick="requestWithdraw()">
 
-      &#x1F4B0; Request Withdraw
+      💰 Request Withdraw
 
     </button>
 
@@ -1034,7 +726,7 @@ button:disabled{
 
   <div class="history">
 
-    <h3>&#x1F4CB; My Withdrawals</h3>
+    <h3>📋 My Withdrawals</h3>
 
     <div id="withdrawHistory">
 
@@ -1053,7 +745,7 @@ button:disabled{
     id="adminBox"
     class="box admin-box">
 
-    <h3>&#x1F451; Admin Panel</h3>
+    <h3>👑 Admin Panel</h3>
 
     <div class="small">
       Manage withdrawal requests.
@@ -1359,342 +1051,6 @@ async function login(){
 }
 
 
-
-/* =========================================
-   PROFILE
-========================================= */
-
-async function loadProfile(user){
-  const { data, error } = await supabaseClient
-    .from("users")
-    .select("username,avatar_url,bio,coins,last_reward_date")
-    .eq("email",user.email)
-    .maybeSingle();
-
-  if(error){
-    console.error("Profile load:", error.message);
-    return null;
-  }
-  if(!data) return null;
-
-  const username = data.username || user.email.split("@")[0];
-
-  document.getElementById("profileUsername").value = username;
-  document.getElementById("profileBio").value = data.bio || "";
-  document.getElementById("profileDisplayName").textContent = username;
-
-  document.getElementById("profileInitial").textContent =
-    username.trim().charAt(0).toUpperCase() || "X";
-
-  const avatar = document.getElementById("profileAvatar");
-
-  if(data.avatar_url){
-    avatar.src = data.avatar_url;
-    avatar.style.display = "block";
-    document.getElementById("profileInitial").style.display = "none";
-  }else{
-    avatar.removeAttribute("src");
-    avatar.style.display = "none";
-    document.getElementById("profileInitial").style.display = "flex";
-  }
-
-  return data;
-}
-
-async function saveProfile(){
-  const { data:userData, error:userError } =
-    await supabaseClient.auth.getUser();
-
-  if(userError || !userData.user){
-    dashboardMessage("Please login first.","error");
-    return;
-  }
-
-  const username = document.getElementById("profileUsername").value.trim();
-  const bio = document.getElementById("profileBio").value.trim();
-
-  if(!username){
-    dashboardMessage("Username is required.","error");
-    return;
-  }
-
-  if(username.length > 30){
-    dashboardMessage("Username must be 30 characters or less.","error");
-    return;
-  }
-
-  if(bio.length > 160){
-    dashboardMessage("Bio must be 160 characters or less.","error");
-    return;
-  }
-
-  const button = document.getElementById("saveProfileButton");
-  button.disabled = true;
-  button.textContent = "Saving...";
-
-  const { error } = await supabaseClient
-    .from("users")
-    .update({ username:username, bio:bio })
-    .eq("email",userData.user.email);
-
-  button.disabled = false;
-  button.textContent = "\u{1F4BE} Save Profile";
-
-  if(error){
-    dashboardMessage("Profile save error: " + error.message,"error");
-    return;
-  }
-
-  document.getElementById("profileDisplayName").textContent = username;
-  document.getElementById("profileInitial").textContent =
-    username.charAt(0).toUpperCase();
-
-  dashboardMessage("\u{2705} Profile saved successfully!","success");
-}
-
-async function uploadAvatar(){
-  const { data:userData, error:userError } =
-    await supabaseClient.auth.getUser();
-
-  if(userError || !userData.user){
-    dashboardMessage("Please login first.","error");
-    return;
-  }
-
-  const input = document.getElementById("avatarFile");
-
-  if(!input.files || !input.files.length){
-    dashboardMessage("Please choose a profile picture.","error");
-    return;
-  }
-
-  const file = input.files[0];
-
-  if(!file.type.startsWith("image/")){
-    dashboardMessage("Please choose an image file.","error");
-    return;
-  }
-
-  if(file.size > 5 * 1024 * 1024){
-    dashboardMessage("Profile picture must be 5 MB or smaller.","error");
-    return;
-  }
-
-  const button = document.getElementById("uploadAvatarButton");
-  button.disabled = true;
-  button.textContent = "Uploading...";
-
-  try{
-    const safeEmail = userData.user.email.replace(/[^a-zA-Z0-9]/g,"_");
-    const extension = file.name.includes(".")
-      ? file.name.split(".").pop().toLowerCase()
-      : "jpg";
-
-    const filePath =
-      safeEmail + "/" + Date.now() + "_" +
-      Math.random().toString(36).substring(2,8) + "." + extension;
-
-    const { error:uploadError } = await supabaseClient.storage
-      .from("avatars")
-      .upload(filePath,file,{
-        cacheControl:"3600",
-        upsert:false,
-        contentType:file.type
-      });
-
-    if(uploadError){
-      throw new Error("Avatar upload error: " + uploadError.message);
-    }
-
-    const { data:urlData } = supabaseClient.storage
-      .from("avatars")
-      .getPublicUrl(filePath);
-
-    const avatarUrl = urlData.publicUrl;
-
-    const { error:updateError } = await supabaseClient
-      .from("users")
-      .update({ avatar_url:avatarUrl })
-      .eq("email",userData.user.email);
-
-    if(updateError){
-      throw new Error("Profile update error: " + updateError.message);
-    }
-
-    const avatar = document.getElementById("profileAvatar");
-    avatar.src = avatarUrl + "?v=" + Date.now();
-    avatar.style.display = "block";
-    document.getElementById("profileInitial").style.display = "none";
-    input.value = "";
-
-    dashboardMessage("\u{2705} Profile picture updated!","success");
-  }catch(error){
-    console.error(error);
-    dashboardMessage(error.message || "Profile picture upload failed.","error");
-  }finally{
-    button.disabled = false;
-    button.textContent = "\u{1F5BC}\u{FE0F} Upload Profile Picture";
-  }
-}
-
-
-/* =========================================
-   NOTIFICATIONS
-========================================= */
-
-async function loadNotifications(){
-
-  const {
-    data:userData,
-    error:userError
-  } = await supabaseClient.auth.getUser();
-
-  if(userError || !userData.user){
-    return;
-  }
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .from("notifications")
-    .select("id,title,message,type,is_read,created_at")
-    .eq("user_email",userData.user.email)
-    .order("created_at",{ascending:false})
-    .limit(30);
-
-  if(error){
-    console.error("Notifications:",error.message);
-    return;
-  }
-
-  const list =
-    document.getElementById("notificationsList");
-
-  const count =
-    document.getElementById("notificationCount");
-
-  const unread =
-    (data || []).filter(n => !n.is_read).length;
-
-  count.textContent = unread;
-
-  if(!data || !data.length){
-    list.innerHTML =
-      '<div class="small">No notifications yet \u{1F514}</div>';
-    return;
-  }
-
-  list.innerHTML = data.map(n => `
-
-    <div class="notification ${n.is_read ? "" : "unread"}">
-
-      <div class="notification-title">
-        ${escapeHtml(n.title)}
-      </div>
-
-      <div class="notification-message">
-        ${escapeHtml(n.message)}
-      </div>
-
-      <div class="notification-date">
-        ${new Date(n.created_at).toLocaleString()}
-      </div>
-
-      ${
-        !n.is_read
-        ? `
-          <button
-            class="read-button"
-            onclick="markNotificationRead('${n.id}')">
-            \u{2713} Mark as read
-          </button>
-        `
-        : ""
-      }
-
-    </div>
-
-  `).join("");
-}
-
-
-async function toggleNotifications(){
-
-  const panel =
-    document.getElementById("notificationsPanel");
-
-  if(panel.style.display === "none"){
-
-    panel.style.display = "block";
-    await loadNotifications();
-
-  }else{
-
-    panel.style.display = "none";
-
-  }
-}
-
-
-async function markNotificationRead(id){
-
-  const {
-    data:userData
-  } = await supabaseClient.auth.getUser();
-
-  if(!userData.user){
-    return;
-  }
-
-  const {
-    error
-  } = await supabaseClient
-    .from("notifications")
-    .update({is_read:true})
-    .eq("id",id)
-    .eq("user_email",userData.user.email);
-
-  if(error){
-
-    dashboardMessage(
-      "Could not mark notification as read.",
-      "error"
-    );
-
-    return;
-  }
-
-  await loadNotifications();
-}
-
-
-/* =========================================
-   CREATE NOTIFICATION
-========================================= */
-
-async function createNotification(userEmail,title,message,type="info"){
-
-  if(!userEmail || !title || !message){
-    return;
-  }
-
-  const { error } = await supabaseClient
-    .from("notifications")
-    .insert({
-      user_email:userEmail,
-      title:title,
-      message:message,
-      type:type,
-      is_read:false
-    });
-
-  if(error){
-    console.error("Create notification:",error.message);
-  }
-}
-
-
 /* =========================================
    COINS
 ========================================= */
@@ -1753,13 +1109,13 @@ async function showDashboard(user){
   document.getElementById("userEmail")
     .textContent=user.email;
 
-  await loadProfile(user);
   await loadCoins(user);
-  await loadNotifications();
 
   await checkDailyRewardButton(user);
 
   await loadVideos();
+
+  await loadTikTokFeed();
 
   await loadWithdrawHistory(user);
 
@@ -1800,14 +1156,14 @@ async function checkDailyRewardButton(user){
     button.disabled=true;
 
     button.textContent =
-      "\u{2705} Reward Claimed";
+      "✅ Reward Claimed";
 
   }else{
 
     button.disabled=false;
 
     button.textContent =
-      "\u{1F381} Daily Reward +10";
+      "🎁 Daily Reward +10";
   }
 }
 
@@ -1834,7 +1190,7 @@ async function dailyReward(){
     button.disabled=false;
 
     button.textContent =
-      "\u{1F381} Daily Reward +10";
+      "🎁 Daily Reward +10";
 
     dashboardMessage(
       error.message,
@@ -1847,10 +1203,10 @@ async function dailyReward(){
   setCoins(data);
 
   button.textContent =
-    "\u{2705} Reward Claimed";
+    "✅ Reward Claimed";
 
   dashboardMessage(
-    "\u{1F389} Daily Reward: +10 Coins!",
+    "🎉 Daily Reward: +10 Coins!",
     "success"
   );
 }
@@ -1885,7 +1241,7 @@ function showSelectedFile(){
 
   box.textContent =
     file.name +
-    " \u{2022} " +
+    " • " +
     sizeMB.toFixed(1) +
     " MB";
 }
@@ -2042,8 +1398,7 @@ async function uploadVideo(){
           user_email:email,
           video_url:videoUrl,
           caption:caption,
-          likes:0,
-          views:0
+          likes:0
         });
 
     if(dbError){
@@ -2069,7 +1424,7 @@ async function uploadVideo(){
     ).value="";
 
     dashboardMessage(
-      "\u{2705} Video uploaded successfully!",
+      "✅ Video uploaded successfully!",
       "success"
     );
 
@@ -2088,509 +1443,9 @@ async function uploadVideo(){
   }finally{
 
     button.disabled=false;
-    button.textContent="\u{2B06}\u{FE0F} Upload Video";
+    button.textContent="⬆️ Upload Video";
   }
 }
-
-
-
-
-
-/* =========================================
-   FOLLOW SYSTEM
-========================================= */
-let activePublicProfileEmail = "";
-
-async function loadFollowStats(email){
-  const followersBox=document.getElementById("publicFollowers");
-  const followingBox=document.getElementById("publicFollowing");
-  const button=document.getElementById("publicFollowButton");
-  const {count:fc,error:fe}=await supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("following_email",email);
-  const {count:gc,error:ge}=await supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("follower_email",email);
-  if(followersBox) followersBox.textContent=fe?"0":String(fc||0);
-  if(followingBox) followingBox.textContent=ge?"0":String(gc||0);
-  const {data:userData}=await supabaseClient.auth.getUser();
-  if(!button||!userData||!userData.user) return;
-  if(userData.user.email===email){button.style.display="none";return;}
-  button.style.display="inline-block";
-  const {data:follow}=await supabaseClient.from("follows").select("id").eq("follower_email",userData.user.email).eq("following_email",email).maybeSingle();
-  if(follow){button.textContent="✓ Following";button.classList.add("following");}else{button.textContent="➕ Follow";button.classList.remove("following");}
-}
-
-async function toggleFollowFromProfile(){
-  if(!activePublicProfileEmail)return;
-  const {data:userData}=await supabaseClient.auth.getUser();
-  if(!userData||!userData.user)return;
-  const me=userData.user.email;
-  if(me===activePublicProfileEmail)return;
-  const button=document.getElementById("publicFollowButton");
-  button.disabled=true;
-  const {data:existing}=await supabaseClient.from("follows").select("id").eq("follower_email",me).eq("following_email",activePublicProfileEmail).maybeSingle();
-  if(existing){
-    const {error}=await supabaseClient.from("follows").delete().eq("id",existing.id).eq("follower_email",me);
-    button.disabled=false;
-    if(error){dashboardMessage("Could not unfollow this user.","error");return;}
-    dashboardMessage("✓ Unfollowed.","success");
-  }else{
-    const {error}=await supabaseClient.from("follows").insert({follower_email:me,following_email:activePublicProfileEmail});
-    button.disabled=false;
-    if(error){dashboardMessage("Could not follow this user.","error");return;}
-    dashboardMessage("✓ Following.","success");
-    await createNotification(activePublicProfileEmail,"👥 New Follower","Someone started following you.","follow");
-  }
-  await loadFollowStats(activePublicProfileEmail);
-}
-
-/* =========================================
-   PUBLIC PROFILE
-========================================= */
-
-async function openPublicProfile(email){
-
-  activePublicProfileEmail = email;
-
-  if(!email){
-    return;
-  }
-
-  const box =
-    document.getElementById("publicProfileBox");
-
-  const name =
-    document.getElementById("publicProfileName");
-
-  const avatar =
-    document.getElementById("publicProfileAvatar");
-
-  const bio =
-    document.getElementById("publicProfileBio");
-
-  const videosBox =
-    document.getElementById("publicProfileVideos");
-
-  box.style.display = "block";
-
-  name.textContent = "Loading...";
-  bio.textContent = "";
-  videosBox.innerHTML =
-    '<div class="small">Loading videos...</div>';
-
-  box.scrollIntoView({
-    behavior:"smooth",
-    block:"start"
-  });
-
-  const {
-    data:profile,
-    error:profileError
-  } = await supabaseClient.rpc(
-    "get_public_profile",
-    {
-      p_email:email
-    }
-  );
-
-  if(profileError || !profile){
-
-    name.textContent = "Profile not found";
-    avatar.removeAttribute("src");
-    bio.textContent = "";
-    videosBox.innerHTML =
-      '<div class="small">Could not load this profile.</div>';
-
-    return;
-  }
-
-  name.textContent =
-    profile.username || "User";
-
-  bio.textContent =
-    profile.bio || "No bio yet.";
-
-  if(profile.avatar_url){
-
-    avatar.src = profile.avatar_url;
-
-  }else{
-
-    avatar.removeAttribute("src");
-
-  }
-
-  await loadFollowStats(email);
-
-  const {
-    data:videos,
-    error:videosError
-  } = await supabaseClient
-    .from("videos")
-    .select(
-      "id,video_url,caption,likes,views,created_at"
-    )
-    .eq("user_email",email)
-    .order(
-      "created_at",
-      {ascending:false}
-    )
-    .limit(30);
-
-  if(videosError){
-
-    videosBox.innerHTML =
-      '<div class="small">Could not load videos.</div>';
-
-    return;
-  }
-
-  if(!videos || !videos.length){
-
-    videosBox.innerHTML =
-      '<div class="small">No videos yet 🎬</div>';
-
-    return;
-  }
-
-  videosBox.innerHTML = `
-    <div class="section-title">
-      🎬 Videos (${videos.length})
-    </div>
-
-    ${videos.map(video => `
-
-      <div class="public-profile-video">
-
-        <video
-          controls
-          playsinline
-          preload="metadata"
-          data-video-id="${escapeHtml(video.id)}"
-          onplay="registerVideoView('${escapeHtml(video.id)}',this)"
-          src="${escapeHtml(video.video_url)}">
-        </video>
-
-        <div class="caption">
-          ${escapeHtml(video.caption || "")}
-        </div>
-
-        <div class="video-stats">
-
-          <span class="video-stat">
-            ❤️ ${Number(video.likes) || 0}
-          </span>
-
-          <span
-            class="video-stat"
-            id="views-${escapeHtml(video.id)}">
-            👁️ ${Number(video.views) || 0}
-          </span>
-
-        </div>
-
-      </div>
-
-    `).join("")}
-  `;
-}
-
-
-function closePublicProfile(){
-
-  const box =
-    document.getElementById("publicProfileBox");
-
-  box.style.display = "none";
-}
-
-
-/* =========================================
-   SEARCH VIDEOS
-========================================= */
-
-let searchTimer = null;
-
-function searchVideos(){
-
-  clearTimeout(searchTimer);
-
-  searchTimer = setTimeout(async () => {
-
-    const input =
-      document.getElementById("searchInput");
-
-    const results =
-      document.getElementById("searchResults");
-
-    if(!input || !results){
-      return;
-    }
-
-    const query =
-      input.value.trim().toLowerCase();
-
-    if(!query){
-      results.innerHTML = "";
-      return;
-    }
-
-    results.innerHTML =
-      '<div class="small">Searching...</div>';
-
-    const {
-      data,
-      error
-    } = await supabaseClient
-      .from("videos")
-      .select(
-        "id,user_email,video_url,caption,likes,views,created_at"
-      )
-      .order(
-        "created_at",
-        {ascending:false}
-      )
-      .limit(100);
-
-    if(error){
-
-      results.innerHTML =
-        '<div class="small">Search error: ' +
-        escapeHtml(error.message) +
-        '</div>';
-
-      return;
-    }
-
-    const matches = (data || []).filter(video => {
-
-      const username =
-        String(video.user_email || "").toLowerCase();
-
-      const caption =
-        String(video.caption || "").toLowerCase();
-
-      return (
-        username.includes(query) ||
-        caption.includes(query)
-      );
-    });
-
-    if(!matches.length){
-
-      results.innerHTML =
-        '<div class="small">No videos found 🔎</div>';
-
-      return;
-    }
-
-    results.innerHTML = matches.map(video => `
-
-      <div class="search-result">
-
-        <div class="search-result-user">
-          👤 ${escapeHtml(video.user_email)}
-        </div>
-
-        <div class="search-result-caption">
-          ${escapeHtml(video.caption || "No caption")}
-        </div>
-
-        <div class="search-result-stats">
-          ❤️ ${Number(video.likes) || 0}
-          &nbsp; • &nbsp;
-          👁️ ${Number(video.views) || 0}
-          &nbsp; • &nbsp;
-          ${new Date(video.created_at).toLocaleString()}
-        </div>
-
-        <button
-          class="search-button"
-          onclick="openSearchVideo('${video.id}')">
-          ▶️ Watch Video
-        </button>
-
-        <button
-          class="search-button"
-          onclick="openPublicProfile('${escapeHtml(video.user_email)}')">
-          👤 View Profile
-        </button>
-
-      </div>
-
-    `).join("");
-
-  }, 250);
-}
-
-
-function openSearchVideo(videoId){
-
-  const videoElement =
-    document.querySelector(
-      `video[src*="${CSS.escape(videoId)}"]`
-    );
-
-  /* Search results don't contain the video element.
-     Find the matching video card through its data id. */
-  const cards =
-    document.querySelectorAll(".video-card");
-
-  let target = null;
-
-  cards.forEach(card => {
-
-    const video = card.querySelector("video");
-
-    if(video && video.getAttribute("data-video-id") === videoId){
-      target = card;
-    }
-
-  });
-
-  if(target){
-
-    target.scrollIntoView({
-      behavior:"smooth",
-      block:"center"
-    });
-
-    target.style.outline = "2px solid #08a9ff";
-
-    setTimeout(() => {
-      target.style.outline = "";
-    }, 1800);
-
-    return;
-  }
-
-  /* If the video is outside the current feed, load it directly. */
-  loadSingleSearchVideo(videoId);
-}
-
-
-async function loadSingleSearchVideo(videoId){
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .from("videos")
-    .select(
-      "id,user_email,video_url,caption,likes,views,created_at"
-    )
-    .eq("id",videoId)
-    .maybeSingle();
-
-  if(error || !data){
-
-    dashboardMessage(
-      "Video could not be opened.",
-      "error"
-    );
-
-    return;
-  }
-
-  const feed =
-    document.getElementById("videoFeed");
-
-  if(!feed){
-    return;
-  }
-
-  const existing =
-    document.querySelector(
-      `.video-card[data-video-card-id="${CSS.escape(videoId)}"]`
-    );
-
-  if(existing){
-
-    existing.scrollIntoView({
-      behavior:"smooth",
-      block:"center"
-    });
-
-    return;
-  }
-
-  const card = document.createElement("div");
-
-  card.className = "video-card";
-  card.dataset.videoCardId = videoId;
-
-  card.innerHTML = `
-
-    <video
-      controls
-      playsinline
-      preload="metadata"
-      data-video-id="${escapeHtml(data.id)}"
-      onplay="registerVideoView('${escapeHtml(data.id)}',this)"
-      src="${escapeHtml(data.video_url)}">
-    </video>
-
-    <div class="video-info">
-
-      <div class="video-user">
-        👤 ${escapeHtml(data.user_email)}
-      </div>
-
-      <div class="caption">
-        ${escapeHtml(data.caption || "")}
-      </div>
-
-      <div class="video-date">
-        ${new Date(data.created_at).toLocaleString()}
-      </div>
-
-      <div class="video-stats">
-
-        <span class="video-stat">
-          ❤️ ${Number(data.likes) || 0}
-        </span>
-
-        <span
-          class="video-stat"
-          id="views-${escapeHtml(data.id)}">
-          👁️ ${Number(data.views) || 0}
-        </span>
-
-      </div>
-
-      <button
-        class="like-button"
-        onclick="likeVideo('${escapeHtml(data.id)}',this)">
-        ❤️ ${Number(data.likes) || 0}
-      </button>
-
-      <div class="comment-area">
-
-        <input
-          class="comment-input"
-          id="comment-${escapeHtml(data.id)}"
-          type="text"
-          maxlength="500"
-          placeholder="Write a comment...">
-
-        <button
-          class="comment-button"
-          onclick="addComment('${escapeHtml(data.id)}')">
-          💬 Add Comment
-        </button>
-
-        <div class="comments-list"></div>
-
-      </div>
-
-    </div>
-  `;
-
-  feed.prepend(card);
-
-  card.scrollIntoView({
-    behavior:"smooth",
-    block:"center"
-  });
-}
-
 
 
 /* =========================================
@@ -2614,7 +1469,7 @@ async function loadVideos(){
     await supabaseClient
       .from("videos")
       .select(
-        "id,user_email,video_url,caption,likes,views,created_at"
+        "id,user_email,video_url,caption,likes,created_at"
       )
       .order(
         "created_at",
@@ -2637,7 +1492,7 @@ async function loadVideos(){
   if(!data || !data.length){
 
     box.innerHTML =
-      '<div class="small">No videos yet. Upload the first video! \u{1F3AC}</div>';
+      '<div class="small">No videos yet. Upload the first video! 🎬</div>';
 
     return;
   }
@@ -2709,7 +1564,7 @@ async function loadVideos(){
             <div class="comment">
 
               <div class="comment-user">
-                \u{1F464} ${escapeHtml(comment.user_email)}
+                👤 ${escapeHtml(comment.user_email)}
               </div>
 
               <div class="comment-text">
@@ -2735,21 +1590,19 @@ async function loadVideos(){
 
       return `
 
-        <div class="video-card" data-video-card-id="${video.id}">
+        <div class="video-card">
 
           <video
             controls
             playsinline
             preload="metadata"
-            data-video-id="${video.id}"
-            onplay="registerVideoView('${video.id}',this)"
             src="${escapeHtml(video.video_url)}">
           </video>
 
           <div class="video-info">
 
             <div class="video-user">
-              \u{1F464} ${escapeHtml(video.user_email)}
+              👤 ${escapeHtml(video.user_email)}
             </div>
 
             <div class="caption">
@@ -2762,18 +1615,6 @@ async function loadVideos(){
               ).toLocaleString()}
             </div>
 
-            <div class="video-stats">
-              <span class="video-stat">
-                ❤️ ${Number(video.likes) || 0}
-              </span>
-
-              <span
-                class="video-stat"
-                id="views-${video.id}">
-                👁️ ${Number(video.views) || 0}
-              </span>
-            </div>
-
 
             <!-- LIKE -->
 
@@ -2781,7 +1622,7 @@ async function loadVideos(){
               class="like-button"
               onclick="likeVideo('${video.id}',this)">
 
-              \u{2764}\u{FE0F} ${Number(video.likes) || 0}
+              ❤️ ${Number(video.likes) || 0}
 
             </button>
 
@@ -2801,7 +1642,7 @@ async function loadVideos(){
                 class="comment-button"
                 onclick="addComment('${video.id}')">
 
-                \u{1F4AC} Add Comment
+                💬 Add Comment
 
               </button>
 
@@ -2821,49 +1662,6 @@ async function loadVideos(){
 
     }).join("");
 
-}
-
-
-
-/* =========================================
-   VIDEO VIEWS
-========================================= */
-
-async function registerVideoView(videoId, videoElement){
-
-  if(!videoId || !videoElement){
-    return;
-  }
-
-  /* Count once per video per page session */
-  if(videoElement.dataset.viewed === "true"){
-    return;
-  }
-
-  videoElement.dataset.viewed = "true";
-
-  const {
-    data,
-    error
-  } = await supabaseClient.rpc(
-    "view_video",
-    {
-      p_video_id:videoId
-    }
-  );
-
-  if(error){
-    console.error("View error:",error.message);
-    return;
-  }
-
-  const countElement =
-    document.getElementById("views-" + videoId);
-
-  if(countElement){
-    countElement.textContent =
-      "👁️ " + Number(data || 0).toLocaleString();
-  }
 }
 
 
@@ -2901,37 +1699,9 @@ async function likeVideo(id,button){
   }
 
   button.textContent =
-    "\u{2764}\u{FE0F} " + Number(data);
+    "❤️ " + Number(data);
 
   button.disabled=false;
-
-  /* Notify the video owner */
-  const {
-    data:userData
-  } = await supabaseClient.auth.getUser();
-
-  const {
-    data:videoOwner
-  } = await supabaseClient
-    .from("videos")
-    .select("user_email")
-    .eq("id",id)
-    .maybeSingle();
-
-  if(
-    userData &&
-    userData.user &&
-    videoOwner &&
-    videoOwner.user_email !== userData.user.email
-  ){
-
-    await createNotification(
-      videoOwner.user_email,
-      "\u{2764}\u{FE0F} New Like",
-      "Someone liked your video.",
-      "like"
-    );
-  }
 }
 
 
@@ -3027,7 +1797,7 @@ async function addComment(videoId){
     console.error(error);
 
     button.disabled=false;
-    button.textContent="\u{1F4AC} Add Comment";
+    button.textContent="💬 Add Comment";
 
     dashboardMessage(
       "Comment error: " +
@@ -3042,30 +1812,11 @@ async function addComment(videoId){
   input.value="";
 
   button.disabled=false;
-  button.textContent="\u{1F4AC} Add Comment";
+  button.textContent="💬 Add Comment";
 
-
-  /* Notify the video owner */
-  const {
-    data:videoOwner
-  } = await supabaseClient
-    .from("videos")
-    .select("user_email")
-    .eq("id",videoId)
-    .maybeSingle();
-
-  if(videoOwner && videoOwner.user_email !== userData.user.email){
-
-    await createNotification(
-      videoOwner.user_email,
-      "\u{1F4AC} New Comment",
-      "Someone commented on your video.",
-      "comment"
-    );
-  }
 
   dashboardMessage(
-    "\u{2705} Comment added!",
+    "✅ Comment added!",
     "success"
   );
 
@@ -3181,7 +1932,7 @@ async function requestWithdraw(){
   button.disabled=false;
 
   button.textContent =
-    "\u{1F4B0} Request Withdraw";
+    "💰 Request Withdraw";
 
 
   if(error){
@@ -3214,7 +1965,7 @@ async function requestWithdraw(){
 
 
   dashboardMessage(
-    "\u{2705} Withdrawal request sent.",
+    "✅ Withdrawal request sent.",
     "success"
   );
 
@@ -3300,7 +2051,7 @@ async function loadWithdrawHistory(user){
           ${escapeHtml(r.method)}
         </b>
 
-        \u{2022}
+        •
         ${Number(r.coins).toLocaleString()}
         Coins
 
@@ -3433,7 +2184,7 @@ async function loadAdminRequests(){
           ${escapeHtml(r.method)}
         </b>
 
-        \u{2022}
+        •
         ${Number(r.coins).toLocaleString()}
         Coins
 
@@ -3533,7 +2284,7 @@ async function adminDecision(
 
 
   dashboardMessage(
-    "\u{2705} Withdrawal status updated.",
+    "✅ Withdrawal status updated.",
     "success"
   );
 
@@ -3555,6 +2306,235 @@ async function adminDecision(
 
     await loadCoins(
       userData.user
+    );
+  }
+}
+
+
+
+/* =========================================
+   TIKTOK STYLE FEED
+========================================= */
+
+async function loadTikTokFeed(){
+
+  const box = document.getElementById("tiktokFeed");
+
+  if(!box) return;
+
+  box.innerHTML =
+    '<div class="tiktok-empty">Loading TikTok Feed...</div>';
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("videos")
+    .select("id,user_email,video_url,caption,likes,views,created_at")
+    .order("created_at",{ascending:false})
+    .limit(50);
+
+  if(error){
+    box.innerHTML =
+      '<div class="tiktok-empty">Could not load TikTok Feed.</div>';
+    console.error(error);
+    return;
+  }
+
+  if(!data || !data.length){
+    box.innerHTML =
+      '<div class="tiktok-empty">No videos yet. Upload the first video! 🎬</div>';
+    return;
+  }
+
+  box.innerHTML = data.map(video => `
+    <div class="tiktok-item" data-video-id="${video.id}">
+
+      <video
+        class="tiktok-video"
+        src="${escapeHtml(video.video_url)}"
+        playsinline
+        muted
+        loop
+        preload="metadata">
+      </video>
+
+      <div class="tiktok-gradient"></div>
+
+      <div class="tiktok-info">
+        <div class="tiktok-user">
+          👤 ${escapeHtml(video.user_email)}
+        </div>
+        <div class="tiktok-caption">
+          ${escapeHtml(video.caption || "")}
+        </div>
+      </div>
+
+      <div class="tiktok-actions">
+
+        <button onclick="likeTikTokVideo('${video.id}',this)">
+          ❤️
+          <span class="count">${Number(video.likes) || 0}</span>
+        </button>
+
+        <button onclick="focusTikTokComment('${video.id}')">
+          💬
+          <span class="count">Comment</span>
+        </button>
+
+        <button>
+          👁️
+          <span class="count tiktok-view-count">${Number(video.views) || 0}</span>
+        </button>
+
+        <button onclick="openTikTokProfile('${escapeHtml(video.user_email)}')">
+          👤
+          <span class="count">Profile</span>
+        </button>
+
+      </div>
+    </div>
+  `).join("");
+
+  setupTikTokObserver();
+}
+
+function setupTikTokObserver(){
+
+  const videos =
+    document.querySelectorAll(".tiktok-video");
+
+  if(!videos.length) return;
+
+  const observer =
+    new IntersectionObserver(async entries => {
+
+      for(const entry of entries){
+
+        const video = entry.target;
+
+        if(entry.isIntersecting && entry.intersectionRatio >= 0.65){
+
+          document.querySelectorAll(".tiktok-video")
+            .forEach(other => {
+              if(other !== video){
+                other.pause();
+              }
+            });
+
+          try{
+            await video.play();
+          }catch(e){
+            // Mobile browsers may require the first tap.
+          }
+
+          const item = video.closest(".tiktok-item");
+
+          if(item && !item.dataset.viewed){
+
+            item.dataset.viewed = "1";
+
+            const id = item.dataset.videoId;
+
+            const {
+              data,
+              error
+            } = await supabaseClient
+              .rpc("view_video",{p_video_id:id});
+
+            if(!error){
+
+              const count =
+                item.querySelector(".tiktok-view-count");
+
+              if(count){
+                count.textContent = Number(data) || 0;
+              }
+            }
+          }
+
+        }else{
+          video.pause();
+        }
+      }
+
+    },{
+      threshold:[0.65]
+    });
+
+  videos.forEach(video => observer.observe(video));
+}
+
+async function likeTikTokVideo(id,button){
+
+  button.disabled = true;
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .rpc("like_video",{p_video_id:id});
+
+  if(error){
+
+    button.disabled = false;
+
+    dashboardMessage(
+      "Like error: " + error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  const count = button.querySelector(".count");
+
+  if(count){
+    count.textContent = Number(data) || 0;
+  }
+
+  button.disabled = false;
+}
+
+function focusTikTokComment(videoId){
+
+  const input =
+    document.getElementById("comment-" + videoId);
+
+  if(input){
+
+    input.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+
+    input.focus();
+
+    dashboardMessage(
+      "Write your comment below in the XALLO Videos section.",
+      "success"
+    );
+
+  }else{
+
+    dashboardMessage(
+      "Open the comment box in XALLO Videos.",
+      "success"
+    );
+  }
+}
+
+function openTikTokProfile(email){
+
+  if(typeof openPublicProfile === "function"){
+
+    openPublicProfile(email);
+
+  }else{
+
+    dashboardMessage(
+      "Profile feature is not available in this version.",
+      "error"
     );
   }
 }
@@ -3634,63 +2614,6 @@ async function checkUser(){
 ========================================= */
 
 checkUser();
-
-
-/* =========================================
-   TIKTOK FEED BEHAVIOR
-========================================= */
-
-function enableTikTokFeed(){
-  const feedSection = document.querySelector('.video-feed');
-  const feed = document.getElementById('videoFeed');
-  if(!feedSection || !feed) return;
-
-  feedSection.classList.add('tiktok-mode');
-  feed.style.scrollSnapType = 'y proximity';
-
-  if(window.__xalloTikTokObserver){
-    window.__xalloTikTokObserver.disconnect();
-  }
-
-  window.__xalloTikTokObserver = new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      const video = entry.target.querySelector('video');
-      if(!video) return;
-
-      if(entry.isIntersecting && entry.intersectionRatio >= 0.65){
-        document.querySelectorAll('#videoFeed video').forEach(other=>{
-          if(other !== video){
-            try{ other.pause(); }catch(e){}
-          }
-        });
-        video.muted = true;
-        const p = video.play();
-        if(p && typeof p.catch === 'function') p.catch(()=>{});
-      }else{
-        try{ video.pause(); }catch(e){}
-      }
-    });
-  },{threshold:[0.65]});
-
-  feed.querySelectorAll('.video-card').forEach(card=>{
-    window.__xalloTikTokObserver.observe(card);
-  });
-}
-
-/* Re-enable the TikTok feed after the existing Supabase loader renders cards. */
-const __xalloOriginalLoadVideos = window.loadVideos;
-if(typeof __xalloOriginalLoadVideos === 'function'){
-  window.loadVideos = async function(){
-    const result = await __xalloOriginalLoadVideos.apply(this, arguments);
-    enableTikTokFeed();
-    return result;
-  };
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
-  setTimeout(enableTikTokFeed, 800);
-});
-
 
 </script>
 
