@@ -455,7 +455,7 @@ button:disabled{
   </div>
 
   <div class="subtitle">
-    Play â€¢ Earn â€¢ Enjoy
+    Play &#x2022; Earn &#x2022; Enjoy
   </div>
 
   <div id="loginBox">
@@ -528,10 +528,10 @@ button:disabled{
   </div>
 
   <div class="subtitle">
-    Play â€¢ Earn â€¢ Enjoy
+    Play &#x2022; Earn &#x2022; Enjoy
   </div>
 
-  <h2>Welcome ðŸŽ®</h2>
+  <h2>Welcome &#x1F3AE;</h2>
 
   <div class="email" id="userEmail"></div>
 
@@ -541,7 +541,7 @@ button:disabled{
     <button
       class="notification-button"
       onclick="toggleNotifications()">
-      ðŸ”” Notifications
+      &#x1F514; Notifications
       <span id="notificationCount">0</span>
     </button>
 
@@ -555,7 +555,7 @@ button:disabled{
 
   <!-- ================= PROFILE ================= -->
   <div class="profile-box">
-    <h3>ðŸ‘¤ My Profile</h3>
+    <h3>&#x1F464; My Profile</h3>
     <div class="profile-top">
       <img id="profileAvatar" class="profile-avatar" alt="Profile">
       <div id="profileInitial" class="profile-initial">X</div>
@@ -576,8 +576,8 @@ button:disabled{
     <div class="profile-label">Bio</div>
     <textarea id="profileBio" maxlength="160" placeholder="Write something about yourself..."></textarea>
 
-    <button class="profile-save" id="saveProfileButton" onclick="saveProfile()">ðŸ’¾ Save Profile</button>
-    <button class="upload-button" id="uploadAvatarButton" onclick="uploadAvatar()">ðŸ–¼ï¸ Upload Profile Picture</button>
+    <button class="profile-save" id="saveProfileButton" onclick="saveProfile()">&#x1F4BE; Save Profile</button>
+    <button class="upload-button" id="uploadAvatarButton" onclick="uploadAvatar()">&#x1F5BC;&#xFE0F; Upload Profile Picture</button>
   </div>
 
 
@@ -586,7 +586,7 @@ button:disabled{
 
   <div class="coins">
 
-    ðŸª™ Your Coins
+    &#x1FA99; Your Coins
 
     <div
       class="coin-number"
@@ -604,7 +604,7 @@ button:disabled{
     id="rewardButton"
     onclick="dailyReward()">
 
-    ðŸŽ Daily Reward +10
+    &#x1F381; Daily Reward +10
 
   </button>
 
@@ -613,7 +613,7 @@ button:disabled{
 
   <div class="box">
 
-    <h3>ðŸ“¹ Upload Video</h3>
+    <h3>&#x1F4F9; Upload Video</h3>
 
     <input
       id="videoFile"
@@ -635,7 +635,7 @@ button:disabled{
       id="uploadButton"
       onclick="uploadVideo()">
 
-      â¬†ï¸ Upload Video
+      &#x2B06;&#xFE0F; Upload Video
 
     </button>
 
@@ -650,7 +650,7 @@ button:disabled{
 
   <div class="video-feed">
 
-    <h3>ðŸŽ¬ XALLO Videos</h3>
+    <h3>&#x1F3AC; XALLO Videos</h3>
 
     <div id="videoFeed">
 
@@ -667,7 +667,7 @@ button:disabled{
 
   <div class="box">
 
-    <h3>ðŸ’³ Withdraw</h3>
+    <h3>&#x1F4B3; Withdraw</h3>
 
     <div class="balance">
 
@@ -686,11 +686,11 @@ button:disabled{
       </option>
 
       <option value="Korek">
-        ðŸ“± Korek
+        &#x1F4F1; Korek
       </option>
 
       <option value="Asiacell">
-        ðŸ“± Asiacell
+        &#x1F4F1; Asiacell
       </option>
 
     </select>
@@ -725,7 +725,7 @@ button:disabled{
       id="withdrawButton"
       onclick="requestWithdraw()">
 
-      ðŸ’° Request Withdraw
+      &#x1F4B0; Request Withdraw
 
     </button>
 
@@ -746,7 +746,7 @@ button:disabled{
 
   <div class="history">
 
-    <h3>ðŸ“‹ My Withdrawals</h3>
+    <h3>&#x1F4CB; My Withdrawals</h3>
 
     <div id="withdrawHistory">
 
@@ -765,7 +765,7 @@ button:disabled{
     id="adminBox"
     class="box admin-box">
 
-    <h3>ðŸ‘‘ Admin Panel</h3>
+    <h3>&#x1F451; Admin Panel</h3>
 
     <div class="small">
       Manage withdrawal requests.
@@ -1150,7 +1150,7 @@ async function saveProfile(){
     .eq("email",userData.user.email);
 
   button.disabled = false;
-  button.textContent = "ðŸ’¾ Save Profile";
+  button.textContent = "\u{1F4BE} Save Profile";
 
   if(error){
     dashboardMessage("Profile save error: " + error.message,"error");
@@ -1161,7 +1161,7 @@ async function saveProfile(){
   document.getElementById("profileInitial").textContent =
     username.charAt(0).toUpperCase();
 
-  dashboardMessage("âœ… Profile saved successfully!","success");
+  dashboardMessage("\u{2705} Profile saved successfully!","success");
 }
 
 async function uploadAvatar(){
@@ -1239,13 +1239,13 @@ async function uploadAvatar(){
     document.getElementById("profileInitial").style.display = "none";
     input.value = "";
 
-    dashboardMessage("âœ… Profile picture updated!","success");
+    dashboardMessage("\u{2705} Profile picture updated!","success");
   }catch(error){
     console.error(error);
     dashboardMessage(error.message || "Profile picture upload failed.","error");
   }finally{
     button.disabled = false;
-    button.textContent = "ðŸ–¼ï¸ Upload Profile Picture";
+    button.textContent = "\u{1F5BC}\u{FE0F} Upload Profile Picture";
   }
 }
 
@@ -1293,7 +1293,7 @@ async function loadNotifications(){
 
   if(!data || !data.length){
     list.innerHTML =
-      '<div class="small">No notifications yet ðŸ””</div>';
+      '<div class="small">No notifications yet \u{1F514}</div>';
     return;
   }
 
@@ -1319,7 +1319,7 @@ async function loadNotifications(){
           <button
             class="read-button"
             onclick="markNotificationRead('${n.id}')">
-            âœ“ Mark as read
+            \u{2713} Mark as read
           </button>
         `
         : ""
@@ -1512,14 +1512,14 @@ async function checkDailyRewardButton(user){
     button.disabled=true;
 
     button.textContent =
-      "âœ… Reward Claimed";
+      "\u{2705} Reward Claimed";
 
   }else{
 
     button.disabled=false;
 
     button.textContent =
-      "ðŸŽ Daily Reward +10";
+      "\u{1F381} Daily Reward +10";
   }
 }
 
@@ -1546,7 +1546,7 @@ async function dailyReward(){
     button.disabled=false;
 
     button.textContent =
-      "ðŸŽ Daily Reward +10";
+      "\u{1F381} Daily Reward +10";
 
     dashboardMessage(
       error.message,
@@ -1559,10 +1559,10 @@ async function dailyReward(){
   setCoins(data);
 
   button.textContent =
-    "âœ… Reward Claimed";
+    "\u{2705} Reward Claimed";
 
   dashboardMessage(
-    "ðŸŽ‰ Daily Reward: +10 Coins!",
+    "\u{1F389} Daily Reward: +10 Coins!",
     "success"
   );
 }
@@ -1597,7 +1597,7 @@ function showSelectedFile(){
 
   box.textContent =
     file.name +
-    " â€¢ " +
+    " \u{2022} " +
     sizeMB.toFixed(1) +
     " MB";
 }
@@ -1780,7 +1780,7 @@ async function uploadVideo(){
     ).value="";
 
     dashboardMessage(
-      "âœ… Video uploaded successfully!",
+      "\u{2705} Video uploaded successfully!",
       "success"
     );
 
@@ -1799,7 +1799,7 @@ async function uploadVideo(){
   }finally{
 
     button.disabled=false;
-    button.textContent="â¬†ï¸ Upload Video";
+    button.textContent="\u{2B06}\u{FE0F} Upload Video";
   }
 }
 
@@ -1848,7 +1848,7 @@ async function loadVideos(){
   if(!data || !data.length){
 
     box.innerHTML =
-      '<div class="small">No videos yet. Upload the first video! ðŸŽ¬</div>';
+      '<div class="small">No videos yet. Upload the first video! \u{1F3AC}</div>';
 
     return;
   }
@@ -1920,7 +1920,7 @@ async function loadVideos(){
             <div class="comment">
 
               <div class="comment-user">
-                ðŸ‘¤ ${escapeHtml(comment.user_email)}
+                \u{1F464} ${escapeHtml(comment.user_email)}
               </div>
 
               <div class="comment-text">
@@ -1958,7 +1958,7 @@ async function loadVideos(){
           <div class="video-info">
 
             <div class="video-user">
-              ðŸ‘¤ ${escapeHtml(video.user_email)}
+              \u{1F464} ${escapeHtml(video.user_email)}
             </div>
 
             <div class="caption">
@@ -1978,7 +1978,7 @@ async function loadVideos(){
               class="like-button"
               onclick="likeVideo('${video.id}',this)">
 
-              â¤ï¸ ${Number(video.likes) || 0}
+              \u{2764}\u{FE0F} ${Number(video.likes) || 0}
 
             </button>
 
@@ -1998,7 +1998,7 @@ async function loadVideos(){
                 class="comment-button"
                 onclick="addComment('${video.id}')">
 
-                ðŸ’¬ Add Comment
+                \u{1F4AC} Add Comment
 
               </button>
 
@@ -2055,7 +2055,7 @@ async function likeVideo(id,button){
   }
 
   button.textContent =
-    "â¤ï¸ " + Number(data);
+    "\u{2764}\u{FE0F} " + Number(data);
 
   button.disabled=false;
 
@@ -2081,7 +2081,7 @@ async function likeVideo(id,button){
 
     await createNotification(
       videoOwner.user_email,
-      "â¤ï¸ New Like",
+      "\u{2764}\u{FE0F} New Like",
       "Someone liked your video.",
       "like"
     );
@@ -2181,7 +2181,7 @@ async function addComment(videoId){
     console.error(error);
 
     button.disabled=false;
-    button.textContent="ðŸ’¬ Add Comment";
+    button.textContent="\u{1F4AC} Add Comment";
 
     dashboardMessage(
       "Comment error: " +
@@ -2196,7 +2196,7 @@ async function addComment(videoId){
   input.value="";
 
   button.disabled=false;
-  button.textContent="ðŸ’¬ Add Comment";
+  button.textContent="\u{1F4AC} Add Comment";
 
 
   /* Notify the video owner */
@@ -2212,14 +2212,14 @@ async function addComment(videoId){
 
     await createNotification(
       videoOwner.user_email,
-      "ðŸ’¬ New Comment",
+      "\u{1F4AC} New Comment",
       "Someone commented on your video.",
       "comment"
     );
   }
 
   dashboardMessage(
-    "âœ… Comment added!",
+    "\u{2705} Comment added!",
     "success"
   );
 
@@ -2335,7 +2335,7 @@ async function requestWithdraw(){
   button.disabled=false;
 
   button.textContent =
-    "ðŸ’° Request Withdraw";
+    "\u{1F4B0} Request Withdraw";
 
 
   if(error){
@@ -2368,7 +2368,7 @@ async function requestWithdraw(){
 
 
   dashboardMessage(
-    "âœ… Withdrawal request sent.",
+    "\u{2705} Withdrawal request sent.",
     "success"
   );
 
@@ -2454,7 +2454,7 @@ async function loadWithdrawHistory(user){
           ${escapeHtml(r.method)}
         </b>
 
-        â€¢
+        \u{2022}
         ${Number(r.coins).toLocaleString()}
         Coins
 
@@ -2587,7 +2587,7 @@ async function loadAdminRequests(){
           ${escapeHtml(r.method)}
         </b>
 
-        â€¢
+        \u{2022}
         ${Number(r.coins).toLocaleString()}
         Coins
 
@@ -2687,7 +2687,7 @@ async function adminDecision(
 
 
   dashboardMessage(
-    "âœ… Withdrawal status updated.",
+    "\u{2705} Withdrawal status updated.",
     "success"
   );
 
