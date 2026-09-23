@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>XALLO-GAMING | پرۆفایل</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#080808;color:#fff;font-family:Arial,"Noto Sans Arabic",sans-serif;padding-bottom:72px}
+header{height:62px;border-bottom:1px solid #252525;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+header a{color:#aaa;text-decoration:none}.brand{font-weight:800}
+main{max-width:800px;margin:auto}.profile{text-align:center;padding:30px 15px 22px}
+.avatar{width:110px;height:110px;border-radius:50%;background:#202020;border:3px solid #333;margin:auto;display:flex;align-items:center;justify-content:center;font-size:45px}
+.name{font-size:23px;font-weight:800;margin-top:13px}.handle{color:#999;margin-top:5px}.bio{color:#bbb;max-width:550px;margin:12px auto;line-height:1.7}
+.stats{display:flex;justify-content:center;gap:45px;margin:22px 0}.stat strong{display:block;font-size:20px}.stat span{color:#999;font-size:12px}
+.follow{border:0;border-radius:12px;background:#ff174f;color:#fff;padding:12px 28px;font-weight:800;cursor:pointer}.follow.following{background:#292929}
+.section{border-top:1px solid #252525;padding:15px;text-align:center;font-weight:800;border-bottom:2px solid #ff174f}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}.video{aspect-ratio:9/14;background:#151515;overflow:hidden}.video video{width:100%;height:100%;object-fit:cover}
+.empty{text-align:center;color:#777;padding:60px 15px}.loading{text-align:center;color:#999;padding:55px}
+.nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:#141414;border-top:1px solid #303030;display:flex;z-index:10}.nav a{flex:1;color:#999;text-decoration:none;text-align:center;padding-top:9px;font-size:12px}.nav a.active{color:#ff174f}.icon{display:block;font-size:22px;margin-bottom:4px}
+</style>
+</head>
+<body>
+<header><a href="search.html">← گەڕان</a><div class="brand">XALLO-GAMING</div><div style="width:55px"></div></header>
+<main>
+<section class="profile">
+<div class="avatar">👤</div>
+<div id="name" class="name">چاوەڕوان بە...</div>
+<div id="handle" class="handle"></div>
+<div id="bio" class="bio"></div>
+<div class="stats">
+<div class="stat"><strong id="followers">0</strong><span>شوێنکەوتوو</span></div>
+<div class="stat"><strong id="following">0</strong><span>شوێنکەوتووم</span></div>
+<div class="stat"><strong id="videosCount">0</strong><span>ڤیدیۆ</span></div>
+</div>
+<button id="followBtn" class="follow" onclick="toggleFollow()">شوێنکەوتن</button>
+</section>
+<div class="section">🎬 ڤیدیۆکان</div>
+<div id="videos" class="loading">چاوەڕوان بە...</div>
+</main>
+<nav class="nav">
+<a href="index.html"><span class="icon">🏠</span>سەرەکی</a>
+<a class="active" href="search.html"><span class="icon">🔎</span>گەڕان</a>
+<a href="index.html"><span class="icon">➕</span>بڵاوکردنەوە</a>
+<a href="index.html"><span class="icon">🔔</span>ئاگادارکردنەوە</a>
+<a href="profile.html"><span class="icon">👤</span>پرۆفایل</a>
+</nav>
+<script>
+const SUPABASE_URL="https://vnyprsjjmmjahkisozib.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueXByc2pqbW1qYWhraXNvemliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5OTE0MjEsImV4cCI6MjEwNTU2NzQyMX0.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let targetId=null,currentUser=null,isFollowing=false;
+const esc=v=>String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+
+async function init(){
+ const {data:{session}}=await db.auth.getSession();
+ currentUser=session?.user||null;
+ targetId=new URLSearchParams(location.search).get("id");
+ if(!targetId){location.href="search.html";return}
+ await loadProfile();
+ await loadFollowState();
+ await loadVideos();
+}
+async function loadProfile(){
+ const {data,error}=await db.from("profiles").select("*").eq("id",targetId).maybeSingle();
+ if(error||!data){document.getElementById("name").textContent="پرۆفایل نەدۆزرایەوە";document.getElementById("videos").className="empty";document.getElementById("videos").textContent="ئەم بەکارهێنەرە بەردەست نییە.";return}
+ document.getElementById("name").textContent=data.display_name||data.username||"بەکارهێنەر";
+ document.getElementById("handle").textContent=data.username?"@"+data.username:"";
+ document.getElementById("bio").textContent=data.bio||"";
+ const {count:followers}=await db.from("follows").select("*",{count:"exact",head:true}).eq("following_id",targetId);
+ const {count:following}=await db.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",targetId);
+ document.getElementById("followers").textContent=followers||0;
+ document.getElementById("following").textContent=following||0;
+}
+async function loadFollowState(){
+ const btn=document.getElementById("followBtn");
+ if(!currentUser||currentUser.id===targetId){btn.style.display="none";return}
+ const {data}=await db.from("follows").select("follower_id").eq("follower_id",currentUser.id).eq("following_id",targetId).maybeSingle();
+ isFollowing=!!data; renderFollow();
+}
+function renderFollow(){
+ const b=document.getElementById("followBtn");b.textContent=isFollowing?"شوێنکەوتراو ✓":"شوێنکەوتن";b.classList.toggle("following",isFollowing);
+}
+async function toggleFollow(){
+ if(!currentUser){alert("تکایە سەرەتا بچۆ ژوورەوە.");return}
+ if(isFollowing){
+  const {error}=await db.from("follows").delete().eq("follower_id",currentUser.id).eq("following_id",targetId);
+  if(error){alert("نەتوانرا شوێنکەوتن بسڕدرێتەوە.");return} isFollowing=false;
+ }else{
+  const {error}=await db.from("follows").insert({follower_id:currentUser.id,following_id:targetId});
+  if(error){alert("نەتوانرا شوێنکەوتن زیاد بکرێت.");return} isFollowing=true;
+ }
+ renderFollow(); await loadProfile();
+}
+async function loadVideos(){
+ const box=document.getElementById("videos");
+ const {data,error}=await db.from("videos").select("*").eq("user_id",targetId).order("created_at",{ascending:false});
+ if(error){box.className="empty";box.textContent="نەتوانرا ڤیدیۆکان باربکرێن.";return}
+ document.getElementById("videosCount").textContent=data.length;
+ if(!data.length){box.className="empty";box.textContent="هیچ ڤیدیۆیەک نییە.";return}
+ box.className="grid";
+ box.innerHTML=data.map(v=>`<div class="video"><video src="${esc(v.video_url)}" muted playsinline controls preload="metadata"></video></div>`).join("");
+}
+init();
+</script>
+</body>
+</html>
