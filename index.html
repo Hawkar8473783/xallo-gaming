@@ -1796,12 +1796,17 @@ async function loadVideos(){
 
             <div class="comment-area">
 
+              <div class="small" style="text-align:left;margin-bottom:6px;">
+                💬 ${videoComments.length} comment${videoComments.length === 1 ? "" : "s"}
+              </div>
+
               <input
                 class="comment-input"
                 id="comment-${video.id}"
                 type="text"
                 maxlength="500"
-                placeholder="Write a comment...">
+                placeholder="Write a comment..."
+                onkeydown="if(event.key==='Enter'){event.preventDefault();addComment('${video.id}');}">
 
               <button
                 class="comment-button"
