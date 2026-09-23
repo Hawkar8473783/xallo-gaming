@@ -548,6 +548,21 @@ button:disabled{
 .user-card button{width:auto;margin:0;padding:9px 12px;background:#e91e63;font-size:13px}
 .users-empty{padding:14px;text-align:center;color:#9da8bd}
 
+
+/* ===== XALLO NOTIFICATIONS ===== */
+.notifications-box{margin-top:16px}
+.notifications-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.notifications-head h3{margin:0}
+.notifications-refresh{width:auto;margin:0;padding:8px 12px;background:#26384e;font-size:12px}
+.notifications-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto}
+.notification-item{padding:12px;border:1px solid #283653;background:#0b1425;border-radius:13px}
+.notification-item.unread{border-color:#e91e63;background:#111b30}
+.notification-title{font-weight:800;margin-bottom:4px}
+.notification-message{font-size:13px;color:#c1ccdc;line-height:1.4}
+.notification-time{font-size:10px;color:#7f8da5;margin-top:7px}
+.notification-read{width:auto;margin:8px 0 0;padding:7px 10px;background:#1c2c42;font-size:11px}
+.notification-badge{display:inline-flex;min-width:22px;height:22px;padding:0 6px;align-items:center;justify-content:center;border-radius:999px;background:#e91e63;color:#fff;font-size:11px;margin-left:5px}
+
 </style>
 
 </head>
@@ -736,6 +751,17 @@ button:disabled{
     </div>
     <div id="usersList" class="users-list">
       <div class="users-empty">Search for users to start a chat.</div>
+    </div>
+  </div>
+
+  <!-- ================= NOTIFICATIONS ================= -->
+  <div class="box notifications-box">
+    <div class="notifications-head">
+      <h3>🔔 Notifications <span id="notificationBadge" class="notification-badge" style="display:none">0</span></h3>
+      <button type="button" class="notifications-refresh" onclick="loadNotifications()">Refresh</button>
+    </div>
+    <div id="notificationsList" class="notifications-list">
+      <div class="users-empty">Loading notifications...</div>
     </div>
   </div>
 
@@ -2860,6 +2886,12 @@ async function toggleFollow(targetEmail){
         });
       if(error) throw error;
       setFollowButton(true);
+
+      const {error:notifyError} = await supabaseClient.rpc(
+        "notify_follow",
+        {p_following_email:targetEmail}
+      );
+      if(notifyError) console.warn("Follow notification unavailable:", notifyError.message);
     }
 
     const {count} = await supabaseClient
@@ -2973,6 +3005,13 @@ async function sendChatMessage(){
     document.getElementById("chatStatus").textContent="Send error: "+error.message;
     return;
   }
+
+  const {error:notifyError}=await supabaseClient.rpc(
+    "notify_message",
+    {p_receiver_email:activeChatEmail,p_preview:text.slice(0,120)}
+  );
+  if(notifyError) console.warn("Message notification unavailable:", notifyError.message);
+
   document.getElementById("chatInput").value="";
   await loadChat();
 }
@@ -3055,6 +3094,87 @@ checkUser();
 
 </script>
 
+
+<script>
+/* ===== XALLO NOTIFICATIONS ===== */
+function notificationSafe(value){
+  const div = document.createElement("div");
+  div.textContent = value == null ? "" : String(value);
+  return div.innerHTML;
+}
+
+function notificationTime(value){
+  if(!value) return "";
+  try{return new Date(value).toLocaleString();}catch(e){return "";}
+}
+
+async function loadNotifications(){
+  const list = document.getElementById("notificationsList");
+  const badge = document.getElementById("notificationBadge");
+  if(!list || !badge || typeof supabaseClient === "undefined") return;
+
+  list.innerHTML = '<div class="users-empty">Loading notifications...</div>';
+
+  try{
+    const {data,error} = await supabaseClient
+      .from("notifications")
+      .select("id,title,message,type,is_read,created_at")
+      .order("created_at",{ascending:false})
+      .limit(50);
+
+    if(error) throw error;
+
+    const rows = data || [];
+    const unread = rows.filter(n => !n.is_read).length;
+
+    if(unread){
+      badge.textContent = String(unread);
+      badge.style.display = "inline-flex";
+    }else{
+      badge.style.display = "none";
+    }
+
+    if(!rows.length){
+      list.innerHTML = '<div class="users-empty">No notifications yet.</div>';
+      return;
+    }
+
+    list.innerHTML = rows.map(n => `
+      <div class="notification-item ${n.is_read ? "" : "unread"}">
+        <div class="notification-title">${notificationSafe(n.title || "Notification")}</div>
+        <div class="notification-message">${notificationSafe(n.message || "")}</div>
+        <div class="notification-time">${notificationSafe(notificationTime(n.created_at))}</div>
+        ${n.is_read ? "" : `<button type="button" class="notification-read" onclick="markNotificationRead('${String(n.id).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">✓ Mark as read</button>`}
+      </div>
+    `).join("");
+  }catch(error){
+    console.error(error);
+    list.innerHTML = `<div class="users-empty">Could not load notifications.<br>${notificationSafe(error.message || "Unknown error")}</div>`;
+  }
+}
+
+async function markNotificationRead(id){
+  if(!id) return;
+
+  const {error} = await supabaseClient
+    .from("notifications")
+    .update({is_read:true})
+    .eq("id",id);
+
+  if(error){
+    dashboardMessage("Notification error: " + (error.message || "Unknown error"),"error");
+    return;
+  }
+
+  await loadNotifications();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    if(typeof supabaseClient !== "undefined") loadNotifications();
+  }, 900);
+});
+</script>
 
 <script>
 /* ===== XALLO USERS SEARCH ===== */
