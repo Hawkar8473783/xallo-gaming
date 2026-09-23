@@ -648,7 +648,7 @@ button:disabled{
     </div>
 
     <div id="tiktokFeed" class="tiktok-feed">
-      <div class="tiktok-empty">Loading videos...</div>
+      <div class="tiktok-empty">Loading TikTok Feed...</div>
     </div>
   </div>
 
@@ -1123,9 +1123,12 @@ async function showDashboard(user){
 
   await checkDailyRewardButton(user);
 
-  await loadVideos();
-
-  await loadTikTokFeed();
+  // Load both feeds independently so a problem in the old video/comments feed
+  // cannot leave the TikTok feed stuck on "Loading videos...".
+  await Promise.allSettled([
+    loadTikTokFeed(),
+    loadVideos()
+  ]);
 
   await loadWithdrawHistory(user);
 
