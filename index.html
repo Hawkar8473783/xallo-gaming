@@ -722,7 +722,9 @@ button:disabled{
       <button type="button" onclick="searchExploreVideos()">Search</button>
     </div>
     <div class="explore-hints">
-      <button type="button" onclick="setExploreSearch('')">🔥 All</button>
+      <button type="button" onclick="setExploreMode('all')">🔥 All</button>
+      <button type="button" onclick="setExploreMode('trending')">📈 Trending</button>
+      <button type="button" onclick="setExploreMode('new')">🆕 New</button>
       <button type="button" onclick="setExploreSearch('gaming')">🎮 Gaming</button>
       <button type="button" onclick="setExploreSearch('pubg')">🔫 PUBG</button>
       <button type="button" onclick="setExploreSearch('fun')">😂 Fun</button>
@@ -2710,7 +2712,7 @@ async function adminDecision(
    TIKTOK STYLE FEED
 ========================================= */
 
-async function loadTikTokFeed(searchTerm=""){
+async function loadTikTokFeed(searchTerm="", mode="all"){
 
   const box = document.getElementById("tiktokFeed");
   if(!box) return;
@@ -2758,6 +2760,11 @@ async function loadTikTokFeed(searchTerm=""){
     }
 
     const term = String(searchTerm || "").trim().toLowerCase();
+    if(mode === "trending") {
+      data = (data || []).slice().sort((a,b) => (Number(b.likes)||0) + (Number(b.views)||0) - ((Number(a.likes)||0) + (Number(a.views)||0)));
+    } else if(mode === "new") {
+      data = (data || []).slice().sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+    }
     if(term){
       data = (data || []).filter(video => {
         const haystack = `${video.caption || ""} ${video.user_email || ""}`.toLowerCase();
@@ -3557,26 +3564,32 @@ function xalloGoHome(){
   if(explore) explore.classList.remove("show");
   xalloSetNav("home");
   document.getElementById("tiktokFeed")?.scrollIntoView({behavior:"smooth",block:"start"});
-  setTimeout(()=>loadTikTokFeed(""),250);
+  setTimeout(()=>loadTikTokFeed("", "all"),250);
 }
 
 function xalloGoExplore(){
   const explore=document.getElementById("exploreBox");
   if(explore) explore.classList.add("show");
   xalloSetNav("explore");
-  document.getElementById("exploreSearchInput")?.focus();
   document.getElementById("tiktokFeed")?.scrollIntoView({behavior:"smooth",block:"start"});
+  setTimeout(()=>loadTikTokFeed("", "trending"),250);
 }
 
 function searchExploreVideos(){
   const q=(document.getElementById("exploreSearchInput")?.value || "").trim();
-  loadTikTokFeed(q);
+  loadTikTokFeed(q, "all");
 }
 
 function setExploreSearch(value){
   const input=document.getElementById("exploreSearchInput");
   if(input) input.value=value;
-  loadTikTokFeed(value);
+  loadTikTokFeed(value, "all");
+}
+
+function setExploreMode(mode){
+  const input=document.getElementById("exploreSearchInput");
+  if(input) input.value="";
+  loadTikTokFeed("", mode);
 }
 
 function xalloGoProfile(){
