@@ -3387,7 +3387,7 @@ function startUserChat(email){
   if(!email) return;
 
   // Reuse the existing secure Chat modal/function from the current XALLO page.
-  const receiver = document.getElementById("chatReceiverEmail");
+  const receiver = document.getElementById("chatRecipient");
   if(receiver) receiver.value = email;
 
   if(typeof openChat === "function"){
