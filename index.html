@@ -5,226 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>XALLO-GAMING | TikTok Feed</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; }
 
-        body {
-            background-color: #000;
-            color: #fff;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-        }
+        .video-feed { height: 100vh; width: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+        .video-feed::-webkit-scrollbar { display: none; }
 
-        .video-feed {
-            height: 100vh;
-            width: 100%;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-            scrollbar-width: none;
-        }
-
-        .video-feed::-webkit-scrollbar {
-            display: none;
-        }
-
-        .video-card {
-            position: relative;
-            height: 100vh;
-            width: 100%;
-            scroll-snap-align: start;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #000;
-            overflow: hidden;
-        }
-
-        .video-card video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-            image-rendering: pixelated;
-        }
+        .video-card { position: relative; height: 100vh; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; background-color: #000; overflow: hidden; }
+        .video-card video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
 
         .overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
             background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            z-index: 2;
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
-            pointer-events: none;
+            z-index: 2; display: flex; justify-content: space-between; padding: 12px;
+            padding-bottom: calc(55px + env(safe-area-inset-bottom)); pointer-events: none;
         }
+        .overlay * { pointer-events: auto; }
 
-        .overlay * {
-            pointer-events: auto;
-        }
+        .user-info { width: 70%; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; margin-bottom: 5px; text-align: right; }
+        .username { font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .caption { font-size: 0.7rem; line-height: 1.3; color: #eee; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .user-info {
-            width: 70%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            gap: 5px;
-            margin-bottom: 10px;
-            text-align: right;
-        }
-
-        .username {
-            font-size: 0.9rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-        }
-
-        .caption {
-            font-size: 0.75rem;
-            line-height: 1.3;
-            color: #eee;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
+        .action-buttons { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 5px; }
         .action-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: none;
-            color: #fff;
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            border-radius: 50%;
-            width: 38px;
-            height: 38px;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-            transition: transform 0.2s, background 0.2s;
+            background: rgba(255, 255, 255, 0.15); border: none; color: #fff; font-size: 1rem;
+            cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px;
+            border-radius: 50%; width: 36px; height: 36px; justify-content: center; backdrop-filter: blur(5px);
         }
+        .action-btn span { font-size: 0.55rem; font-weight: bold; }
+        .follow-btn { background: #fe2c55; border-radius: 50%; width: 32px; height: 32px; font-size: 1rem; display: flex; justify-content: center; align-items: center; color: white; border: none; cursor: pointer; }
 
-        .action-btn:active {
-            transform: scale(0.9);
-        }
+        .top-controls { position: absolute; top: 15px; right: 15px; z-index: 3; display: flex; gap: 10px; padding-top: env(safe-area-inset-top); }
+        .top-btn { background: rgba(0, 0, 0, 0.5); border: none; color: white; font-size: 1.1rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
 
-        .action-btn span {
-            font-size: 0.6rem;
-            font-weight: bold;
-        }
-
-        .follow-btn {
-            background: #fe2c55;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            font-size: 1.2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 10px rgba(254, 44, 85, 0.5);
-        }
-
-        .follow-btn.following {
-            background: #333;
-            color: #fff;
-            box-shadow: none;
-        }
-
-        .top-controls {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 3;
-            display: flex;
-            gap: 10px;
-            padding-top: env(safe-area-inset-top); 
-        }
-
-        .top-btn {
-            background: rgba(0, 0, 0, 0.5);
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-
-        /* مێنیوی خوارەوە */
+        /* مێنیوی خوارەوە (بچووککراوە) */
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(30, 30, 30, 0.9);
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            border-top: 1px solid #333;
-            padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background-color: rgba(30, 30, 30, 0.95); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around; padding: 6px 0;
+            border-top: 1px solid #333; padding-bottom: calc(6px + env(safe-area-inset-bottom));
             z-index: 100;
         }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #888;
-            text-decoration: none;
-            font-size: 0.7rem;
-            gap: 3px;
-            transition: color 0.2s;
-        }
-
-        .nav-item.active {
-            color: #fe2c55;
-        }
-
-        .nav-item span {
-            font-size: 1.2rem;
-        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; text-decoration: none; font-size: 0.6rem; gap: 2px; }
+        .nav-item.active { color: #fe2c55; }
+        .nav-item span { font-size: 1rem; }
     </style>
 </head>
 <body>
@@ -234,103 +58,57 @@
     </div>
 
     <div class="video-feed" id="videoFeed">
-        
         <div class="video-card">
             <video src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline muted></video>
-            
             <div class="overlay">
                 <div class="user-info">
-                    <div class="username">
-                        <span>👤</span> XALLO_GAMER
-                    </div>
-                    <div class="caption">
-                        یەکەم ڤیدیۆی من لە XALLO-GAMING! 🎮🔥 #گەیمینگ #XALLO
-                    </div>
+                    <div class="username"><span>👤</span> XALLO_GAMER</div>
+                    <div class="caption">یەکەم ڤیدیۆی من لە XALLO-GAMING! 🎮🔥 #گەیمینگ #XALLO</div>
                 </div>
-                
                 <div class="action-buttons">
                     <button class="follow-btn" onclick="toggleFollow(this)">+</button>
-                    <button class="action-btn" onclick="likeVideo(this)">
-                        ❤️ <span>1.2K</span>
-                    </button>
-                    <button class="action-btn" onclick="openComments()">
-                        💬 <span>45</span>
-                    </button>
-                    <button class="action-btn" onclick="shareVideo()">
-                        ↗️ <span>Share</span>
-                    </button>
+                    <button class="action-btn" onclick="likeVideo(this)">❤️ <span>1.2K</span></button>
+                    <button class="action-btn" onclick="openComments()">💬 <span>45</span></button>
+                    <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
                 </div>
             </div>
         </div>
-
         <div class="video-card">
             <video src="https://www.w3schools.com/html/movie.mp4" loop playsinline muted></video>
-            
             <div class="overlay">
                 <div class="user-info">
-                    <div class="username">
-                        <span>👤</span> PRO_GAMER
-                    </div>
-                    <div class="caption">
-                        یارییەکی زۆر سەخت! 🕹️ ئەتوانی بیبەیت؟ #چالێنج
-                    </div>
+                    <div class="username"><span>👤</span> PRO_GAMER</div>
+                    <div class="caption">یارییەکی زۆر سەخت! 🕹️ ئەتوانی بیبەیت؟ #چالێنج</div>
                 </div>
-                
                 <div class="action-buttons">
                     <button class="follow-btn" onclick="toggleFollow(this)">+</button>
-                    <button class="action-btn" onclick="likeVideo(this)">
-                        ❤️ <span>3.5K</span>
-                    </button>
-                    <button class="action-btn" onclick="openComments()">
-                        💬 <span>120</span>
-                    </button>
-                    <button class="action-btn" onclick="shareVideo()">
-                        ↗️ <span>Share</span>
-                    </button>
+                    <button class="action-btn" onclick="likeVideo(this)">❤️ <span>3.5K</span></button>
+                    <button class="action-btn" onclick="openComments()">💬 <span>120</span></button>
+                    <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- مێنیوی خوارەوە -->
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item active">
-            <span>🏠</span>
-            <span>ماڵەوە</span>
-        </a>
-        <a href="#" class="nav-item">
-            <span>🔍</span>
-            <span>گەڕان</span>
-        </a>
-        <a href="#" class="nav-item">
-            <span>➕</span>
-            <span>بڵاوکردنەوە</span>
-        </a>
-        <a href="#" class="nav-item">
-            <span>💬</span>
-            <span>نامەکان</span>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <span>👤</span>
-            <span>پرۆفایل</span>
-        </a>
+        <a href="index.html" class="nav-item active"><span>🏠</span><span>ماڵەوە</span></a>
+        <a href="#" class="nav-item"><span>🔍</span><span>گەڕان</span></a>
+        <a href="#" class="nav-item"><span>➕</span><span>بڵاوکردنەوە</span></a>
+        <a href="#" class="nav-item"><span>💬</span><span>نامەکان</span></a>
+        <a href="profile.html" class="nav-item"><span>👤</span><span>پرۆفایل</span></a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // ⚠️ ئەم دوو دێرە بگۆڕە بە زانیارییەکانی خۆت
         const SUPABASE_URL = 'لێرە_URL_ی_پرۆژەکەت_دابنێ';
         const SUPABASE_ANON_KEY = 'لێرە_ANON_KEY_دابنێ';
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // پشکنینی چوونەژوورەوە
-        async function checkAuth() {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                window.location.href = 'login.html';
-            }
-        }
-        checkAuth();
+        supabase.auth.getUser().then(({ data: { user } }) => {
+            if (!user) window.location.href = 'login.html';
+        });
 
         let isMuted = true;
         const videos = document.querySelectorAll('video');
@@ -338,9 +116,7 @@
 
         function toggleMute() {
             isMuted = !isMuted;
-            videos.forEach(video => {
-                video.muted = isMuted;
-            });
+            videos.forEach(v => v.muted = isMuted);
             muteBtn.textContent = isMuted ? '🔇' : '🔊';
         }
 
@@ -348,58 +124,27 @@
             entries.forEach(entry => {
                 const video = entry.target.querySelector('video');
                 if (entry.isIntersecting) {
-                    video.play().catch(e => {
-                        video.muted = true; 
-                        isMuted = true;
-                        muteBtn.textContent = '🔇';
-                    });
+                    video.play().catch(() => { video.muted = true; isMuted = true; muteBtn.textContent = '🔇'; });
                 } else {
-                    video.pause();
-                    video.currentTime = 0; 
+                    video.pause(); video.currentTime = 0;
                 }
             });
         }, { threshold: 0.6 });
-
-        document.querySelectorAll('.video-card').forEach(card => {
-            observer.observe(card);
-        });
+        document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
 
         function likeVideo(btn) {
             const isLiked = btn.style.color === 'red';
-            if (isLiked) {
-                btn.style.color = 'white';
-                let span = btn.querySelector('span');
-                let num = parseFloat(span.textContent);
-                if (span.textContent.includes('K')) num = num * 1000;
-                num -= 1;
-                span.textContent = num >= 1000 ? (num/1000).toFixed(1) + 'K' : num;
-            } else {
-                btn.style.color = 'red';
-                let span = btn.querySelector('span');
-                let num = parseFloat(span.textContent);
-                if (span.textContent.includes('K')) num = num * 1000;
-                num += 1;
-                span.textContent = num >= 1000 ? (num/1000).toFixed(1) + 'K' : num;
-            }
+            btn.style.color = isLiked ? 'white' : 'red';
+            let span = btn.querySelector('span');
+            let num = parseFloat(span.textContent);
+            if (span.textContent.includes('K')) num *= 1000;
+            num = isLiked ? num - 1 : num + 1;
+            span.textContent = num >= 1000 ? (num/1000).toFixed(1) + 'K' : num;
         }
 
-        function toggleFollow(btn) {
-            if (btn.textContent === '+') {
-                btn.textContent = '✓';
-                btn.classList.add('following');
-            } else {
-                btn.textContent = '+';
-                btn.classList.remove('following');
-            }
-        }
-
-        function openComments() {
-            alert("بەشی کۆمێنتەکان لە داهاتوودا دروست دەکرێت!");
-        }
-
-        function shareVideo() {
-            alert("بەشی هاوبەشکردن لە داهاتوودا دروست دەکرێت!");
-        }
+        function toggleFollow(btn) { btn.textContent = btn.textContent === '+' ? '✓' : '+'; }
+        function openComments() { alert("بەشی کۆمێنتەکان لە داهاتوودا دروست دەکرێت!"); }
+        function shareVideo() { alert("بەشی هاوبەشکردن لە داهاتوودا دروست دەکرێت!"); }
     </script>
 </body>
 </html>
