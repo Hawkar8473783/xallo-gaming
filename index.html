@@ -74,11 +74,42 @@
         .upload-close { position: absolute; left: 12px; top: 8px; border: 0; background: transparent; color: #fff; font-size: 1.6rem; cursor: pointer; }
         #uploadMessage { min-height: 22px; color: #ffd1da; font-size: .8rem; margin-top: 10px; line-height: 1.5; }
 
+    
+        .comments-modal { position: fixed; inset: 0; z-index: 1002; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,.55); }
+        .comments-modal.show { display: flex; }
+        .comments-box { width: min(520px,100%); max-height: 72vh; background: #171717; border-radius: 20px 20px 0 0; padding: 18px; display: flex; flex-direction: column; }
+        .comments-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+        .comments-head button { border:0; background:transparent; color:#fff; font-size:1.5rem; cursor:pointer; }
+        #commentsList { overflow:auto; min-height:80px; max-height:45vh; }
+        .comment-item { padding:9px 0; border-bottom:1px solid #292929; }
+        .comment-user { font-weight:bold; font-size:.78rem; }
+        .comment-body { color:#ddd; font-size:.82rem; margin-top:3px; word-break:break-word; }
+        .comment-form { display:flex; gap:7px; margin-top:12px; }
+        .comment-form input { flex:1; background:#0c0c0c; border:1px solid #444; color:#fff; border-radius:10px; padding:11px; direction:rtl; }
+        .comment-form button { border:0; background:#fe2c55; color:#fff; border-radius:10px; padding:0 14px; font-weight:bold; }
+        #commentMessage { color:#aaa; font-size:.72rem; margin-top:7px; min-height:18px; }
+
     </style>
 </head>
 <body>
 
 
+
+
+    <div id="commentsModal" class="comments-modal" aria-hidden="true">
+        <div class="comments-box">
+            <div class="comments-head">
+                <strong>کۆمێنتەکان</strong>
+                <button onclick="closeComments()">×</button>
+            </div>
+            <div id="commentsList"></div>
+            <div class="comment-form">
+                <input id="commentInput" maxlength="1000" placeholder="کۆمێنتێک بنووسە...">
+                <button onclick="sendComment()">ناردن</button>
+            </div>
+            <div id="commentMessage"></div>
+        </div>
+    </div>
 
     <div id="uploadModal" class="upload-modal" aria-hidden="true">
         <div class="upload-box">
@@ -180,19 +211,6 @@
         }, { threshold: 0.6 });
         document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
 
-        function likeVideo(btn) {
-            const isLiked = btn.style.color === 'red';
-            btn.style.color = isLiked ? 'white' : 'red';
-            let span = btn.querySelector('span');
-            let num = parseFloat(span.textContent);
-            if (span.textContent.includes('K')) num *= 1000;
-            num = isLiked ? num - 1 : num + 1;
-            span.textContent = num >= 1000 ? (num/1000).toFixed(1) + 'K' : num;
-        }
-
-        function toggleFollow(btn) { btn.textContent = btn.textContent === '+' ? '✓' : '+'; }
-        function openComments() { alert("بەشی کۆمێنتەکان لە داهاتوودا دروست دەکرێت!"); }
-        function shareVideo() { alert("بەشی هاوبەشکردن لە داهاتوودا دروست دەکرێت!"); }
 
 
         function openUpload() {
@@ -292,39 +310,102 @@
         }
 
         async function loadVideos() {
-            const { data, error } = await supabaseClient
+            const { data: videos, error } = await supabaseClient
                 .from("videos")
-                .select("id, user_id, video_url, caption, created_at, profiles(username, display_name)")
+                .select("id, user_id, video_url, caption, created_at")
                 .order("created_at", { ascending: false });
 
-            if (error || !data || !data.length) return;
+            if (error || !videos) return;
+
+            const userIds = [...new Set(videos.map(v => v.user_id))];
+            const { data: profiles } = userIds.length
+                ? await supabaseClient.from("profiles").select("id, username, display_name").in("id", userIds)
+                : { data: [] };
+
+            const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
+            const { data: { session } } = await supabaseClient.auth.getSession();
 
             const feed = document.getElementById("videoFeed");
             feed.innerHTML = "";
 
-            data.forEach(v => {
+            if (!videos.length) {
+                feed.innerHTML = '<div style="height:100vh;display:flex;align-items:center;justify-content:center;color:#aaa">هێشتا ڤیدیۆ نییە 🎥</div>';
+                return;
+            }
+
+            for (const v of videos) {
+                const p = profileMap[v.user_id];
+                const username = p?.username || p?.display_name || "XALLO_GAMER";
                 const card = document.createElement("div");
                 card.className = "video-card";
-                const username = v.profiles?.username || "XALLO_GAMER";
-                const caption = v.caption || "";
+                card.dataset.videoId = v.id;
                 card.innerHTML = `
                     <video src="${escapeHtml(v.video_url)}" loop playsinline muted></video>
                     <div class="overlay">
                         <div class="user-info">
                             <div class="username"><span>👤</span> ${escapeHtml(username)}</div>
-                            <div class="caption">${escapeHtml(caption)}</div>
+                            <div class="caption">${escapeHtml(v.caption || "")}</div>
                         </div>
                         <div class="action-buttons">
-                            <button class="follow-btn" onclick="toggleFollow(this)">+</button>
-                            <button class="action-btn" onclick="likeVideo(this)">❤️ <span>0</span></button>
-                            <button class="action-btn" onclick="openComments()">💬 <span>0</span></button>
-                            <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
+                            <button class="follow-btn" data-user-id="${v.user_id}" onclick="toggleFollow(this)">+</button>
+                            <button class="action-btn like-btn" data-video-id="${v.id}" onclick="likeVideo(this)">❤️ <span>0</span></button>
+                            <button class="action-btn comment-btn" data-video-id="${v.id}" onclick="openComments(${v.id})">💬 <span>0</span></button>
+                            <button class="action-btn" onclick="shareVideo(${v.id})">↗️ <span>Share</span></button>
                         </div>
                     </div>`;
                 feed.appendChild(card);
                 observer.observe(card);
-            });
+
+                const likeBtn = card.querySelector(".like-btn");
+                const commentBtn = card.querySelector(".comment-btn");
+                await updateCountsAndState(v.id, likeBtn, commentBtn, session);
+            }
         }
+
+        async function updateCountsAndState(videoId, likeBtn, commentBtn, session) {
+            const { count: likes } = await supabaseClient
+                .from("video_likes")
+                .select("*", { count: "exact", head: true })
+                .eq("video_id", videoId);
+
+            const { count: comments } = await supabaseClient
+                .from("comments")
+                .select("*", { count: "exact", head: true })
+                .eq("video_id", videoId);
+
+            likeBtn.querySelector("span").textContent = likes || 0;
+            commentBtn.querySelector("span").textContent = comments || 0;
+
+            if (session) {
+                const { data: mine } = await supabaseClient
+                    .from("video_likes")
+                    .select("video_id")
+                    .eq("video_id", videoId)
+                    .eq("user_id", session.user.id)
+                    .maybeSingle();
+                likeBtn.style.color = mine ? "#fe2c55" : "#fff";
+
+                const { data: video } = await supabaseClient
+                    .from("videos")
+                    .select("user_id")
+                    .eq("id", videoId)
+                    .maybeSingle();
+
+                if (video && video.user_id !== session.user.id) {
+                    const followBtn = document.querySelector(`.video-card[data-video-id="${videoId}"] .follow-btn`);
+                    if (followBtn) {
+                        const { data: followed } = await supabaseClient
+                            .from("follows")
+                            .select("follower_id")
+                            .eq("follower_id", session.user.id)
+                            .eq("following_id", video.user_id)
+                            .maybeSingle();
+                        followBtn.textContent = followed ? "✓" : "+";
+                    }
+                }
+            }
+        }
+
 
         function escapeHtml(value) {
             return String(value)
@@ -333,6 +414,198 @@
                 .replaceAll(">", "&gt;")
                 .replaceAll('"', "&quot;")
                 .replaceAll("'", "&#039;");
+        }
+
+
+        let activeCommentVideoId = null;
+
+        async function likeVideo(btn) {
+            const videoId = btn.dataset.videoId;
+            if (!videoId) return;
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                openAuth("login");
+                return;
+            }
+
+            const { data: existing } = await supabaseClient
+                .from("video_likes")
+                .select("video_id")
+                .eq("video_id", videoId)
+                .eq("user_id", session.user.id)
+                .maybeSingle();
+
+            if (existing) {
+                await supabaseClient.from("video_likes")
+                    .delete()
+                    .eq("video_id", videoId)
+                    .eq("user_id", session.user.id);
+            } else {
+                await supabaseClient.from("video_likes")
+                    .insert({ video_id: videoId, user_id: session.user.id });
+            }
+
+            await refreshLikeButton(btn, videoId, session.user.id);
+        }
+
+        async function refreshLikeButton(btn, videoId, userId) {
+            const { count } = await supabaseClient
+                .from("video_likes")
+                .select("*", { count: "exact", head: true })
+                .eq("video_id", videoId);
+
+            const { data: mine } = await supabaseClient
+                .from("video_likes")
+                .select("video_id")
+                .eq("video_id", videoId)
+                .eq("user_id", userId)
+                .maybeSingle();
+
+            btn.style.color = mine ? "#fe2c55" : "#fff";
+            btn.querySelector("span").textContent = count || 0;
+        }
+
+        async function openComments(videoId) {
+            activeCommentVideoId = videoId;
+            document.getElementById("commentInput").value = "";
+            document.getElementById("commentMessage").textContent = "";
+            document.getElementById("commentsModal").classList.add("show");
+            document.getElementById("commentsModal").setAttribute("aria-hidden", "false");
+            await loadComments(videoId);
+        }
+
+        function closeComments() {
+            activeCommentVideoId = null;
+            document.getElementById("commentsModal").classList.remove("show");
+            document.getElementById("commentsModal").setAttribute("aria-hidden", "true");
+        }
+
+        async function loadComments(videoId) {
+            const list = document.getElementById("commentsList");
+            list.innerHTML = "چاوەڕێ بکە...";
+
+            const { data, error } = await supabaseClient
+                .from("comments")
+                .select("id, user_id, body, created_at")
+                .eq("video_id", videoId)
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                list.innerHTML = "هەڵە لە هێنانی کۆمێنتەکان.";
+                return;
+            }
+
+            if (!data.length) {
+                list.innerHTML = '<div style="color:#888;text-align:center;padding:20px">هێشتا کۆمێنت نییە.</div>';
+                return;
+            }
+
+            const ids = [...new Set(data.map(c => c.user_id))];
+            const { data: profiles } = await supabaseClient
+                .from("profiles")
+                .select("id, username, display_name")
+                .in("id", ids);
+
+            const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
+
+            list.innerHTML = data.map(c => {
+                const p = profileMap[c.user_id];
+                const name = p?.username || p?.display_name || "User";
+                return `<div class="comment-item">
+                    <div class="comment-user">${escapeHtml(name)}</div>
+                    <div class="comment-body">${escapeHtml(c.body)}</div>
+                </div>`;
+            }).join("");
+        }
+
+        async function sendComment() {
+            const input = document.getElementById("commentInput");
+            const message = document.getElementById("commentMessage");
+            const body = input.value.trim();
+
+            if (!activeCommentVideoId || !body) return;
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                openAuth("login");
+                return;
+            }
+
+            const { error } = await supabaseClient
+                .from("comments")
+                .insert({
+                    video_id: activeCommentVideoId,
+                    user_id: session.user.id,
+                    body
+                });
+
+            if (error) {
+                message.textContent = error.message;
+                return;
+            }
+
+            input.value = "";
+            message.textContent = "";
+            await loadComments(activeCommentVideoId);
+            await updateCommentCount(activeCommentVideoId);
+        }
+
+        async function updateCommentCount(videoId) {
+            const { count } = await supabaseClient
+                .from("comments")
+                .select("*", { count: "exact", head: true })
+                .eq("video_id", videoId);
+
+            const btn = document.querySelector(`.comment-btn[data-video-id="${videoId}"]`);
+            if (btn) btn.querySelector("span").textContent = count || 0;
+        }
+
+        async function toggleFollow(btn) {
+            const followingId = btn.dataset.userId;
+            if (!followingId) return;
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                openAuth("login");
+                return;
+            }
+            if (session.user.id === followingId) return;
+
+            const { data: existing } = await supabaseClient
+                .from("follows")
+                .select("follower_id")
+                .eq("follower_id", session.user.id)
+                .eq("following_id", followingId)
+                .maybeSingle();
+
+            if (existing) {
+                await supabaseClient.from("follows")
+                    .delete()
+                    .eq("follower_id", session.user.id)
+                    .eq("following_id", followingId);
+            } else {
+                await supabaseClient.from("follows")
+                    .insert({ follower_id: session.user.id, following_id: followingId });
+            }
+
+            btn.textContent = existing ? "+" : "✓";
+        }
+
+        async function shareVideo(videoId) {
+            const card = document.querySelector(`.video-card[data-video-id="${videoId}"]`);
+            const videoUrl = card?.querySelector("video")?.src || location.href;
+
+            try {
+                if (navigator.share) {
+                    await navigator.share({ title: "XALLO-GAMING", url: videoUrl });
+                } else if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(videoUrl);
+                    alert("بەستەرەکە کۆپی کرا.");
+                } else {
+                    alert(videoUrl);
+                }
+            } catch (e) {}
         }
 
         function openAuth(mode = "login") {
