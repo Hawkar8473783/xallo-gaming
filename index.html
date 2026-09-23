@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XALLO-GAMING</title>
-<meta name="xallo-version" content="tiktok-coins-fixed-2026-09-23">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
@@ -35,7 +34,6 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .box{margin-top:20px;padding:18px;background:#0c1b2e;border:1px solid #315174;border-radius:18px}
 .balance{text-align:center;color:#9da8bd;margin-bottom:12px}
 .small{color:#8f9bb3;font-size:12px;line-height:1.5;text-align:center;margin-top:8px}
-.video-feed{display:none!important}
 .history{margin-top:22px}
 .request,.admin-row{background:#070b19;border:1px solid #283653;border-radius:12px;padding:12px;margin-top:10px;font-size:13px;line-height:1.7}
 .pending{color:#ffd54a}
@@ -63,8 +61,6 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .tiktok-actions button{width:58px;height:58px;flex:0 0 58px;margin:0;padding:4px;border-radius:50%;background:rgba(20,28,45,.85);border:1px solid rgba(255,255,255,.18);font-size:12px}
 .tiktok-actions .count{display:block;font-size:11px;margin-top:2px}
 .tiktok-empty{padding:35px 18px;text-align:center;color:#9da8bd}
-.tiktok-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:0;border-radius:50%;width:58px;height:58px;font-size:24px;background:rgba(0,0,0,.45);color:#fff;display:none}
-.tiktok-item:hover .tiktok-play{display:block}
 .profile-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px}
 .profile-card{width:min(420px,100%);background:#0c1a2b;border:1px solid #31506f;border-radius:22px;padding:22px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.5);position:relative}
 .profile-close{position:absolute;right:12px;top:10px;width:40px;height:40px;border-radius:50%;background:#182a40;color:#fff;border:1px solid #38516d;font-size:20px}
@@ -78,19 +74,16 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .follow-button{width:100%;margin:6px 0 0;padding:13px;border-radius:13px;border:0;background:#e91e63;color:#fff;font-weight:800;font-size:16px}
 .follow-button.following{background:#26384e;border:1px solid #52657c}
 .tiktok-follow-button{background:rgba(233,30,99,.9)!important}
-@media(max-width:600px){.tiktok-feed,.tiktok-item{height:76vh;min-height:520px}.tiktok-actions{right:10px}.tiktok-info{left:12px;right:70px;bottom:18px}}
-@media(max-width:520px){.tiktok-section{margin-top:16px}.tiktok-feed,.tiktok-item{height:78vh;min-height:540px}.tiktok-feed{border-radius:16px}.tiktok-info{left:12px;right:72px;bottom:16px}.tiktok-actions{right:7px;bottom:14px}}
+@media(max-width:600px){.tiktok-feed,.tiktok-item{height:76vh;min-height:520px}}
 </style>
 </head>
 <body>
 
 <div class="container">
 
-<!-- AUTH -->
 <div id="authBox">
   <div class="logo">XALLO-<span>GAMING</span></div>
   <div class="subtitle">Play • Earn • Enjoy</div>
-
   <div id="loginBox">
     <h2>Login</h2>
     <input id="loginEmail" type="email" placeholder="Email">
@@ -98,7 +91,6 @@ button:disabled{opacity:.5;cursor:not-allowed}
     <button class="login-btn" id="loginButton" onclick="login()">Login</button>
     <div class="switch">Don't have an account? <a onclick="showSignup()">Sign Up</a></div>
   </div>
-
   <div id="signupBox" style="display:none">
     <h2>Create Account</h2>
     <input id="signupEmail" type="email" placeholder="Email">
@@ -106,15 +98,12 @@ button:disabled{opacity:.5;cursor:not-allowed}
     <button class="login-btn" id="signupButton" onclick="signup()">Sign Up</button>
     <div class="switch">Already have an account? <a onclick="showLogin()">Login</a></div>
   </div>
-
   <div id="message" class="message"></div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard">
   <div class="logo">XALLO-<span>GAMING</span></div>
   <div class="subtitle">Play • Earn • Enjoy</div>
-
   <h2>Welcome 🎮</h2>
   <div class="email" id="userEmail"></div>
 
@@ -126,11 +115,11 @@ button:disabled{opacity:.5;cursor:not-allowed}
   <button class="reward-button" id="rewardButton" onclick="dailyReward()">🎁 Daily Reward +10</button>
 
   <div class="box">
-    <h3>📹 Upload Video</h3>
+    <h3>📹 Upload Video (+25 Coins)</h3>
     <input id="videoFile" type="file" accept="video/*" onchange="showSelectedFile()">
     <div id="selectedFile" class="file-name"></div>
     <textarea id="videoCaption" placeholder="Write a caption..."></textarea>
-    <button class="upload-button" id="uploadButton" onclick="uploadVideo()">⬆️ Upload Video (+25 Coins)</button>
+    <button class="upload-button" id="uploadButton" onclick="uploadVideo()">⬆️ Upload Video</button>
     <div class="small">Maximum video size: 50 MB</div>
   </div>
 
@@ -369,7 +358,6 @@ async function uploadVideo(){
       throw new Error("Database Error: " + dbError.message);
     }
 
-    // 🎁 +25 Coins Reward
     try {
       const {data:newCoins} = await supabaseClient.rpc("upload_video_reward");
       if(newCoins) setCoins(newCoins);
@@ -388,56 +376,13 @@ async function uploadVideo(){
     dashboardMessage(error.message || "Video upload failed.","error");
   }finally{
     button.disabled = false;
-    button.textContent = "⬆️ Upload Video (+25 Coins)";
+    button.textContent = "⬆️ Upload Video";
   }
 }
 
 async function loadVideos(){
   const box = document.getElementById("videoFeed");
   if(!box) return;
-  box.innerHTML = '<div class="small">Loading videos...</div>';
-  const {data, error} = await supabaseClient.from("videos").select("id,user_email,video_url,caption,likes,created_at").order("created_at",{ascending:false}).limit(50);
-  if(error){ box.innerHTML = '<div class="small">Could not load videos: ' + escapeHtml(error.message) + '</div>'; return; }
-  if(!data || !data.length){ box.innerHTML = '<div class="small">No videos yet.</div>'; return; }
-
-  const videoIds = data.map(video => video.id);
-  const {data:comments, error:commentsError} = await supabaseClient.from("comments").select("id,video_id,user_email,comment,created_at").in("video_id",videoIds).order("created_at",{ascending:true});
-  if(commentsError) console.error("Comments error:", commentsError.message);
-
-  const commentsByVideo = {};
-  (comments || []).forEach(comment => {
-    if(!commentsByVideo[comment.video_id]) commentsByVideo[comment.video_id] = [];
-    commentsByVideo[comment.video_id].push(comment);
-  });
-
-  box.innerHTML = data.map(video => {
-    const videoComments = commentsByVideo[video.id] || [];
-    const commentsHtml = videoComments.length
-      ? videoComments.map(comment => `
-          <div class="comment">
-            <div class="comment-user">👤 ${escapeHtml(comment.user_email)}</div>
-            <div class="comment-text">${escapeHtml(comment.comment)}</div>
-            <div class="comment-date">${new Date(comment.created_at).toLocaleString()}</div>
-          </div>
-        `).join("")
-      : '<div class="small">No comments yet.</div>';
-    return `
-      <div class="video-card">
-        <video controls playsinline preload="metadata" src="${escapeHtml(video.video_url)}"></video>
-        <div class="video-info">
-          <div class="video-user">👤 ${escapeHtml(video.user_email)}</div>
-          <div class="caption">${escapeHtml(video.caption || "")}</div>
-          <div class="video-date">${new Date(video.created_at).toLocaleString()}</div>
-          <button class="like-button" onclick="likeVideo('${video.id}',this)">❤️ ${Number(video.likes) || 0}</button>
-          <div class="comment-area">
-            <input class="comment-input" id="comment-${video.id}" type="text" maxlength="500" placeholder="Write a comment...">
-            <button class="comment-button" onclick="addComment('${video.id}')">💬 Add Comment (+1)</button>
-            <div class="comments-list">${commentsHtml}</div>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
 }
 
 async function likeVideo(id,button){
@@ -472,7 +417,6 @@ async function addComment(videoId){
     return;
   }
 
-  // 🎁 +1 Coin
   try { await supabaseClient.rpc("comment_reward",{p_video_id:videoId}); } catch(e){ console.warn(e); }
 
   input.value = "";
@@ -543,4 +487,129 @@ async function checkAdmin(){
   else{ box.style.display = "none"; }
 }
 
-async function loadAdminRequests
+async function loadAdminRequests(){
+  const box = document.getElementById("adminRequests");
+  const {data, error} = await supabaseClient.from("withdrawals").select("id,user_email,coins,method,phone,status,created_at").order("created_at",{ascending:false}).limit(50);
+  if(error){ box.innerHTML = '<div class="small">Could not load requests.</div>'; return; }
+  if(!data || !data.length){ box.innerHTML = '<div class="small">No withdrawal requests.</div>'; return; }
+  box.innerHTML = data.map(r => `
+    <div class="admin-row">
+      <b>${escapeHtml(r.method)}</b> • ${Number(r.coins).toLocaleString()} Coins<br>
+      User: ${escapeHtml(r.user_email)}<br>
+      Phone: ${escapeHtml(r.phone)}<br>
+      Status: <span class="${statusClass(r.status)}">${escapeHtml(r.status)}</span>
+      ${r.status === "pending" ? `
+        <div class="admin-actions">
+          <button class="approve" onclick="adminDecision('${r.id}','approved')">Approve</button>
+          <button class="reject" onclick="adminDecision('${r.id}','rejected')">Reject</button>
+        </div>
+      ` : ""}
+    </div>
+  `).join("");
+}
+
+async function adminDecision(id,status){
+  if(!confirm(status === "approved" ? "Approve this request?" : "Reject and return Coins?")) return;
+  const {error} = await supabaseClient.rpc("admin_update_withdrawal",{ p_withdrawal_id:id, p_status:status });
+  if(error){ dashboardMessage(error.message,"error"); return; }
+  dashboardMessage("✅ Withdrawal status updated.","success");
+  await loadAdminRequests();
+  const {data:userData} = await supabaseClient.auth.getUser();
+  if(userData.user){
+    await loadWithdrawHistory(userData.user);
+    await loadCoins(userData.user);
+  }
+}
+
+async function loadTikTokFeed(){
+  const box = document.getElementById("tiktokFeed");
+  if(!box) return;
+  box.innerHTML = '<div class="tiktok-empty">Loading TikTok Feed...</div>';
+
+  try{
+    let result = await supabaseClient.from("videos")
+      .select("id,user_email,video_url,caption,likes,views,created_at")
+      .order("created_at",{ascending:false}).limit(50);
+
+    let data = result.data;
+    let error = result.error;
+
+    if(error){
+      const fallback = await supabaseClient.from("videos")
+        .select("id,user_email,video_url,caption,likes,created_at")
+        .order("created_at",{ascending:false}).limit(50);
+      data = fallback.data;
+      error = fallback.error;
+    }
+
+    if(error) throw new Error(error.message || "Could not load videos.");
+
+    if(!data || !data.length){
+      box.innerHTML = '<div class="tiktok-empty"><div style="font-size:42px">🎬</div><div>No videos yet.</div><div class="small">Upload a video and it will appear here.</div></div>';
+      return;
+    }
+
+    box.innerHTML = data.map(video => {
+      const id = String(video.id || "");
+      const email = escapeHtml(video.user_email || "");
+      const url = escapeHtml(video.video_url || "");
+      const caption = escapeHtml(video.caption || "");
+      const likes = Number(video.likes) || 0;
+      const views = Number(video.views) || 0;
+      if(!id || !url) return "";
+
+      return '<div class="tiktok-item" data-video-id="' + escapeHtml(id) + '">' +
+        '<video class="tiktok-video" src="' + url + '" playsinline muted loop preload="metadata"></video>' +
+        '<div class="tiktok-gradient"></div>' +
+        '<div class="tiktok-info">' +
+          '<div class="tiktok-user">👤 ' + email + '</div>' +
+          '<div class="tiktok-caption">' + caption + '</div>' +
+        '</div>' +
+        '<div class="tiktok-actions">' +
+          '<button type="button" onclick="likeTikTokVideo(\'' + escapeHtml(id) + '\',this)">❤️ <span class="count">' + likes + '</span></button>' +
+          '<button type="button" class="tiktok-view-button">👁️ <span class="count tiktok-view-count">' + views + '</span></button>' +
+          '<button type="button" class="tiktok-follow-button" onclick="openTikTokProfile(\'' + escapeHtml(email) + '\')">➕ <span class="count">Follow</span></button>' +
+          '<button type="button" onclick="openTikTokProfile(\'' + escapeHtml(email) + '\')">👤 <span class="count">Profile</span></button>' +
+        '</div>' +
+      '</div>';
+    }).join("");
+
+    setupTikTokObserver();
+    box.querySelectorAll(".tiktok-video").forEach(video => {
+      video.addEventListener("click", async () => {
+        try{
+          if(video.paused){
+            box.querySelectorAll(".tiktok-video").forEach(v => { if(v !== video) v.pause(); });
+            await video.play();
+          }else{ video.pause(); }
+        }catch(e){ console.warn(e); }
+      });
+    });
+
+  }catch(e){
+    console.error("TikTok Feed error:", e);
+    box.innerHTML = '<div class="tiktok-empty"><div style="font-size:42px">⚠️</div><div>Could not load TikTok Feed.</div><div class="small" style="margin-top:8px">' + escapeHtml(e.message || "Unknown error") + '</div><button type="button" style="margin-top:14px" onclick="loadTikTokFeed()">🔄 Retry</button></div>';
+  }
+}
+
+function setupTikTokObserver(){
+  const videos = document.querySelectorAll(".tiktok-video");
+  if(!videos.length) return;
+  if(window.__xalloTikTokObserver){
+    try{ window.__xalloTikTokObserver.disconnect(); }catch(e){}
+  }
+  const observer = new IntersectionObserver(async entries => {
+    for(const entry of entries){
+      const video = entry.target;
+      if(entry.isIntersecting && entry.intersectionRatio >= 0.65){
+        document.querySelectorAll(".tiktok-video").forEach(other => { if(other !== video) other.pause(); });
+        try{ await video.play(); }catch(e){}
+        const item = video.closest(".tiktok-item");
+        if(item && !item.dataset.viewed){
+          item.dataset.viewed = "1";
+          const id = item.dataset.videoId;
+          try{
+            const {data, error} = await supabaseClient.rpc("view_video",{p_video_id:id});
+            if(!error){
+              const count = item.querySelector(".tiktok-view-count");
+              if(count) count.textContent = Number(data
