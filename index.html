@@ -198,46 +198,19 @@ button:disabled{
   margin-top:20px;
 }
 
-/* TikTok-style vertical feed */
-#videoFeed{
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-  scroll-snap-type:y mandatory;
-}
-
 .video-card{
   background:#070b19;
   border:1px solid #283653;
   border-radius:18px;
   overflow:hidden;
-  margin-top:0;
-  scroll-snap-align:start;
-  scroll-margin-top:12px;
-  box-shadow:0 12px 35px rgba(0,0,0,.28);
+  margin-top:15px;
 }
 
 .video-card video{
   width:100%;
   display:block;
-  height:min(72vh,680px);
-  min-height:420px;
-  object-fit:cover;
-  background:#000;
-}
-
-@media (max-width:600px){
-  #videoFeed{
-    gap:12px;
-  }
-  .video-card{
-    border-radius:16px;
-  }
-  .video-card video{
-    height:70vh;
-    min-height:420px;
-    max-height:none;
-  }
+  max-height:600px;
+  background:black;
 }
 
 .video-info{
@@ -621,6 +594,87 @@ button:disabled{
 .follow-button.following{background:#263b63}
 .follow-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .follow-stat{padding:8px 12px;border-radius:12px;background:#18243b;color:#dce7f7;font-size:13px}
+
+
+/* =========================================
+   TIKTOK STYLE VIDEO FEED
+========================================= */
+
+.video-feed.tiktok-mode{
+  margin-top:20px;
+}
+
+.video-feed.tiktok-mode > h3{
+  position:sticky;
+  top:0;
+  z-index:20;
+  margin:0;
+  padding:12px 0;
+  background:#050814;
+}
+
+.video-feed.tiktok-mode #videoFeed{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.video-feed.tiktok-mode .video-card{
+  position:relative;
+  min-height:72vh;
+  margin:0;
+  border-radius:18px;
+  overflow:hidden;
+  scroll-snap-align:start;
+  background:#05070d;
+}
+
+.video-feed.tiktok-mode .video-card video{
+  width:100%;
+  height:72vh;
+  max-height:none;
+  object-fit:contain;
+  background:#000;
+}
+
+.video-feed.tiktok-mode .video-info{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:5;
+  padding:50px 14px 14px;
+  background:linear-gradient(transparent,rgba(0,0,0,.9));
+}
+
+.video-feed.tiktok-mode .video-user,
+.video-feed.tiktok-mode .caption,
+.video-feed.tiktok-mode .video-date,
+.video-feed.tiktok-mode .video-stats{
+  text-shadow:0 1px 4px #000;
+}
+
+.video-feed.tiktok-mode .comment-area{
+  display:none;
+}
+
+.video-feed.tiktok-mode .like-button{
+  width:auto;
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:22px;
+  margin-top:8px;
+}
+
+@media(max-width:600px){
+  .video-feed.tiktok-mode .video-card{
+    min-height:68vh;
+  }
+  .video-feed.tiktok-mode .video-card video{
+    height:68vh;
+  }
+}
+
 </style>
 </head>
 
@@ -2686,7 +2740,6 @@ async function loadVideos(){
           <video
             controls
             playsinline
-            muted
             preload="metadata"
             data-video-id="${video.id}"
             onplay="registerVideoView('${video.id}',this)"
@@ -2768,54 +2821,6 @@ async function loadVideos(){
 
     }).join("");
 
-  setupTikTokFeed();
-}
-
-/* =========================================
-   TIKTOK-STYLE VIDEO FEED
-========================================= */
-
-function setupTikTokFeed(){
-
-  const videos =
-    Array.from(
-      document.querySelectorAll("#videoFeed video")
-    );
-
-  if(!videos.length) return;
-
-  if(window.__xalloFeedObserver){
-    window.__xalloFeedObserver.disconnect();
-  }
-
-  window.__xalloFeedObserver =
-    new IntersectionObserver((entries)=>{
-
-      entries.forEach(entry=>{
-
-        const video = entry.target;
-
-        if(entry.isIntersecting && entry.intersectionRatio >= 0.65){
-          videos.forEach(other=>{
-            if(other !== video){
-              other.pause();
-            }
-          });
-
-          video.muted = true;
-          video.play().catch(()=>{});
-        }else{
-          video.pause();
-        }
-      });
-
-    },{
-      threshold:[0.25,0.65,0.9] 
-    });
-
-  videos.forEach(video=>{
-    window.__xalloFeedObserver.observe(video);
-  });
 }
 
 
@@ -3629,6 +3634,63 @@ async function checkUser(){
 ========================================= */
 
 checkUser();
+
+
+/* =========================================
+   TIKTOK FEED BEHAVIOR
+========================================= */
+
+function enableTikTokFeed(){
+  const feedSection = document.querySelector('.video-feed');
+  const feed = document.getElementById('videoFeed');
+  if(!feedSection || !feed) return;
+
+  feedSection.classList.add('tiktok-mode');
+  feed.style.scrollSnapType = 'y proximity';
+
+  if(window.__xalloTikTokObserver){
+    window.__xalloTikTokObserver.disconnect();
+  }
+
+  window.__xalloTikTokObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      const video = entry.target.querySelector('video');
+      if(!video) return;
+
+      if(entry.isIntersecting && entry.intersectionRatio >= 0.65){
+        document.querySelectorAll('#videoFeed video').forEach(other=>{
+          if(other !== video){
+            try{ other.pause(); }catch(e){}
+          }
+        });
+        video.muted = true;
+        const p = video.play();
+        if(p && typeof p.catch === 'function') p.catch(()=>{});
+      }else{
+        try{ video.pause(); }catch(e){}
+      }
+    });
+  },{threshold:[0.65]});
+
+  feed.querySelectorAll('.video-card').forEach(card=>{
+    window.__xalloTikTokObserver.observe(card);
+  });
+}
+
+/* Re-enable the TikTok feed after the existing Supabase loader renders cards. */
+const __xalloOriginalLoadVideos = window.loadVideos;
+if(typeof __xalloOriginalLoadVideos === 'function'){
+  window.loadVideos = async function(){
+    const result = await __xalloOriginalLoadVideos.apply(this, arguments);
+    enableTikTokFeed();
+    return result;
+  };
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(enableTikTokFeed, 800);
+});
+
 
 </script>
 
