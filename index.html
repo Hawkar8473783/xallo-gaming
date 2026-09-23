@@ -502,6 +502,25 @@ button:disabled{
 
 
 
+
+/* ===== XALLO TIKTOK ENHANCED ACTIONS ===== */
+.tiktok-actions .tiktok-small-btn{font-size:18px;}
+.tiktok-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.45);color:#fff;font-size:26px;z-index:4;display:flex;align-items:center;justify-content:center;}
+.tiktok-mute{position:absolute;right:12px;top:12px;z-index:4;width:44px!important;height:44px!important;border-radius:50%!important;background:rgba(0,0,0,.5)!important;border:1px solid rgba(255,255,255,.3)!important;margin:0!important;padding:0!important;font-size:20px!important;}
+.tiktok-follow-button.following{background:rgba(38,56,78,.95)!important;}
+.tiktok-share-note{font-size:11px;color:#9eacc0;margin-top:3px;}
+.tiktok-comment-modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:flex-end;justify-content:center;z-index:12000;padding:0;}
+.tiktok-comment-card{width:min(560px,100%);height:min(68vh,620px);background:#0b1626;border:1px solid #304864;border-bottom:0;border-radius:22px 22px 0 0;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -20px 70px rgba(0,0,0,.5);}
+.tiktok-comment-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #263b55;color:#fff;font-weight:800;}
+.tiktok-comment-list{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+.tiktok-comment-row{background:#15263b;border-radius:13px;padding:10px 12px;color:#e7edf7;}
+.tiktok-comment-user{font-weight:800;font-size:12px;margin-bottom:4px;}
+.tiktok-comment-text{word-break:break-word;line-height:1.45;}
+.tiktok-comment-form{display:flex;gap:8px;padding:12px;border-top:1px solid #263b55;}
+.tiktok-comment-form input{flex:1;margin:0;min-width:0;}
+.tiktok-comment-form button{width:auto;margin:0;padding:10px 14px;}
+@media(max-width:520px){.tiktok-comment-card{height:72vh}.tiktok-mute{right:9px;top:9px}}
+
 /* =========================================
    XALLO CHAT / MESSAGES
 ========================================= */
@@ -817,8 +836,23 @@ button:disabled{
     </div>
   </div>
 
+  <!-- TikTok comments drawer -->
+  <div id="tiktokCommentModal" class="tiktok-comment-modal" onclick="closeTikTokComments(event)">
+    <div class="tiktok-comment-card" onclick="event.stopPropagation()">
+      <div class="tiktok-comment-head">
+        <span>💬 Comments</span>
+        <button type="button" class="chat-close" onclick="closeTikTokComments()">×</button>
+      </div>
+      <div id="tiktokCommentList" class="tiktok-comment-list">
+        <div class="small">Loading comments...</div>
+      </div>
+      <div class="tiktok-comment-form">
+        <input id="tiktokCommentInput" type="text" maxlength="500" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') submitTikTokComment()">
+        <button type="button" onclick="submitTikTokComment()">Send</button>
+      </div>
+    </div>
+  </div>
 
-  
   <!-- ================= USERS / SEARCH ================= -->
   <div class="box users-box">
     <h3>👥 Find Users</h3>
@@ -2741,6 +2775,22 @@ async function loadTikTokFeed(searchTerm=""){
       return;
     }
 
+    // Load the current user's follow state in one query so each video can show Follow/Following.
+    let followingSet = new Set();
+    try{
+      const {data:authData} = await supabaseClient.auth.getUser();
+      const currentEmail = authData && authData.user ? authData.user.email : "";
+      const creatorEmails = [...new Set((data || []).map(v => v.user_email).filter(Boolean))];
+      if(currentEmail && creatorEmails.length){
+        const {data:followRows} = await supabaseClient
+          .from("follows")
+          .select("following_email")
+          .eq("follower_email",currentEmail)
+          .in("following_email",creatorEmails);
+        followingSet = new Set((followRows || []).map(row => String(row.following_email).toLowerCase()));
+      }
+    }catch(e){ console.warn("Follow state load error",e); }
+
     // Render each card safely. One bad video URL must not stop the whole feed.
     box.innerHTML = data.map(video => {
       const id = String(video.id || "");
@@ -2749,6 +2799,7 @@ async function loadTikTokFeed(searchTerm=""){
       const caption = escapeHtml(video.caption || "");
       const likes = Number(video.likes) || 0;
       const views = Number(video.views) || 0;
+      const isFollowing = followingSet.has(String(video.user_email || "").toLowerCase());
 
       if(!id || !url) return "";
 
@@ -2765,6 +2816,7 @@ async function loadTikTokFeed(searchTerm=""){
           ></video>
 
           <div class="tiktok-gradient"></div>
+          <button type="button" class="tiktok-mute" aria-label="Unmute" onclick="toggleTikTokMute(event,this)">🔇</button>
 
           <div class="tiktok-info">
             <div class="tiktok-user">👤 ${email}</div>
@@ -2776,7 +2828,7 @@ async function loadTikTokFeed(searchTerm=""){
               ❤️ <span class="count">${likes}</span>
             </button>
 
-            <button type="button" onclick="focusTikTokComment('${escapeHtml(id)}')">
+            <button type="button" onclick="openTikTokComments('${escapeHtml(id)}')">
               💬 <span class="count">Comment</span>
             </button>
 
@@ -2784,8 +2836,12 @@ async function loadTikTokFeed(searchTerm=""){
               👁️ <span class="count tiktok-view-count">${views}</span>
             </button>
 
-            <button type="button" class="tiktok-follow-button" onclick="openTikTokProfile('${escapeHtml(email)}')">
-              ➕ <span class="count">Follow</span>
+            <button type="button" class="tiktok-follow-button ${isFollowing ? "following" : ""}" onclick="toggleTikTokFollow(event,'${escapeHtml(email)}',this)">
+              ${followingSet.has(String(video.user_email || "").toLowerCase()) ? "✓" : "➕"} <span class="count">${followingSet.has(String(video.user_email || "").toLowerCase()) ? "Following" : "Follow"}</span>
+            </button>
+
+            <button type="button" class="tiktok-small-btn" onclick="shareTikTokVideo('${escapeHtml(id)}')">
+              ↗️ <span class="count">Share</span>
             </button>
 
             <button type="button" onclick="openTikTokProfile('${escapeHtml(email)}')">
@@ -2853,6 +2909,11 @@ function setupTikTokObserver(){
         try{ await video.play(); }catch(e){
           // A first tap may be required by the mobile browser.
         }
+        const activeItem = video.closest(".tiktok-item");
+        if(activeItem){
+          const muteBtn = activeItem.querySelector(".tiktok-mute");
+          if(muteBtn) muteBtn.textContent = video.muted ? "🔇" : "🔊";
+        }
 
         const item = video.closest(".tiktok-item");
         if(item && !item.dataset.viewed){
@@ -2908,6 +2969,117 @@ async function likeTikTokVideo(id,button){
   }
 
   button.disabled = false;
+}
+
+
+function toggleTikTokMute(event,button){
+  if(event) event.stopPropagation();
+  const item = button ? button.closest(".tiktok-item") : null;
+  const video = item ? item.querySelector(".tiktok-video") : null;
+  if(!video) return;
+  video.muted = !video.muted;
+  button.textContent = video.muted ? "🔇" : "🔊";
+  button.setAttribute("aria-label", video.muted ? "Unmute" : "Mute");
+}
+
+async function toggleTikTokFollow(event,targetEmail,button){
+  if(event) event.stopPropagation();
+  const email = String(targetEmail || "").trim();
+  if(!email || !button) return;
+  const {data:authData} = await supabaseClient.auth.getUser();
+  const currentEmail = authData && authData.user ? authData.user.email : "";
+  if(!currentEmail){ dashboardMessage("Please login first.","error"); return; }
+  if(currentEmail.toLowerCase() === email.toLowerCase()) return;
+  button.disabled = true;
+  try{
+    const {data:existing,error:checkError} = await supabaseClient
+      .from("follows").select("id").eq("follower_email",currentEmail).eq("following_email",email).maybeSingle();
+    if(checkError) throw checkError;
+    if(existing){
+      const {error} = await supabaseClient.from("follows").delete().eq("id",existing.id).eq("follower_email",currentEmail);
+      if(error) throw error;
+      button.classList.remove("following");
+      button.innerHTML = "➕ <span class=\"count\">Follow</span>";
+    }else{
+      const {error} = await supabaseClient.from("follows").insert({follower_email:currentEmail,following_email:email});
+      if(error) throw error;
+      button.classList.add("following");
+      button.innerHTML = "✓ <span class=\"count\">Following</span>";
+      try{ await supabaseClient.rpc("notify_follow",{p_following_email:email}); }catch(e){ console.warn("Follow notification error",e); }
+    }
+  }catch(error){
+    dashboardMessage(error.message || "Follow action failed.","error");
+  }finally{
+    button.disabled = false;
+  }
+}
+
+async function shareTikTokVideo(videoId){
+  const url = window.location.href.split("#")[0] + "#video=" + encodeURIComponent(videoId);
+  try{
+    if(navigator.share){
+      await navigator.share({title:"XALLO-GAMING",text:"Watch this video on XALLO-GAMING",url});
+      return;
+    }
+    await navigator.clipboard.writeText(url);
+    dashboardMessage("🔗 Video link copied.","success");
+  }catch(error){
+    if(error && error.name === "AbortError") return;
+    dashboardMessage("Could not share this video.","error");
+  }
+}
+
+let activeTikTokCommentVideoId = "";
+
+async function openTikTokComments(videoId){
+  activeTikTokCommentVideoId = String(videoId || "");
+  if(!activeTikTokCommentVideoId) return;
+  const modal = document.getElementById("tiktokCommentModal");
+  const list = document.getElementById("tiktokCommentList");
+  const input = document.getElementById("tiktokCommentInput");
+  modal.style.display = "flex";
+  list.innerHTML = '<div class="small">Loading comments...</div>';
+  input.value = "";
+  try{
+    const {data,error} = await supabaseClient.from("comments")
+      .select("id,user_email,comment,created_at")
+      .eq("video_id",activeTikTokCommentVideoId)
+      .order("created_at",{ascending:true});
+    if(error) throw error;
+    list.innerHTML = (data || []).length ? data.map(c => `
+      <div class="tiktok-comment-row">
+        <div class="tiktok-comment-user">👤 ${escapeHtml(c.user_email || "")}</div>
+        <div class="tiktok-comment-text">${escapeHtml(c.comment || "")}</div>
+        <div class="chat-time">${new Date(c.created_at).toLocaleString()}</div>
+      </div>`).join("") : '<div class="small">No comments yet. Be the first! 💬</div>';
+    setTimeout(()=>input.focus(),80);
+  }catch(error){
+    list.innerHTML = `<div class="small">Could not load comments: ${escapeHtml(error.message || "Unknown error")}</div>`;
+  }
+}
+
+function closeTikTokComments(event){
+  if(event && event.target !== event.currentTarget) return;
+  const modal = document.getElementById("tiktokCommentModal");
+  if(modal) modal.style.display = "none";
+  activeTikTokCommentVideoId = "";
+}
+
+async function submitTikTokComment(){
+  const videoId = activeTikTokCommentVideoId;
+  const input = document.getElementById("tiktokCommentInput");
+  const comment = input ? input.value.trim() : "";
+  if(!videoId || !comment) return;
+  const {data:userData} = await supabaseClient.auth.getUser();
+  if(!userData.user){ dashboardMessage("Please login first.","error"); return; }
+  try{
+    const {error} = await supabaseClient.from("comments").insert({video_id:videoId,user_email:userData.user.email,comment});
+    if(error) throw error;
+    input.value = "";
+    await openTikTokComments(videoId);
+  }catch(error){
+    dashboardMessage("Comment error: " + (error.message || "Unknown error"),"error");
+  }
 }
 
 function focusTikTokComment(videoId){
@@ -3112,6 +3284,8 @@ function closeProfileModal(event){
 
 
 
+
+
 /* =========================================
    XALLO CHAT / MESSAGES
 ========================================= */
@@ -3257,6 +3431,11 @@ async function logout(){
 /* =========================================
    CHECK LOGIN
 ========================================= */
+
+
+document.addEventListener("keydown",(event)=>{
+  if(event.key === "Escape") closeTikTokComments();
+});
 
 async function checkUser(){
 
