@@ -1,109 +1,124 @@
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>پرۆفایل | XALLO-GAMING</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #121212; color: #fff; padding-bottom: 80px; }
-
-        .profile-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: #1e1e1e; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #333; }
-        .profile-header h2 { font-size: 1.2rem; }
-        .back-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; text-decoration: none; }
-
-        .profile-info { display: flex; flex-direction: column; align-items: center; padding: 30px 20px; text-align: center; }
-        .profile-pic-container { position: relative; margin-bottom: 15px; }
-        .profile-pic { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #fe2c55; object-fit: cover; background-color: #333; }
-        .edit-pic-btn { position: absolute; bottom: 0; right: 0; background: #fe2c55; border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; display: flex; justify-content: center; align-items: center; }
-
-        .username-display { font-size: 1.3rem; font-weight: bold; margin-bottom: 5px; }
-        .bio-display { font-size: 0.9rem; color: #aaa; margin-bottom: 15px; max-width: 300px; }
-
-        .profile-stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; width: 100%; }
-        .stat-item { display: flex; flex-direction: column; align-items: center; }
-        .stat-number { font-size: 1.1rem; font-weight: bold; }
-        .stat-label { font-size: 0.8rem; color: #aaa; }
-
-        .action-buttons-profile { display: flex; gap: 10px; width: 100%; max-width: 300px; margin-bottom: 30px; }
-        .btn-primary { flex: 1; padding: 10px; background-color: #fe2c55; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-secondary { flex: 1; padding: 10px; background-color: #333; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        .settings-list { padding: 0 20px; }
-        .settings-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #2a2a2a; cursor: pointer; transition: background 0.2s; }
-        .settings-item:hover { background-color: #1e1e1e; }
-        .settings-item-left { display: flex; align-items: center; gap: 15px; font-size: 1rem; }
-        .settings-item-icon { font-size: 1.2rem; width: 25px; text-align: center; }
-        .settings-item-arrow { color: #666; }
-
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background-color: rgba(30, 30, 30, 0.95); backdrop-filter: blur(10px);
-            display: flex; justify-content: space-around; padding: 6px 0;
-            border-top: 1px solid #333; padding-bottom: calc(6px + env(safe-area-inset-bottom));
-            z-index: 100;
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; text-decoration: none; font-size: 0.6rem; gap: 2px; }
-        .nav-item.active { color: #fe2c55; }
-        .nav-item span { font-size: 1rem; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>XALLO-GAMING | Profile</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,sans-serif}
+body{background:#000;color:#fff;min-height:100vh}
+.page{max-width:620px;margin:auto;min-height:100vh;background:#080808;padding-bottom:80px}
+.header{padding:18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #222}
+.header h1{font-size:1rem}.back{color:#fff;text-decoration:none;font-size:1.3rem}
+.profile{padding:24px 18px 16px;text-align:center}
+.avatar{width:82px;height:82px;border-radius:50%;background:#222;border:2px solid #444;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 12px}
+.username{font-size:1.1rem;font-weight:bold}.bio{color:#aaa;font-size:.8rem;margin:7px auto;max-width:360px;line-height:1.5}
+.stats{display:flex;justify-content:center;gap:34px;margin:18px 0}.stat strong{display:block;font-size:1rem}.stat span{color:#888;font-size:.7rem}
+.actions{display:flex;gap:8px;justify-content:center}.btn{border:0;border-radius:10px;padding:10px 22px;background:#fe2c55;color:#fff;font-weight:bold}.btn.alt{background:#292929}
+.tabs{display:flex;border-top:1px solid #222;border-bottom:1px solid #222}.tab{flex:1;padding:12px;text-align:center;color:#aaa}.tab.active{color:#fff;border-bottom:2px solid #fe2c55}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:2px}.tile{aspect-ratio:9/14;background:#151515;overflow:hidden}.tile video{width:100%;height:100%;object-fit:cover}.empty{text-align:center;color:#777;padding:50px 20px;font-size:.85rem}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.show{display:flex}.box{width:min(420px,100%);background:#171717;border:1px solid #333;border-radius:16px;padding:20px}.box h2{font-size:1rem;margin-bottom:14px}.box input,.box textarea{width:100%;margin:5px 0;background:#090909;color:#fff;border:1px solid #444;border-radius:9px;padding:11px;direction:rtl}.box textarea{min-height:90px}.close{float:left;background:none;border:0;color:#fff;font-size:1.4rem}.save{width:100%;margin-top:10px;background:#fe2c55;border:0;color:#fff;padding:12px;border-radius:9px;font-weight:bold}.msg{font-size:.75rem;color:#aaa;margin-top:8px}
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:620px;margin:auto;background:rgba(25,25,25,.97);border-top:1px solid #333;display:flex;justify-content:space-around;padding:8px 0}.nav a{color:#888;text-decoration:none;text-align:center;font-size:.65rem}.nav a span{display:block;font-size:1rem}.nav .active{color:#fe2c55}
+</style>
 </head>
 <body>
-
-    <div class="profile-header">
-        <h2>پرۆفایل</h2>
-        <a href="index.html" class="back-btn">↩️</a>
+<div class="page">
+  <div class="header"><a class="back" href="index.html">â€¹</a><h1>Ù¾Ø±Û†ÙØ§ÛŒÙ„</h1><span></span></div>
+  <section class="profile">
+    <div class="avatar">ðŸ‘¤</div>
+    <div class="username" id="username">Ú†Ø§ÙˆÛ•Ú•ÛŽ Ø¨Ú©Û•...</div>
+    <div class="bio" id="bio"></div>
+    <div class="stats">
+      <div class="stat"><strong id="followers">0</strong><span>ÙÛ†ÚµÛ†ÙˆÛ•Ø±</span></div>
+      <div class="stat"><strong id="following">0</strong><span>ÙÛ†ÚµÛ†ÙˆÛŒÙ†Ú¯</span></div>
+      <div class="stat"><strong id="videosCount">0</strong><span>Ú¤ÛŒØ¯ÛŒÛ†</span></div>
     </div>
+    <div class="actions"><button class="btn" id="editBtn" onclick="openEdit()">Ø¯Û•Ø³ØªÚ©Ø§Ø±ÛŒÚ©Ø±Ø¯Ù†</button><button class="btn alt" onclick="logout()">Ø¯Û•Ø±Ú†ÙˆÙˆÙ†</button></div>
+  </section>
+  <div class="tabs"><div class="tab active">Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù†</div></div>
+  <div class="grid" id="grid"></div>
+</div>
 
-    <div class="profile-info">
-        <div class="profile-pic-container">
-            <img src="https://ui-avatars.com/api/?name=XALLO&background=fe2c55&color=fff&size=100" alt="Profile" class="profile-pic" id="profilePic">
-            <button class="edit-pic-btn" onclick="changeProfilePic()">✏️</button>
-        </div>
-        
-        <div class="username-display" id="usernameDisplay">XALLO_GAMER</div>
-        <div class="bio-display" id="bioDisplay">یاریزانی پیشەگەر 🎮 | XALLO-GAMING</div>
+<div class="modal" id="editModal">
+  <div class="box">
+    <button class="close" onclick="closeEdit()">Ã—</button>
+    <h2>Ø¯Û•Ø³ØªÚ©Ø§Ø±ÛŒÚ©Ø±Ø¯Ù†ÛŒ Ù¾Ø±Û†ÙØ§ÛŒÙ„</h2>
+    <input id="editUsername" maxlength="30" placeholder="Ù†Ø§ÙˆÛŒ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±">
+    <input id="editDisplay" maxlength="60" placeholder="Ù†Ø§ÙˆÛŒ Ù¾ÛŒØ´Ø§Ù†Ø¯Ø§Ù†">
+    <textarea id="editBio" maxlength="200" placeholder="Bio"></textarea>
+    <button class="save" onclick="saveProfile()">Ù¾Ø§Ø´Û•Ú©Û•ÙˆØªÚ©Ø±Ø¯Ù†</button>
+    <div class="msg" id="editMsg"></div>
+  </div>
+</div>
 
-        <div class="profile-stats">
-            <div class="stat-item"><span class="stat-number" id="followingCount">120</span><span class="stat-label">فۆڵۆینگ</span></div>
-            <div class="stat-item"><span class="stat-number" id="followersCount">1.5K</span><span class="stat-label">فۆڵۆوەر</span></div>
-            <div class="stat-item"><span class="stat-number" id="likesCount">12.3K</span><span class="stat-label">لایک</span></div>
-        </div>
+<div class="nav">
+  <a href="index.html"><span>ðŸ </span>Ù…Ø§ÚµÛ•ÙˆÛ•</a>
+  <a href="index.html"><span>ðŸ”</span>Ú¯Û•Ú•Ø§Ù†</a>
+  <a href="index.html"><span>âž•</span>Ø¨ÚµØ§ÙˆÚ©Ø±Ø¯Ù†Û•ÙˆÛ•</a>
+  <a href="#"><span>ðŸ’¬</span>Ù†Ø§Ù…Û•Ú©Ø§Ù†</a>
+  <a class="active" href="profile.html"><span>ðŸ‘¤</span>Ù¾Ø±Û†ÙØ§ÛŒÙ„</a>
+</div>
 
-        <div class="action-buttons-profile">
-            <button class="btn-primary" onclick="editProfile()">دەستکاری پرۆفایل</button>
-            <button class="btn-secondary" onclick="shareProfile()">هاوبەشکردن</button>
-        </div>
-    </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://vnyprsjjmmjahkisozib.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZXMiLCJyZWYiOiJ2bnlwcnNqam1tamFoa2lzb3ppYiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzg5OTkxNDIxLCJleHAiOjIxMDU1Njc0MjF9.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let session=null;
 
-    <div class="settings-list">
-        <div class="settings-item" onclick="openSettings('account')"><div class="settings-item-left"><span class="settings-item-icon">👤</span><span>ڕێکخستنی هەژمار</span></div><span class="settings-item-arrow">‹</span></div>
-        <div class="settings-item" onclick="openSettings('privacy')"><div class="settings-item-left"><span class="settings-item-icon">🔒</span><span>پاراستن و تایبەتمەندی</span></div><span class="settings-item-arrow">‹</span></div>
-        <div class="settings-item" onclick="openSettings('notifications')"><div class="settings-item-left"><span class="settings-item-icon">🔔</span><span>ئاگادارکردنەوەکان</span></div><span class="settings-item-arrow">‹</span></div>
-        <div class="settings-item" onclick="openSettings('wallet')"><div class="settings-item-left"><span class="settings-item-icon">💰</span><span>جزدان و کۆینەکان</span></div><span class="settings-item-arrow">‹</span></div>
-        <div class="settings-item" style="border-bottom: none; margin-top: 20px;" onclick="logout()"><div class="settings-item-left"><span class="settings-item-icon">🚪</span><span style="color: #fe2c55;">چوونەدەرەوە</span></div></div>
-    </div>
-
-    <div class="bottom-nav">
-        <a href="index.html" class="nav-item"><span>🏠</span><span>ماڵەوە</span></a>
-        <a href="#" class="nav-item"><span>🔍</span><span>گەڕان</span></a>
-        <a href="#" class="nav-item"><span>➕</span><span>بڵاوکردنەوە</span></a>
-        <a href="#" class="nav-item"><span>💬</span><span>نامەکان</span></a>
-        <a href="profile.html" class="nav-item active"><span>👤</span><span>پرۆفایل</span></a>
-    </div>
-
-    <script>
-        // ⚠️ Supabase لە ئێستادا چالاک نییە
-
-        async function logout() {
-            alert('چوونەدەرەوە تەواو بوو!');
-            window.location.href = 'login.html';
-        }
-
-        function changeProfilePic() { alert("بەشی گۆڕینی وێنە لە داهاتوودا کارا دەکرێت."); }
-        function editProfile() { alert("بەشی دەستکاری پرۆفایل لە داهاتوودا کارا دەکرێت."); }
-        function shareProfile() { alert("بەشی هاوبەشکردنی پرۆفایل لە داهاتوودا کارا دەکرێت."); }
-        function openSettings(section) { alert("بەشی " + section + " لە داهاتوودا کارا دەکرێت."); }
-    </script>
+async function init(){
+ const r=await sb.auth.getSession(); session=r.data.session;
+ if(!session){location.href="index.html";return;}
+ await loadProfile(); await loadStats(); await loadVideos();
+}
+async function loadProfile(){
+ let {data}=await sb.from("profiles").select("username,display_name,bio").eq("id",session.user.id).maybeSingle();
+ if(!data){
+   await sb.from("profiles").insert({id:session.user.id,username:(session.user.email||"user").split("@")[0],display_name:(session.user.email||"user").split("@")[0]});
+   ({data}=await sb.from("profiles").select("username,display_name,bio").eq("id",session.user.id).maybeSingle());
+ }
+ document.getElementById("username").textContent="@"+(data?.username||"user");
+ document.getElementById("bio").textContent=data?.bio||"";
+}
+async function loadStats(){
+ const [v,f,fo]=await Promise.all([
+  sb.from("videos").select("*",{count:"exact",head:true}).eq("user_id",session.user.id),
+  sb.from("follows").select("*",{count:"exact",head:true}).eq("following_id",session.user.id),
+  sb.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",session.user.id)
+ ]);
+ document.getElementById("videosCount").textContent=v.count||0;
+ document.getElementById("followers").textContent=f.count||0;
+ document.getElementById("following").textContent=fo.count||0;
+}
+async function loadVideos(){
+ const {data}=await sb.from("videos").select("video_url,caption").eq("user_id",session.user.id).order("created_at",{ascending:false});
+ const grid=document.getElementById("grid");
+ if(!data?.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">Ù‡ÛŽØ´ØªØ§ Ù‡ÛŒÚ† Ú¤ÛŒØ¯ÛŒÛ†ÛŒÛ•Ú©Øª Ù†ÛŒÛŒÛ• ðŸŽ¥</div>';return;}
+ grid.innerHTML=data.map(v=>`<div class="tile"><video src="${esc(v.video_url)}" muted playsinline loop onclick="this.paused?this.play():this.pause()"></video></div>`).join("");
+}
+function openEdit(){
+ sb.from("profiles").select("username,display_name,bio").eq("id",session.user.id).maybeSingle().then(({data})=>{
+  document.getElementById("editUsername").value=data?.username||"";
+  document.getElementById("editDisplay").value=data?.display_name||"";
+  document.getElementById("editBio").value=data?.bio||"";
+  document.getElementById("editMsg").textContent="";
+  document.getElementById("editModal").classList.add("show");
+ });
+}
+function closeEdit(){document.getElementById("editModal").classList.remove("show")}
+async function saveProfile(){
+ const username=document.getElementById("editUsername").value.trim();
+ const display=document.getElementById("editDisplay").value.trim();
+ const bio=document.getElementById("editBio").value.trim();
+ const msg=document.getElementById("editMsg");
+ if(!username){msg.textContent="Ù†Ø§ÙˆÛŒ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø± Ù¾Ú• Ø¨Ú©Û•Ø±Û•ÙˆÛ•.";return;}
+ const {error}=await sb.from("profiles").update({username,display_name:display,bio}).eq("id",session.user.id);
+ if(error){msg.textContent=error.message;return;}
+ closeEdit(); await loadProfile();
+}
+async function logout(){await sb.auth.signOut();location.href="index.html"}
+function esc(v){return String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+init();
+</script>
 </body>
 </html>
