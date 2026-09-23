@@ -612,4 +612,174 @@ function setupTikTokObserver(){
             const {data, error} = await supabaseClient.rpc("view_video",{p_video_id:id});
             if(!error){
               const count = item.querySelector(".tiktok-view-count");
-              if(count) count.textContent = Number(data
+              if(count) count.textContent = Number(data) || 0;
+            }
+          }catch(e){ console.warn(e); }
+        }
+      }else{ video.pause(); }
+    }
+  },{threshold:[0.65]});
+  videos.forEach(video => observer.observe(video));
+  window.__xalloTikTokObserver = observer;
+}
+
+async function likeTikTokVideo(id,button){
+  button.disabled = true;
+  const {data, error} = await supabaseClient.rpc("like_video",{p_video_id:id});
+  if(error){ button.disabled = false; dashboardMessage("Like error: " + error.message,"error"); return; }
+  const count = button.querySelector(".count");
+  if(count) count.textContent = Number(data) || 0;
+  button.disabled = false;
+  await refreshCoins();
+}
+
+let activeProfileEmail = "";
+
+async function openTikTokProfile(email){
+  const targetEmail = String(email || "").trim();
+  if(!targetEmail) return;
+  const {data:authData} = await supabaseClient.auth.getUser();
+  const currentEmail = authData && authData.user ? authData.user.email : "";
+  activeProfileEmail = targetEmail;
+
+  const modal = document.getElementById("profileModal");
+  const nameBox = document.getElementById("profileName");
+  const emailBox = document.getElementById("profileEmail");
+  const bioBox = document.getElementById("profileBio");
+  const avatar = document.getElementById("profileAvatar");
+  const followButton = document.getElementById("profileFollowButton");
+
+  modal.style.display = "flex";
+  nameBox.textContent = "Loading profile...";
+  emailBox.textContent = targetEmail;
+  bioBox.textContent = "";
+  avatar.src = "";
+  followButton.disabled = true;
+  followButton.textContent = "Loading...";
+
+  try{
+    const {data:profile, error:profileError} = await supabaseClient.rpc("get_public_profile",{p_email:targetEmail});
+    if(profileError) throw profileError;
+    const profileData = profile || {};
+    nameBox.textContent = profileData.username || targetEmail.split("@")[0];
+    emailBox.textContent = targetEmail;
+    bioBox.textContent = profileData.bio || "";
+    avatar.src = profileData.avatar_url || "";
+    if(!profileData.avatar_url) avatar.style.display = "none";
+    else avatar.style.display = "block";
+
+    const [followerRes, followingRes] = await Promise.all([
+      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("following_email",targetEmail),
+      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("follower_email",targetEmail)
+    ]);
+    document.getElementById("profileFollowers").textContent = Number(followerRes.count || 0);
+    document.getElementById("profileFollowing").textContent = Number(followingRes.count || 0);
+
+    if(currentEmail && currentEmail.toLowerCase() === targetEmail.toLowerCase()){
+      followButton.disabled = true;
+      followButton.textContent = "Your Profile";
+      followButton.classList.remove("following");
+      return;
+    }
+
+    const {data:existing} = await supabaseClient.from("follows")
+      .select("id")
+      .eq("follower_email",currentEmail)
+      .eq("following_email",targetEmail)
+      .maybeSingle();
+
+    setFollowButton(existing ? true : false);
+    followButton.disabled = false;
+    followButton.onclick = () => toggleFollow(targetEmail);
+
+  }catch(error){
+    nameBox.textContent = "Profile unavailable";
+    bioBox.textContent = error.message || "Could not load profile.";
+    followButton.disabled = true;
+    followButton.textContent = "Follow unavailable";
+  }
+}
+
+function setFollowButton(isFollowing){
+  const button = document.getElementById("profileFollowButton");
+  button.classList.toggle("following",!!isFollowing);
+  button.textContent = isFollowing ? "✓ Following" : "＋ Follow";
+}
+
+async function toggleFollow(targetEmail){
+  const button = document.getElementById("profileFollowButton");
+  const {data:authData} = await supabaseClient.auth.getUser();
+  const currentEmail = authData && authData.user ? authData.user.email : "";
+  if(!currentEmail){ dashboardMessage("Please login first.","error"); return; }
+  if(currentEmail.toLowerCase() === targetEmail.toLowerCase()) return;
+
+  button.disabled = true;
+
+  try{
+    const {data:existing, error:checkError} = await supabaseClient.from("follows")
+      .select("id")
+      .eq("follower_email",currentEmail)
+      .eq("following_email",targetEmail)
+      .maybeSingle();
+    if(checkError) throw checkError;
+
+    if(existing){
+      const {error} = await supabaseClient.from("follows").delete().eq("id",existing.id).eq("follower_email",currentEmail);
+      if(error) throw error;
+      setFollowButton(false);
+    }else{
+      const {error} = await supabaseClient.from("follows").insert({
+        follower_email:currentEmail, following_email:targetEmail
+      });
+      if(error) throw error;
+      setFollowButton(true);
+
+      try { await supabaseClient.rpc("follow_reward",{p_target_email:targetEmail}); } catch(e){ console.warn(e); }
+      await refreshCoins();
+    }
+
+    const {count} = await supabaseClient.from("follows")
+      .select("id",{count:"exact",head:true})
+      .eq("following_email",targetEmail);
+    document.getElementById("profileFollowers").textContent = Number(count || 0);
+
+  }catch(error){
+    dashboardMessage("Follow error: " + (error.message || "Unknown error"),"error");
+  }finally{
+    button.disabled = false;
+  }
+}
+
+function closeProfileModal(event){
+  if(event && event.target && event.target.id !== "profileModal") return;
+  const modal = document.getElementById("profileModal");
+  if(modal) modal.style.display = "none";
+  activeProfileEmail = "";
+}
+
+function escapeHtml(value){
+  return String(value ?? "").replace(/[&<>"']/g, m => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+  }[m]));
+}
+
+async function logout(){
+  await supabaseClient.auth.signOut();
+  document.getElementById("dashboard").style.display = "none";
+  document.getElementById("authBox").style.display = "block";
+  showLogin();
+}
+
+async function checkUser(){
+  const {data} = await supabaseClient.auth.getUser();
+  if(data && data.user){
+    await createUserProfile(data.user.email);
+    await showDashboard(data.user);
+  }
+}
+
+checkUser();
+</script>
+
+</body>
+</html>
