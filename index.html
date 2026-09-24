@@ -783,8 +783,8 @@ img,video{max-width:100%}
     <button type="button" class="my-profile-save" id="myپرۆفایلSaveButton" onclick="saveMyپرۆفایل()">💾 پاشەکەوتکردنی پرۆفایل</button>
 
     <div class="my-profile-stats-row">
-      <div class="my-profile-stat"><b id="myشوێن بکەوەersCount">0</b><span>شوێنکەوتوو</span></div>
-      <div class="my-profile-stat"><b id="myشوێن بکەوەingCount">0</b><span>شوێنکەوتووەکان</span></div>
+      <div class="my-profile-stat"><b id="myFollowersCount">0</b><span>شوێنکەوتوو</span></div>
+      <div class="my-profile-stat"><b id="myFollowingCount">0</b><span>شوێنکەوتووەکان</span></div>
     </div>
   </div>
 
@@ -1046,10 +1046,10 @@ img,video{max-width:100%}
       <div id="profileEmail" class="profile-email"></div>
       <div id="profileدەربارەی خۆت" class="profile-bio"></div>
       <div class="profile-stats">
-        <div><b id="profileشوێن بکەوەers">0</b><span>شوێنکەوتوو</span></div>
-        <div><b id="profileشوێن بکەوەing">0</b><span>شوێنکەوتووەکان</span></div>
+        <div><b id="profileFollowers">0</b><span>شوێنکەوتوو</span></div>
+        <div><b id="profileFollowing">0</b><span>شوێنکەوتووەکان</span></div>
       </div>
-      <button id="profileشوێن بکەوەButton" class="follow-button" type="button">شوێن بکەوە</button>
+      <button id="profileFollowButton" class="follow-button" type="button">شوێن بکەوە</button>
     </div>
   </div>
 
@@ -1345,18 +1345,18 @@ async function loadMyپرۆفایل(email){
       avatar.style.display="none"; initial.style.display="flex";
       initial.textContent=username.charAt(0).toUpperCase();
     }
-    await loadMyشوێن بکەوەStats(email);
+    await loadMyFollowStats(email);
   }catch(e){ console.warn("پرۆفایل load:",e.message); }
 }
 
-async function loadMyشوێن بکەوەStats(email){
+async function loadMyFollowStats(email){
   try{
     const [a,b]=await Promise.all([
       supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("following_email",email),
       supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("follower_email",email)
     ]);
-    document.getElementById("myشوێن بکەوەersCount").textContent=Number(a.count||0);
-    document.getElementById("myشوێن بکەوەingCount").textContent=Number(b.count||0);
+    document.getElementById("myFollowersCount").textContent=Number(a.count||0);
+    document.getElementById("myFollowingCount").textContent=Number(b.count||0);
   }catch(e){ console.warn("شوێن بکەوە stats:",e.message); }
 }
 
@@ -2790,7 +2790,7 @@ async function loadTikTokFeed(searchTerm="", mode="all"){
       const caption = escapeHtml(video.caption || "");
       const likes = Number(video.likes) || 0;
       const views = Number(video.views) || 0;
-      const isشوێن بکەوەing = followingSet.has(String(video.user_email || "").toLowerCase());
+      const isFollowing = followingSet.has(String(video.user_email || "").toLowerCase());
 
       if(!id || !url) return "";
 
@@ -2827,7 +2827,7 @@ async function loadTikTokFeed(searchTerm="", mode="all"){
               👁️ <span class="count tiktok-view-count">${views}</span>
             </button>
 
-            <button type="button" class="tiktok-follow-button ${isشوێن بکەوەing ? "following" : ""}" onclick="toggleTikTokشوێن بکەوە(event,'${escapeHtml(email)}',this)">
+            <button type="button" class="tiktok-follow-button ${isFollowing ? "following" : ""}" onclick="toggleTikTokFollow(event,'${escapeHtml(email)}',this)">
               ${followingSet.has(String(video.user_email || "").toLowerCase()) ? "✓" : "➕"} <span class="count">${followingSet.has(String(video.user_email || "").toLowerCase()) ? "شوێن بکەوەing" : "شوێن بکەوە"}</span>
             </button>
 
@@ -2973,7 +2973,7 @@ function toggleTikTokMute(event,button){
   button.setAttribute("aria-label", video.muted ? "Unmute" : "Mute");
 }
 
-async function toggleTikTokشوێن بکەوە(event,targetEmail,button){
+async function toggleTikTokFollow(event,targetEmail,button){
   if(event) event.stopPropagation();
   const email = String(targetEmail || "").trim();
   if(!email || !button) return;
@@ -3123,7 +3123,7 @@ async function openTikTokپرۆفایل(email){
   const emailBox = document.getElementById("profileEmail");
   const bioBox = document.getElementById("profileدەربارەی خۆت");
   const avatar = document.getElementById("profileAvatar");
-  const followButton = document.getElementById("profileشوێن بکەوەButton");
+  const followButton = document.getElementById("profileFollowButton");
 
   modal.style.display = "flex";
   nameBox.textContent = "پرۆفایل بار دەکرێت...";
@@ -3163,8 +3163,8 @@ async function openTikTokپرۆفایل(email){
     if(followerError) throw followerError;
     if(followingError) throw followingError;
 
-    document.getElementById("profileشوێن بکەوەers").textContent = Number(followerCount || 0);
-    document.getElementById("profileشوێن بکەوەing").textContent = Number(followingCount || 0);
+    document.getElementById("profileFollowers").textContent = Number(followerCount || 0);
+    document.getElementById("profileFollowing").textContent = Number(followingCount || 0);
 
     if(currentEmail && currentEmail.toLowerCase() === targetEmail.toLowerCase()){
       followButton.disabled = true;
@@ -3182,9 +3182,9 @@ async function openTikTokپرۆفایل(email){
 
     if(followCheckError) throw followCheckError;
 
-    setشوێن بکەوەButton(existing ? true : false);
+    setFollowButton(existing ? true : false);
     followButton.disabled = false;
-    followButton.onclick = () => toggleشوێن بکەوە(targetEmail);
+    followButton.onclick = () => toggleFollow(targetEmail);
 
   }catch(error){
     nameBox.textContent = "پرۆفایل unavailable";
@@ -3194,15 +3194,15 @@ async function openTikTokپرۆفایل(email){
   }
 }
 
-function setشوێن بکەوەButton(isشوێن بکەوەing){
-  const button = document.getElementById("profileشوێن بکەوەButton");
-  button.classList.toggle("following",!!isشوێن بکەوەing);
-  button.textContent = isشوێن بکەوەing ? "✓ شوێن بکەوەing" : "＋ شوێن بکەوە";
+function setFollowButton(isFollowing){
+  const button = document.getElementById("profileFollowButton");
+  button.classList.toggle("following",!!isFollowing);
+  button.textContent = isFollowing ? "✓ شوێن بکەوەing" : "＋ شوێن بکەوە";
 }
 
-async function toggleشوێن بکەوە(targetEmail){
+async function toggleFollow(targetEmail){
 
-  const button = document.getElementById("profileشوێن بکەوەButton");
+  const button = document.getElementById("profileFollowButton");
   const {data:authData} = await supabaseClient.auth.getUser();
   const currentEmail = authData && authData.user ? authData.user.email : "";
 
@@ -3232,7 +3232,7 @@ async function toggleشوێن بکەوە(targetEmail){
         .eq("id",existing.id)
         .eq("follower_email",currentEmail);
       if(error) throw error;
-      setشوێن بکەوەButton(false);
+      setFollowButton(false);
     }else{
       const {error} = await supabaseClient
         .from("follows")
@@ -3241,7 +3241,7 @@ async function toggleشوێن بکەوە(targetEmail){
           following_email:targetEmail
         });
       if(error) throw error;
-      setشوێن بکەوەButton(true);
+      setFollowButton(true);
 
       const {error:notifyError} = await supabaseClient.rpc(
         "notify_follow",
@@ -3255,7 +3255,7 @@ async function toggleشوێن بکەوە(targetEmail){
       .select("id",{count:"exact",head:true})
       .eq("following_email",targetEmail);
 
-    document.getElementById("profileشوێن بکەوەers").textContent = Number(count || 0);
+    document.getElementById("profileFollowers").textContent = Number(count || 0);
 
   }catch(error){
     dashboardپەیام("شوێن بکەوە error: " + (error.message || "Unknown error"),"error");
