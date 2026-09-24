@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ku">
+<html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -350,10 +350,23 @@ button:disabled{
   word-break:break-word;
 }
 
+
+/* ===== XALLO Kurdish Profile + Follow ===== */
+.profile-box{background:#0a1222;border:1px solid #283653;border-radius:18px;padding:18px;margin:18px 0;text-align:center}
+.profile-avatar{width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #08a9ff;background:#11182d}
+.profile-name{margin-top:10px;font-size:20px;font-weight:bold}
+.profile-email{color:#9da8bd;font-size:12px;margin-top:5px;word-break:break-word}
+.profile-bio{color:#d8deea;margin:10px 0;line-height:1.7}
+.profile-stats{display:flex;justify-content:center;gap:22px;margin:14px 0}
+.profile-stat b{display:block;color:#08a9ff;font-size:18px}
+.profile-stat span{color:#9da8bd;font-size:12px}
+.follow-button{background:#08a9ff;margin-top:8px}
+.follow-button.following{background:#263b63}
+
 </style>
 </head>
 
-<body>
+<body dir="rtl">
 
 <div class="container">
 
@@ -366,12 +379,12 @@ button:disabled{
   </div>
 
   <div class="subtitle">
-    Play • Earn • Enjoy
+    یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
   </div>
 
   <div id="loginBox">
 
-    <h2>Login</h2>
+    <h2>چوونەژوورەوە</h2>
 
     <input
       id="loginEmail"
@@ -387,7 +400,7 @@ button:disabled{
       class="login-btn"
       id="loginButton"
       onclick="login()">
-      Login
+      چوونەژوورەوە
     </button>
 
     <div class="switch">
@@ -420,7 +433,7 @@ button:disabled{
 
     <div class="switch">
       Already have an account?
-      <a onclick="showLogin()">Login</a>
+      <a onclick="showچوونەژوورەوە()">چوونەژوورەوە</a>
     </div>
 
   </div>
@@ -434,12 +447,27 @@ button:disabled{
 
 <div id="dashboard">
 
+  <!-- ================= PROFILE + FOLLOW ================= -->
+  <div class="profile-box" id="profileBox">
+    <img id="profileAvatar" class="profile-avatar" alt="وێنەی پرۆفایل">
+    <div id="profileName" class="profile-name">بەکارهێنەر</div>
+    <div id="profileEmail" class="profile-email"></div>
+    <div id="profileBio" class="profile-bio">بەخێربێیت بۆ XALLO-GAMING 🎮</div>
+    <div class="profile-stats">
+      <div class="profile-stat"><b id="profileFollowers">0</b><span>شوێنکەوتوو</span></div>
+      <div class="profile-stat"><b id="profileFollowing">0</b><span>شوێنکەوتووەکان</span></div>
+      <div class="profile-stat"><b id="profileVideoCount">0</b><span>ڤیدیۆ</span></div>
+    </div>
+    <button id="followButton" class="follow-button" onclick="toggleFollow()">👥 شوێن بکەوە</button>
+  </div>
+
+
   <div class="logo">
     XALLO-<span>GAMING</span>
   </div>
 
   <div class="subtitle">
-    Play • Earn • Enjoy
+    یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
   </div>
 
   <h2>Welcome 🎮</h2>
@@ -451,7 +479,7 @@ button:disabled{
 
   <div class="coins">
 
-    🪙 Your Coins
+    🪙 Your دراو
 
     <div
       class="coin-number"
@@ -478,7 +506,7 @@ button:disabled{
 
   <div class="box">
 
-    <h3>📹 Upload Video</h3>
+    <h3>📹 دانانی ڤیدیۆ</h3>
 
     <input
       id="videoFile"
@@ -493,19 +521,19 @@ button:disabled{
 
     <textarea
       id="videoCaption"
-      placeholder="Write a caption..."></textarea>
+      placeholder="دەربارەی ڤیدیۆکە بنووسە..."></textarea>
 
     <button
       class="upload-button"
       id="uploadButton"
       onclick="uploadVideo()">
 
-      ⬆️ Upload Video
+      ⬆️ دانانی ڤیدیۆ
 
     </button>
 
     <div class="small">
-      Maximum video size: 50 MB
+      زۆرترین قەبارەی ڤیدیۆ: ٥٠ MB
     </div>
 
   </div>
@@ -515,12 +543,12 @@ button:disabled{
 
   <div class="video-feed">
 
-    <h3>🎬 XALLO Videos</h3>
+    <h3>🎬 ڤیدیۆکانی XALLO</h3>
 
     <div id="videoFeed">
 
       <div class="small">
-        Loading videos...
+        ڤیدیۆکان بار دەکرێن...
       </div>
 
     </div>
@@ -532,14 +560,14 @@ button:disabled{
 
   <div class="box">
 
-    <h3>💳 Withdraw</h3>
+    <h3>💳 کێشانەوەی پارە</h3>
 
     <div class="balance">
 
-      Your balance:
+      باڵانسی تۆ:
       <b>
-        <span id="withdrawCoins">0</span>
-        Coins
+        <span id="withdrawدراو">0</span>
+        دراو
       </b>
 
     </div>
@@ -547,7 +575,7 @@ button:disabled{
     <select id="withdrawMethod">
 
       <option value="">
-        Select payment method
+        شێوازی پارەدان هەڵبژێرە
       </option>
 
       <option value="Korek">
@@ -563,19 +591,19 @@ button:disabled{
     <select id="withdrawAmount">
 
       <option value="">
-        Select amount
+        بڕ هەڵبژێرە
       </option>
 
       <option value="1000">
-        1,000 Coins
+        1,000 دراو
       </option>
 
       <option value="5000">
-        5,000 Coins
+        5,000 دراو
       </option>
 
       <option value="10000">
-        10,000 Coins
+        10,000 دراو
       </option>
 
     </select>
@@ -583,19 +611,19 @@ button:disabled{
     <input
       id="withdrawPhone"
       type="tel"
-      placeholder="Phone number">
+      placeholder="ژمارەی مۆبایل">
 
     <button
       class="withdraw-button"
       id="withdrawButton"
-      onclick="requestWithdraw()">
+      onclick="requestکێشانەوەی پارە()">
 
-      💰 Request Withdraw
+      💰 Request کێشانەوەی پارە
 
     </button>
 
     <div class="small">
-      Withdraw requests are reviewed by admin.
+      کێشانەوەی پارە requests are reviewed by admin.
     </div>
 
   </div>
@@ -611,12 +639,12 @@ button:disabled{
 
   <div class="history">
 
-    <h3>📋 My Withdrawals</h3>
+    <h3>📋 My کێشانەوەی پارەals</h3>
 
     <div id="withdrawHistory">
 
       <div class="small">
-        No requests yet.
+        هێشتا هیچ داواکارییەک نییە.
       </div>
 
     </div>
@@ -630,10 +658,10 @@ button:disabled{
     id="adminBox"
     class="box admin-box">
 
-    <h3>👑 Admin Panel</h3>
+    <h3>👑 پانێڵی بەڕێوەبەر</h3>
 
     <div class="small">
-      Manage withdrawal requests.
+      بەڕێوەبردنی داواکارییەکانی کێشانەوە.
     </div>
 
     <div id="adminRequests"></div>
@@ -645,7 +673,7 @@ button:disabled{
     class="logout"
     onclick="logout()">
 
-    Logout
+    چوونەدەرەوە
 
   </button>
 
@@ -707,7 +735,7 @@ function dashboardMessage(text,type){
    LOGIN / SIGNUP UI
 ========================================= */
 
-function showLogin(){
+function showچوونەژوورەوە(){
 
   document.getElementById("loginBox")
     .style.display="block";
@@ -855,6 +883,9 @@ async function signup(){
     await showDashboard(
       data.user
     );
+    await loadXalloProfile(
+      data.user
+    );
 
     return;
   }
@@ -911,7 +942,7 @@ async function login(){
       });
 
   button.disabled=false;
-  button.textContent="Login";
+  button.textContent="چوونەژوورەوە";
 
   if(error){
 
@@ -940,7 +971,7 @@ async function login(){
    COINS
 ========================================= */
 
-function setCoins(amount){
+function setدراو(amount){
 
   const value =
     Number(amount) || 0;
@@ -949,12 +980,12 @@ function setCoins(amount){
     .textContent=value;
 
   document.getElementById(
-    "withdrawCoins"
+    "withdrawدراو"
   ).textContent=value;
 }
 
 
-async function loadCoins(user){
+async function loadدراو(user){
 
   const {
     data,
@@ -968,12 +999,12 @@ async function loadCoins(user){
 
   if(error || !data){
 
-    setCoins(0);
+    setدراو(0);
 
     return null;
   }
 
-  setCoins(data.coins);
+  setدراو(data.coins);
 
   return data;
 }
@@ -994,13 +1025,13 @@ async function showDashboard(user){
   document.getElementById("userEmail")
     .textContent=user.email;
 
-  await loadCoins(user);
+  await loadدراو(user);
 
   await checkDailyRewardButton(user);
 
   await loadVideos();
 
-  await loadWithdrawHistory(user);
+  await loadکێشانەوەی پارەHistory(user);
 
   await checkAdmin();
 }
@@ -1083,13 +1114,13 @@ async function dailyReward(){
     return;
   }
 
-  setCoins(data);
+  setدراو(data);
 
   button.textContent =
     "✅ Reward Claimed";
 
   dashboardMessage(
-    "🎉 Daily Reward: +10 Coins!",
+    "🎉 Daily Reward: +10 دراو!",
     "success"
   );
 }
@@ -1145,7 +1176,7 @@ async function uploadVideo(){
   if(userError || !userData.user){
 
     dashboardMessage(
-      "Please login first.",
+      "تکایە سەرەتا بچۆ ژوورەوە.",
       "error"
     );
 
@@ -1160,7 +1191,7 @@ async function uploadVideo(){
   if(!input.files || !input.files.length){
 
     dashboardMessage(
-      "Please choose a video.",
+      "تکایە ڤیدیۆیەک هەڵبژێرە.",
       "error"
     );
 
@@ -1172,7 +1203,7 @@ async function uploadVideo(){
   if(!file.type.startsWith("video/")){
 
     dashboardMessage(
-      "Please select a video file.",
+      "تکایە فایلێکی ڤیدیۆ هەڵبژێرە.",
       "error"
     );
 
@@ -1185,7 +1216,7 @@ async function uploadVideo(){
   if(file.size > maxSize){
 
     dashboardMessage(
-      "Video is larger than 50 MB.",
+      "قەبارەی ڤیدیۆ لە ٥٠ MB زیاترە.",
       "error"
     );
 
@@ -1203,7 +1234,7 @@ async function uploadVideo(){
     );
 
   button.disabled=true;
-  button.textContent="Uploading...";
+  button.textContent="ڤیدیۆکە دادەنرێت...";
 
   try{
 
@@ -1307,7 +1338,7 @@ async function uploadVideo(){
     ).value="";
 
     dashboardMessage(
-      "✅ Video uploaded successfully!",
+      "✅ ڤیدیۆکە بە سەرکەوتوویی دانرا!",
       "success"
     );
 
@@ -1326,7 +1357,7 @@ async function uploadVideo(){
   }finally{
 
     button.disabled=false;
-    button.textContent="⬆️ Upload Video";
+    button.textContent="⬆️ دانانی ڤیدیۆ";
   }
 }
 
@@ -1343,7 +1374,7 @@ async function loadVideos(){
     );
 
   box.innerHTML =
-    '<div class="small">Loading videos...</div>';
+    '<div class="small">ڤیدیۆکان بار دەکرێن...</div>';
 
   const {
     data,
@@ -1606,7 +1637,7 @@ async function addComment(videoId){
   ){
 
     dashboardMessage(
-      "Please login first.",
+      "تکایە سەرەتا بچۆ ژوورەوە.",
       "error"
     );
 
@@ -1712,7 +1743,7 @@ async function addComment(videoId){
    WITHDRAW
 ========================================= */
 
-async function requestWithdraw(){
+async function requestکێشانەوەی پارە(){
 
   const {
     data:userData
@@ -1722,7 +1753,7 @@ async function requestWithdraw(){
   if(!userData.user){
 
     dashboardMessage(
-      "Please login first.",
+      "تکایە سەرەتا بچۆ ژوورەوە.",
       "error"
     );
 
@@ -1815,7 +1846,7 @@ async function requestWithdraw(){
   button.disabled=false;
 
   button.textContent =
-    "💰 Request Withdraw";
+    "💰 Request کێشانەوەی پارە";
 
 
   if(error){
@@ -1829,7 +1860,7 @@ async function requestWithdraw(){
   }
 
 
-  setCoins(
+  setدراو(
     data?.new_balance ?? 0
   );
 
@@ -1848,12 +1879,12 @@ async function requestWithdraw(){
 
 
   dashboardMessage(
-    "✅ Withdrawal request sent.",
+    "✅ کێشانەوەی پارەal request sent.",
     "success"
   );
 
 
-  await loadWithdrawHistory(
+  await loadکێشانەوەی پارەHistory(
     userData.user
   );
 }
@@ -1877,7 +1908,7 @@ function statusClass(status){
 }
 
 
-async function loadWithdrawHistory(user){
+async function loadکێشانەوەی پارەHistory(user){
 
   const box =
     document.getElementById(
@@ -1919,7 +1950,7 @@ async function loadWithdrawHistory(user){
   if(!data || !data.length){
 
     box.innerHTML =
-      '<div class="small">No requests yet.</div>';
+      '<div class="small">هێشتا هیچ داواکارییەک نییە.</div>';
 
     return;
   }
@@ -1936,7 +1967,7 @@ async function loadWithdrawHistory(user){
 
         •
         ${Number(r.coins).toLocaleString()}
-        Coins
+        دراو
 
         <br>
 
@@ -2069,7 +2100,7 @@ async function loadAdminRequests(){
 
         •
         ${Number(r.coins).toLocaleString()}
-        Coins
+        دراو
 
         <br>
 
@@ -2135,7 +2166,7 @@ async function adminDecision(
   if(!confirm(
     status === "approved"
     ? "Approve this request?"
-    : "Reject and return Coins?"
+    : "Reject and return دراو?"
   )){
 
     return;
@@ -2167,7 +2198,7 @@ async function adminDecision(
 
 
   dashboardMessage(
-    "✅ Withdrawal status updated.",
+    "✅ کێشانەوەی پارەal status updated.",
     "success"
   );
 
@@ -2183,11 +2214,11 @@ async function adminDecision(
 
   if(userData.user){
 
-    await loadWithdrawHistory(
+    await loadکێشانەوەی پارەHistory(
       userData.user
     );
 
-    await loadCoins(
+    await loadدراو(
       userData.user
     );
   }
@@ -2234,7 +2265,7 @@ async function logout(){
   ).style.display="block";
 
 
-  showLogin();
+  showچوونەژوورەوە();
 }
 
 
