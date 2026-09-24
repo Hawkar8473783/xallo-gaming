@@ -363,7 +363,11 @@ button:disabled{
 .follow-button{background:#08a9ff;margin-top:8px}
 .follow-button.following{background:#263b63}
 
-</style>
+
+#dashboard{
+  display:none;
+}
+
 </head>
 
 <body dir="rtl">
@@ -379,61 +383,61 @@ button:disabled{
   </div>
 
   <div class="subtitle">
-    یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
+    ÛŒØ§Ø±ÛŒ Ø¨Ú©Û• â€¢ Ù¾Ø§Ø¯Ø§Ø´Øª ÙˆÛ•Ø±Ø¨Ú¯Ø±Û• â€¢ Ú†ÛŽÚ˜ ÙˆÛ•Ø±Ø¨Ú¯Ø±Û•
   </div>
 
   <div id="loginBox">
 
-    <h2>چوونەژوورەوە</h2>
+    <h2>Ú†ÙˆÙˆÙ†Û•Ú˜ÙˆÙˆØ±Û•ÙˆÛ•</h2>
 
     <input
       id="loginEmail"
       type="email"
-      placeholder="Email">
+      placeholder="Ø¦ÛŒÙ…Û•ÛŒÚµ">
 
     <input
       id="loginPassword"
       type="password"
-      placeholder="Password">
+      placeholder="ÙˆØ´Û•ÛŒ Ù†Ù‡ÛŽÙ†ÛŒ">
 
     <button
       class="login-btn"
       id="loginButton"
       onclick="login()">
-      چوونەژوورەوە
+      Ú†ÙˆÙˆÙ†Û•Ú˜ÙˆÙˆØ±Û•ÙˆÛ•
     </button>
 
     <div class="switch">
-      Don't have an account?
-      <a onclick="showSignup()">Sign Up</a>
+      Ù‡Û•Ú˜Ù…Ø§Ø±Øª Ù†ÛŒÛŒÛ•ØŸ
+      <a onclick="showSignup()">ØªÛ†Ù…Ø§Ø±Ú©Ø±Ø¯Ù†</a>
     </div>
 
   </div>
 
   <div id="signupBox" style="display:none">
 
-    <h2>Create Account</h2>
+    <h2>Ø¯Ø±ÙˆØ³ØªÚ©Ø±Ø¯Ù†ÛŒ Ù‡Û•Ú˜Ù…Ø§Ø±</h2>
 
     <input
       id="signupEmail"
       type="email"
-      placeholder="Email">
+      placeholder="Ø¦ÛŒÙ…Û•ÛŒÚµ">
 
     <input
       id="signupPassword"
       type="password"
-      placeholder="Password">
+      placeholder="ÙˆØ´Û•ÛŒ Ù†Ù‡ÛŽÙ†ÛŒ">
 
     <button
       class="login-btn"
       id="signupButton"
       onclick="signup()">
-      Sign Up
+      ØªÛ†Ù…Ø§Ø±Ú©Ø±Ø¯Ù†
     </button>
 
     <div class="switch">
-      Already have an account?
-      <a onclick="showچوونەژوورەوە()">چوونەژوورەوە</a>
+      Ù‡Û•Ú˜Ù…Ø§Ø±Øª Ù‡Û•ÛŒÛ•ØŸ
+      <a onclick="showÚ†ÙˆÙˆÙ†Û•Ú˜ÙˆÙˆØ±Û•ÙˆÛ•()">Ú†ÙˆÙˆÙ†Û•Ú˜ÙˆÙˆØ±Û•ÙˆÛ•</a>
     </div>
 
   </div>
@@ -445,20 +449,20 @@ button:disabled{
 
 <!-- ================= DASHBOARD ================= -->
 
-<div id="dashboard">
+<div id="dashboard" style="display:none;">
 
   <!-- ================= PROFILE + FOLLOW ================= -->
   <div class="profile-box" id="profileBox">
-    <img id="profileAvatar" class="profile-avatar" alt="وێنەی پرۆفایل">
-    <div id="profileName" class="profile-name">بەکارهێنەر</div>
+    <div id="profileAvatar" class="profile-avatar" aria-label="ÙˆÛŽÙ†Û•ÛŒ Ù¾Ø±Û†ÙØ§ÛŒÙ„" style="display:flex;align-items:center;justify-content:center;color:#08a9ff;font-size:30px;font-weight:bold;">X</div>
+    <div id="profileName" class="profile-name">Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±</div>
     <div id="profileEmail" class="profile-email"></div>
-    <div id="profileBio" class="profile-bio">بەخێربێیت بۆ XALLO-GAMING 🎮</div>
+    <div id="profileBio" class="profile-bio">Ø¨Û•Ø®ÛŽØ±Ø¨ÛŽÛŒØª Ø¨Û† XALLO-GAMING ðŸŽ®</div>
     <div class="profile-stats">
-      <div class="profile-stat"><b id="profileFollowers">0</b><span>شوێنکەوتوو</span></div>
-      <div class="profile-stat"><b id="profileFollowing">0</b><span>شوێنکەوتووەکان</span></div>
-      <div class="profile-stat"><b id="profileVideoCount">0</b><span>ڤیدیۆ</span></div>
+      <div class="profile-stat"><b id="profileFollowers">0</b><span>Ø´ÙˆÛŽÙ†Ú©Û•ÙˆØªÙˆÙˆ</span></div>
+      <div class="profile-stat"><b id="profileFollowing">0</b><span>Ø´ÙˆÛŽÙ†Ú©Û•ÙˆØªÙˆÙˆÛ•Ú©Ø§Ù†</span></div>
+      <div class="profile-stat"><b id="profileVideoCount">0</b><span>Ú¤ÛŒØ¯ÛŒÛ†</span></div>
     </div>
-    <button id="followButton" class="follow-button" onclick="toggleFollow()">👥 شوێن بکەوە</button>
+    <button id="followButton" class="follow-button" onclick="toggleFollow()">ðŸ‘¥ Ø´ÙˆÛŽÙ† Ø¨Ú©Û•ÙˆÛ•</button>
   </div>
 
 
@@ -467,10 +471,10 @@ button:disabled{
   </div>
 
   <div class="subtitle">
-    یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
+    ÛŒØ§Ø±ÛŒ Ø¨Ú©Û• â€¢ Ù¾Ø§Ø¯Ø§Ø´Øª ÙˆÛ•Ø±Ø¨Ú¯Ø±Û• â€¢ Ú†ÛŽÚ˜ ÙˆÛ•Ø±Ø¨Ú¯Ø±Û•
   </div>
 
-  <h2>Welcome 🎮</h2>
+  <h2>Ø¨Û•Ø®ÛŽØ±Ø¨ÛŽÛŒØª ðŸŽ®</h2>
 
   <div class="email" id="userEmail"></div>
 
@@ -479,7 +483,7 @@ button:disabled{
 
   <div class="coins">
 
-    🪙 Your دراو
+    ðŸª™ Ø¯Ø±Ø§ÙˆÛ•Ú©Ø§Ù†ÛŒ ØªÛ† ðŸª™
 
     <div
       class="coin-number"
@@ -497,7 +501,7 @@ button:disabled{
     id="rewardButton"
     onclick="dailyReward()">
 
-    🎁 Daily Reward +10
+    ðŸŽ Ù¾Ø§Ø¯Ø§Ø´ØªÛŒ Ú•Û†Ú˜Ø§Ù†Û• +Ù¡Ù 
 
   </button>
 
@@ -506,7 +510,7 @@ button:disabled{
 
   <div class="box">
 
-    <h3>📹 دانانی ڤیدیۆ</h3>
+    <h3>ðŸ“¹ Ø¯Ø§Ù†Ø§Ù†ÛŒ Ú¤ÛŒØ¯ÛŒÛ†</h3>
 
     <input
       id="videoFile"
@@ -521,19 +525,19 @@ button:disabled{
 
     <textarea
       id="videoCaption"
-      placeholder="دەربارەی ڤیدیۆکە بنووسە..."></textarea>
+      placeholder="Ø¯Û•Ø±Ø¨Ø§Ø±Û•ÛŒ Ú¤ÛŒØ¯ÛŒÛ†Ú©Û• Ø¨Ù†ÙˆÙˆØ³Û•..."></textarea>
 
     <button
       class="upload-button"
       id="uploadButton"
       onclick="uploadVideo()">
 
-      ⬆️ دانانی ڤیدیۆ
+      â¬†ï¸ Ø¯Ø§Ù†Ø§Ù†ÛŒ Ú¤ÛŒØ¯ÛŒÛ†
 
     </button>
 
     <div class="small">
-      زۆرترین قەبارەی ڤیدیۆ: ٥٠ MB
+      Ø²Û†Ø±ØªØ±ÛŒÙ† Ù‚Û•Ø¨Ø§Ø±Û•ÛŒ Ú¤ÛŒØ¯ÛŒÛ†: Ù¥Ù  MB
     </div>
 
   </div>
@@ -543,12 +547,12 @@ button:disabled{
 
   <div class="video-feed">
 
-    <h3>🎬 ڤیدیۆکانی XALLO</h3>
+    <h3>ðŸŽ¬ Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù†ÛŒ XALLO</h3>
 
     <div id="videoFeed">
 
       <div class="small">
-        ڤیدیۆکان بار دەکرێن...
+        Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù† Ø¨Ø§Ø± Ø¯Û•Ú©Ø±ÛŽÙ†...
       </div>
 
     </div>
@@ -560,14 +564,14 @@ button:disabled{
 
   <div class="box">
 
-    <h3>💳 کێشانەوەی پارە</h3>
+    <h3>ðŸ’³ Ú©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•</h3>
 
     <div class="balance">
 
-      باڵانسی تۆ:
+      Ø¨Ø§ÚµØ§Ù†Ø³ÛŒ ØªÛ†:
       <b>
-        <span id="withdrawدراو">0</span>
-        دراو
+        <span id="withdrawØ¯Ø±Ø§Ùˆ">0</span>
+        Ø¯Ø±Ø§Ùˆ
       </b>
 
     </div>
@@ -575,15 +579,15 @@ button:disabled{
     <select id="withdrawMethod">
 
       <option value="">
-        شێوازی پارەدان هەڵبژێرە
+        Ø´ÛŽÙˆØ§Ø²ÛŒ Ù¾Ø§Ø±Û•Ø¯Ø§Ù† Ù‡Û•ÚµØ¨Ú˜ÛŽØ±Û•
       </option>
 
       <option value="Korek">
-        📱 Korek
+        ðŸ“± Korek
       </option>
 
       <option value="Asiacell">
-        📱 Asiacell
+        ðŸ“± Asiacell
       </option>
 
     </select>
@@ -591,19 +595,19 @@ button:disabled{
     <select id="withdrawAmount">
 
       <option value="">
-        بڕ هەڵبژێرە
+        Ø¨Ú• Ù‡Û•ÚµØ¨Ú˜ÛŽØ±Û•
       </option>
 
       <option value="1000">
-        1,000 دراو
+        1,000 Ø¯Ø±Ø§Ùˆ
       </option>
 
       <option value="5000">
-        5,000 دراو
+        5,000 Ø¯Ø±Ø§Ùˆ
       </option>
 
       <option value="10000">
-        10,000 دراو
+        10,000 Ø¯Ø±Ø§Ùˆ
       </option>
 
     </select>
@@ -611,19 +615,19 @@ button:disabled{
     <input
       id="withdrawPhone"
       type="tel"
-      placeholder="ژمارەی مۆبایل">
+      placeholder="Ú˜Ù…Ø§Ø±Û•ÛŒ Ù…Û†Ø¨Ø§ÛŒÙ„">
 
     <button
       class="withdraw-button"
       id="withdrawButton"
-      onclick="requestکێشانەوەی پارە()">
+      onclick="requestÚ©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•()">
 
-      💰 Request کێشانەوەی پارە
+      ðŸ’° Request Ú©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•
 
     </button>
 
     <div class="small">
-      کێشانەوەی پارە requests are reviewed by admin.
+      Ú©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û• requests are reviewed by admin.
     </div>
 
   </div>
@@ -639,12 +643,12 @@ button:disabled{
 
   <div class="history">
 
-    <h3>📋 My کێشانەوەی پارەals</h3>
+    <h3>ðŸ“‹ My Ú©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•als</h3>
 
     <div id="withdrawHistory">
 
       <div class="small">
-        هێشتا هیچ داواکارییەک نییە.
+        Ù‡ÛŽØ´ØªØ§ Ù‡ÛŒÚ† Ø¯Ø§ÙˆØ§Ú©Ø§Ø±ÛŒÛŒÛ•Ú© Ù†ÛŒÛŒÛ•.
       </div>
 
     </div>
@@ -658,10 +662,10 @@ button:disabled{
     id="adminBox"
     class="box admin-box">
 
-    <h3>👑 پانێڵی بەڕێوەبەر</h3>
+    <h3>ðŸ‘‘ Ù¾Ø§Ù†ÛŽÚµÛŒ Ø¨Û•Ú•ÛŽÙˆÛ•Ø¨Û•Ø±</h3>
 
     <div class="small">
-      بەڕێوەبردنی داواکارییەکانی کێشانەوە.
+      Ø¨Û•Ú•ÛŽÙˆÛ•Ø¨Ø±Ø¯Ù†ÛŒ Ø¯Ø§ÙˆØ§Ú©Ø§Ø±ÛŒÛŒÛ•Ú©Ø§Ù†ÛŒ Ú©ÛŽØ´Ø§Ù†Û•ÙˆÛ•.
     </div>
 
     <div id="adminRequests"></div>
@@ -673,7 +677,7 @@ button:disabled{
     class="logout"
     onclick="logout()">
 
-    چوونەدەرەوە
+    Ú†ÙˆÙˆÙ†Û•Ø¯Û•Ø±Û•ÙˆÛ•
 
   </button>
 
@@ -735,7 +739,7 @@ function dashboardMessage(text,type){
    LOGIN / SIGNUP UI
 ========================================= */
 
-function showچوونەژوورەوە(){
+function showÚ†ÙˆÙˆÙ†Û•Ú˜ÙˆÙˆØ±Û•ÙˆÛ•(){
 
   document.getElementById("loginBox")
     .style.display="block";
@@ -827,7 +831,7 @@ async function signup(){
   if(!email || !password){
 
     showMessage(
-      "Enter email and password.",
+      "ØªÚ©Ø§ÛŒÛ• Ø¦ÛŒÙ…Û•ÛŒÚµ Ùˆ ÙˆØ´Û•ÛŒ Ù†Ù‡ÛŽÙ†ÛŒ Ø¨Ù†ÙˆÙˆØ³Û•.",
       "error"
     );
 
@@ -837,7 +841,7 @@ async function signup(){
   if(password.length < 6){
 
     showMessage(
-      "Password must be at least 6 characters.",
+      "ÙˆØ´Û•ÛŒ Ù†Ù‡ÛŽÙ†ÛŒ Ø¯Û•Ø¨ÛŽØª Ù„Ø§Ù†ÛŒÚ©Û•Ù… Ù¦ Ù¾ÛŒØª Ø¨ÛŽØª.",
       "error"
     );
 
@@ -850,7 +854,7 @@ async function signup(){
     );
 
   button.disabled=true;
-  button.textContent="Creating...";
+  button.textContent="Ø¯Ø±ÙˆØ³Øª Ø¯Û•Ú©Ø±ÛŽØª...";
 
   const {
     data,
@@ -862,7 +866,7 @@ async function signup(){
     });
 
   button.disabled=false;
-  button.textContent="Sign Up";
+  button.textContent="ØªÛ†Ù…Ø§Ø±Ú©Ø±Ø¯Ù†";
 
   if(error){
 
@@ -916,7 +920,7 @@ async function login(){
   if(!email || !password){
 
     showMessage(
-      "Enter email and password.",
+      "ØªÚ©Ø§ÛŒÛ• Ø¦ÛŒÙ…Û•ÛŒÚµ Ùˆ ÙˆØ´Û•ÛŒ Ù†Ù‡ÛŽÙ†ÛŒ Ø¨Ù†ÙˆÙˆØ³Û•.",
       "error"
     );
 
@@ -942,7 +946,7 @@ async function login(){
       });
 
   button.disabled=false;
-  button.textContent="چوونەژوورەوە";
+  button.textContent="Ú†ÙˆÙˆÙ†Û•Ú˜ÙˆÙˆØ±Û•ÙˆÛ•";
 
   if(error){
 
@@ -971,7 +975,7 @@ async function login(){
    COINS
 ========================================= */
 
-function setدراو(amount){
+function setØ¯Ø±Ø§Ùˆ(amount){
 
   const value =
     Number(amount) || 0;
@@ -980,12 +984,12 @@ function setدراو(amount){
     .textContent=value;
 
   document.getElementById(
-    "withdrawدراو"
+    "withdrawØ¯Ø±Ø§Ùˆ"
   ).textContent=value;
 }
 
 
-async function loadدراو(user){
+async function loadØ¯Ø±Ø§Ùˆ(user){
 
   const {
     data,
@@ -999,12 +1003,12 @@ async function loadدراو(user){
 
   if(error || !data){
 
-    setدراو(0);
+    setØ¯Ø±Ø§Ùˆ(0);
 
     return null;
   }
 
-  setدراو(data.coins);
+  setØ¯Ø±Ø§Ùˆ(data.coins);
 
   return data;
 }
@@ -1025,13 +1029,13 @@ async function showDashboard(user){
   document.getElementById("userEmail")
     .textContent=user.email;
 
-  await loadدراو(user);
+  await loadØ¯Ø±Ø§Ùˆ(user);
 
   await checkDailyRewardButton(user);
 
   await loadVideos();
 
-  await loadکێشانەوەی پارەHistory(user);
+  await loadÚ©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•History(user);
 
   await checkAdmin();
 }
@@ -1070,14 +1074,14 @@ async function checkDailyRewardButton(user){
     button.disabled=true;
 
     button.textContent =
-      "✅ Reward Claimed";
+      "âœ… Ù¾Ø§Ø¯Ø§Ø´Øª ÙˆÛ•Ø±Ú¯ÛŒØ±Ø§";
 
   }else{
 
     button.disabled=false;
 
     button.textContent =
-      "🎁 Daily Reward +10";
+      "ðŸŽ Ù¾Ø§Ø¯Ø§Ø´ØªÛŒ Ú•Û†Ú˜Ø§Ù†Û• +Ù¡Ù ";
   }
 }
 
@@ -1090,7 +1094,7 @@ async function dailyReward(){
     );
 
   button.disabled=true;
-  button.textContent="Checking...";
+  button.textContent="Ø¯Û•Ú†ÛŽØªÛ• Ù¾Ø´Ú©Ù†ÛŒÙ†...";
 
   const {
     data,
@@ -1104,7 +1108,7 @@ async function dailyReward(){
     button.disabled=false;
 
     button.textContent =
-      "🎁 Daily Reward +10";
+      "ðŸŽ Ù¾Ø§Ø¯Ø§Ø´ØªÛŒ Ú•Û†Ú˜Ø§Ù†Û• +Ù¡Ù ";
 
     dashboardMessage(
       error.message,
@@ -1114,13 +1118,13 @@ async function dailyReward(){
     return;
   }
 
-  setدراو(data);
+  setØ¯Ø±Ø§Ùˆ(data);
 
   button.textContent =
-    "✅ Reward Claimed";
+    "âœ… Ù¾Ø§Ø¯Ø§Ø´Øª ÙˆÛ•Ø±Ú¯ÛŒØ±Ø§";
 
   dashboardMessage(
-    "🎉 Daily Reward: +10 دراو!",
+    "ðŸŽ‰ Daily Reward: +10 Ø¯Ø±Ø§Ùˆ!",
     "success"
   );
 }
@@ -1155,7 +1159,7 @@ function showSelectedFile(){
 
   box.textContent =
     file.name +
-    " • " +
+    " â€¢ " +
     sizeMB.toFixed(1) +
     " MB";
 }
@@ -1176,7 +1180,7 @@ async function uploadVideo(){
   if(userError || !userData.user){
 
     dashboardMessage(
-      "تکایە سەرەتا بچۆ ژوورەوە.",
+      "ØªÚ©Ø§ÛŒÛ• Ø³Û•Ø±Û•ØªØ§ Ø¨Ú†Û† Ú˜ÙˆÙˆØ±Û•ÙˆÛ•.",
       "error"
     );
 
@@ -1191,7 +1195,7 @@ async function uploadVideo(){
   if(!input.files || !input.files.length){
 
     dashboardMessage(
-      "تکایە ڤیدیۆیەک هەڵبژێرە.",
+      "ØªÚ©Ø§ÛŒÛ• Ú¤ÛŒØ¯ÛŒÛ†ÛŒÛ•Ú© Ù‡Û•ÚµØ¨Ú˜ÛŽØ±Û•.",
       "error"
     );
 
@@ -1203,7 +1207,7 @@ async function uploadVideo(){
   if(!file.type.startsWith("video/")){
 
     dashboardMessage(
-      "تکایە فایلێکی ڤیدیۆ هەڵبژێرە.",
+      "ØªÚ©Ø§ÛŒÛ• ÙØ§ÛŒÙ„ÛŽÚ©ÛŒ Ú¤ÛŒØ¯ÛŒÛ† Ù‡Û•ÚµØ¨Ú˜ÛŽØ±Û•.",
       "error"
     );
 
@@ -1216,7 +1220,7 @@ async function uploadVideo(){
   if(file.size > maxSize){
 
     dashboardMessage(
-      "قەبارەی ڤیدیۆ لە ٥٠ MB زیاترە.",
+      "Ù‚Û•Ø¨Ø§Ø±Û•ÛŒ Ú¤ÛŒØ¯ÛŒÛ† Ù„Û• Ù¥Ù  MB Ø²ÛŒØ§ØªØ±Û•.",
       "error"
     );
 
@@ -1234,7 +1238,7 @@ async function uploadVideo(){
     );
 
   button.disabled=true;
-  button.textContent="ڤیدیۆکە دادەنرێت...";
+  button.textContent="Ú¤ÛŒØ¯ÛŒÛ†Ú©Û• Ø¯Ø§Ø¯Û•Ù†Ø±ÛŽØª...";
 
   try{
 
@@ -1338,7 +1342,7 @@ async function uploadVideo(){
     ).value="";
 
     dashboardMessage(
-      "✅ ڤیدیۆکە بە سەرکەوتوویی دانرا!",
+      "âœ… Ú¤ÛŒØ¯ÛŒÛ†Ú©Û• Ø¨Û• Ø³Û•Ø±Ú©Û•ÙˆØªÙˆÙˆÛŒÛŒ Ø¯Ø§Ù†Ø±Ø§!",
       "success"
     );
 
@@ -1357,7 +1361,7 @@ async function uploadVideo(){
   }finally{
 
     button.disabled=false;
-    button.textContent="⬆️ دانانی ڤیدیۆ";
+    button.textContent="â¬†ï¸ Ø¯Ø§Ù†Ø§Ù†ÛŒ Ú¤ÛŒØ¯ÛŒÛ†";
   }
 }
 
@@ -1374,7 +1378,7 @@ async function loadVideos(){
     );
 
   box.innerHTML =
-    '<div class="small">ڤیدیۆکان بار دەکرێن...</div>';
+    '<div class="small">Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù† Ø¨Ø§Ø± Ø¯Û•Ú©Ø±ÛŽÙ†...</div>';
 
   const {
     data,
@@ -1406,7 +1410,7 @@ async function loadVideos(){
   if(!data || !data.length){
 
     box.innerHTML =
-      '<div class="small">No videos yet. Upload the first video! 🎬</div>';
+      '<div class="small">No videos yet. Upload the first video! ðŸŽ¬</div>';
 
     return;
   }
@@ -1478,7 +1482,7 @@ async function loadVideos(){
             <div class="comment">
 
               <div class="comment-user">
-                👤 ${escapeHtml(comment.user_email)}
+                ðŸ‘¤ ${escapeHtml(comment.user_email)}
               </div>
 
               <div class="comment-text">
@@ -1516,7 +1520,7 @@ async function loadVideos(){
           <div class="video-info">
 
             <div class="video-user">
-              👤 ${escapeHtml(video.user_email)}
+              ðŸ‘¤ ${escapeHtml(video.user_email)}
             </div>
 
             <div class="caption">
@@ -1536,7 +1540,7 @@ async function loadVideos(){
               class="like-button"
               onclick="likeVideo('${video.id}',this)">
 
-              ❤️ ${Number(video.likes) || 0}
+              â¤ï¸ ${Number(video.likes) || 0}
 
             </button>
 
@@ -1556,7 +1560,7 @@ async function loadVideos(){
                 class="comment-button"
                 onclick="addComment('${video.id}')">
 
-                💬 Add Comment
+                ðŸ’¬ Add Comment
 
               </button>
 
@@ -1613,7 +1617,7 @@ async function likeVideo(id,button){
   }
 
   button.textContent =
-    "❤️ " + Number(data);
+    "â¤ï¸ " + Number(data);
 
   button.disabled=false;
 }
@@ -1637,7 +1641,7 @@ async function addComment(videoId){
   ){
 
     dashboardMessage(
-      "تکایە سەرەتا بچۆ ژوورەوە.",
+      "ØªÚ©Ø§ÛŒÛ• Ø³Û•Ø±Û•ØªØ§ Ø¨Ú†Û† Ú˜ÙˆÙˆØ±Û•ÙˆÛ•.",
       "error"
     );
 
@@ -1711,7 +1715,7 @@ async function addComment(videoId){
     console.error(error);
 
     button.disabled=false;
-    button.textContent="💬 Add Comment";
+    button.textContent="ðŸ’¬ Add Comment";
 
     dashboardMessage(
       "Comment error: " +
@@ -1726,11 +1730,11 @@ async function addComment(videoId){
   input.value="";
 
   button.disabled=false;
-  button.textContent="💬 Add Comment";
+  button.textContent="ðŸ’¬ Add Comment";
 
 
   dashboardMessage(
-    "✅ Comment added!",
+    "âœ… Comment added!",
     "success"
   );
 
@@ -1743,7 +1747,7 @@ async function addComment(videoId){
    WITHDRAW
 ========================================= */
 
-async function requestکێشانەوەی پارە(){
+async function requestÚ©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•(){
 
   const {
     data:userData
@@ -1753,7 +1757,7 @@ async function requestکێشانەوەی پارە(){
   if(!userData.user){
 
     dashboardMessage(
-      "تکایە سەرەتا بچۆ ژوورەوە.",
+      "ØªÚ©Ø§ÛŒÛ• Ø³Û•Ø±Û•ØªØ§ Ø¨Ú†Û† Ú˜ÙˆÙˆØ±Û•ÙˆÛ•.",
       "error"
     );
 
@@ -1846,7 +1850,7 @@ async function requestکێشانەوەی پارە(){
   button.disabled=false;
 
   button.textContent =
-    "💰 Request کێشانەوەی پارە";
+    "ðŸ’° Request Ú©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•";
 
 
   if(error){
@@ -1860,7 +1864,7 @@ async function requestکێشانەوەی پارە(){
   }
 
 
-  setدراو(
+  setØ¯Ø±Ø§Ùˆ(
     data?.new_balance ?? 0
   );
 
@@ -1879,12 +1883,12 @@ async function requestکێشانەوەی پارە(){
 
 
   dashboardMessage(
-    "✅ کێشانەوەی پارەal request sent.",
+    "âœ… Ú©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•al request sent.",
     "success"
   );
 
 
-  await loadکێشانەوەی پارەHistory(
+  await loadÚ©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•History(
     userData.user
   );
 }
@@ -1908,7 +1912,7 @@ function statusClass(status){
 }
 
 
-async function loadکێشانەوەی پارەHistory(user){
+async function loadÚ©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•History(user){
 
   const box =
     document.getElementById(
@@ -1950,7 +1954,7 @@ async function loadکێشانەوەی پارەHistory(user){
   if(!data || !data.length){
 
     box.innerHTML =
-      '<div class="small">هێشتا هیچ داواکارییەک نییە.</div>';
+      '<div class="small">Ù‡ÛŽØ´ØªØ§ Ù‡ÛŒÚ† Ø¯Ø§ÙˆØ§Ú©Ø§Ø±ÛŒÛŒÛ•Ú© Ù†ÛŒÛŒÛ•.</div>';
 
     return;
   }
@@ -1965,9 +1969,9 @@ async function loadکێشانەوەی پارەHistory(user){
           ${escapeHtml(r.method)}
         </b>
 
-        •
+        â€¢
         ${Number(r.coins).toLocaleString()}
-        دراو
+        Ø¯Ø±Ø§Ùˆ
 
         <br>
 
@@ -2098,9 +2102,9 @@ async function loadAdminRequests(){
           ${escapeHtml(r.method)}
         </b>
 
-        •
+        â€¢
         ${Number(r.coins).toLocaleString()}
-        دراو
+        Ø¯Ø±Ø§Ùˆ
 
         <br>
 
@@ -2166,7 +2170,7 @@ async function adminDecision(
   if(!confirm(
     status === "approved"
     ? "Approve this request?"
-    : "Reject and return دراو?"
+    : "Reject and return Ø¯Ø±Ø§Ùˆ?"
   )){
 
     return;
@@ -2198,7 +2202,7 @@ async function adminDecision(
 
 
   dashboardMessage(
-    "✅ کێشانەوەی پارەal status updated.",
+    "âœ… Ú©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•al status updated.",
     "success"
   );
 
@@ -2214,11 +2218,11 @@ async function adminDecision(
 
   if(userData.user){
 
-    await loadکێشانەوەی پارەHistory(
+    await loadÚ©ÛŽØ´Ø§Ù†Û•ÙˆÛ•ÛŒ Ù¾Ø§Ø±Û•History(
       userData.user
     );
 
-    await loadدراو(
+    await loadØ¯Ø±Ø§Ùˆ(
       userData.user
     );
   }
@@ -2265,7 +2269,7 @@ async function logout(){
   ).style.display="block";
 
 
-  showچوونەژوورەوە();
+  showÚ†ÙˆÙˆÙ†Û•Ú˜ÙˆÙˆØ±Û•ÙˆÛ•();
 }
 
 
