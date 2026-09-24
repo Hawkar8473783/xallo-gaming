@@ -934,29 +934,66 @@ async function login(){
     );
 
   button.disabled=true;
-  button.textContent="Logging in...";
+  button.textContent="چاوەڕوان بە...";
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth
-      .signInWithوشەی نهێنی({
-        email:email,
-        password:password
-      });
+  try {
 
-  button.disabled=false;
-  button.textContent="چوونەژوورەوە";
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth
+        .signInWithPassword({
+          email:email,
+          password:password
+        });
 
-  if(error){
+    button.disabled=false;
+    button.textContent="چوونەژوورەوە";
+
+    if(error){
+
+      showMessage(
+        "چوونەژوورەوە سەرکەوتوو نەبوو: " + error.message,
+        "error"
+      );
+
+      return;
+    }
+
+    if(data && data.user){
+
+      await createUserپرۆفایل(
+        data.user.email
+      );
+
+      await showDashboard(
+        data.user
+      );
+
+      await loadXalloپرۆفایل(
+        data.user
+      );
+
+      return;
+    }
 
     showMessage(
-      error.message,
+      "نەتوانرا هەژمارەکەت بناسرێتەوە.",
       "error"
     );
 
-    return;
+  } catch (err) {
+
+    button.disabled=false;
+    button.textContent="چوونەژوورەوە";
+
+    showMessage(
+      "کێشەی پەیوەندی بە سێرڤەر هەیە. تکایە دووبارە هەوڵ بدەوە.",
+      "error"
+    );
+
+    console.error(err);
   }
 
   if(data && data.user){
