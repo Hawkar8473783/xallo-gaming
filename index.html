@@ -705,6 +705,10 @@ img,video{max-width:100%}
       Sign Up
     </button>
 
+    <button type="button" id="resendVerificationButton" class="login-btn" style="background:#263b63;margin-top:8px" onclick="resendVerification()">
+      📧 ناردنەوەی ئیمەیڵی پشتڕاستکردنەوە
+    </button>
+
     <div class="switch">
       هەژمارت هەیە؟
       <a onclick="showLogin()" >چوونەژوورەوە</a>
@@ -1250,6 +1254,26 @@ async function signup(){
   }finally{
     button.disabled=false;
     button.textContent="Sign Up";
+  }
+}
+
+async function resendVerification(){
+  const email=document.getElementById("signupEmail")?.value.trim();
+  if(!email){
+    showپەیام("تکایە سەرەتا ئیمەیڵەکەت بنووسە.","error");
+    return;
+  }
+  const button=document.getElementById("resendVerificationButton");
+  if(button) button.disabled=true;
+  try{
+    const {error}=await supabaseClient.auth.resend({type:"signup",email});
+    if(error) throw error;
+    showپەیام("📧 ئیمەیڵی پشتڕاستکردنەوە دووبارە نێردرا.","success");
+  }catch(error){
+    console.error(error);
+    showپەیام("نەتوانرا ئیمەیڵ بنێردرێت: " + error.message,"error");
+  }finally{
+    if(button) button.disabled=false;
   }
 }
 
@@ -2050,38 +2074,35 @@ async function loadVideos(){
 ========================================= */
 
 async function likeVideo(id,button){
+  if(button.dataset.busy === "1") return;
+  button.dataset.busy = "1";
+  button.disabled = true;
 
-  button.disabled=true;
+  try{
+    const {data:{user},error:authError}=await supabaseClient.auth.getUser();
+    if(authError || !user){
+      dashboardMessage("تکایە سەرەتا بچۆ ژوورەوە.","error");
+      return;
+    }
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .rpc(
-        "like_video",
-        {
-          p_video_id:id
-        }
-      );
+    const {data,error}=await supabaseClient.rpc("toggle_video_like",{
+      p_video_id:id
+    });
 
-  if(error){
+    if(error) throw error;
 
+    const result=data || {};
+    const liked=!!result.liked;
+    const count=Number(result.likes)||0;
+    button.textContent=(liked ? "💙 " : "❤️ ") + count;
+    button.classList.toggle("liked",liked);
+  }catch(error){
+    console.error("Like error:",error);
+    dashboardMessage("Like کار نەکرد: " + error.message,"error");
+  }finally{
+    button.dataset.busy="0";
     button.disabled=false;
-
-    dashboardپەیام(
-      "Like error: " +
-      error.message,
-      "error"
-    );
-
-    return;
   }
-
-  button.textContent =
-    "❤️ " + Number(data);
-
-  button.disabled=false;
 }
 
 
