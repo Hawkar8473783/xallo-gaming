@@ -1214,156 +1214,103 @@ async function createUserپرۆفایل(email){
 ========================================= */
 
 async function signup(){
-
-  const email =
-    document.getElementById(
-      "signupEmail"
-    ).value.trim();
-
-  const password =
-    document.getElementById(
-      "signupPassword"
-    ).value;
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
 
   if(!email || !password){
-
-    showپەیام(
-      "Enter email and password.",
-      "error"
-    );
-
+    showپەیام("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
     return;
   }
-
   if(password.length < 6){
-
-    showپەیام(
-      "Password must be at least 6 characters.",
-      "error"
-    );
-
+    showپەیام("وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.","error");
     return;
   }
 
-  const button =
-    document.getElementById(
-      "signupButton"
-    );
-
+  const button=document.getElementById("signupButton");
   button.disabled=true;
   button.textContent="Creating...";
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth.signUp({
-      email:email,
-      password:password
-    });
+  try{
+    const {data,error}=await supabaseClient.auth.signUp({email,password});
+    if(error){
+      showپەیام(error.message,"error");
+      return;
+    }
 
-  button.disabled=false;
-  button.textContent="Sign Up";
+    if(data?.session && data?.user){
+      document.body.classList.add("xallo-logged-in");
+      document.getElementById("authBox").style.display="none";
+      document.getElementById("dashboard").style.display="block";
+      await showDashboard(data.user);
+      return;
+    }
 
-  if(error){
-
-    showپەیام(
-      error.message,
-      "error"
-    );
-
-    return;
+    showLogin();
+    showپەیام("هەژمار دروست کرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە، پاشان Login بکە.","success");
+  }catch(err){
+    console.error("signup exception:",err);
+    showپەیام("کێشەیەک ڕوویدا لە دروستکردنی هەژمار.","error");
+  }finally{
+    button.disabled=false;
+    button.textContent="Sign Up";
   }
-
-  if(data && data.session && data.user){
-
-    await createUserپرۆفایل(
-      data.user.email
-    );
-
-    await showDashboard(
-      data.user
-    );
-
-    return;
-  }
-
-  showپەیام(
-    "Account created. Check your email, then login.",
-    "success"
-  );
 }
-
 
 /* =========================================
    LOGIN
 ========================================= */
 
 async function login(){
-
-  const email =
-    document.getElementById(
-      "loginEmail"
-    ).value.trim();
-
-  const password =
-    document.getElementById(
-      "loginPassword"
-    ).value;
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
 
   if(!email || !password){
-
-    showپەیام(
-      "Enter email and password.",
-      "error"
-    );
-
+    showپەیام("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
     return;
   }
 
-  const button =
-    document.getElementById(
-      "loginButton"
-    );
+  const button = document.getElementById("loginButton");
+  button.disabled = true;
+  button.textContent = "Logging in...";
+  showپەیام("","success");
 
-  button.disabled=true;
-  button.textContent="Logging in...";
+  try{
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth
-      .signInWithPassword({
-        email:email,
-        password:password
-      });
+    if(error){
+      console.error("login error:", error);
+      const msg = String(error.message || "");
+      if(msg.toLowerCase().includes("email not confirmed")){
+        showپەیام("ئیمەیڵەکەت پشتڕاست نەکراوەتەوە. سەرەتا ئیمەیڵەکەت پشتڕاست بکەرەوە.","error");
+      }else if(msg.toLowerCase().includes("invalid login credentials")){
+        showپەیام("ئیمەیڵ یان وشەی نهێنی هەڵەیە.","error");
+      }else{
+        showپەیام(msg || "چوونەژوورەوە سەرکەوتوو نەبوو.","error");
+      }
+      return;
+    }
 
-  button.disabled=false;
-  button.textContent="Login";
-
-  if(error){
-
-    showپەیام(
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-  if(data && data.user){
-
-    await createUserپرۆفایل(
-      data.user.email
-    );
-
-    await showDashboard(
-      data.user
-    );
+    if(data?.user){
+      // Show the dashboard immediately after successful Auth.
+      // Profile creation is best-effort and must not block login.
+      document.body.classList.add("xallo-logged-in");
+      document.getElementById("authBox").style.display="none";
+      document.getElementById("dashboard").style.display="block";
+      await showDashboard(data.user);
+    }else{
+      showپەیام("هیچ بەکارهێنەرێکی login نەدۆزرایەوە.","error");
+    }
+  }catch(err){
+    console.error("login exception:", err);
+    showپەیام("کێشەی پەیوەندی هەیە. ئینتەرنێت و Supabase پشکنین بکە.","error");
+  }finally{
+    button.disabled=false;
+    button.textContent="Login";
   }
 }
-
 
 /* =========================================
    MY PROFILE
@@ -3477,38 +3424,52 @@ document.addEventListener("keydown",(event)=>{
 });
 
 async function checkUser(){
+  try{
+    const { data, error } = await supabaseClient.auth.getSession();
 
-  const {
-    data
-  } =
-    await supabaseClient.auth.getUser();
+    if(error){
+      console.error("getSession error:", error);
+      document.body.classList.remove("xallo-logged-in");
+      document.getElementById("dashboard").style.display="none";
+      document.getElementById("authBox").style.display="block";
+      showLogin();
+      showپەیام("کێشەی پەیوەندی بە Supabase هەیە. تکایە دووبارە هەوڵ بدە.","error");
+      return;
+    }
 
-  if(data && data.user){
-
-    await createUserپرۆفایل(
-      data.user.email
-    );
-
-    await showDashboard(
-      data.user
-    );
-  }else{
-    // No active session: make sure an old/stale dashboard cannot remain visible.
+    const session = data?.session;
+    if(session?.user){
+      await showDashboard(session.user);
+    }else{
+      document.body.classList.remove("xallo-logged-in");
+      document.getElementById("dashboard").style.display="none";
+      document.getElementById("authBox").style.display="block";
+      showLogin();
+    }
+  }catch(err){
+    console.error("checkUser error:", err);
     document.body.classList.remove("xallo-logged-in");
     document.getElementById("dashboard").style.display="none";
     document.getElementById("authBox").style.display="block";
     showLogin();
+    showپەیام("کێشەیەک ڕوویدا لە چوونەژوورەوە.","error");
   }
 }
 
-// Keep the UI synchronized with Supabase session changes (login/logout in another tab, etc.).
-supabaseClient.auth.onAuthStateChange(async (event, session) => {
-  if(session && session.user){
+// IMPORTANT: do not run Supabase database queries directly inside
+// onAuthStateChange. Supabase holds an auth lock while firing this callback;
+// doing extra awaited queries here can make login appear to freeze.
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if(session?.user){
     document.body.classList.add("xallo-logged-in");
-    if(event === "SIGNED_IN" || event === "INITIAL_SESSION") {
-      await createUserپرۆفایل(session.user.email);
-      await showDashboard(session.user);
-    }
+    document.getElementById("authBox").style.display="none";
+    document.getElementById("dashboard").style.display="block";
+    // Let the auth callback finish first, then load the dashboard data.
+    setTimeout(() => {
+      showDashboard(session.user).catch(err => {
+        console.error("showDashboard after auth event:", err);
+      });
+    }, 0);
   }else if(event === "SIGNED_OUT"){
     document.body.classList.remove("xallo-logged-in");
     document.getElementById("dashboard").style.display="none";
@@ -3516,7 +3477,6 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
     showLogin();
   }
 });
-
 
 /* =========================================
    START
