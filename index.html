@@ -2,44 +2,43 @@
 <html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>XALLO-GAMING</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 *{
   box-sizing:border-box;
   margin:0;
   padding:0;
-  font-family: "Noto Sans Arabic", "Noto Naskh Arabic", Arial, sans-serif;
+  font-family:Arial,"Noto Sans Arabic",sans-serif;
 }
 
 body{
   min-height:100vh;
   background:radial-gradient(circle at top,#123b5d,#050713 70%);
-  color:white;
-  padding:20px;
+  color:#fff;
+  padding:15px;
 }
 
 .container{
   width:100%;
-  max-width:500px;
+  max-width:520px;
   margin:auto;
   background:#11182d;
   border:1px solid #263553;
-  border-radius:25px;
-  padding:25px 20px;
-  box-shadow:0 0 40px rgba(0,170,255,.18);
+  border-radius:24px;
+  padding:20px;
+  box-shadow:0 0 40px rgba(0,170,255,.15);
 }
 
 .logo{
   text-align:center;
   font-size:30px;
   font-weight:bold;
-  margin-bottom:6px;
+  margin-bottom:7px;
 }
 
 .logo span{
@@ -49,47 +48,44 @@ body{
 .subtitle{
   text-align:center;
   color:#9da8bd;
-  margin-bottom:25px;
+  margin-bottom:22px;
 }
 
 h2,h3{
   margin-bottom:15px;
 }
 
-input,
-select,
-textarea{
+input,select,textarea{
   width:100%;
-  padding:15px;
-  margin-bottom:12px;
+  padding:14px;
+  margin-bottom:10px;
   border-radius:12px;
   border:1px solid #283653;
   background:#070b19;
-  color:white;
-  font-size:16px;
+  color:#fff;
+  font-size:15px;
   outline:none;
 }
 
 textarea{
-  min-height:90px;
+  min-height:85px;
   resize:none;
 }
 
 button{
   width:100%;
-  padding:15px;
   border:0;
   border-radius:12px;
-  color:white;
-  font-size:16px;
+  padding:14px;
+  margin-top:6px;
+  color:#fff;
+  font-size:15px;
   font-weight:bold;
   cursor:pointer;
-  margin-top:7px;
 }
 
 button:disabled{
   opacity:.5;
-  cursor:not-allowed;
 }
 
 .login-btn{
@@ -100,21 +96,22 @@ button:disabled{
   background:#9c27b0;
 }
 
-.withdraw-button{
-  background:#ff9800;
-}
-
 .upload-button{
   background:#00a878;
 }
 
+.withdraw-button{
+  background:#ff9800;
+}
+
 .logout{
   background:#e53935;
+  margin-top:20px;
 }
 
 .switch{
   text-align:center;
-  margin-top:18px;
+  margin-top:15px;
   color:#9da8bd;
 }
 
@@ -125,44 +122,106 @@ button:disabled{
 }
 
 .message{
-  margin-top:15px;
+  display:none;
+  margin-top:12px;
   padding:12px;
   border-radius:10px;
   text-align:center;
-  line-height:1.5;
-  display:none;
+  line-height:1.6;
 }
 
-.success{
+.message.success{
   display:block;
   color:#55e6a5;
   background:rgba(0,200,120,.12);
 }
 
-.error{
+.message.error{
   display:block;
   color:#ff7777;
   background:rgba(255,60,60,.12);
 }
 
-.dashboard{
+#dashboard{
   display:none;
 }
 
-.email{
-  color:#b8c1d4;
-  margin:10px 0 18px;
+.profile-box,
+.box,
+.coins{
+  background:#0c1b2e;
+  border:1px solid #315174;
+  border-radius:18px;
+  padding:18px;
+  margin-top:18px;
+}
+
+.profile-box{
   text-align:center;
+}
+
+.avatar{
+  width:82px;
+  height:82px;
+  border-radius:50%;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#11182d;
+  border:3px solid #08a9ff;
+  color:#08a9ff;
+  font-size:30px;
+  font-weight:bold;
+}
+
+.profile-name{
+  font-size:20px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.profile-email{
+  color:#9da8bd;
+  font-size:12px;
+  margin-top:5px;
   word-break:break-word;
 }
 
+.profile-bio{
+  color:#d8deea;
+  margin:10px 0;
+  line-height:1.6;
+}
+
+.stats{
+  display:flex;
+  justify-content:center;
+  gap:25px;
+  margin:15px 0;
+}
+
+.stat b{
+  display:block;
+  color:#08a9ff;
+  font-size:19px;
+}
+
+.stat span{
+  color:#9da8bd;
+  font-size:11px;
+}
+
+.follow-btn{
+  background:#08a9ff;
+}
+
+.follow-btn.following{
+  background:#263b63;
+}
+
 .coins{
-  padding:20px;
-  border-radius:18px;
-  background:#0c1b2e;
-  border:1px solid #315174;
   text-align:center;
-  margin-bottom:15px;
 }
 
 .coin-number{
@@ -170,14 +229,6 @@ button:disabled{
   font-size:40px;
   font-weight:bold;
   margin-top:7px;
-}
-
-.box{
-  margin-top:20px;
-  padding:18px;
-  background:#0c1b2e;
-  border:1px solid #315174;
-  border-radius:18px;
 }
 
 .balance{
@@ -189,13 +240,16 @@ button:disabled{
 .small{
   color:#8f9bb3;
   font-size:12px;
-  line-height:1.5;
+  line-height:1.6;
   text-align:center;
   margin-top:8px;
 }
 
-.video-feed{
-  margin-top:20px;
+.file-name{
+  color:#08a9ff;
+  font-size:12px;
+  margin-bottom:10px;
+  word-break:break-word;
 }
 
 .video-card{
@@ -210,7 +264,7 @@ button:disabled{
   width:100%;
   display:block;
   max-height:600px;
-  background:black;
+  background:#000;
 }
 
 .video-info{
@@ -226,70 +280,50 @@ button:disabled{
 
 .caption{
   color:#ddd;
-  line-height:1.5;
-  margin-bottom:10px;
+  line-height:1.6;
+  margin-bottom:8px;
 }
 
 .video-date{
   color:#77839a;
-  font-size:11px;
+  font-size:10px;
 }
 
-.like-button{
+.actions{
+  display:flex;
+  gap:7px;
+  margin-top:10px;
+}
+
+.actions button{
+  margin:0;
   background:#18243b;
-  margin-top:12px;
+  padding:10px;
 }
 
-.comment-area{
-  margin-top:12px;
-}
-
-.comment-input{
-  margin-bottom:8px;
-  padding:12px;
-  font-size:14px;
-}
-
-.comment-button{
-  background:#263b63;
-  padding:12px;
-  margin-top:0;
-}
-
-.comments-list{
-  margin-top:12px;
+.comment-box{
+  margin-top:10px;
 }
 
 .comment{
   background:#101a2d;
   border:1px solid #263553;
   border-radius:10px;
-  padding:10px;
-  margin-top:8px;
-  font-size:13px;
-  line-height:1.5;
+  padding:9px;
+  margin-top:7px;
 }
 
 .comment-user{
   color:#08a9ff;
   font-weight:bold;
-  margin-bottom:4px;
-  word-break:break-word;
+  font-size:12px;
 }
 
 .comment-text{
   color:#ddd;
+  font-size:13px;
+  margin-top:4px;
   word-break:break-word;
-}
-
-.comment-date{
-  color:#77839a;
-  font-size:10px;
-  margin-top:5px;
-}
-
-.history{
-  margin-top:22px;
 }
 
 .request,
@@ -298,7 +332,7 @@ button:disabled{
   border:1px solid #283653;
   border-radius:12px;
   padding:12px;
-  margin-top:10px;
+  margin-top:9px;
   font-size:13px;
   line-height:1.7;
 }
@@ -322,13 +356,10 @@ button:disabled{
 .admin-actions{
   display:flex;
   gap:8px;
-  margin-top:10px;
 }
 
 .admin-actions button{
-  margin:0;
-  font-size:13px;
-  padding:10px;
+  margin-top:8px;
 }
 
 .approve{
@@ -338,64 +369,16 @@ button:disabled{
 .reject{
   background:#e53935;
 }
-
-.logout{
-  margin-top:25px;
-}
-
-.file-name{
-  color:#08a9ff;
-  font-size:13px;
-  margin:5px 0 10px;
-  word-break:break-word;
-}
-
-
-/* ===== XALLO Kurdish پرۆفایل + شوێن بکەوە ===== */
-.profile-box{background:#0a1222;border:1px solid #283653;border-radius:18px;padding:18px;margin:18px 0;text-align:center}
-.profile-avatar{width:82px;height:82px;border-radius:50%;object-fit:cover;border:3px solid #08a9ff;background:#11182d}
-.profile-name{margin-top:10px;font-size:20px;font-weight:bold}
-.profile-email{color:#9da8bd;font-size:12px;margin-top:5px;word-break:break-word}
-.profile-bio{color:#d8deea;margin:10px 0;line-height:1.7}
-.profile-stats{display:flex;justify-content:center;gap:22px;margin:14px 0}
-.profile-stat b{display:block;color:#08a9ff;font-size:18px}
-.profile-stat span{color:#9da8bd;font-size:12px}
-.follow-button{background:#08a9ff;margin-top:8px}
-.follow-button.following{background:#263b63}
-
-
-#dashboard{
-  display:none;
-}
-
 </style>
-
-<style id="xallo-social-css">
-.xallo-social-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.xallo-social-btn{border:1px solid #2a3b58;background:#07101e;color:#eaf2ff;border-radius:12px;padding:9px 12px;font-weight:700;cursor:pointer}
-.xallo-social-btn:active{transform:scale(.98)}
-.xallo-comments-box{margin-top:10px;display:none}
-.xallo-comments-box textarea{width:100%;min-height:70px;box-sizing:border-box;background:#07101e;color:#fff;border:1px solid #2a3b58;border-radius:10px;padding:10px;direction:rtl}
-.xallo-comment-send{margin-top:7px;width:100%;padding:10px;border:0;border-radius:10px;background:#08a9ff;color:#fff;font-weight:700}
-.xallo-social-note{font-size:13px;color:#aab7ca;margin-top:7px}
-</style>
-
-
-<style id="xallo-follow-css">
-.xallo-follow-btn{border:0;border-radius:12px;padding:9px 14px;background:#08a9ff;color:#fff;font-weight:700;cursor:pointer}
-.xallo-follow-btn.following{background:#263956}
-.xallo-follow-note{font-size:13px;color:#aab7ca;margin-top:6px}
-</style>
-
 </head>
 
-<body dir="rtl">
+<body>
 
 <div class="container">
 
-<!-- ================= AUTH ================= -->
+<!-- ================= LOGIN ================= -->
 
-<div id="authBox" style="display:block;">
+<div id="authBox">
 
   <div class="logo">
     XALLO-<span>GAMING</span>
@@ -409,20 +392,17 @@ button:disabled{
 
     <h2>چوونەژوورەوە</h2>
 
-    <input
-      id="loginEmail"
-      type="email"
-      placeholder="ئیمەیڵ">
+    <input id="loginEmail"
+           type="email"
+           placeholder="ئیمەیڵ">
 
-    <input
-      id="loginPassword"
-      type="password"
-      placeholder="وشەی نهێنی">
+    <input id="loginPassword"
+           type="password"
+           placeholder="وشەی نهێنی">
 
-    <button
-      class="login-btn"
-      id="loginButton"
-      onclick="login()">
+    <button class="login-btn"
+            id="loginButton"
+            onclick="login()">
       چوونەژوورەوە
     </button>
 
@@ -437,20 +417,17 @@ button:disabled{
 
     <h2>دروستکردنی هەژمار</h2>
 
-    <input
-      id="signupEmail"
-      type="email"
-      placeholder="ئیمەیڵ">
+    <input id="signupEmail"
+           type="email"
+           placeholder="ئیمەیڵ">
 
-    <input
-      id="signupPassword"
-      type="password"
-      placeholder="وشەی نهێنی">
+    <input id="signupPassword"
+           type="password"
+           placeholder="وشەی نهێنی">
 
-    <button
-      class="login-btn"
-      id="signupButton"
-      onclick="signup()">
+    <button class="login-btn"
+            id="signupButton"
+            onclick="signup()">
       تۆمارکردن
     </button>
 
@@ -468,54 +445,7 @@ button:disabled{
 
 <!-- ================= DASHBOARD ================= -->
 
-<div id="dashboard" style="display:none;">
-    <!-- ===== XALLO VIDEO FEED ===== -->
-    
-<section class="xallo-upload-panel" id="xalloUploadPanel">
-  <div class="xallo-upload-title">🎥 دانانی ڤیدیۆ</div>
-
-  <label class="xallo-file-label" for="xalloVideoFile">
-    📁 ڤیدیۆ هەڵبژێرە
-  </label>
-  <input id="xalloVideoFile" type="file" accept="video/*">
-
-  <textarea id="xalloVideoCaption"
-    placeholder="دەربارەی ڤیدیۆکە بنووسە..."></textarea>
-
-  <div id="xalloUploadStatus" class="xallo-upload-status"></div>
-
-  <button id="xalloUploadButton" class="xallo-upload-button"
-    type="button" onclick="uploadXalloVideo()">
-    ⬆️ دانانی ڤیدیۆ
-  </button>
-</section>
-
-<section class="xallo-feed-section" id="xalloVideoFeed">
-      <div class="xallo-feed-title">
-        <span>🎬</span>
-        <strong>ڤیدیۆکانی XALLO</strong>
-        <span class="xallo-feed-hint">⬆️ بۆ سەرەوە بکێشە</span>
-      </div>
-      <div id="xalloFeedList" class="xallo-feed-list">
-        <div class="xallo-feed-empty">هێشتا هیچ ڤیدیۆیەک نییە.</div>
-      </div>
-    </section>
-
-
-  <!-- ================= PROFILE + FOLLOW ================= -->
-  <div class="profile-box" id="profileBox">
-    <div id="profileAvatar" class="profile-avatar" aria-label="وێنەی پرۆفایل" style="display:flex;align-items:center;justify-content:center;color:#08a9ff;font-size:30px;font-weight:bold;">X</div>
-    <div id="profileName" class="profile-name">بەکارهێنەر</div>
-    <div id="profileEmail" class="profile-email"></div>
-    <div id="profileBio" class="profile-bio">بەخێربێیت بۆ XALLO-GAMING 🎮</div>
-    <div class="profile-stats">
-      <div class="profile-stat"><b id="profileFollowers">0</b><span>شوێنکەوتوو</span></div>
-      <div class="profile-stat"><b id="profileFollowing">0</b><span>شوێنکەوتووەکان</span></div>
-      <div class="profile-stat"><b id="profileVideoCount">0</b><span>ڤیدیۆ</span></div>
-    </div>
-    <button id="followButton" class="follow-button" onclick="toggleFollow()">👥 شوێن بکەوە</button>
-  </div>
-
+<div id="dashboard">
 
   <div class="logo">
     XALLO-<span>GAMING</span>
@@ -525,7 +455,52 @@ button:disabled{
     یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
   </div>
 
-  <h2>بەخێربێیت 🎮</h2>
+
+  <!-- PROFILE -->
+
+  <div class="profile-box">
+
+    <div id="profileAvatar" class="avatar">
+      X
+    </div>
+
+    <div id="profileName" class="profile-name">
+      بەکارهێنەر
+    </div>
+
+    <div id="profileEmail" class="profile-email"></div>
+
+    <div class="profile-bio">
+      بەخێربێیت بۆ XALLO-GAMING 🎮
+    </div>
+
+    <div class="stats">
+
+      <div class="stat">
+        <b id="followersCount">0</b>
+        <span>شوێنکەوتوو</span>
+      </div>
+
+      <div class="stat">
+        <b id="followingCount">0</b>
+        <span>شوێنکەوتووەکان</span>
+      </div>
+
+      <div class="stat">
+        <b id="videoCount">0</b>
+        <span>ڤیدیۆ</span>
+      </div>
+
+    </div>
+
+    <button id="followButton"
+            class="follow-btn"
+            onclick="toggleOwnProfileFollow()">
+      👥 شوێن بکەوە
+    </button>
+
+  </div>
+
 
   <div class="email" id="userEmail"></div>
 
@@ -536,9 +511,7 @@ button:disabled{
 
     🪙 دراوەکانی تۆ 🪙
 
-    <div
-      class="coin-number"
-      id="coins">
+    <div id="coins" class="coin-number">
       0
     </div>
 
@@ -547,44 +520,35 @@ button:disabled{
 
   <!-- DAILY REWARD -->
 
-  <button
-    class="reward-button"
-    id="rewardButton"
-    onclick="dailyReward()">
-
+  <button id="rewardButton"
+          class="reward-button"
+          onclick="dailyReward()">
     🎁 پاداشتی ڕۆژانە +١٠
-
   </button>
 
 
-  <!-- ================= UPLOAD VIDEO ================= -->
+  <!-- VIDEO UPLOAD -->
 
   <div class="box">
 
     <h3>📹 دانانی ڤیدیۆ</h3>
 
-    <input
-      id="videoFile"
-      type="file"
-      accept="video/*"
-      onchange="showSelectedFile()">
+    <input id="videoFile"
+           type="file"
+           accept="video/*"
+           onchange="showSelectedFile()">
 
-    <div
-      id="selectedFile"
-      class="file-name">
+    <div id="selectedFile"
+         class="file-name">
     </div>
 
-    <textarea
-      id="videoCaption"
-      placeholder="دەربارەی ڤیدیۆکە بنووسە..."></textarea>
+    <textarea id="videoCaption"
+              placeholder="دەربارەی ڤیدیۆکە بنووسە..."></textarea>
 
-    <button
-      class="upload-button"
-      id="uploadButton"
-      onclick="uploadVideo()">
-
+    <button id="uploadButton"
+            class="upload-button"
+            onclick="uploadVideo()">
       ⬆️ دانانی ڤیدیۆ
-
     </button>
 
     <div class="small">
@@ -596,35 +560,31 @@ button:disabled{
 
   <!-- VIDEO FEED -->
 
-  <div class="video-feed">
+  <div class="box">
 
     <h3>🎬 ڤیدیۆکانی XALLO</h3>
 
     <div id="videoFeed">
-
       <div class="small">
         ڤیدیۆکان بار دەکرێن...
       </div>
-
     </div>
 
   </div>
 
 
-  <!-- ================= WITHDRAW ================= -->
+  <!-- WITHDRAW -->
 
   <div class="box">
 
     <h3>💳 کێشانەوەی پارە</h3>
 
     <div class="balance">
-
       باڵانسی تۆ:
       <b>
         <span id="withdrawCoins">0</span>
         دراو
       </b>
-
     </div>
 
     <select id="withdrawMethod">
@@ -663,45 +623,33 @@ button:disabled{
 
     </select>
 
-    <input
-      id="withdrawPhone"
-      type="tel"
-      placeholder="ژمارەی مۆبایل">
+    <input id="withdrawPhone"
+           type="tel"
+           placeholder="ژمارەی مۆبایل">
 
-    <button
-      class="withdraw-button"
-      id="withdrawButton"
-      onclick="requestWithdrawal()">
-
+    <button id="withdrawButton"
+            class="withdraw-button"
+            onclick="requestWithdrawal()">
       💰 داواکاری کێشانەوە
-
     </button>
 
     <div class="small">
-      کێشانەوەی پارە داواکارییەکان لەلایەن بەڕێوەبەرەوە پشکنین دەکرێن.
+      داواکارییەکان لەلایەن بەڕێوەبەرەوە پشکنین دەکرێن.
     </div>
 
   </div>
 
 
-  <div
-    id="dashboardMessage"
-    class="message">
-  </div>
+  <!-- HISTORY -->
 
+  <div class="box">
 
-  <!-- WITHDRAW HISTORY -->
-
-  <div class="history">
-
-    <h3>📋 My داواکارییەکان</h3>
+    <h3>📋 داواکارییەکانم</h3>
 
     <div id="withdrawHistory">
-
       <div class="small">
         هێشتا هیچ داواکارییەک نییە.
       </div>
-
     </div>
 
   </div>
@@ -709,9 +657,8 @@ button:disabled{
 
   <!-- ADMIN -->
 
-  <div
-    id="adminBox"
-    class="box admin-box">
+  <div id="adminBox"
+       class="box admin-box">
 
     <h3>👑 پانێڵی بەڕێوەبەر</h3>
 
@@ -724,12 +671,14 @@ button:disabled{
   </div>
 
 
-  <button
-    class="logout"
-    onclick="logout()">
+  <div id="dashboardMessage"
+       class="message">
+  </div>
 
+
+  <button class="logout"
+          onclick="logout()">
     چوونەدەرەوە
-
   </button>
 
 </div>
@@ -739,9 +688,9 @@ button:disabled{
 
 <script>
 
-/* =========================================
+/* =====================================================
    SUPABASE
-========================================= */
+===================================================== */
 
 const SUPABASE_URL =
 "https://vnyprsjjmmjahkisozib.supabase.co";
@@ -756,9 +705,9 @@ window.supabase.createClient(
 );
 
 
-/* =========================================
-   MESSAGE
-========================================= */
+/* =====================================================
+   HELPERS
+===================================================== */
 
 function showMessage(text,type){
 
@@ -766,444 +715,20 @@ function showMessage(text,type){
     document.getElementById("message");
 
   box.textContent=text;
-
-  box.className =
-    "message " + type;
+  box.className="message "+type;
 }
-
 
 function dashboardMessage(text,type){
 
   const box =
-    document.getElementById(
-      "dashboardMessage"
-    );
+    document.getElementById("dashboardMessage");
 
   box.textContent=text;
-
-  box.className =
-    "message " + type;
-}
-
-
-/* =========================================
-   LOGIN / SIGNUP UI
-========================================= */
-
-
-function showLogin(){
-  document.getElementById("loginBox").style.display="block";
-  document.getElementById("signupBox").style.display="none";
-  document.getElementById("message").style.display="none";
-}
-
-function showSignup(){
-  document.getElementById("loginBox").style.display="none";
-  document.getElementById("signupBox").style.display="block";
-  document.getElementById("message").style.display="none";
-}
-
-async function createUserProfile(email){
-  try{
-    const {data:existing,error:readError} =
-      await supabaseClient
-        .from("users")
-        .select("email")
-        .eq("email",email)
-        .maybeSingle();
-
-    if(readError){
-      console.log("users profile read:",readError.message);
-      return;
-    }
-
-    if(existing) return;
-
-    const {error:insertError} =
-      await supabaseClient
-        .from("users")
-        .insert({
-          email:email,
-          username:email.split("@")[0]
-        });
-
-    if(insertError){
-      console.log("users profile insert:",insertError.message);
-    }
-  }catch(err){
-    console.log("profile error:",err);
-  }
-}
-
-async function signup(){
-  const email=document.getElementById("signupEmail").value.trim();
-  const password=document.getElementById("signupPassword").value;
-
-  if(!email || !password){
-    showMessage("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
-    return;
-  }
-
-  if(password.length < 6){
-    showMessage("وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.","error");
-    return;
-  }
-
-  const button=document.getElementById("signupButton");
-  button.disabled=true;
-  button.textContent="چاوەڕوان بە...";
-
-  try{
-    const {data,error}=await supabaseClient.auth.signUp({
-      email:email,
-      password:password
-    });
-
-    button.disabled=false;
-    button.textContent="تۆمارکردن";
-
-    if(error){
-      showMessage("تۆمارکردن سەرکەوتوو نەبوو: "+error.message,"error");
-      return;
-    }
-
-    if(data && data.user){
-      await createUserProfile(data.user.email);
-
-      if(data.session){
-        await showDashboard(data.user);
-        await loadXalloProfile(data.user);
-        await loadXalloVideoFeed();
-        showMessage("هەژمارەکەت بە سەرکەوتوویی دروست کرا.","success");
-      }else{
-        showMessage(
-          "هەژمارەکەت دروست کرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە، پاشان بچۆ ژوورەوە.",
-          "success"
-        );
-        document.getElementById("signupPassword").value="";
-      }
-      return;
-    }
-
-    showMessage("نەتوانرا هەژمار دروست بکرێت.","error");
-
-  }catch(err){
-    button.disabled=false;
-    button.textContent="تۆمارکردن";
-    console.error(err);
-    showMessage("کێشەیەک ڕوویدا. تکایە دووبارە هەوڵ بدەوە.","error");
-  }
-}
-
-async function login(){
-  const email=document.getElementById("loginEmail").value.trim();
-  const password=document.getElementById("loginPassword").value;
-
-  if(!email || !password){
-    showMessage("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
-    return;
-  }
-
-  const button=document.getElementById("loginButton");
-  button.disabled=true;
-  button.textContent="چاوەڕوان بە...";
-
-  try{
-    const {data,error}=await supabaseClient.auth.signInWithPassword({
-      email:email,
-      password:password
-    });
-
-    button.disabled=false;
-    button.textContent="چوونەژوورەوە";
-
-    if(error){
-      showMessage("چوونەژوورەوە سەرکەوتوو نەبوو: "+error.message,"error");
-      return;
-    }
-
-    if(data && data.user){
-      await createUserProfile(data.user.email);
-      await showDashboard(data.user);
-      await loadXalloProfile(data.user);
-        await loadXalloVideoFeed();
-      return;
-    }
-
-    showMessage("نەتوانرا هەژمارەکەت بناسرێتەوە.","error");
-
-  }catch(err){
-    button.disabled=false;
-    button.textContent="چوونەژوورەوە";
-    console.error(err);
-    showMessage(
-      "کێشەی پەیوەندی بە سێرڤەر هەیە. تکایە دووبارە هەوڵ بدەوە.",
-      "error"
-    );
-  }
-}
-
-async function loadXalloProfile(user){
-  if(!user) return;
-
-  const email=user.email || "";
-  const username=
-    user.user_metadata?.username ||
-    email.split("@")[0] ||
-    "بەکارهێنەر";
-
-  const name=document.getElementById("profileName");
-  const emailBox=document.getElementById("profileEmail");
-  const userEmail=document.getElementById("userEmail");
-  const avatar=document.getElementById("profileAvatar");
-
-  if(name) name.textContent=username;
-  if(emailBox) emailBox.textContent=email;
-  if(userEmail) userEmail.textContent=email;
-
-  if(avatar){
-    avatar.textContent=username.trim().charAt(0).toUpperCase() || "X";
-  }
-
-  try{
-    const {count}=await supabaseClient
-      .from("videos")
-      .select("id",{count:"exact",head:true})
-      .eq("user_email",email);
-
-    const videoCount=document.getElementById("profileVideoCount");
-    if(videoCount) videoCount.textContent=count || 0;
-  }catch(err){
-    console.log("video count:",err);
-  }
-
-  updateFollowButton();
-}
-
-const XALLO_FOLLOW_KEY="xallo_following_v1";
-
-function getFollowing(){
-  try{
-    return JSON.parse(localStorage.getItem(XALLO_FOLLOW_KEY) || "[]");
-  }catch(e){
-    return [];
-  }
-}
-
-function updateFollowButton(){
-  const button=document.getElementById("followButton");
-  const email=document.getElementById("profileEmail")?.textContent?.trim();
-
-  if(!button || !email) return;
-
-  const following=getFollowing().includes(email);
-  button.textContent=following ? "✓ شوێنکەوتن" : "👥 شوێن بکەوە";
-  button.classList.toggle("following",following);
-}
-
-function toggleFollow(){
-  const email=document.getElementById("profileEmail")?.textContent?.trim();
-  if(!email) return;
-
-  const list=getFollowing();
-  const index=list.indexOf(email);
-
-  if(index === -1) list.push(email);
-  else list.splice(index,1);
-
-  localStorage.setItem(XALLO_FOLLOW_KEY,JSON.stringify(list));
-  updateFollowButton();
-}
-
-
-
-async function uploadXalloVideo(){
-  const fileInput=document.getElementById("xalloVideoFile");
-  const captionInput=document.getElementById("xalloVideoCaption");
-  const status=document.getElementById("xalloUploadStatus");
-  const button=document.getElementById("xalloUploadButton");
-
-  if(!fileInput || !fileInput.files.length){
-    status.textContent="تکایە سەرەتا ڤیدیۆیەک هەڵبژێرە.";
-    return;
-  }
-
-  const file=fileInput.files[0];
-  const caption=(captionInput?.value || "").trim();
-
-  if(!file.type.startsWith("video/")){
-    status.textContent="تکایە تەنها فایلێکی ڤیدیۆ هەڵبژێرە.";
-    return;
-  }
-
-  const maxSize=50*1024*1024;
-  if(file.size > maxSize){
-    status.textContent="قەبارەی ڤیدیۆ نابێت لە ٥٠ MB زیاتر بێت.";
-    return;
-  }
-
-  button.disabled=true;
-  status.textContent="ڤیدیۆکە دادەنرێت... ⏳";
-
-  try{
-    const {data:{user},error:userError}=await supabaseClient.auth.getUser();
-
-    if(userError || !user){
-      status.textContent="تکایە سەرەتا بچۆ ژوورەوە.";
-      button.disabled=false;
-      return;
-    }
-
-    const safeName=file.name
-      .replace(/[^a-zA-Z0-9._-]/g,"_");
-
-    const path=
-      user.id + "/" +
-      Date.now() + "-" +
-      safeName;
-
-    const {error:uploadError}=await supabaseClient.storage
-      .from("videos")
-      .upload(path,file,{
-        cacheControl:"3600",
-        upsert:false,
-        contentType:file.type
-      });
-
-    if(uploadError){
-      console.error(uploadError);
-      status.textContent=
-        "هەڵە لە Upload: " + uploadError.message;
-      button.disabled=false;
-      return;
-    }
-
-    const {data:urlData}=supabaseClient.storage
-      .from("videos")
-      .getPublicUrl(path);
-
-    const videoUrl=urlData?.publicUrl;
-
-    if(!videoUrl){
-      status.textContent="نەتوانرا لینکی ڤیدیۆ دروست بکرێت.";
-      button.disabled=false;
-      return;
-    }
-
-    const username=
-      user.user_metadata?.username ||
-      user.email?.split("@")[0] ||
-      "بەکارهێنەر";
-
-    const {error:dbError}=await supabaseClient
-      .from("videos")
-      .insert({
-        user_id:user.id,
-        user_email:user.email,
-        username:username,
-        caption:caption,
-        video_url:videoUrl
-      });
-
-    if(dbError){
-      console.error(dbError);
-      status.textContent=
-        "ڤیدیۆکە Upload کرا، بەڵام لە داتابەیس تۆمار نەکرا.";
-      button.disabled=false;
-      return;
-    }
-
-    status.textContent="✅ ڤیدیۆکە بە سەرکەوتوویی دانرا!";
-
-    fileInput.value="";
-    if(captionInput) captionInput.value="";
-
-    await loadXalloVideoFeed();
-
-  }catch(err){
-    console.error(err);
-    status.textContent=
-      "هەڵەیەک ڕوویدا. تکایە دووبارە هەوڵ بدەوە.";
-  }
-
-  button.disabled=false;
-}
-
-
-/* ===== XALLO VIDEO FEED ===== */
-async function loadXalloVideoFeed(){
-  const list=document.getElementById("xalloFeedList");
-  if(!list) return;
-
-  list.innerHTML='<div class="xallo-feed-empty">ڤیدیۆکان بار دەکرێن...</div>';
-
-  try{
-    const {data,error}=await supabaseClient
-      .from("videos")
-      .select("*")
-      .order("created_at",{ascending:false})
-      .limit(30);
-
-    if(error){
-      console.error("Feed:",error);
-      list.innerHTML='<div class="xallo-feed-empty">نەتوانرا ڤیدیۆکان بار بکرێن.</div>';
-      return;
-    }
-
-    if(!data || !data.length){
-      list.innerHTML='<div class="xallo-feed-empty">هێشتا هیچ ڤیدیۆیەک نییە. یەکەم ڤیدیۆ دابنێ 🎥</div>';
-      return;
-    }
-
-    list.innerHTML="";
-
-    data.forEach(video=>{
-      const card=document.createElement("article");
-      card.className="xallo-feed-card";
-
-      const videoUrl=video.video_url || video.url || video.file_url || "";
-      const caption=video.caption || video.description || "";
-      const username=video.username || (video.user_email ? video.user_email.split("@")[0] : "بەکارهێنەر");
-      const targetUserId=video.user_id || "";
-
-      if(!videoUrl){
-        card.innerHTML='<div class="xallo-feed-empty">ئەم ڤیدیۆیە لینکێکی دروستی نییە.</div>';
-        list.appendChild(card);
-        return;
-      }
-
-      card.innerHTML=`
-        <video class="xallo-feed-video" src="${escapeHtml(videoUrl)}" controls playsinline preload="metadata"></video>
-        <div class="xallo-feed-actions">
-          <button class="xallo-feed-action" onclick="toggleVideoLike(this)">❤️</button>
-          <button class="xallo-feed-action" onclick="shareXalloVideo('${escapeJs(videoUrl)}')">↗️</button>
-        </div>
-        <div class="xallo-feed-overlay">
-          <div class="xallo-feed-user">
-            👤 ${escapeHtml(username)}
-            ${targetUserId ? `<button class="xallo-follow-btn" data-follow-user="${escapeHtml(targetUserId)}" type="button"
-              onclick="xalloToggleFollow('${escapeJs(targetUserId)}',this)">➕ شوێنکەوتن</button>` : ""}
-          </div>
-          <div class="xallo-feed-caption">${escapeHtml(caption)}</div>
-          <div class="xallo-follow-note"></div>
-        </div>
-      `;
-
-      list.appendChild(card);
-
-      if(targetUserId){
-        const followBtn=card.querySelector("[data-follow-user]");
-        if(followBtn) xalloSetupFollowButton(followBtn,targetUserId);
-      }
-    });
-
-  }catch(err){
-    console.error(err);
-    list.innerHTML='<div class="xallo-feed-empty">هەڵەیەک ڕوویدا لە بارکردنی ڤیدیۆکان.</div>';
-  }
+  box.className="message "+type;
 }
 
 function escapeHtml(value){
+
   return String(value ?? "")
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
@@ -1212,236 +737,187 @@ function escapeHtml(value){
     .replace(/'/g,"&#039;");
 }
 
-function escapeJs(value){
-  return String(value ?? "").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
-}
 
-function toggleVideoLike(button){
-  button.classList.toggle("liked");
-  button.textContent=button.classList.contains("liked") ? "💙" : "❤️";
-}
+/* =====================================================
+   LOGIN UI
+===================================================== */
 
-async function shareXalloVideo(url){
-  try{
-    if(navigator.share){
-      await navigator.share({title:"XALLO-GAMING",url:url});
-    }else{
-      await navigator.clipboard.writeText(url);
-      showMessage("لینکی ڤیدیۆکە کۆپی کرا.","success");
-    }
-  }catch(err){
-    console.log("share cancelled",err);
-  }
-}
+function showLogin(){
 
-
-/* =========================================
-   COINS
-========================================= */
-
-function setCoins(amount){
-
-  const value =
-    Number(amount) || 0;
-
-  document.getElementById("coins")
-    .textContent=value;
-
-  document.getElementById(
-    "withdrawCoins"
-  ).textContent=value;
-}
-
-
-async function loadCoins(user){
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("users")
-      .select("coins,last_reward_date")
-      .eq("email",user.email)
-      .maybeSingle();
-
-  if(error || !data){
-
-    setCoins(0);
-
-    return null;
-  }
-
-  setCoins(data.coins);
-
-  return data;
-}
-
-
-/* =========================================
-   DASHBOARD
-========================================= */
-
-async function showDashboard(user){
-
-  document.getElementById("authBox")
-    .style.display="none";
-
-  document.getElementById("dashboard")
+  document.getElementById("loginBox")
     .style.display="block";
 
-  document.getElementById("userEmail")
-    .textContent=user.email;
+  document.getElementById("signupBox")
+    .style.display="none";
 
-  await loadCoins(user);
+  document.getElementById("message")
+    .className="message";
+}
 
-  await checkDailyRewardButton(user);
+function showSignup(){
 
-  await loadVideos();
+  document.getElementById("loginBox")
+    .style.display="none";
 
-  await loadWithdrawalHistory(user);
+  document.getElementById("signupBox")
+    .style.display="block";
 
-  await checkAdmin();
+  document.getElementById("message")
+    .className="message";
 }
 
 
-/* =========================================
-   DAILY REWARD
-========================================= */
+/* =====================================================
+   PROFILE
+===================================================== */
 
-async function checkDailyRewardButton(user){
+async function createUserProfile(user){
 
-  const {
-    data,
-    error
-  } =
+  if(!user) return;
+
+  const email=user.email;
+
+  const {data}=await supabaseClient
+    .from("users")
+    .select("email")
+    .eq("email",email)
+    .maybeSingle();
+
+  if(!data){
+
     await supabaseClient
       .from("users")
-      .select("last_reward_date")
-      .eq("email",user.email)
-      .maybeSingle();
+      .insert({
+        email:email,
+        username:
+          user.user_metadata?.username ||
+          email.split("@")[0],
+        coins:0
+      });
+  }
+}
 
-  if(error || !data){
+
+async function loadProfile(user){
+
+  if(!user) return;
+
+  const email=user.email;
+
+  const username=
+    user.user_metadata?.username ||
+    email.split("@")[0] ||
+    "بەکارهێنەر";
+
+  document.getElementById("profileName")
+    .textContent=username;
+
+  document.getElementById("profileEmail")
+    .textContent=email;
+
+  document.getElementById("userEmail")
+    .textContent=email;
+
+  document.getElementById("profileAvatar")
+    .textContent=username
+    .charAt(0)
+    .toUpperCase();
+
+
+  /* VIDEO COUNT */
+
+  const {count}=await supabaseClient
+    .from("videos")
+    .select("id",{count:"exact",head:true})
+    .eq("user_email",email);
+
+  document.getElementById("videoCount")
+    .textContent=count || 0;
+
+
+  /* FOLLOW COUNTS */
+
+  const {data:userRow}=await supabaseClient
+    .from("users")
+    .select("id")
+    .eq("email",email)
+    .maybeSingle();
+
+  if(userRow){
+
+    await loadFollowCounts(userRow.id);
+    await updateFollowButton(userRow.id);
+  }
+}
+
+
+/* =====================================================
+   FOLLOW
+===================================================== */
+
+async function loadFollowCounts(userId){
+
+  const {count:followers}=await supabaseClient
+    .from("user_follows")
+    .select("id",{count:"exact",head:true})
+    .eq("following_id",userId);
+
+  const {count:following}=await supabaseClient
+    .from("user_follows")
+    .select("id",{count:"exact",head:true})
+    .eq("follower_id",userId);
+
+  document.getElementById("followersCount")
+    .textContent=followers || 0;
+
+  document.getElementById("followingCount")
+    .textContent=following || 0;
+}
+
+
+async function updateFollowButton(targetUserId){
+
+  const button=
+    document.getElementById("followButton");
+
+  const {data:{user}}=
+    await supabaseClient.auth.getUser();
+
+  if(!user || user.id===targetUserId){
+
+    button.textContent="👤 ئەمە هەژماری خۆتە";
+    button.disabled=true;
     return;
   }
 
-  const button =
-    document.getElementById(
-      "rewardButton"
-    );
+  const {data}=await supabaseClient
+    .from("user_follows")
+    .select("id")
+    .eq("follower_id",user.id)
+    .eq("following_id",targetUserId)
+    .maybeSingle();
 
-  const today =
-    new Date().toLocaleDateString("en-CA");
+  button.disabled=false;
 
-  if(data.last_reward_date === today){
+  if(data){
 
-    button.disabled=true;
-
-    button.textContent =
-      "✅ پاداشت وەرگیرا";
+    button.textContent="✓ شوێنکەوترا";
+    button.classList.add("following");
 
   }else{
 
-    button.disabled=false;
-
-    button.textContent =
-      "🎁 پاداشتی ڕۆژانە +١٠";
+    button.textContent="👥 شوێن بکەوە";
+    button.classList.remove("following");
   }
 }
 
 
-async function dailyReward(){
+async function toggleFollow(targetUserId,button){
 
-  const button =
-    document.getElementById(
-      "rewardButton"
-    );
-
-  button.disabled=true;
-  button.textContent="دەچێتە پشکنین...";
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .rpc("claim_daily_reward");
-
-  if(error){
-
-    button.disabled=false;
-
-    button.textContent =
-      "🎁 پاداشتی ڕۆژانە +١٠";
-
-    dashboardMessage(
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-  setCoins(data);
-
-  button.textContent =
-    "✅ پاداشت وەرگیرا";
-
-  dashboardMessage(
-    "🎉 پاداشتی ڕۆژانە: +١٠ دراو!",
-    "success"
-  );
-}
-
-
-/* =========================================
-   SELECTED FILE
-========================================= */
-
-function showSelectedFile(){
-
-  const input =
-    document.getElementById(
-      "videoFile"
-    );
-
-  const box =
-    document.getElementById(
-      "selectedFile"
-    );
-
-  if(!input.files.length){
-
-    box.textContent="";
-    return;
-  }
-
-  const file=input.files[0];
-
-  const sizeMB =
-    file.size / (1024 * 1024);
-
-  box.textContent =
-    file.name +
-    " • " +
-    sizeMB.toFixed(1) +
-    " MB";
-}
-
-
-/* =========================================
-   UPLOAD VIDEO
-========================================= */
-
-async function uploadVideo(){
-
-  const {
-    data:userData,
-    error:userError
-  } =
+  const {data:{user}}=
     await supabaseClient.auth.getUser();
 
-  if(userError || !userData.user){
+  if(!user){
 
     dashboardMessage(
       "تکایە سەرەتا بچۆ ژوورەوە.",
@@ -1451,12 +927,420 @@ async function uploadVideo(){
     return;
   }
 
-  const input =
-    document.getElementById(
-      "videoFile"
+  if(user.id===targetUserId){
+
+    return;
+  }
+
+  const {data:existing}=await supabaseClient
+    .from("user_follows")
+    .select("id")
+    .eq("follower_id",user.id)
+    .eq("following_id",targetUserId)
+    .maybeSingle();
+
+  if(existing){
+
+    const {error}=await supabaseClient
+      .from("user_follows")
+      .delete()
+      .eq("id",existing.id);
+
+    if(error){
+
+      dashboardMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+    button.textContent="👥 شوێن بکەوە";
+    button.classList.remove("following");
+
+  }else{
+
+    const {error}=await supabaseClient
+      .from("user_follows")
+      .insert({
+        follower_id:user.id,
+        following_id:targetUserId
+      });
+
+    if(error){
+
+      dashboardMessage(
+        error.message,
+        "error"
+      );
+
+      return;
+    }
+
+    button.textContent="✓ شوێنکەوترا";
+    button.classList.add("following");
+  }
+}
+
+
+async function toggleOwnProfileFollow(){
+
+  const {data:{user}}=
+    await supabaseClient.auth.getUser();
+
+  if(!user) return;
+
+  dashboardMessage(
+    "ئەمە پرۆفایلی خۆتە؛ ناتوانیت خۆت Follow بکەیت.",
+    "error"
+  );
+}
+
+
+/* =====================================================
+   SIGNUP
+===================================================== */
+
+async function signup(){
+
+  const email=
+    document.getElementById("signupEmail")
+    .value.trim();
+
+  const password=
+    document.getElementById("signupPassword")
+    .value;
+
+  if(!email || !password){
+
+    showMessage(
+      "تکایە ئیمەیڵ و وشەی نهێنی بنووسە.",
+      "error"
     );
 
-  if(!input.files || !input.files.length){
+    return;
+  }
+
+  if(password.length<6){
+
+    showMessage(
+      "وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.",
+      "error"
+    );
+
+    return;
+  }
+
+  const button=
+    document.getElementById("signupButton");
+
+  button.disabled=true;
+  button.textContent="چاوەڕوان بە...";
+
+  const {data,error}=
+    await supabaseClient.auth.signUp({
+      email,
+      password
+    });
+
+  button.disabled=false;
+  button.textContent="تۆمارکردن";
+
+  if(error){
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  if(data.user){
+
+    if(data.session){
+
+      await createUserProfile(data.user);
+      await openDashboard(data.user);
+
+    }else{
+
+      showMessage(
+        "هەژمارەکەت دروست کرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە.",
+        "success"
+      );
+    }
+  }
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+async function login(){
+
+  const email=
+    document.getElementById("loginEmail")
+    .value.trim();
+
+  const password=
+    document.getElementById("loginPassword")
+    .value;
+
+  if(!email || !password){
+
+    showMessage(
+      "تکایە ئیمەیڵ و وشەی نهێنی بنووسە.",
+      "error"
+    );
+
+    return;
+  }
+
+  const button=
+    document.getElementById("loginButton");
+
+  button.disabled=true;
+  button.textContent="چاوەڕوان بە...";
+
+  const {data,error}=
+    await supabaseClient.auth
+    .signInWithPassword({
+      email,
+      password
+    });
+
+  button.disabled=false;
+  button.textContent="چوونەژوورەوە";
+
+  if(error){
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  if(data.user){
+
+    await createUserProfile(data.user);
+    await openDashboard(data.user);
+  }
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+async function openDashboard(user){
+
+  document.getElementById("authBox")
+    .style.display="none";
+
+  document.getElementById("dashboard")
+    .style.display="block";
+
+  await createUserProfile(user);
+  await loadProfile(user);
+  await loadCoins(user);
+  await checkDailyReward(user);
+  await loadVideos();
+  await loadWithdrawalHistory(user);
+  await checkAdmin();
+}
+
+
+/* =====================================================
+   COINS
+===================================================== */
+
+function setCoins(value){
+
+  value=Number(value)||0;
+
+  document.getElementById("coins")
+    .textContent=value;
+
+  document.getElementById("withdrawCoins")
+    .textContent=value;
+}
+
+
+async function loadCoins(user){
+
+  const {data}=await supabaseClient
+    .from("users")
+    .select("coins,last_reward_date")
+    .eq("email",user.email)
+    .maybeSingle();
+
+  setCoins(data?.coins || 0);
+
+  return data;
+}
+
+
+/* =====================================================
+   DAILY REWARD
+===================================================== */
+
+async function checkDailyReward(user){
+
+  const {data}=await supabaseClient
+    .from("users")
+    .select("last_reward_date")
+    .eq("email",user.email)
+    .maybeSingle();
+
+  const button=
+    document.getElementById("rewardButton");
+
+  const today=
+    new Date().toISOString().slice(0,10);
+
+  if(data?.last_reward_date===today){
+
+    button.disabled=true;
+    button.textContent="✅ پاداشت وەرگیرا";
+
+  }else{
+
+    button.disabled=false;
+    button.textContent="🎁 پاداشتی ڕۆژانە +١٠";
+  }
+}
+
+
+async function dailyReward(){
+
+  const {data:{user}}=
+    await supabaseClient.auth.getUser();
+
+  if(!user) return;
+
+  const today=
+    new Date().toISOString().slice(0,10);
+
+  const {data,error}=
+    await supabaseClient
+    .from("users")
+    .select("coins,last_reward_date")
+    .eq("email",user.email)
+    .maybeSingle();
+
+  if(error){
+
+    dashboardMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  if(data.last_reward_date===today){
+
+    dashboardMessage(
+      "پاداشتی ئەمڕۆت پێشتر وەرگرتووە.",
+      "error"
+    );
+
+    return;
+  }
+
+  const newCoins=
+    Number(data.coins||0)+10;
+
+  const {error:updateError}=
+    await supabaseClient
+    .from("users")
+    .update({
+      coins:newCoins,
+      last_reward_date:today
+    })
+    .eq("email",user.email);
+
+  if(updateError){
+
+    dashboardMessage(
+      updateError.message,
+      "error"
+    );
+
+    return;
+  }
+
+  setCoins(newCoins);
+
+  document.getElementById("rewardButton")
+    .disabled=true;
+
+  document.getElementById("rewardButton")
+    .textContent="✅ پاداشت وەرگیرا";
+
+  dashboardMessage(
+    "🎉 +١٠ دراو زیاد کرا!",
+    "success"
+  );
+}
+
+
+/* =====================================================
+   FILE
+===================================================== */
+
+function showSelectedFile(){
+
+  const input=
+    document.getElementById("videoFile");
+
+  const box=
+    document.getElementById("selectedFile");
+
+  if(!input.files.length){
+
+    box.textContent="";
+    return;
+  }
+
+  const file=input.files[0];
+
+  const mb=
+    file.size/(1024*1024);
+
+  box.textContent=
+    file.name+" • "+mb.toFixed(1)+" MB";
+}
+
+
+/* =====================================================
+   UPLOAD VIDEO
+===================================================== */
+
+async function uploadVideo(){
+
+  const {data:{user}}=
+    await supabaseClient.auth.getUser();
+
+  if(!user){
+
+    dashboardMessage(
+      "تکایە سەرەتا بچۆ ژوورەوە.",
+      "error"
+    );
+
+    return;
+  }
+
+  const input=
+    document.getElementById("videoFile");
+
+  if(!input.files.length){
 
     dashboardMessage(
       "تکایە ڤیدیۆیەک هەڵبژێرە.",
@@ -1471,140 +1355,103 @@ async function uploadVideo(){
   if(!file.type.startsWith("video/")){
 
     dashboardMessage(
-      "تکایە فایلێکی ڤیدیۆ هەڵبژێرە.",
+      "تکایە تەنها ڤیدیۆ هەڵبژێرە.",
       "error"
     );
 
     return;
   }
 
-  const maxSize =
-    50 * 1024 * 1024;
-
-  if(file.size > maxSize){
+  if(file.size>50*1024*1024){
 
     dashboardMessage(
-      "قەبارەی ڤیدیۆ لە ٥٠ MB زیاترە.",
+      "قەبارەی ڤیدیۆ نابێت لە ٥٠ MB زیاتر بێت.",
       "error"
     );
 
     return;
   }
 
-  const caption =
-    document.getElementById(
-      "videoCaption"
-    ).value.trim();
+  const caption=
+    document.getElementById("videoCaption")
+    .value.trim();
 
-  const button =
-    document.getElementById(
-      "uploadButton"
-    );
+  const button=
+    document.getElementById("uploadButton");
 
   button.disabled=true;
   button.textContent="ڤیدیۆکە دادەنرێت...";
 
   try{
 
-    const email =
-      userData.user.email;
-
-    const safeئیمەیڵ =
-      email.replace(
-        /[^a-zA-Z0-9]/g,
-        "_"
-      );
-
-    const extension =
+    const extension=
       file.name.includes(".")
       ? file.name.split(".").pop()
       : "mp4";
 
-    const filePath =
-      safeئیمەیڵ +
-      "/" +
-      Date.now() +
-      "_" +
-      Math.random()
-        .toString(36)
-        .substring(2,8) +
-      "." +
+    const path=
+      user.id+
+      "/"+
+      Date.now()+
+      "."+
       extension;
 
-    const {
-      error:uploadError
-    } =
+    const {error:uploadError}=
       await supabaseClient.storage
-        .from("videos")
-        .upload(
-          filePath,
-          file,
-          {
-            cacheControl:"3600",
-            upsert:false,
-            contentType:file.type
-          }
-        );
-
-    if(uploadError){
-
-      throw new Error(
-        "Storage Upload Error: " +
-        uploadError.message
+      .from("videos")
+      .upload(
+        path,
+        file,
+        {
+          cacheControl:"3600",
+          upsert:false,
+          contentType:file.type
+        }
       );
-    }
 
-    const {
-      data:urlData
-    } =
+    if(uploadError)
+      throw uploadError;
+
+    const {data:urlData}=
       supabaseClient.storage
-        .from("videos")
-        .getPublicUrl(filePath);
+      .from("videos")
+      .getPublicUrl(path);
 
-    const videoUrl =
+    const videoUrl=
       urlData.publicUrl;
 
-    if(!videoUrl){
+    const username=
+      user.user_metadata?.username ||
+      user.email.split("@")[0];
 
-      throw new Error(
-        "Could not create video URL."
-      );
-    }
-
-    const {
-      error:dbError
-    } =
+    const {error:dbError}=
       await supabaseClient
-        .from("videos")
-        .insert({
-          user_id:userData.user.id,
-          user_email:email,
-          video_url:videoUrl,
-          caption:caption,
-          likes:0
-        });
+      .from("videos")
+      .insert({
+        user_id:user.id,
+        user_email:user.email,
+        username:username,
+        caption:caption,
+        video_url:videoUrl,
+        likes:0
+      });
 
     if(dbError){
 
       await supabaseClient.storage
         .from("videos")
-        .remove([filePath]);
+        .remove([path]);
 
-      throw new Error(
-        "Database Error: " +
-        dbError.message
-      );
+      throw dbError;
     }
 
     input.value="";
 
-    document.getElementById(
-      "selectedFile"
-    ).textContent="";
+    document.getElementById("selectedFile")
+      .textContent="";
 
-    document.getElementById(
-      "videoCaption"
-    ).value="";
+    document.getElementById("videoCaption")
+      .value="";
 
     dashboardMessage(
       "✅ ڤیدیۆکە بە سەرکەوتوویی دانرا!",
@@ -1612,14 +1459,14 @@ async function uploadVideo(){
     );
 
     await loadVideos();
+    await loadProfile(user);
 
   }catch(error){
 
     console.error(error);
 
     dashboardMessage(
-      error.message ||
-      "Video upload failed.",
+      "هەڵە لە دانانی ڤیدیۆ: "+error.message,
       "error"
     );
 
@@ -1631,279 +1478,135 @@ async function uploadVideo(){
 }
 
 
-/* =========================================
+/* =====================================================
    LOAD VIDEOS
-========================================= */
+===================================================== */
 
 async function loadVideos(){
 
-  const box =
-    document.getElementById(
-      "videoFeed"
-    );
+  const box=
+    document.getElementById("videoFeed");
 
-  box.innerHTML =
+  box.innerHTML=
     '<div class="small">ڤیدیۆکان بار دەکرێن...</div>';
 
-  const {
-    data,
-    error
-  } =
+  const {data,error}=
     await supabaseClient
-      .from("videos")
-      .select(
-        "id,user_email,video_url,caption,likes,created_at"
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-      .limit(50);
+    .from("videos")
+    .select("*")
+    .order("created_at",{ascending:false})
+    .limit(50);
 
   if(error){
 
-    box.innerHTML =
-      '<div class="small">Could not load videos: ' +
-      escapeHtml(error.message) +
-      '<br><small>Run XALLO-GAMING_SUPABASE_SETUP.sql in Supabase SQL Editor.</small></div>';
+    box.innerHTML=
+      '<div class="small">'+
+      escapeHtml(error.message)+
+      '</div>';
 
     return;
   }
 
-  if(!data || !data.length){
+  if(!data?.length){
 
-    box.innerHTML =
-      '<div class="small">No videos yet. Upload the first video! 🎬</div>';
+    box.innerHTML=
+      '<div class="small">'+
+      'هێشتا هیچ ڤیدیۆیەک نییە 🎬'+
+      '</div>';
 
     return;
   }
 
+  box.innerHTML="";
 
-  /* LOAD COMMENTS */
+  for(const video of data){
 
-  const videoIds =
-    data.map(video => video.id);
+    const card=
+      document.createElement("div");
 
-  const {
-    data:comments,
-    error:commentsError
-  } =
-    await supabaseClient
-      .from("comments")
-      .select(
-        "id,video_id,user_email,comment,created_at"
-      )
-      .in(
-        "video_id",
-        videoIds
-      )
-      .order(
-        "created_at",
-        {
-          ascending:true
-        }
-      );
+    card.className="video-card";
 
+    const username=
+      video.username ||
+      video.user_email?.split("@")[0] ||
+      "بەکارهێنەر";
 
-  if(commentsError){
+    card.innerHTML=`
 
-    console.error(
-      "کۆمێنتs error:",
-      commentsError.message
-    );
-  }
+      <video
+        controls
+        playsinline
+        preload="metadata"
+        src="${escapeHtml(video.video_url)}">
+      </video>
 
+      <div class="video-info">
 
-  /* GROUP COMMENTS BY VIDEO */
+        <div class="video-user">
+          👤 ${escapeHtml(username)}
+        </div>
 
-  const commentsByVideo = {};
+        <div class="caption">
+          ${escapeHtml(video.caption||"")}
+        </div>
 
-  (comments || []).forEach(comment => {
+        <div class="video-date">
+          ${new Date(video.created_at).toLocaleString()}
+        </div>
 
-    if(!commentsByVideo[comment.video_id]){
-      commentsByVideo[comment.video_id] = [];
-    }
+        <div class="actions">
 
-    commentsByVideo[comment.video_id].push(
-      comment
-    );
+          <button
+            onclick="likeVideo('${video.id}',this)">
+            ❤️ ${Number(video.likes)||0}
+          </button>
 
-  });
+          <button
+            onclick="shareVideo('${escapeHtml(video.video_url)}')">
+            ↗️ هاوبەشکردن
+          </button>
 
+        </div>
 
-  box.innerHTML =
-    data.map(video => {
+        <div class="comment-box">
 
-      const videoکۆمێنتs =
-        commentsByVideo[video.id] || [];
+          <input
+            id="comment-${video.id}"
+            placeholder="کۆمێنتەکەت بنووسە...">
 
-      const commentsHtml =
-        videoکۆمێنتs.length
+          <button
+            onclick="addComment('${video.id}')">
+            💬 ناردنی کۆمێنت
+          </button>
 
-        ? videoکۆمێنتs.map(comment => `
-
-            <div class="comment">
-
-              <div class="comment-user">
-                👤 ${escapeHtml(comment.user_email)}
-              </div>
-
-              <div class="comment-text">
-                ${escapeHtml(comment.comment)}
-              </div>
-
-              <div class="comment-date">
-                ${new Date(
-                  comment.created_at
-                ).toLocaleString()}
-              </div>
-
-            </div>
-
-          `).join("")
-
-        : `
+          <div id="comments-${video.id}">
             <div class="small">
-              No comments yet.
+              کۆمێنتکان بار دەکرێن...
             </div>
-          `;
-
-
-      return `
-
-        <div class="video-card">
-
-          <video
-            controls
-            playsinline
-            preload="metadata"
-            src="${escapeHtml(video.video_url)}">
-          </video>
-
-          <div class="video-info">
-
-            <div class="video-user">
-              👤 ${escapeHtml(video.user_email)}
-            </div>
-
-            <div class="caption">
-              ${escapeHtml(video.caption || "")}
-            </div>
-
-            <div class="video-date">
-              ${new Date(
-                video.created_at
-              ).toLocaleString()}
-            </div>
-
-
-            <!-- LIKE -->
-
-            <button
-              class="like-button"
-              onclick="likeVideo('${video.id}',this)">
-
-              ❤️ ${Number(video.likes) || 0}
-
-            </button>
-
-
-            <!-- COMMENT -->
-
-            <div class="comment-area">
-
-              <input
-                class="comment-input"
-                id="comment-${video.id}"
-                type="text"
-                maxlength="500"
-                placeholder="Write a comment...">
-
-              <button
-                class="comment-button"
-                onclick="addکۆمێنت('${video.id}')">
-
-                💬 Add کۆمێنت
-
-              </button>
-
-              <div class="comments-list">
-
-                ${commentsHtml}
-
-              </div>
-
-            </div>
-
           </div>
 
         </div>
 
-      `;
+      </div>
+    `;
 
-    }).join("");
+    box.appendChild(card);
 
-}
-
-
-/* =========================================
-   LIKE VIDEO
-========================================= */
-
-async function likeVideo(id,button){
-
-  button.disabled=true;
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .rpc(
-        "like_video",
-        {
-          p_video_id:id
-        }
-      );
-
-  if(error){
-
-    button.disabled=false;
-
-    dashboardMessage(
-      "دڵ error: " +
-      error.message,
-      "error"
-    );
-
-    return;
+    loadComments(video.id);
   }
-
-  button.textContent =
-    "❤️ " + Number(data);
-
-  button.disabled=false;
 }
 
 
-/* =========================================
-   ADD COMMENT
-========================================= */
+/* =====================================================
+   LIKE
+===================================================== */
 
-async function addکۆمێنت(videoId){
+async function likeVideo(videoId,button){
 
-  const {
-    data:userData,
-    error:userError
-  } =
+  const {data:{user}}=
     await supabaseClient.auth.getUser();
 
-  if(
-    userError ||
-    !userData.user
-  ){
+  if(!user){
 
     dashboardMessage(
       "تکایە سەرەتا بچۆ ژوورەوە.",
@@ -1913,265 +1616,344 @@ async function addکۆمێنت(videoId){
     return;
   }
 
-
-  const input =
-    document.getElementById(
-      "comment-" + videoId
-    );
-
-  if(!input){
-
-    return;
-  }
-
-
-  const comment =
-    input.value.trim();
-
-
-  if(!comment){
-
-    dashboardMessage(
-      "Write a comment first.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if(comment.length > 500){
-
-    dashboardMessage(
-      "کۆمێنت is too long.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const button =
-    input.nextElementSibling;
-
   button.disabled=true;
-  button.textContent="Sending...";
 
+  const {data:video}=await supabaseClient
+    .from("videos")
+    .select("likes")
+    .eq("id",videoId)
+    .single();
 
-  const {
-    error
-  } =
+  if(!video){
+
+    button.disabled=false;
+    return;
+  }
+
+  const newLikes=
+    Number(video.likes||0)+1;
+
+  const {error}=
     await supabaseClient
-      .from("comments")
-      .insert({
+    .from("videos")
+    .update({likes:newLikes})
+    .eq("id",videoId);
 
-        video_id:videoId,
+  if(!error){
 
-        user_email:
-          userData.user.email,
+    button.textContent=
+      "❤️ "+newLikes;
+  }
 
-        comment:comment
+  button.disabled=false;
+}
 
-      });
 
+/* =====================================================
+   COMMENTS
+===================================================== */
+
+async function loadComments(videoId){
+
+  const box=
+    document.getElementById(
+      "comments-"+videoId
+    );
+
+  if(!box) return;
+
+  const {data,error}=
+    await supabaseClient
+    .from("comments")
+    .select("*")
+    .eq("video_id",videoId)
+    .order("created_at",{ascending:true});
 
   if(error){
 
-    console.error(error);
+    box.innerHTML=
+      '<div class="small">کۆمێنتکان نەتوانرا بار بکرێن.</div>';
 
-    button.disabled=false;
-    button.textContent="💬 Add کۆمێنت";
+    return;
+  }
+
+  if(!data?.length){
+
+    box.innerHTML=
+      '<div class="small">هێشتا کۆمێنت نییە.</div>';
+
+    return;
+  }
+
+  box.innerHTML=data.map(c=>`
+
+    <div class="comment">
+
+      <div class="comment-user">
+        👤 ${escapeHtml(c.user_email)}
+      </div>
+
+      <div class="comment-text">
+        ${escapeHtml(c.comment)}
+      </div>
+
+    </div>
+
+  `).join("");
+}
+
+
+async function addComment(videoId){
+
+  const {data:{user}}=
+    await supabaseClient.auth.getUser();
+
+  if(!user){
 
     dashboardMessage(
-      "کۆمێنت error: " +
+      "تکایە سەرەتا بچۆ ژوورەوە.",
+      "error"
+    );
+
+    return;
+  }
+
+  const input=
+    document.getElementById(
+      "comment-"+videoId
+    );
+
+  const text=
+    input.value.trim();
+
+  if(!text){
+
+    dashboardMessage(
+      "تکایە کۆمێنتەکەت بنووسە.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(text.length>500){
+
+    dashboardMessage(
+      "کۆمێنتەکە زۆر درێژە.",
+      "error"
+    );
+
+    return;
+  }
+
+  const {error}=
+    await supabaseClient
+    .from("comments")
+    .insert({
+      video_id:videoId,
+      user_email:user.email,
+      comment:text
+    });
+
+  if(error){
+
+    dashboardMessage(
       error.message,
       "error"
     );
 
     return;
   }
-
 
   input.value="";
 
-  button.disabled=false;
-  button.textContent="💬 Add کۆمێنت";
-
+  await loadComments(videoId);
 
   dashboardMessage(
-    "✅ کۆمێنت added!",
+    "✅ کۆمێنتەکەت نێردرا.",
     "success"
   );
-
-
-  await loadVideos();
 }
 
 
-/* =========================================
+/* =====================================================
+   SHARE
+===================================================== */
+
+async function shareVideo(url){
+
+  try{
+
+    if(navigator.share){
+
+      await navigator.share({
+        title:"XALLO-GAMING",
+        url:url
+      });
+
+    }else{
+
+      await navigator.clipboard.writeText(url);
+
+      dashboardMessage(
+        "✅ لینکی ڤیدیۆکە کۆپی کرا.",
+        "success"
+      );
+    }
+
+  }catch(e){}
+}
+
+
+/* =====================================================
    WITHDRAW
-========================================= */
+===================================================== */
 
 async function requestWithdrawal(){
 
-  const {
-    data:userData
-  } =
+  const {data:{user}}=
     await supabaseClient.auth.getUser();
 
-  if(!userData.user){
+  if(!user) return;
 
-    dashboardMessage(
-      "تکایە سەرەتا بچۆ ژوورەوە.",
-      "error"
-    );
-
-    return;
-  }
-
-  const method =
+  const method=
     document.getElementById(
       "withdrawMethod"
     ).value;
 
-  const coins =
+  const amount=
     Number(
       document.getElementById(
         "withdrawAmount"
       ).value
     );
 
-  const phone =
+  const phone=
     document.getElementById(
       "withdrawPhone"
     ).value.trim();
 
-
-  if(
-    !["Korek","Asiacell"]
-      .includes(method)
-  ){
+  if(!["Korek","Asiacell"].includes(method)){
 
     dashboardMessage(
-      "Select Korek or Asiacell.",
+      "تکایە Korek یان Asiacell هەڵبژێرە.",
       "error"
     );
 
     return;
   }
 
-
-  if(
-    ![1000,5000,10000]
-      .includes(coins)
-  ){
+  if(![1000,5000,10000].includes(amount)){
 
     dashboardMessage(
-      "Select a valid amount.",
+      "بڕێکی دروست هەڵبژێرە.",
       "error"
     );
 
     return;
   }
 
-
-  if(
-    !/^[0-9+\s-]{10,15}$/.test(phone)
-  ){
+  if(!/^[0-9+\s-]{10,15}$/.test(phone)){
 
     dashboardMessage(
-      "Enter a valid phone number.",
+      "ژمارەی مۆبایل بە دروستی بنووسە.",
       "error"
     );
 
     return;
   }
 
+  const {data:userRow}=await supabaseClient
+    .from("users")
+    .select("coins")
+    .eq("email",user.email)
+    .single();
 
-  const button =
-    document.getElementById(
-      "withdrawButton"
+  const balance=
+    Number(userRow?.coins||0);
+
+  if(balance<amount){
+
+    dashboardMessage(
+      "دراوی پێویستت نییە.",
+      "error"
     );
 
-  button.disabled=true;
-  button.textContent="Sending...";
+    return;
+  }
 
+  const newBalance=
+    balance-amount;
 
-  const {
-    data,
-    error
-  } =
+  const {error:updateError}=
     await supabaseClient
-      .rpc(
-        "create_withdrawal",
-        {
-          p_coins:coins,
-          p_method:method,
-          p_phone:phone
-        }
-      );
+    .from("users")
+    .update({coins:newBalance})
+    .eq("email",user.email);
 
-
-  button.disabled=false;
-
-  button.textContent =
-    "💰 داواکاری کێشانەوە";
-
-
-  if(error){
+  if(updateError){
 
     dashboardMessage(
-      error.message,
+      updateError.message,
       "error"
     );
 
     return;
   }
 
+  const {error:insertError}=
+    await supabaseClient
+    .from("withdrawals")
+    .insert({
+      user_email:user.email,
+      coins:amount,
+      amount:amount,
+      method:method,
+      phone:phone,
+      status:"pending"
+    });
 
-  setCoins(
-    data?.new_balance ?? 0
-  );
+  if(insertError){
 
+    await supabaseClient
+      .from("users")
+      .update({coins:balance})
+      .eq("email",user.email);
 
-  document.getElementById(
-    "withdrawMethod"
-  ).value="";
+    dashboardMessage(
+      insertError.message,
+      "error"
+    );
 
-  document.getElementById(
-    "withdrawAmount"
-  ).value="";
+    return;
+  }
 
-  document.getElementById(
-    "withdrawPhone"
-  ).value="";
+  setCoins(newBalance);
 
+  document.getElementById("withdrawMethod").value="";
+  document.getElementById("withdrawAmount").value="";
+  document.getElementById("withdrawPhone").value="";
 
   dashboardMessage(
-    "✅ کێشانەوەی پارە داواکاری بە سەرکەوتوویی نێردرا.",
+    "✅ داواکارییەکەت نێردرا.",
     "success"
   );
 
-
-  await loadWithdrawalHistory(
-    userData.user
-  );
+  await loadWithdrawalHistory(user);
 }
 
 
-/* =========================================
+/* =====================================================
    WITHDRAW HISTORY
-========================================= */
+===================================================== */
 
 function statusClass(status){
 
-  if(status==="approved"){
+  if(status==="approved")
     return "approved";
-  }
 
-  if(status==="rejected"){
+  if(status==="rejected")
     return "rejected";
-  }
 
   return "pending";
 }
@@ -2179,128 +1961,89 @@ function statusClass(status){
 
 async function loadWithdrawalHistory(user){
 
-  const box =
+  const box=
     document.getElementById(
       "withdrawHistory"
     );
 
-
-  const {
-    data,
-    error
-  } =
+  const {data,error}=
     await supabaseClient
-      .from("withdrawals")
-      .select(
-        "coins,amount,method,phone,status,created_at"
-      )
-      .eq(
-        "user_email",
-        user.email
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-      .limit(20);
-
+    .from("withdrawals")
+    .select("*")
+    .eq("user_email",user.email)
+    .order("created_at",{ascending:false})
+    .limit(30);
 
   if(error){
 
-    box.innerHTML =
-      '<div class="small">Could not load history.</div>';
+    box.innerHTML=
+      '<div class="small">'+
+      escapeHtml(error.message)+
+      '</div>';
 
     return;
   }
 
+  if(!data?.length){
 
-  if(!data || !data.length){
-
-    box.innerHTML =
-      '<div class="small">هێشتا هیچ داواکارییەک نییە.</div>';
+    box.innerHTML=
+      '<div class="small">'+
+      'هێشتا هیچ داواکارییەک نییە.'+
+      '</div>';
 
     return;
   }
 
+  box.innerHTML=data.map(r=>`
 
-  box.innerHTML =
-    data.map(r => `
+    <div class="request">
 
-      <div class="request">
+      💳 ${escapeHtml(r.method)}
 
-        <b>
-          ${escapeHtml(r.method)}
-        </b>
+      • ${Number(r.coins).toLocaleString()} دراو
 
-        •
-        ${Number(r.coins).toLocaleString()}
-        دراو
+      <br>
 
-        <br>
+      📱 ${escapeHtml(r.phone)}
 
-        Phone:
-        ${escapeHtml(r.phone)}
+      <br>
 
-        <br>
+      دۆخ:
+      <span class="${statusClass(r.status)}">
+        ${escapeHtml(r.status)}
+      </span>
 
-        Status:
+      <br>
 
-        <span class="${statusClass(r.status)}">
-          ${escapeHtml(r.status)}
-        </span>
+      ${new Date(r.created_at).toLocaleString()}
 
-        <br>
+    </div>
 
-        ${new Date(
-          r.created_at
-        ).toLocaleString()}
-
-      </div>
-
-    `).join("");
+  `).join("");
 }
 
 
-/* =========================================
+/* =====================================================
    ADMIN
-========================================= */
+===================================================== */
 
 async function checkAdmin(){
 
-  const {
-    data:userData
-  } =
+  const {data:{user}}=
     await supabaseClient.auth.getUser();
 
+  if(!user) return;
 
-  if(!userData.user){
-    return;
-  }
+  const {data}=await supabaseClient
+    .from("admins")
+    .select("email")
+    .eq("email",user.email)
+    .maybeSingle();
 
+  const box=
+    document.getElementById("adminBox");
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("admins")
-      .select("email")
-      .eq(
-        "email",
-        userData.user.email
-      )
-      .maybeSingle();
-
-
-  const box =
-    document.getElementById(
-      "adminBox"
-    );
-
-
-  if(!error && data){
+  if(data){
 
     box.style.display="block";
 
@@ -2309,151 +2052,113 @@ async function checkAdmin(){
   }else{
 
     box.style.display="none";
-
   }
 }
 
 
 async function loadAdminRequests(){
 
-  const box =
-    document.getElementById(
-      "adminRequests"
-    );
+  const box=
+    document.getElementById("adminRequests");
 
-
-  const {
-    data,
-    error
-  } =
+  const {data,error}=
     await supabaseClient
-      .from("withdrawals")
-      .select(
-        "id,user_email,coins,method,phone,status,created_at"
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-      .limit(50);
-
+    .from("withdrawals")
+    .select("*")
+    .order("created_at",{ascending:false})
+    .limit(50);
 
   if(error){
 
-    box.innerHTML =
-      '<div class="small">Could not load requests.</div>';
+    box.innerHTML=
+      '<div class="small">'+
+      escapeHtml(error.message)+
+      '</div>';
 
     return;
   }
 
+  if(!data?.length){
 
-  if(!data || !data.length){
-
-    box.innerHTML =
-      '<div class="small">No withdrawal requests.</div>';
+    box.innerHTML=
+      '<div class="small">هیچ داواکارییەک نییە.</div>';
 
     return;
   }
 
+  box.innerHTML=data.map(r=>`
 
-  box.innerHTML =
-    data.map(r => `
+    <div class="admin-row">
 
-      <div class="admin-row">
+      💳 ${escapeHtml(r.method)}
 
-        <b>
-          ${escapeHtml(r.method)}
-        </b>
+      • ${Number(r.coins).toLocaleString()} دراو
 
-        •
-        ${Number(r.coins).toLocaleString()}
-        دراو
+      <br>
 
-        <br>
+      👤 ${escapeHtml(r.user_email)}
 
-        User:
-        ${escapeHtml(r.user_email)}
+      <br>
 
-        <br>
+      📱 ${escapeHtml(r.phone)}
 
-        Phone:
-        ${escapeHtml(r.phone)}
+      <br>
 
-        <br>
+      دۆخ:
+      <span class="${statusClass(r.status)}">
+        ${escapeHtml(r.status)}
+      </span>
 
-        Status:
+      ${
+        r.status==="pending"
+        ? `
 
-        <span class="${statusClass(r.status)}">
-          ${escapeHtml(r.status)}
-        </span>
+        <div class="admin-actions">
 
+          <button
+            class="approve"
+            onclick="adminDecision('${r.id}','approved')">
+            ✅ پەسەندکردن
+          </button>
 
-        ${
-          r.status === "pending"
+          <button
+            class="reject"
+            onclick="adminDecision('${r.id}','rejected')">
+            ❌ ڕەتکردنەوە
+          </button>
 
-          ? `
+        </div>
 
-            <div class="admin-actions">
+        `
+        : ""
+      }
 
-              <button
-                class="approve"
-                onclick="adminDecision('${r.id}','approved')">
+    </div>
 
-                Approve
-
-              </button>
-
-              <button
-                class="reject"
-                onclick="adminDecision('${r.id}','rejected')">
-
-                Reject
-
-              </button>
-
-            </div>
-
-          `
-
-          : ""
-
-        }
-
-      </div>
-
-    `).join("");
+  `).join("");
 }
 
 
-async function adminDecision(
-  id,
-  status
-){
+async function adminDecision(id,status){
 
   if(!confirm(
-    status === "approved"
-    ? "Approve this request?"
-    : "ڕەتکردنەوە و گەڕاندنەوەی دراو؟"
-  )){
+    status==="approved"
+    ? "داواکارییەکە پەسەند بکەم؟"
+    : "داواکارییەکە ڕەت بکەمەوە؟"
+  )) return;
 
-    return;
-  }
+  const {data:req}=await supabaseClient
+    .from("withdrawals")
+    .select("*")
+    .eq("id",id)
+    .single();
 
+  if(!req) return;
 
-  const {
-    error
-  } =
-    await supabaseClient
-      .rpc(
-        "admin_update_withdrawal",
-        {
-          p_withdrawal_id:id,
-          p_status:status
-        }
-      );
-
+  const {error}=await supabaseClient
+    .from("withdrawals")
+    .update({status:status})
+    .eq("id",id);
 
   if(error){
 
@@ -2465,279 +2170,88 @@ async function adminDecision(
     return;
   }
 
+  /* ئەگەر ڕەتکرایەوە، دراوەکان بگەڕێنەوە */
+
+  if(status==="rejected"){
+
+    const {data:userRow}=
+      await supabaseClient
+      .from("users")
+      .select("coins")
+      .eq("email",req.user_email)
+      .single();
+
+    if(userRow){
+
+      await supabaseClient
+        .from("users")
+        .update({
+          coins:
+            Number(userRow.coins||0)+
+            Number(req.coins||0)
+        })
+        .eq("email",req.user_email);
+    }
+  }
 
   dashboardMessage(
-    "✅ کێشانەوەی پارە دۆخ بە سەرکەوتوویی نوێ کرایەوە.",
+    "✅ دۆخی داواکاری نوێ کرایەوە.",
     "success"
   );
 
-
   await loadAdminRequests();
 
-
-  const {
-    data:userData
-  } =
+  const {data:{user}}=
     await supabaseClient.auth.getUser();
 
+  if(user){
 
-  if(userData.user){
-
-    await loadWithdrawalHistory(
-      userData.user
-    );
-
-    await loadCoins(
-      userData.user
-    );
+    await loadCoins(user);
+    await loadWithdrawalHistory(user);
   }
 }
 
 
-/* =========================================
-   ESCAPE HTML
-========================================= */
-
-function escapeHtml(value){
-
-  return String(
-    value ?? ""
-  ).replace(
-    /[&<>"']/g,
-    m => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#039;"
-    }[m])
-  );
-}
-
-
-/* =========================================
+/* =====================================================
    LOGOUT
-========================================= */
+===================================================== */
 
 async function logout(){
 
   await supabaseClient.auth.signOut();
 
+  document.getElementById("dashboard")
+    .style.display="none";
 
-  document.getElementById(
-    "dashboard"
-  ).style.display="none";
-
-
-  document.getElementById(
-    "authBox"
-  ).style.display="block";
-
+  document.getElementById("authBox")
+    .style.display="block";
 
   showLogin();
 }
 
 
-/* =========================================
-   CHECK LOGIN
-========================================= */
+/* =====================================================
+   CHECK USER
+===================================================== */
 
 async function checkUser(){
 
-  const {
-    data
-  } =
+  const {data:{user}}=
     await supabaseClient.auth.getUser();
 
+  if(user){
 
-  if(data && data.user){
-
-    await createUserProfile(
-      data.user.email
-    );
-
-    await showDashboard(
-      data.user
-    );
+    await openDashboard(user);
   }
 }
 
 
-/* =========================================
+/* =====================================================
    START
-========================================= */
+===================================================== */
 
 checkUser();
 
-</script>
-
-
-<script id="xallo-social-js">
-async function xalloToggleLike(videoId, button){
-  try{
-    const {data:{user},error:authError}=await supabaseClient.auth.getUser();
-    if(authError || !user){
-      button.textContent="🔐 چوونەژوورەوە پێویستە";
-      return;
-    }
-    const {data:existing,error:findError}=await supabaseClient
-      .from("video_likes").select("id").eq("video_id",videoId).eq("user_id",user.id).maybeSingle();
-    if(findError){
-      button.textContent="❤️ Like";
-      console.error(findError);
-      return;
-    }
-    if(existing){
-      await supabaseClient.from("video_likes").delete().eq("id",existing.id);
-      button.textContent="♡ Like";
-    }else{
-      const {error}=await supabaseClient.from("video_likes").insert({
-        video_id:videoId,user_id:user.id
-      });
-      if(!error) button.textContent="❤️ Like";
-      else console.error(error);
-    }
-  }catch(e){ console.error(e); }
-}
-
-function xalloShowComments(videoId, root){
-  const box=root.querySelector(".xallo-comments-box");
-  if(box) box.style.display=box.style.display==="none"?"block":"none";
-}
-
-async function xalloSendComment(videoId, root){
-  const input=root.querySelector("textarea");
-  const note=root.querySelector(".xallo-social-note");
-  const text=(input?.value||"").trim();
-  if(!text){ if(note) note.textContent="تکایە کۆمێنتەکەت بنووسە."; return; }
-
-  try{
-    const {data:{user},error:authError}=await supabaseClient.auth.getUser();
-    if(authError || !user){
-      if(note) note.textContent="تکایە سەرەتا بچۆ ژوورەوە.";
-      return;
-    }
-
-    const {error}=await supabaseClient.from("video_comments").insert({
-      video_id:videoId,user_id:user.id,comment:text
-    });
-
-    if(error){
-      console.error(error);
-      if(note) note.textContent="کۆمێنتەکە نەنێردرا.";
-      return;
-    }
-
-    input.value="";
-    if(note) note.textContent="✅ کۆمێنتەکەت نێردرا.";
-  }catch(e){
-    console.error(e);
-    if(note) note.textContent="هەڵەیەک ڕوویدا.";
-  }
-}
-</script>
-
-
-<script id="xallo-social-helper">
-function xalloAttachSocialActions(root, videoId){
-  if(!root || root.querySelector(".xallo-social-actions")) return;
-  const wrap=document.createElement("div");
-  wrap.className="xallo-social-actions";
-  wrap.innerHTML=`
-    <button class="xallo-social-btn" type="button"
-      onclick="xalloToggleLike('${videoId}',this)">♡ Like</button>
-    <button class="xallo-social-btn" type="button"
-      onclick="xalloShowComments('${videoId}',this.parentElement.parentElement)">💬 کۆمێنت</button>
-    <div class="xallo-comments-box">
-      <textarea placeholder="کۆمێنتەکەت بنووسە..."></textarea>
-      <button class="xallo-comment-send" type="button"
-        onclick="xalloSendComment('${videoId}',this.parentElement.parentElement.parentElement)">ناردن</button>
-      <div class="xallo-social-note"></div>
-    </div>`;
-  root.appendChild(wrap);
-}
-</script>
-
-
-<script id="xallo-follow-js">
-async function xalloToggleFollow(targetUserId, button){
-  try{
-    const {data:{user},error:authError}=await supabaseClient.auth.getUser();
-    if(authError || !user){
-      button.textContent="🔐 چوونەژوورەوە";
-      return;
-    }
-    if(user.id === targetUserId){
-      button.textContent="ئەمە هەژماری خۆتە";
-      return;
-    }
-
-    const {data:existing,error:findError}=await supabaseClient
-      .from("user_follows")
-      .select("id")
-      .eq("follower_id",user.id)
-      .eq("following_id",targetUserId)
-      .maybeSingle();
-
-    if(findError){
-      console.error(findError);
-      button.textContent="Follow";
-      return;
-    }
-
-    if(existing){
-      const {error}=await supabaseClient
-        .from("user_follows").delete().eq("id",existing.id);
-      if(error) throw error;
-      button.textContent="➕ شوێنکەوتن";
-      button.classList.remove("following");
-    }else{
-      const {error}=await supabaseClient
-        .from("user_follows").insert({
-          follower_id:user.id,
-          following_id:targetUserId
-        });
-      if(error) throw error;
-      button.textContent="✓ شوێنکەوترا";
-      button.classList.add("following");
-    }
-  }catch(e){
-    console.error(e);
-    button.textContent="هەڵە ڕوویدا";
-  }
-}
-
-async function xalloSetupFollowButton(button,targetUserId){
-  try{
-    const {data:{user}}=await supabaseClient.auth.getUser();
-    if(!user || user.id===targetUserId) return;
-    const {data}=await supabaseClient
-      .from("user_follows").select("id")
-      .eq("follower_id",user.id)
-      .eq("following_id",targetUserId)
-      .maybeSingle();
-    if(data){
-      button.textContent="✓ شوێنکەوترا";
-      button.classList.add("following");
-    }
-  }catch(e){ console.error(e); }
-}
-</script>
-
-
-<script id="xallo-follow-counts">
-async function xalloGetFollowCounts(userId){
-  try{
-    const [{count:followers},{count:following}]=await Promise.all([
-      supabaseClient.from("user_follows").select("*",{count:"exact",head:true}).eq("following_id",userId),
-      supabaseClient.from("user_follows").select("*",{count:"exact",head:true}).eq("follower_id",userId)
-    ]);
-    return {followers:followers||0,following:following||0};
-  }catch(e){
-    console.error(e);
-    return {followers:0,following:0};
-  }
-}
 </script>
 
 </body>
