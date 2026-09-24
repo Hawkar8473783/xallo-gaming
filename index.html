@@ -2953,34 +2953,46 @@ function setupTikTokObserver(){
 }
 
 async function likeTikTokVideo(id,button){
-
+  if(button.dataset.busy === "1") return;
+  button.dataset.busy = "1";
   button.disabled = true;
 
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .rpc("like_video",{p_video_id:id});
+  try{
+    const {data:{user},error:authError}=await supabaseClient.auth.getUser();
+    if(authError || !user){
+      dashboardMessage("تکایە سەرەتا بچۆ ژوورەوە.","error");
+      return;
+    }
 
-  if(error){
+    // IMPORTANT: videos.id is BIGINT/number in this project.
+    // Always use the bigint-compatible toggle_video_like RPC.
+    const videoId = Number(id);
+    if(!Number.isInteger(videoId)){
+      throw new Error("Video ID ـەکە دروست نییە.");
+    }
 
+    const {data,error}=await supabaseClient.rpc("toggle_video_like",{
+      p_video_id: videoId
+    });
+
+    if(error) throw error;
+
+    const result=data || {};
+    const liked=!!result.liked;
+    const likes=Number(result.likes)||0;
+    const count = button.querySelector(".count");
+
+    if(count) count.textContent = likes;
+    button.classList.toggle("liked",liked);
+    button.setAttribute("aria-pressed", liked ? "true" : "false");
+
+  }catch(error){
+    console.error("Like error:",error);
+    dashboardMessage("Like کار نەکرد: " + error.message,"error");
+  }finally{
+    button.dataset.busy = "0";
     button.disabled = false;
-
-    dashboardپەیام(
-      "Like error: " + error.message,
-      "error"
-    );
-
-    return;
   }
-
-  const count = button.querySelector(".count");
-
-  if(count){
-    count.textContent = Number(data) || 0;
-  }
-
-  button.disabled = false;
 }
 
 
