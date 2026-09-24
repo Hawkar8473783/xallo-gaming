@@ -1238,10 +1238,7 @@ async function signup(){
     }
 
     if(data?.session && data?.user){
-      document.body.classList.add("xallo-logged-in");
-      document.getElementById("authBox").style.display="none";
-      document.getElementById("dashboard").style.display="block";
-      await showDashboard(data.user);
+      enterXalloApp(data.user);
       return;
     }
 
@@ -1294,12 +1291,8 @@ async function login(){
     }
 
     if(data?.user){
-      // Show the dashboard immediately after successful Auth.
-      // Profile creation is best-effort and must not block login.
-      document.body.classList.add("xallo-logged-in");
-      document.getElementById("authBox").style.display="none";
-      document.getElementById("dashboard").style.display="block";
-      await showDashboard(data.user);
+      // Auth succeeded: enter immediately. Database/storage modules run in the background.
+      enterXalloApp(data.user);
     }else{
       showپەیام("هیچ بەکارهێنەرێکی login نەدۆزرایەوە.","error");
     }
@@ -1309,6 +1302,23 @@ async function login(){
   }finally{
     button.disabled=false;
     button.textContent="Login";
+  }
+}
+
+async function resetPassword(){
+  const email=document.getElementById("loginEmail").value.trim();
+  if(!email){
+    showپەیام("تکایە سەرەتا ئیمەیڵەکەت بنووسە.","error");
+    return;
+  }
+  try{
+    const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{
+      redirectTo:window.location.origin
+    });
+    if(error) throw error;
+    showپەیام("لینکی گۆڕینی وشەی نهێنی بۆ ئیمەیڵەکەت نێردرا.","success");
+  }catch(e){
+    showپەیام(e.message || "نەتوانرا لینکی گۆڕینی وشەی نهێنی بنێردرێت.","error");
   }
 }
 
@@ -1463,38 +1473,33 @@ async function loadدراو(user){
    DASHBOARD
 ========================================= */
 
-async function showDashboard(user){
+function enterXalloApp(user){
+  // IMPORTANT: authentication success must NEVER wait for database/storage
+  // queries. Show the dashboard immediately, then load optional data in the
+  // background. This prevents RLS/table errors from looking like Login failed.
+  if(!user) return;
 
-  // Switch the whole app into authenticated mode first.
-  // The CSS auth gate guarantees the login form can never remain
-  // visible above the dashboard after a successful login/session restore.
   document.body.classList.add("xallo-logged-in");
+  document.getElementById("authBox").style.display="none";
+  document.getElementById("dashboard").style.display="block";
+  document.getElementById("userEmail").textContent=user.email || "";
 
-  document.getElementById("authBox")
-    .style.display="none";
-
-  document.getElementById("dashboard")
-    .style.display="block";
-
-  document.getElementById("userEmail")
-    .textContent=user.email;
-
-  await loadMyپرۆفایل(user.email);
-
-  await loadدراو(user);
-
-  await checkDailyRewardButton(user);
-
-  // Load both feeds independently so a problem in the old video/comments feed
-  // cannot leave the TikTok feed stuck on "Loading videos...".
-  await Promise.allSettled([
+  Promise.allSettled([
+    loadMyپرۆفایل(user.email),
+    loadدراو(user),
+    checkDailyRewardButton(user),
     loadTikTokFeed(),
-    loadVideos()
-  ]);
+    loadVideos(),
+    loadWithdrawHistory(user),
+    checkAdmin()
+  ]).then(results=>{
+    const failed=results.filter(r=>r.status==="rejected");
+    if(failed.length) console.warn("Some dashboard modules failed:",failed);
+  });
+}
 
-  await loadWithdrawHistory(user);
-
-  await checkAdmin();
+async function showDashboard(user){
+  enterXalloApp(user);
 }
 
 
@@ -3439,7 +3444,7 @@ async function checkUser(){
 
     const session = data?.session;
     if(session?.user){
-      await showDashboard(session.user);
+      enterXalloApp(session.user);
     }else{
       document.body.classList.remove("xallo-logged-in");
       document.getElementById("dashboard").style.display="none";
@@ -3461,15 +3466,8 @@ async function checkUser(){
 // doing extra awaited queries here can make login appear to freeze.
 supabaseClient.auth.onAuthStateChange((event, session) => {
   if(session?.user){
-    document.body.classList.add("xallo-logged-in");
-    document.getElementById("authBox").style.display="none";
-    document.getElementById("dashboard").style.display="block";
-    // Let the auth callback finish first, then load the dashboard data.
-    setTimeout(() => {
-      showDashboard(session.user).catch(err => {
-        console.error("showDashboard after auth event:", err);
-      });
-    }, 0);
+    // Do not await any database query inside the auth callback.
+    enterXalloApp(session.user);
   }else if(event === "SIGNED_OUT"){
     document.body.classList.remove("xallo-logged-in");
     document.getElementById("dashboard").style.display="none";
