@@ -452,7 +452,27 @@ button:disabled{
 
 <div id="dashboard" style="display:none;">
     <!-- ===== XALLO VIDEO FEED ===== -->
-    <section class="xallo-feed-section" id="xalloVideoFeed">
+    
+<section class="xallo-upload-panel" id="xalloUploadPanel">
+  <div class="xallo-upload-title">🎥 دانانی ڤیدیۆ</div>
+
+  <label class="xallo-file-label" for="xalloVideoFile">
+    📁 ڤیدیۆ هەڵبژێرە
+  </label>
+  <input id="xalloVideoFile" type="file" accept="video/*">
+
+  <textarea id="xalloVideoCaption"
+    placeholder="دەربارەی ڤیدیۆکە بنووسە..."></textarea>
+
+  <div id="xalloUploadStatus" class="xallo-upload-status"></div>
+
+  <button id="xalloUploadButton" class="xallo-upload-button"
+    type="button" onclick="uploadXalloVideo()">
+    ⬆️ دانانی ڤیدیۆ
+  </button>
+</section>
+
+<section class="xallo-feed-section" id="xalloVideoFeed">
       <div class="xallo-feed-title">
         <span>🎬</span>
         <strong>ڤیدیۆکانی XALLO</strong>
@@ -975,6 +995,119 @@ function toggleFollow(){
 
   localStorage.setItem(XALLO_FOLLOW_KEY,JSON.stringify(list));
   updateFollowButton();
+}
+
+
+
+async function uploadXalloVideo(){
+  const fileInput=document.getElementById("xalloVideoFile");
+  const captionInput=document.getElementById("xalloVideoCaption");
+  const status=document.getElementById("xalloUploadStatus");
+  const button=document.getElementById("xalloUploadButton");
+
+  if(!fileInput || !fileInput.files.length){
+    status.textContent="تکایە سەرەتا ڤیدیۆیەک هەڵبژێرە.";
+    return;
+  }
+
+  const file=fileInput.files[0];
+  const caption=(captionInput?.value || "").trim();
+
+  if(!file.type.startsWith("video/")){
+    status.textContent="تکایە تەنها فایلێکی ڤیدیۆ هەڵبژێرە.";
+    return;
+  }
+
+  const maxSize=50*1024*1024;
+  if(file.size > maxSize){
+    status.textContent="قەبارەی ڤیدیۆ نابێت لە ٥٠ MB زیاتر بێت.";
+    return;
+  }
+
+  button.disabled=true;
+  status.textContent="ڤیدیۆکە دادەنرێت... ⏳";
+
+  try{
+    const {data:{user},error:userError}=await supabaseClient.auth.getUser();
+
+    if(userError || !user){
+      status.textContent="تکایە سەرەتا بچۆ ژوورەوە.";
+      button.disabled=false;
+      return;
+    }
+
+    const safeName=file.name
+      .replace(/[^a-zA-Z0-9._-]/g,"_");
+
+    const path=
+      user.id + "/" +
+      Date.now() + "-" +
+      safeName;
+
+    const {error:uploadError}=await supabaseClient.storage
+      .from("videos")
+      .upload(path,file,{
+        cacheControl:"3600",
+        upsert:false,
+        contentType:file.type
+      });
+
+    if(uploadError){
+      console.error(uploadError);
+      status.textContent=
+        "هەڵە لە Upload: " + uploadError.message;
+      button.disabled=false;
+      return;
+    }
+
+    const {data:urlData}=supabaseClient.storage
+      .from("videos")
+      .getPublicUrl(path);
+
+    const videoUrl=urlData?.publicUrl;
+
+    if(!videoUrl){
+      status.textContent="نەتوانرا لینکی ڤیدیۆ دروست بکرێت.";
+      button.disabled=false;
+      return;
+    }
+
+    const username=
+      user.user_metadata?.username ||
+      user.email?.split("@")[0] ||
+      "بەکارهێنەر";
+
+    const {error:dbError}=await supabaseClient
+      .from("videos")
+      .insert({
+        user_email:user.email,
+        username:username,
+        caption:caption,
+        video_url:videoUrl
+      });
+
+    if(dbError){
+      console.error(dbError);
+      status.textContent=
+        "ڤیدیۆکە Upload کرا، بەڵام لە داتابەیس تۆمار نەکرا.";
+      button.disabled=false;
+      return;
+    }
+
+    status.textContent="✅ ڤیدیۆکە بە سەرکەوتوویی دانرا!";
+
+    fileInput.value="";
+    if(captionInput) captionInput.value="";
+
+    await loadXalloVideoFeed();
+
+  }catch(err){
+    console.error(err);
+    status.textContent=
+      "هەڵەیەک ڕوویدا. تکایە دووبارە هەوڵ بدەوە.";
+  }
+
+  button.disabled=false;
 }
 
 
