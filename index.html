@@ -2,11 +2,9 @@
 <html lang="ku">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>XALLO-GAMING</title>
-<meta name="xallo-version" content="tiktok-real-fixed-2026-09-23">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -16,7 +14,7 @@
   box-sizing:border-box;
   margin:0;
   padding:0;
-  font-family:Arial,"Noto Sans Arabic","Noto Sans",sans-serif;
+  font-family: Arial, "Noto Sans Arabic", "Noto Sans", sans-serif;
 }
 
 body{
@@ -352,167 +350,7 @@ button:disabled{
   word-break:break-word;
 }
 
-
-/* ================= TIKTOK STYLE FEED ================= */
-.tiktok-section{
-  margin-top:20px;
-  padding:0;
-}
-.tiktok-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
-  padding:0 4px;
-}
-.tiktok-title{
-  margin:0;
-}
-.tiktok-swipe-hint{
-  color:#aeb8cc;
-  font-size:12px;
-}
-.tiktok-feed{
-  width:100%;
-  height:78vh;
-  min-height:560px;
-  max-height:none;
-  overflow-y:auto;
-  scroll-snap-type:y mandatory;
-  background:#000;
-  border-radius:20px;
-  border:1px solid #283653;
-  scrollbar-width:none;
-}
-.tiktok-feed::-webkit-scrollbar{display:none}
-.tiktok-item{
-  position:relative;
-  height:78vh;
-  min-height:560px;
-  max-height:none;
-  scroll-snap-align:start;
-  scroll-snap-stop:always;
-  background:#000;
-  overflow:hidden;
-}
-.tiktok-item video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  background:#000;
-}
-.tiktok-gradient{
-  position:absolute;
-  inset:45% 0 0;
-  background:linear-gradient(transparent,rgba(0,0,0,.9));
-  pointer-events:none;
-}
-.tiktok-info{
-  position:absolute;
-  left:14px;
-  right:76px;
-  bottom:18px;
-  z-index:2;
-}
-.tiktok-user{
-  color:#fff;
-  font-weight:bold;
-  margin-bottom:8px;
-  word-break:break-word;
-}
-.tiktok-caption{
-  color:#fff;
-  line-height:1.45;
-  word-break:break-word;
-}
-.tiktok-actions{
-  position:absolute;
-  right:10px;
-  bottom:18px;
-  width:58px;
-  z-index:3;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.tiktok-actions button{
-  width:58px;
-  height:58px;
-  flex:0 0 58px;
-  margin:0;
-  padding:4px;
-  border-radius:50%;
-  background:rgba(20,28,45,.85);
-  border:1px solid rgba(255,255,255,.18);
-  font-size:12px;
-}
-.tiktok-actions .count{
-  display:block;
-  font-size:11px;
-  margin-top:2px;
-}
-.tiktok-empty{
-  padding:35px 18px;
-  text-align:center;
-  color:#9da8bd;
-}
-@media(max-width:520px){
-  .tiktok-section{
-    margin-top:16px;
-  }
-  .tiktok-feed,.tiktok-item{
-    height:78vh;
-    min-height:540px;
-  }
-  .tiktok-feed{
-    border-radius:16px;
-  }
-  .tiktok-info{
-    left:12px;
-    right:72px;
-    bottom:16px;
-  }
-  .tiktok-actions{
-    right:7px;
-    bottom:14px;
-  }
-}
-
-
-/* ===== XALLO TIKTOK: hide legacy feed if present ===== */
-.video-feed{display:none !important;}
-
-
-/* =========================================
-   FOLLOW / PUBLIC PROFILE
-========================================= */
-.profile-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px}
-.profile-card{width:min(420px,100%);background:#0c1a2b;border:1px solid #31506f;border-radius:22px;padding:22px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.5);position:relative}
-.profile-close{position:absolute;right:12px;top:10px;width:40px;height:40px;border-radius:50%;background:#182a40;color:#fff;border:1px solid #38516d;font-size:20px}
-.profile-avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;background:#16263a;border:3px solid #fff;margin:8px auto 12px;display:block}
-.profile-name{font-size:21px;font-weight:800;color:#fff;word-break:break-word}
-.profile-email{font-size:12px;color:#9eacc0;margin-top:5px;word-break:break-word}
-.profile-bio{color:#d7deea;margin:14px 8px;line-height:1.5;word-break:break-word}
-.profile-stats{display:flex;justify-content:center;gap:34px;margin:16px 0;color:#fff}
-.profile-stats b{display:block;font-size:19px}.profile-stats span{font-size:12px;color:#9eacc0}
-.follow-button{width:100%;margin:6px 0 0;padding:13px;border-radius:13px;border:0;background:#e91e63;color:#fff;font-weight:800;font-size:16px}
-.follow-button.following{background:#26384e;border:1px solid #52657c}
-.tiktok-follow-button{background:rgba(233,30,99,.9)!important}
-
-
-
-/* XALLO TikTok Feed final mobile layout */
-.tiktok-section{position:relative;}
-.tiktok-feed{width:100%;height:72vh;min-height:520px;overflow-y:auto;scroll-snap-type:y mandatory;background:#000;border-radius:18px;}
-.tiktok-item{position:relative;width:100%;height:72vh;min-height:520px;scroll-snap-align:start;scroll-snap-stop:always;background:#000;overflow:hidden;}
-.tiktok-video{width:100%;height:100%;object-fit:cover;display:block;background:#000;}
-.tiktok-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:0;border-radius:50%;width:58px;height:58px;font-size:24px;background:rgba(0,0,0,.45);color:#fff;display:none;}
-.tiktok-item:hover .tiktok-play{display:block;}
-@media (max-width:600px){.tiktok-feed,.tiktok-item{height:76vh;min-height:520px}.tiktok-actions{right:10px}.tiktok-info{left:12px;right:70px;bottom:18px}}
 </style>
-
 </head>
 
 <body>
@@ -673,17 +511,20 @@ button:disabled{
   </div>
 
 
-  <!-- ================= XALLO TIKTOK FEED ================= -->
+  <!-- VIDEO FEED -->
 
-  <div class="tiktok-section">
-    <div class="tiktok-header">
-      <h3 class="tiktok-title">🎬 XALLO TikTok</h3>
-      <span class="tiktok-swipe-hint">↑ Swipe ↑</span>
+  <div class="video-feed">
+
+    <h3>🎬 XALLO Videos</h3>
+
+    <div id="videoFeed">
+
+      <div class="small">
+        Loading videos...
+      </div>
+
     </div>
 
-    <div id="tiktokFeed" class="tiktok-feed">
-      <div class="tiktok-empty">Loading TikTok Feed...</div>
-    </div>
   </div>
 
 
@@ -782,23 +623,6 @@ button:disabled{
 
   </div>
 
-
-
-  <!-- ================= PUBLIC PROFILE MODAL ================= -->
-  <div id="profileModal" class="profile-modal" onclick="closeProfileModal(event)">
-    <div class="profile-card" onclick="event.stopPropagation()">
-      <button class="profile-close" type="button" onclick="closeProfileModal()">×</button>
-      <img id="profileAvatar" class="profile-avatar" src="" alt="Profile">
-      <div id="profileName" class="profile-name">Profile</div>
-      <div id="profileEmail" class="profile-email"></div>
-      <div id="profileBio" class="profile-bio"></div>
-      <div class="profile-stats">
-        <div><b id="profileFollowers">0</b><span>Followers</span></div>
-        <div><b id="profileFollowing">0</b><span>Following</span></div>
-      </div>
-      <button id="profileFollowButton" class="follow-button" type="button">Follow</button>
-    </div>
-  </div>
 
   <!-- ADMIN -->
 
@@ -1174,12 +998,7 @@ async function showDashboard(user){
 
   await checkDailyRewardButton(user);
 
-  // Load both feeds independently so a problem in the old video/comments feed
-  // cannot leave the TikTok feed stuck on "Loading videos...".
-  await Promise.allSettled([
-    loadTikTokFeed(),
-    loadVideos()
-  ]);
+  await loadVideos();
 
   await loadWithdrawHistory(user);
 
@@ -1548,7 +1367,7 @@ async function loadVideos(){
     box.innerHTML =
       '<div class="small">Could not load videos: ' +
       escapeHtml(error.message) +
-      '</div>';
+      '<br><small>Run XALLO-GAMING_SUPABASE_SETUP.sql in Supabase SQL Editor.</small></div>';
 
     return;
   }
@@ -2373,431 +2192,6 @@ async function adminDecision(
     );
   }
 }
-
-
-
-/* =========================================
-   TIKTOK STYLE FEED
-========================================= */
-
-async function loadTikTokFeed(){
-
-  const box = document.getElementById("tiktokFeed");
-  if(!box) return;
-
-  box.innerHTML = '<div class="tiktok-empty">Loading TikTok Feed...</div>';
-
-  try {
-    // supabaseClient is a local const in this page, so do not check
-    // window.supabaseClient (that property does not exist).
-    if(!supabaseClient){
-      throw new Error("Supabase is not ready. Please refresh the page.");
-    }
-
-    // First try with views. If the database schema cache does not know
-    // the views column yet, fall back to the basic video columns.
-    let result = await Promise.race([
-      supabaseClient
-        .from("videos")
-        .select("id,user_email,video_url,caption,likes,views,created_at")
-        .order("created_at",{ascending:false})
-        .limit(50),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Video loading timed out. Check your Supabase connection.")), 12000)
-      )
-    ]);
-
-    let data = result.data;
-    let error = result.error;
-
-    if(error){
-      console.warn("TikTok feed query with views failed; retrying basic query", error);
-
-      const fallback = await supabaseClient
-        .from("videos")
-        .select("id,user_email,video_url,caption,likes,created_at")
-        .order("created_at",{ascending:false})
-        .limit(50);
-
-      data = fallback.data;
-      error = fallback.error;
-    }
-
-    if(error){
-      throw new Error(error.message || "Could not load videos.");
-    }
-
-    if(!data || !data.length){
-      box.innerHTML = `
-        <div class="tiktok-empty">
-          <div style="font-size:42px">🎬</div>
-          <div>No videos yet.</div>
-          <div class="small">Upload a video and it will appear here.</div>
-        </div>`;
-      return;
-    }
-
-    // Render each card safely. One bad video URL must not stop the whole feed.
-    box.innerHTML = data.map(video => {
-      const id = String(video.id || "");
-      const email = escapeHtml(video.user_email || "");
-      const url = escapeHtml(video.video_url || "");
-      const caption = escapeHtml(video.caption || "");
-      const likes = Number(video.likes) || 0;
-      const views = Number(video.views) || 0;
-
-      if(!id || !url) return "";
-
-      return `
-        <div class="tiktok-item" data-video-id="${escapeHtml(id)}">
-          <video
-            class="tiktok-video"
-            src="${url}"
-            playsinline
-            muted
-            loop
-            preload="metadata"
-            controlslist="nodownload"
-          ></video>
-
-          <div class="tiktok-gradient"></div>
-
-          <div class="tiktok-info">
-            <div class="tiktok-user">👤 ${email}</div>
-            <div class="tiktok-caption">${caption}</div>
-          </div>
-
-          <div class="tiktok-actions">
-            <button type="button" onclick="likeTikTokVideo('${escapeHtml(id)}',this)">
-              ❤️ <span class="count">${likes}</span>
-            </button>
-
-            <button type="button" onclick="focusTikTokComment('${escapeHtml(id)}')">
-              💬 <span class="count">Comment</span>
-            </button>
-
-            <button type="button" class="tiktok-view-button">
-              👁️ <span class="count tiktok-view-count">${views}</span>
-            </button>
-
-            <button type="button" class="tiktok-follow-button" onclick="openTikTokProfile('${escapeHtml(email)}')">
-              ➕ <span class="count">Follow</span>
-            </button>
-
-            <button type="button" onclick="openTikTokProfile('${escapeHtml(email)}')">
-              👤 <span class="count">Profile</span>
-            </button>
-          </div>
-
-          <button type="button" class="tiktok-play" aria-label="Play video">▶</button>
-        </div>`;
-    }).join("");
-
-    if(!box.querySelector(".tiktok-item")){
-      box.innerHTML = '<div class="tiktok-empty">The videos were found, but their video URLs are empty.</div>';
-      return;
-    }
-
-    setupTikTokObserver();
-
-    // Allow tap-to-play on mobile and pause all other videos.
-    box.querySelectorAll(".tiktok-video").forEach(video => {
-      video.addEventListener("click", async () => {
-        try {
-          if(video.paused){
-            box.querySelectorAll(".tiktok-video").forEach(v => { if(v !== video) v.pause(); });
-            await video.play();
-          }else{
-            video.pause();
-          }
-        }catch(e){
-          console.warn("Video playback error", e);
-        }
-      });
-    });
-
-  } catch(e) {
-    console.error("TikTok Feed error:", e);
-    box.innerHTML = `
-      <div class="tiktok-empty">
-        <div style="font-size:42px">⚠️</div>
-        <div>Could not load TikTok Feed.</div>
-        <div class="small" style="margin-top:8px">${escapeHtml(e.message || "Unknown error")}</div>
-        <button type="button" style="margin-top:14px" onclick="loadTikTokFeed()">🔄 Retry</button>
-      </div>`;
-  }
-}
-
-function setupTikTokObserver(){
-
-  const videos = document.querySelectorAll(".tiktok-video");
-  if(!videos.length) return;
-
-  if(window.__xalloTikTokObserver){
-    try{ window.__xalloTikTokObserver.disconnect(); }catch(e){}
-  }
-
-  const observer = new IntersectionObserver(async entries => {
-    for(const entry of entries){
-      const video = entry.target;
-
-      if(entry.isIntersecting && entry.intersectionRatio >= 0.65){
-        document.querySelectorAll(".tiktok-video").forEach(other => {
-          if(other !== video) other.pause();
-        });
-
-        try{ await video.play(); }catch(e){
-          // A first tap may be required by the mobile browser.
-        }
-
-        const item = video.closest(".tiktok-item");
-        if(item && !item.dataset.viewed){
-          item.dataset.viewed = "1";
-          const id = item.dataset.videoId;
-
-          try{
-            const {data,error} = await supabaseClient.rpc("view_video",{p_video_id:id});
-            if(!error){
-              const count = item.querySelector(".tiktok-view-count");
-              if(count) count.textContent = Number(data) || 0;
-            }
-          }catch(e){
-            console.warn("View counter error", e);
-          }
-        }
-      }else{
-        video.pause();
-      }
-    }
-  },{threshold:[0.65]});
-
-  videos.forEach(video => observer.observe(video));
-  window.__xalloTikTokObserver = observer;
-}
-
-async function likeTikTokVideo(id,button){
-
-  button.disabled = true;
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .rpc("like_video",{p_video_id:id});
-
-  if(error){
-
-    button.disabled = false;
-
-    dashboardMessage(
-      "Like error: " + error.message,
-      "error"
-    );
-
-    return;
-  }
-
-  const count = button.querySelector(".count");
-
-  if(count){
-    count.textContent = Number(data) || 0;
-  }
-
-  button.disabled = false;
-}
-
-function focusTikTokComment(videoId){
-
-  const input =
-    document.getElementById("comment-" + videoId);
-
-  if(input){
-
-    input.scrollIntoView({
-      behavior:"smooth",
-      block:"center"
-    });
-
-    input.focus();
-
-    dashboardMessage(
-      "Write your comment below in the XALLO Videos section.",
-      "success"
-    );
-
-  }else{
-
-    dashboardMessage(
-      "Open the comment box in XALLO Videos.",
-      "success"
-    );
-  }
-}
-
-
-/* =========================================
-   FOLLOW / PUBLIC PROFILE
-========================================= */
-
-let activeProfileEmail = "";
-
-async function openTikTokProfile(email){
-
-  const targetEmail = String(email || "").trim();
-  if(!targetEmail) return;
-
-  const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData && authData.user ? authData.user.email : "";
-
-  activeProfileEmail = targetEmail;
-
-  const modal = document.getElementById("profileModal");
-  const nameBox = document.getElementById("profileName");
-  const emailBox = document.getElementById("profileEmail");
-  const bioBox = document.getElementById("profileBio");
-  const avatar = document.getElementById("profileAvatar");
-  const followButton = document.getElementById("profileFollowButton");
-
-  modal.style.display = "flex";
-  nameBox.textContent = "Loading profile...";
-  emailBox.textContent = targetEmail;
-  bioBox.textContent = "";
-  avatar.src = "";
-  followButton.disabled = true;
-  followButton.textContent = "Loading...";
-
-  try{
-    const {data:profile,error:profileError} = await supabaseClient.rpc(
-      "get_public_profile",
-      {p_email:targetEmail}
-    );
-
-    if(profileError) throw profileError;
-
-    const profileData = profile || {};
-    nameBox.textContent = profileData.username || targetEmail.split("@")[0];
-    emailBox.textContent = targetEmail;
-    bioBox.textContent = profileData.bio || "";
-
-    avatar.src = profileData.avatar_url || "";
-    avatar.onerror = () => {
-      avatar.style.display = "none";
-    };
-    avatar.onload = () => {
-      avatar.style.display = "block";
-    };
-    if(!profileData.avatar_url) avatar.style.display = "none";
-
-    const [{count:followerCount,error:followerError},{count:followingCount,error:followingError}] = await Promise.all([
-      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("following_email",targetEmail),
-      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("follower_email",targetEmail)
-    ]);
-
-    if(followerError) throw followerError;
-    if(followingError) throw followingError;
-
-    document.getElementById("profileFollowers").textContent = Number(followerCount || 0);
-    document.getElementById("profileFollowing").textContent = Number(followingCount || 0);
-
-    if(currentEmail && currentEmail.toLowerCase() === targetEmail.toLowerCase()){
-      followButton.disabled = true;
-      followButton.textContent = "Your Profile";
-      followButton.classList.remove("following");
-      return;
-    }
-
-    const {data:existing,error:followCheckError} = await supabaseClient
-      .from("follows")
-      .select("id")
-      .eq("follower_email",currentEmail)
-      .eq("following_email",targetEmail)
-      .maybeSingle();
-
-    if(followCheckError) throw followCheckError;
-
-    setFollowButton(existing ? true : false);
-    followButton.disabled = false;
-    followButton.onclick = () => toggleFollow(targetEmail);
-
-  }catch(error){
-    nameBox.textContent = "Profile unavailable";
-    bioBox.textContent = error.message || "Could not load profile.";
-    followButton.disabled = true;
-    followButton.textContent = "Follow unavailable";
-  }
-}
-
-function setFollowButton(isFollowing){
-  const button = document.getElementById("profileFollowButton");
-  button.classList.toggle("following",!!isFollowing);
-  button.textContent = isFollowing ? "✓ Following" : "＋ Follow";
-}
-
-async function toggleFollow(targetEmail){
-
-  const button = document.getElementById("profileFollowButton");
-  const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData && authData.user ? authData.user.email : "";
-
-  if(!currentEmail){
-    dashboardMessage("Please login first.","error");
-    return;
-  }
-
-  if(currentEmail.toLowerCase() === targetEmail.toLowerCase()) return;
-
-  button.disabled = true;
-
-  try{
-    const {data:existing,error:checkError} = await supabaseClient
-      .from("follows")
-      .select("id")
-      .eq("follower_email",currentEmail)
-      .eq("following_email",targetEmail)
-      .maybeSingle();
-
-    if(checkError) throw checkError;
-
-    if(existing){
-      const {error} = await supabaseClient
-        .from("follows")
-        .delete()
-        .eq("id",existing.id)
-        .eq("follower_email",currentEmail);
-      if(error) throw error;
-      setFollowButton(false);
-    }else{
-      const {error} = await supabaseClient
-        .from("follows")
-        .insert({
-          follower_email:currentEmail,
-          following_email:targetEmail
-        });
-      if(error) throw error;
-      setFollowButton(true);
-    }
-
-    const {count} = await supabaseClient
-      .from("follows")
-      .select("id",{count:"exact",head:true})
-      .eq("following_email",targetEmail);
-
-    document.getElementById("profileFollowers").textContent = Number(count || 0);
-
-  }catch(error){
-    dashboardMessage("Follow error: " + (error.message || "Unknown error"),"error");
-  }finally{
-    button.disabled = false;
-  }
-}
-
-function closeProfileModal(event){
-  if(event && event.target && event.target.id !== "profileModal") return;
-  const modal = document.getElementById("profileModal");
-  if(modal) modal.style.display = "none";
-  activeProfileEmail = "";
-}
-
 
 
 /* =========================================
