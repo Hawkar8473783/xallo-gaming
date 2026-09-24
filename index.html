@@ -2766,7 +2766,7 @@ async function loadTikTokFeed(searchTerm="", mode="all"){
       return;
     }
 
-    // Load the current user's follow state in one query so each video can show شوێن بکەوە/شوێن بکەوەing.
+    // Load the current user's follow state in one query so each video can show شوێن بکەوە/شوێنکەوترا.
     let followingSet = new Set();
     try{
       const {data:authData} = await supabaseClient.auth.getUser();
@@ -2828,7 +2828,7 @@ async function loadTikTokFeed(searchTerm="", mode="all"){
             </button>
 
             <button type="button" class="tiktok-follow-button ${isFollowing ? "following" : ""}" onclick="toggleTikTokFollow(event,'${escapeHtml(email)}',this)">
-              ${followingSet.has(String(video.user_email || "").toLowerCase()) ? "✓" : "➕"} <span class="count">${followingSet.has(String(video.user_email || "").toLowerCase()) ? "شوێن بکەوەing" : "شوێن بکەوە"}</span>
+              ${followingSet.has(String(video.user_email || "").toLowerCase()) ? "✓" : "➕"} <span class="count">${followingSet.has(String(video.user_email || "").toLowerCase()) ? "شوێنکەوترا" : "شوێن بکەوە"}</span>
             </button>
 
             <button type="button" class="tiktok-small-btn" onclick="shareTikTokVideo('${escapeHtml(id)}')">
@@ -3190,14 +3190,14 @@ async function openTikTokپرۆفایل(email){
     nameBox.textContent = "پرۆفایل unavailable";
     bioBox.textContent = error.message || "نەتوانرا پرۆفایل بار بکرێت.";
     followButton.disabled = true;
-    followButton.textContent = "شوێن بکەوە unavailable";
+    followButton.textContent = "شوێنکەوتن بەردەست نییە";
   }
 }
 
 function setFollowButton(isFollowing){
   const button = document.getElementById("profileFollowButton");
   button.classList.toggle("following",!!isFollowing);
-  button.textContent = isFollowing ? "✓ شوێن بکەوەing" : "＋ شوێن بکەوە";
+  button.textContent = isFollowing ? "✓ شوێنکەوترا" : "＋ شوێن بکەوە";
 }
 
 async function toggleFollow(targetEmail){
