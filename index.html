@@ -392,12 +392,12 @@ button:disabled{
     <h2>چوونەژوورەوە</h2>
 
     <input
-      id="loginئیمەیڵ"
+      id="loginEmail"
       type="email"
       placeholder="ئیمەیڵ">
 
     <input
-      id="loginوشەی نهێنی"
+      id="loginPassword"
       type="password"
       placeholder="وشەی نهێنی">
 
@@ -420,12 +420,12 @@ button:disabled{
     <h2>دروستکردنی هەژمار</h2>
 
     <input
-      id="signupئیمەیڵ"
+      id="signupEmail"
       type="email"
       placeholder="ئیمەیڵ">
 
     <input
-      id="signupوشەی نهێنی"
+      id="signupPassword"
       type="password"
       placeholder="وشەی نهێنی">
 
@@ -438,7 +438,7 @@ button:disabled{
 
     <div class="switch">
       هەژمارت هەیە؟
-      <a onclick="showچوونەژوورەوە()">چوونەژوورەوە</a>
+      <a onclick="showLogin()">چوونەژوورەوە</a>
     </div>
 
   </div>
@@ -456,14 +456,14 @@ button:disabled{
   <div class="profile-box" id="profileBox">
     <div id="profileAvatar" class="profile-avatar" aria-label="وێنەی پرۆفایل" style="display:flex;align-items:center;justify-content:center;color:#08a9ff;font-size:30px;font-weight:bold;">X</div>
     <div id="profileName" class="profile-name">بەکارهێنەر</div>
-    <div id="profileئیمەیڵ" class="profile-email"></div>
+    <div id="profileEmail" class="profile-email"></div>
     <div id="profileBio" class="profile-bio">بەخێربێیت بۆ XALLO-GAMING 🎮</div>
     <div class="profile-stats">
-      <div class="profile-stat"><b id="profileشوێن بکەوەers">0</b><span>شوێنکەوتوو</span></div>
-      <div class="profile-stat"><b id="profileشوێن بکەوەing">0</b><span>شوێنکەوتووەکان</span></div>
+      <div class="profile-stat"><b id="profileFollowers">0</b><span>شوێنکەوتوو</span></div>
+      <div class="profile-stat"><b id="profileFollowing">0</b><span>شوێنکەوتووەکان</span></div>
       <div class="profile-stat"><b id="profileVideoCount">0</b><span>ڤیدیۆ</span></div>
     </div>
-    <button id="followButton" class="follow-button" onclick="toggleشوێن بکەوە()">👥 شوێن بکەوە</button>
+    <button id="followButton" class="follow-button" onclick="toggleFollow()">👥 شوێن بکەوە</button>
   </div>
 
 
@@ -477,7 +477,7 @@ button:disabled{
 
   <h2>بەخێربێیت 🎮</h2>
 
-  <div class="email" id="userئیمەیڵ"></div>
+  <div class="email" id="userEmail"></div>
 
 
   <!-- COINS -->
@@ -740,274 +740,228 @@ function dashboardMessage(text,type){
    LOGIN / SIGNUP UI
 ========================================= */
 
-function showچوونەژوورەوە(){
 
-  document.getElementById("loginBox")
-    .style.display="block";
-
-  document.getElementById("signupBox")
-    .style.display="none";
-
-  document.getElementById("message")
-    .style.display="none";
+function showLogin(){
+  document.getElementById("loginBox").style.display="block";
+  document.getElementById("signupBox").style.display="none";
+  document.getElementById("message").style.display="none";
 }
-
 
 function showSignup(){
-
-  document.getElementById("loginBox")
-    .style.display="none";
-
-  document.getElementById("signupBox")
-    .style.display="block";
-
-  document.getElementById("message")
-    .style.display="none";
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("signupBox").style.display="block";
+  document.getElementById("message").style.display="none";
 }
 
+async function createUserProfile(email){
+  try{
+    const {data:existing,error:readError} =
+      await supabaseClient
+        .from("users")
+        .select("email")
+        .eq("email",email)
+        .maybeSingle();
 
-/* =========================================
-   USER PROFILE
-========================================= */
+    if(readError){
+      console.log("users profile read:",readError.message);
+      return;
+    }
 
-async function createUserپرۆفایل(email){
+    if(existing) return;
 
-  const {
-    data:existing,
-    error
-  } =
-    await supabaseClient
-      .from("users")
-      .select("email")
-      .eq("email",email)
-      .maybeSingle();
+    const {error:insertError} =
+      await supabaseClient
+        .from("users")
+        .insert({
+          email:email,
+          username:email.split("@")[0]
+        });
 
-  if(error){
-    console.log(
-      "پرۆفایل error:",
-      error.message
-    );
-    return;
-  }
-
-  if(existing){
-    return;
-  }
-
-  const {
-    error:insertError
-  } =
-    await supabaseClient
-      .from("users")
-      .insert({
-        email:email,
-        username:email.split("@")[0]
-      });
-
-  if(insertError){
-    console.log(
-      "پرۆفایل insert:",
-      insertError.message
-    );
+    if(insertError){
+      console.log("users profile insert:",insertError.message);
+    }
+  }catch(err){
+    console.log("profile error:",err);
   }
 }
-
-
-/* =========================================
-   SIGN UP
-========================================= */
 
 async function signup(){
-
-  const email =
-    document.getElementById(
-      "signupئیمەیڵ"
-    ).value.trim();
-
-  const password =
-    document.getElementById(
-      "signupوشەی نهێنی"
-    ).value;
+  const email=document.getElementById("signupEmail").value.trim();
+  const password=document.getElementById("signupPassword").value;
 
   if(!email || !password){
-
-    showMessage(
-      "تکایە ئیمەیڵ و وشەی نهێنی بنووسە.",
-      "error"
-    );
-
+    showMessage("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
     return;
   }
 
   if(password.length < 6){
-
-    showMessage(
-      "وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.",
-      "error"
-    );
-
+    showMessage("وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.","error");
     return;
   }
 
-  const button =
-    document.getElementById(
-      "signupButton"
-    );
-
+  const button=document.getElementById("signupButton");
   button.disabled=true;
-  button.textContent="دروست دەکرێت...";
+  button.textContent="چاوەڕوان بە...";
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth.signUp({
+  try{
+    const {data,error}=await supabaseClient.auth.signUp({
       email:email,
       password:password
     });
 
-  button.disabled=false;
-  button.textContent="تۆمارکردن";
+    button.disabled=false;
+    button.textContent="تۆمارکردن";
 
-  if(error){
+    if(error){
+      showMessage("تۆمارکردن سەرکەوتوو نەبوو: "+error.message,"error");
+      return;
+    }
 
-    showMessage(
-      error.message,
-      "error"
-    );
+    if(data && data.user){
+      await createUserProfile(data.user.email);
 
-    return;
+      if(data.session){
+        await showDashboard(data.user);
+        await loadXalloProfile(data.user);
+        showMessage("هەژمارەکەت بە سەرکەوتوویی دروست کرا.","success");
+      }else{
+        showMessage(
+          "هەژمارەکەت دروست کرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە، پاشان بچۆ ژوورەوە.",
+          "success"
+        );
+        document.getElementById("signupPassword").value="";
+      }
+      return;
+    }
+
+    showMessage("نەتوانرا هەژمار دروست بکرێت.","error");
+
+  }catch(err){
+    button.disabled=false;
+    button.textContent="تۆمارکردن";
+    console.error(err);
+    showMessage("کێشەیەک ڕوویدا. تکایە دووبارە هەوڵ بدەوە.","error");
   }
-
-  if(data && data.session && data.user){
-
-    await createUserپرۆفایل(
-      data.user.email
-    );
-
-    await showDashboard(
-      data.user
-    );
-    await loadXalloپرۆفایل(
-      data.user
-    );
-
-    return;
-  }
-
-  showMessage(
-    "Account created. Check your email, then login.",
-    "success"
-  );
 }
 
-
-/* =========================================
-   LOGIN
-========================================= */
-
 async function login(){
-
-  const email =
-    document.getElementById(
-      "loginئیمەیڵ"
-    ).value.trim();
-
-  const password =
-    document.getElementById(
-      "loginوشەی نهێنی"
-    ).value;
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value;
 
   if(!email || !password){
-
-    showMessage(
-      "تکایە ئیمەیڵ و وشەی نهێنی بنووسە.",
-      "error"
-    );
-
+    showMessage("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
     return;
   }
 
-  const button =
-    document.getElementById(
-      "loginButton"
-    );
-
+  const button=document.getElementById("loginButton");
   button.disabled=true;
   button.textContent="چاوەڕوان بە...";
 
-  try {
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth
-        .signInWithPassword({
-          email:email,
-          password:password
-        });
+  try{
+    const {data,error}=await supabaseClient.auth.signInWithPassword({
+      email:email,
+      password:password
+    });
 
     button.disabled=false;
     button.textContent="چوونەژوورەوە";
 
     if(error){
-
-      showMessage(
-        "چوونەژوورەوە سەرکەوتوو نەبوو: " + error.message,
-        "error"
-      );
-
+      showMessage("چوونەژوورەوە سەرکەوتوو نەبوو: "+error.message,"error");
       return;
     }
 
     if(data && data.user){
-
-      await createUserپرۆفایل(
-        data.user.email
-      );
-
-      await showDashboard(
-        data.user
-      );
-
-      await loadXalloپرۆفایل(
-        data.user
-      );
-
+      await createUserProfile(data.user.email);
+      await showDashboard(data.user);
+      await loadXalloProfile(data.user);
       return;
     }
 
-    showMessage(
-      "نەتوانرا هەژمارەکەت بناسرێتەوە.",
-      "error"
-    );
+    showMessage("نەتوانرا هەژمارەکەت بناسرێتەوە.","error");
 
-  } catch (err) {
-
+  }catch(err){
     button.disabled=false;
     button.textContent="چوونەژوورەوە";
-
+    console.error(err);
     showMessage(
       "کێشەی پەیوەندی بە سێرڤەر هەیە. تکایە دووبارە هەوڵ بدەوە.",
       "error"
     );
-
-    console.error(err);
-  }
-
-  if(data && data.user){
-
-    await createUserپرۆفایل(
-      data.user.email
-    );
-
-    await showDashboard(
-      data.user
-    );
   }
 }
 
+async function loadXalloProfile(user){
+  if(!user) return;
+
+  const email=user.email || "";
+  const username=
+    user.user_metadata?.username ||
+    email.split("@")[0] ||
+    "بەکارهێنەر";
+
+  const name=document.getElementById("profileName");
+  const emailBox=document.getElementById("profileEmail");
+  const userEmail=document.getElementById("userEmail");
+  const avatar=document.getElementById("profileAvatar");
+
+  if(name) name.textContent=username;
+  if(emailBox) emailBox.textContent=email;
+  if(userEmail) userEmail.textContent=email;
+
+  if(avatar){
+    avatar.textContent=username.trim().charAt(0).toUpperCase() || "X";
+  }
+
+  try{
+    const {count}=await supabaseClient
+      .from("videos")
+      .select("id",{count:"exact",head:true})
+      .eq("user_email",email);
+
+    const videoCount=document.getElementById("profileVideoCount");
+    if(videoCount) videoCount.textContent=count || 0;
+  }catch(err){
+    console.log("video count:",err);
+  }
+
+  updateFollowButton();
+}
+
+const XALLO_FOLLOW_KEY="xallo_following_v1";
+
+function getFollowing(){
+  try{
+    return JSON.parse(localStorage.getItem(XALLO_FOLLOW_KEY) || "[]");
+  }catch(e){
+    return [];
+  }
+}
+
+function updateFollowButton(){
+  const button=document.getElementById("followButton");
+  const email=document.getElementById("profileEmail")?.textContent?.trim();
+
+  if(!button || !email) return;
+
+  const following=getFollowing().includes(email);
+  button.textContent=following ? "✓ شوێنکەوتن" : "👥 شوێن بکەوە";
+  button.classList.toggle("following",following);
+}
+
+function toggleFollow(){
+  const email=document.getElementById("profileEmail")?.textContent?.trim();
+  if(!email) return;
+
+  const list=getFollowing();
+  const index=list.indexOf(email);
+
+  if(index === -1) list.push(email);
+  else list.splice(index,1);
+
+  localStorage.setItem(XALLO_FOLLOW_KEY,JSON.stringify(list));
+  updateFollowButton();
+}
 
 /* =========================================
    COINS
@@ -1064,7 +1018,7 @@ async function showDashboard(user){
   document.getElementById("dashboard")
     .style.display="block";
 
-  document.getElementById("userئیمەیڵ")
+  document.getElementById("userEmail")
     .textContent=user.email;
 
   await loadCoins(user);
@@ -2307,7 +2261,7 @@ async function logout(){
   ).style.display="block";
 
 
-  showچوونەژوورەوە();
+  showLogin();
 }
 
 
@@ -2325,7 +2279,7 @@ async function checkUser(){
 
   if(data && data.user){
 
-    await createUserپرۆفایل(
+    await createUserProfile(
       data.user.email
     );
 
