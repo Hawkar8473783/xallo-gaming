@@ -451,6 +451,18 @@ button:disabled{
 <!-- ================= DASHBOARD ================= -->
 
 <div id="dashboard" style="display:none;">
+    <!-- ===== XALLO VIDEO FEED ===== -->
+    <section class="xallo-feed-section" id="xalloVideoFeed">
+      <div class="xallo-feed-title">
+        <span>🎬</span>
+        <strong>ڤیدیۆکانی XALLO</strong>
+        <span class="xallo-feed-hint">⬆️ بۆ سەرەوە بکێشە</span>
+      </div>
+      <div id="xalloFeedList" class="xallo-feed-list">
+        <div class="xallo-feed-empty">هێشتا هیچ ڤیدیۆیەک نییە.</div>
+      </div>
+    </section>
+
 
   <!-- ================= PROFILE + FOLLOW ================= -->
   <div class="profile-box" id="profileBox">
@@ -823,6 +835,7 @@ async function signup(){
       if(data.session){
         await showDashboard(data.user);
         await loadXalloProfile(data.user);
+        await loadXalloVideoFeed();
         showMessage("هەژمارەکەت بە سەرکەوتوویی دروست کرا.","success");
       }else{
         showMessage(
@@ -875,6 +888,7 @@ async function login(){
       await createUserProfile(data.user.email);
       await showDashboard(data.user);
       await loadXalloProfile(data.user);
+        await loadXalloVideoFeed();
       return;
     }
 
@@ -962,6 +976,101 @@ function toggleFollow(){
   localStorage.setItem(XALLO_FOLLOW_KEY,JSON.stringify(list));
   updateFollowButton();
 }
+
+
+/* ===== XALLO VIDEO FEED ===== */
+async function loadXalloVideoFeed(){
+  const list=document.getElementById("xalloFeedList");
+  if(!list) return;
+
+  list.innerHTML='<div class="xallo-feed-empty">ڤیدیۆکان بار دەکرێن...</div>';
+
+  try{
+    const {data,error}=await supabaseClient
+      .from("videos")
+      .select("*")
+      .order("created_at",{ascending:false})
+      .limit(30);
+
+    if(error){
+      console.error("Feed:",error);
+      list.innerHTML='<div class="xallo-feed-empty">نەتوانرا ڤیدیۆکان بار بکرێن.</div>';
+      return;
+    }
+
+    if(!data || !data.length){
+      list.innerHTML='<div class="xallo-feed-empty">هێشتا هیچ ڤیدیۆیەک نییە. یەکەم ڤیدیۆ دابنێ 🎥</div>';
+      return;
+    }
+
+    list.innerHTML="";
+
+    data.forEach(video=>{
+      const card=document.createElement("article");
+      card.className="xallo-feed-card";
+
+      const videoUrl=video.video_url || video.url || video.file_url || "";
+      const caption=video.caption || video.description || "";
+      const username=video.username || (video.user_email ? video.user_email.split("@")[0] : "بەکارهێنەر");
+
+      if(!videoUrl){
+        card.innerHTML='<div class="xallo-feed-empty">ئەم ڤیدیۆیە لینکێکی دروستی نییە.</div>';
+        list.appendChild(card);
+        return;
+      }
+
+      card.innerHTML=`
+        <video class="xallo-feed-video" src="${escapeHtml(videoUrl)}" controls playsinline preload="metadata"></video>
+        <div class="xallo-feed-actions">
+          <button class="xallo-feed-action" onclick="toggleVideoLike(this)">❤️</button>
+          <button class="xallo-feed-action" onclick="shareXalloVideo('${escapeJs(videoUrl)}')">↗️</button>
+        </div>
+        <div class="xallo-feed-overlay">
+          <div class="xallo-feed-user">👤 ${escapeHtml(username)}</div>
+          <div class="xallo-feed-caption">${escapeHtml(caption)}</div>
+        </div>
+      `;
+
+      list.appendChild(card);
+    });
+
+  }catch(err){
+    console.error(err);
+    list.innerHTML='<div class="xallo-feed-empty">هەڵەیەک ڕوویدا لە بارکردنی ڤیدیۆکان.</div>';
+  }
+}
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function escapeJs(value){
+  return String(value ?? "").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+}
+
+function toggleVideoLike(button){
+  button.classList.toggle("liked");
+  button.textContent=button.classList.contains("liked") ? "💙" : "❤️";
+}
+
+async function shareXalloVideo(url){
+  try{
+    if(navigator.share){
+      await navigator.share({title:"XALLO-GAMING",url:url});
+    }else{
+      await navigator.clipboard.writeText(url);
+      showMessage("لینکی ڤیدیۆکە کۆپی کرا.","success");
+    }
+  }catch(err){
+    console.log("share cancelled",err);
+  }
+}
+
 
 /* =========================================
    COINS
