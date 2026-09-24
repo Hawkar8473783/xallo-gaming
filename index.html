@@ -1,697 +1,2881 @@
 <!DOCTYPE html>
-<html lang="ku" dir="rtl">
+<html lang="ku">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>XALLO-GAMING | TikTok Feed</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; }
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .video-feed { height: 100vh; width: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
-        .video-feed::-webkit-scrollbar { display: none; }
+<title>XALLO-GAMING</title>
+<meta name="xallo-version" content="tiktok-real-fixed-2026-09-23">
 
-        .video-card { position: relative; height: 100vh; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; background-color: #000; overflow: hidden; }
-        .video-card video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        .overlay {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            z-index: 2; display: flex; justify-content: space-between; padding: 12px;
-            padding-bottom: calc(55px + env(safe-area-inset-bottom)); pointer-events: none;
-        }
-        .overlay * { pointer-events: auto; }
+<style>
 
-        .user-info { width: 70%; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; margin-bottom: 5px; text-align: right; }
-        .username { font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
-        .caption { font-size: 0.7rem; line-height: 1.3; color: #eee; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,"Noto Sans Arabic","Noto Sans",sans-serif;
+}
 
-        .action-buttons { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 5px; }
-        .action-btn {
-            background: rgba(255, 255, 255, 0.15); border: none; color: #fff; font-size: 1rem;
-            cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px;
-            border-radius: 50%; width: 36px; height: 36px; justify-content: center; backdrop-filter: blur(5px);
-        }
-        .action-btn span { font-size: 0.55rem; font-weight: bold; }
-        .follow-btn { background: #fe2c55; border-radius: 50%; width: 32px; height: 32px; font-size: 1rem; display: flex; justify-content: center; align-items: center; color: white; border: none; cursor: pointer; }
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at top,#123b5d,#050713 70%);
+  color:white;
+  padding:20px;
+}
 
-        .top-controls { position: absolute; top: 15px; right: 15px; z-index: 3; display: flex; gap: 10px; padding-top: env(safe-area-inset-top); }
-        .top-btn { background: rgba(0, 0, 0, 0.5); border: none; color: white; font-size: 1.1rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+.container{
+  width:100%;
+  max-width:500px;
+  margin:auto;
+  background:#11182d;
+  border:1px solid #263553;
+  border-radius:25px;
+  padding:25px 20px;
+  box-shadow:0 0 40px rgba(0,170,255,.18);
+}
 
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background-color: rgba(30, 30, 30, 0.95); backdrop-filter: blur(10px);
-            display: flex; justify-content: space-around; padding: 6px 0;
-            border-top: 1px solid #333; padding-bottom: calc(6px + env(safe-area-inset-bottom));
-            z-index: 100;
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; text-decoration: none; font-size: 0.6rem; gap: 2px; }
-        .nav-item.active { color: #fe2c55; }
-        .nav-item span { font-size: 1rem; }
-    
-        .auth-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.78); padding: 20px; }
-        .auth-modal.show { display: flex; }
-        .auth-box { width: min(420px, 100%); background: #171717; border: 1px solid #333; border-radius: 18px; padding: 24px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.55); text-align: right; }
-        .auth-box h2 { font-size: 1.35rem; margin-bottom: 8px; }
-        .auth-box p { color: #aaa; font-size: .85rem; line-height: 1.6; margin-bottom: 18px; }
-        .auth-box input { width: 100%; border: 1px solid #444; background: #0c0c0c; color: #fff; border-radius: 10px; padding: 13px; margin: 6px 0; outline: none; direction: ltr; }
-        .auth-box input:focus { border-color: #fe2c55; }
-        .auth-main { width: 100%; border: 0; background: #fe2c55; color: #fff; padding: 13px; border-radius: 10px; margin-top: 10px; font-weight: bold; cursor: pointer; }
-        .auth-switch { width: 100%; border: 0; background: transparent; color: #ddd; padding: 12px 4px 2px; cursor: pointer; }
-        .auth-close { position: absolute; left: 12px; top: 10px; border: 0; background: transparent; color: #fff; font-size: 1.6rem; cursor: pointer; }
-        #authMessage { min-height: 22px; margin-top: 10px; color: #ffd1da; font-size: .8rem; line-height: 1.5; }
-        .account-btn { background: rgba(0,0,0,.5); border: 1px solid #444; color: #fff; font-size: .75rem; min-width: 90px; height: 32px; border-radius: 18px; cursor: pointer; padding: 0 10px; backdrop-filter: blur(5px); }
+.logo{
+  text-align:center;
+  font-size:30px;
+  font-weight:bold;
+  margin-bottom:6px;
+}
 
-    
-        .upload-modal { position: fixed; inset: 0; z-index: 1001; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.8); padding: 20px; }
-        .upload-modal.show { display: flex; }
-        .upload-box { width: min(440px, 100%); background: #171717; border: 1px solid #333; border-radius: 18px; padding: 22px; position: relative; }
-        .upload-box h2 { margin-bottom: 14px; font-size: 1.25rem; }
-        .upload-box input[type=file], .upload-box textarea { width: 100%; background: #0c0c0c; color: #fff; border: 1px solid #444; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
-        .upload-box textarea { min-height: 90px; resize: vertical; direction: rtl; }
-        .upload-main { width: 100%; border: 0; background: #fe2c55; color: #fff; padding: 13px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .upload-main:disabled { opacity: .55; cursor: not-allowed; }
-        .upload-close { position: absolute; left: 12px; top: 8px; border: 0; background: transparent; color: #fff; font-size: 1.6rem; cursor: pointer; }
-        #uploadMessage { min-height: 22px; color: #ffd1da; font-size: .8rem; margin-top: 10px; line-height: 1.5; }
+.logo span{
+  color:#08a9ff;
+}
 
-    
-        .comments-modal { position: fixed; inset: 0; z-index: 1002; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,.55); }
-        .comments-modal.show { display: flex; }
-        .comments-box { width: min(520px,100%); max-height: 72vh; background: #171717; border-radius: 20px 20px 0 0; padding: 18px; display: flex; flex-direction: column; }
-        .comments-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-        .comments-head button { border:0; background:transparent; color:#fff; font-size:1.5rem; cursor:pointer; }
-        #commentsList { overflow:auto; min-height:80px; max-height:45vh; }
-        .comment-item { padding:9px 0; border-bottom:1px solid #292929; }
-        .comment-user { font-weight:bold; font-size:.78rem; }
-        .comment-body { color:#ddd; font-size:.82rem; margin-top:3px; word-break:break-word; }
-        .comment-form { display:flex; gap:7px; margin-top:12px; }
-        .comment-form input { flex:1; background:#0c0c0c; border:1px solid #444; color:#fff; border-radius:10px; padding:11px; direction:rtl; }
-        .comment-form button { border:0; background:#fe2c55; color:#fff; border-radius:10px; padding:0 14px; font-weight:bold; }
-        #commentMessage { color:#aaa; font-size:.72rem; margin-top:7px; min-height:18px; }
+.subtitle{
+  text-align:center;
+  color:#9da8bd;
+  margin-bottom:25px;
+}
 
-    </style>
+h2,h3{
+  margin-bottom:15px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:15px;
+  margin-bottom:12px;
+  border-radius:12px;
+  border:1px solid #283653;
+  background:#070b19;
+  color:white;
+  font-size:16px;
+  outline:none;
+}
+
+textarea{
+  min-height:90px;
+  resize:none;
+}
+
+button{
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:12px;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:7px;
+}
+
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.login-btn{
+  background:#08a9ff;
+}
+
+.reward-button{
+  background:#9c27b0;
+}
+
+.withdraw-button{
+  background:#ff9800;
+}
+
+.upload-button{
+  background:#00a878;
+}
+
+.logout{
+  background:#e53935;
+}
+
+.switch{
+  text-align:center;
+  margin-top:18px;
+  color:#9da8bd;
+}
+
+.switch a{
+  color:#08a9ff;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.message{
+  margin-top:15px;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  line-height:1.5;
+  display:none;
+}
+
+.success{
+  display:block;
+  color:#55e6a5;
+  background:rgba(0,200,120,.12);
+}
+
+.error{
+  display:block;
+  color:#ff7777;
+  background:rgba(255,60,60,.12);
+}
+
+.dashboard{
+  display:none;
+}
+
+.email{
+  color:#b8c1d4;
+  margin:10px 0 18px;
+  text-align:center;
+  word-break:break-word;
+}
+
+.coins{
+  padding:20px;
+  border-radius:18px;
+  background:#0c1b2e;
+  border:1px solid #315174;
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.coin-number{
+  color:#ffd54a;
+  font-size:40px;
+  font-weight:bold;
+  margin-top:7px;
+}
+
+.box{
+  margin-top:20px;
+  padding:18px;
+  background:#0c1b2e;
+  border:1px solid #315174;
+  border-radius:18px;
+}
+
+.balance{
+  text-align:center;
+  color:#9da8bd;
+  margin-bottom:12px;
+}
+
+.small{
+  color:#8f9bb3;
+  font-size:12px;
+  line-height:1.5;
+  text-align:center;
+  margin-top:8px;
+}
+
+.video-feed{
+  margin-top:20px;
+}
+
+.video-card{
+  background:#070b19;
+  border:1px solid #283653;
+  border-radius:18px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.video-card video{
+  width:100%;
+  display:block;
+  max-height:600px;
+  background:black;
+}
+
+.video-info{
+  padding:14px;
+}
+
+.video-user{
+  color:#08a9ff;
+  font-weight:bold;
+  margin-bottom:8px;
+  word-break:break-word;
+}
+
+.caption{
+  color:#ddd;
+  line-height:1.5;
+  margin-bottom:10px;
+}
+
+.video-date{
+  color:#77839a;
+  font-size:11px;
+}
+
+.like-button{
+  background:#18243b;
+  margin-top:12px;
+}
+
+.comment-area{
+  margin-top:12px;
+}
+
+.comment-input{
+  margin-bottom:8px;
+  padding:12px;
+  font-size:14px;
+}
+
+.comment-button{
+  background:#263b63;
+  padding:12px;
+  margin-top:0;
+}
+
+.comments-list{
+  margin-top:12px;
+}
+
+.comment{
+  background:#101a2d;
+  border:1px solid #263553;
+  border-radius:10px;
+  padding:10px;
+  margin-top:8px;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.comment-user{
+  color:#08a9ff;
+  font-weight:bold;
+  margin-bottom:4px;
+  word-break:break-word;
+}
+
+.comment-text{
+  color:#ddd;
+  word-break:break-word;
+}
+
+.comment-date{
+  color:#77839a;
+  font-size:10px;
+  margin-top:5px;
+}
+
+.history{
+  margin-top:22px;
+}
+
+.request,
+.admin-row{
+  background:#070b19;
+  border:1px solid #283653;
+  border-radius:12px;
+  padding:12px;
+  margin-top:10px;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.pending{
+  color:#ffd54a;
+}
+
+.approved{
+  color:#55e6a5;
+}
+
+.rejected{
+  color:#ff7777;
+}
+
+.admin-box{
+  display:none;
+}
+
+.admin-actions{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.admin-actions button{
+  margin:0;
+  font-size:13px;
+  padding:10px;
+}
+
+.approve{
+  background:#16b978;
+}
+
+.reject{
+  background:#e53935;
+}
+
+.logout{
+  margin-top:25px;
+}
+
+.file-name{
+  color:#08a9ff;
+  font-size:13px;
+  margin:5px 0 10px;
+  word-break:break-word;
+}
+
+
+/* ================= TIKTOK STYLE FEED ================= */
+.tiktok-section{
+  margin-top:20px;
+  padding:0;
+}
+.tiktok-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+  padding:0 4px;
+}
+.tiktok-title{
+  margin:0;
+}
+.tiktok-swipe-hint{
+  color:#aeb8cc;
+  font-size:12px;
+}
+.tiktok-feed{
+  width:100%;
+  height:78vh;
+  min-height:560px;
+  max-height:none;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+  background:#000;
+  border-radius:20px;
+  border:1px solid #283653;
+  scrollbar-width:none;
+}
+.tiktok-feed::-webkit-scrollbar{display:none}
+.tiktok-item{
+  position:relative;
+  height:78vh;
+  min-height:560px;
+  max-height:none;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  background:#000;
+  overflow:hidden;
+}
+.tiktok-item video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  background:#000;
+}
+.tiktok-gradient{
+  position:absolute;
+  inset:45% 0 0;
+  background:linear-gradient(transparent,rgba(0,0,0,.9));
+  pointer-events:none;
+}
+.tiktok-info{
+  position:absolute;
+  left:14px;
+  right:76px;
+  bottom:18px;
+  z-index:2;
+}
+.tiktok-user{
+  color:#fff;
+  font-weight:bold;
+  margin-bottom:8px;
+  word-break:break-word;
+}
+.tiktok-caption{
+  color:#fff;
+  line-height:1.45;
+  word-break:break-word;
+}
+.tiktok-actions{
+  position:absolute;
+  right:10px;
+  bottom:18px;
+  width:58px;
+  z-index:3;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.tiktok-actions button{
+  width:58px;
+  height:58px;
+  flex:0 0 58px;
+  margin:0;
+  padding:4px;
+  border-radius:50%;
+  background:rgba(20,28,45,.85);
+  border:1px solid rgba(255,255,255,.18);
+  font-size:12px;
+}
+.tiktok-actions .count{
+  display:block;
+  font-size:11px;
+  margin-top:2px;
+}
+.tiktok-empty{
+  padding:35px 18px;
+  text-align:center;
+  color:#9da8bd;
+}
+@media(max-width:520px){
+  .tiktok-section{
+    margin-top:16px;
+  }
+  .tiktok-feed,.tiktok-item{
+    height:78vh;
+    min-height:540px;
+  }
+  .tiktok-feed{
+    border-radius:16px;
+  }
+  .tiktok-info{
+    left:12px;
+    right:72px;
+    bottom:16px;
+  }
+  .tiktok-actions{
+    right:7px;
+    bottom:14px;
+  }
+}
+
+
+/* ===== XALLO TIKTOK: hide legacy feed if present ===== */
+.video-feed{display:none !important;}
+
+
+/* =========================================
+   FOLLOW / PUBLIC PROFILE
+========================================= */
+.profile-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px}
+.profile-card{width:min(420px,100%);background:#0c1a2b;border:1px solid #31506f;border-radius:22px;padding:22px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.5);position:relative}
+.profile-close{position:absolute;right:12px;top:10px;width:40px;height:40px;border-radius:50%;background:#182a40;color:#fff;border:1px solid #38516d;font-size:20px}
+.profile-avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;background:#16263a;border:3px solid #fff;margin:8px auto 12px;display:block}
+.profile-name{font-size:21px;font-weight:800;color:#fff;word-break:break-word}
+.profile-email{font-size:12px;color:#9eacc0;margin-top:5px;word-break:break-word}
+.profile-bio{color:#d7deea;margin:14px 8px;line-height:1.5;word-break:break-word}
+.profile-stats{display:flex;justify-content:center;gap:34px;margin:16px 0;color:#fff}
+.profile-stats b{display:block;font-size:19px}.profile-stats span{font-size:12px;color:#9eacc0}
+.follow-button{width:100%;margin:6px 0 0;padding:13px;border-radius:13px;border:0;background:#e91e63;color:#fff;font-weight:800;font-size:16px}
+.follow-button.following{background:#26384e;border:1px solid #52657c}
+.tiktok-follow-button{background:rgba(233,30,99,.9)!important}
+
+
+
+/* XALLO TikTok Feed final mobile layout */
+.tiktok-section{position:relative;}
+.tiktok-feed{width:100%;height:72vh;min-height:520px;overflow-y:auto;scroll-snap-type:y mandatory;background:#000;border-radius:18px;}
+.tiktok-item{position:relative;width:100%;height:72vh;min-height:520px;scroll-snap-align:start;scroll-snap-stop:always;background:#000;overflow:hidden;}
+.tiktok-video{width:100%;height:100%;object-fit:cover;display:block;background:#000;}
+.tiktok-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:0;border-radius:50%;width:58px;height:58px;font-size:24px;background:rgba(0,0,0,.45);color:#fff;display:none;}
+.tiktok-item:hover .tiktok-play{display:block;}
+@media (max-width:600px){.tiktok-feed,.tiktok-item{height:76vh;min-height:520px}.tiktok-actions{right:10px}.tiktok-info{left:12px;right:70px;bottom:18px}}
+</style>
+
 </head>
+
 <body>
 
+<div class="container">
+
+<!-- ================= AUTH ================= -->
+
+<div id="authBox">
+
+  <div class="logo">
+    XALLO-<span>GAMING</span>
+  </div>
+
+  <div class="subtitle">
+    Play • Earn • Enjoy
+  </div>
+
+  <div id="loginBox">
+
+    <h2>Login</h2>
+
+    <input
+      id="loginEmail"
+      type="email"
+      placeholder="Email">
+
+    <input
+      id="loginPassword"
+      type="password"
+      placeholder="Password">
+
+    <button
+      class="login-btn"
+      id="loginButton"
+      onclick="login()">
+      Login
+    </button>
+
+    <div class="switch">
+      Don't have an account?
+      <a onclick="showSignup()">Sign Up</a>
+    </div>
+
+  </div>
+
+  <div id="signupBox" style="display:none">
+
+    <h2>Create Account</h2>
+
+    <input
+      id="signupEmail"
+      type="email"
+      placeholder="Email">
+
+    <input
+      id="signupPassword"
+      type="password"
+      placeholder="Password">
+
+    <button
+      class="login-btn"
+      id="signupButton"
+      onclick="signup()">
+      Sign Up
+    </button>
+
+    <div class="switch">
+      Already have an account?
+      <a onclick="showLogin()">Login</a>
+    </div>
+
+  </div>
+
+  <div id="message" class="message"></div>
+
+</div>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<div id="dashboard">
+
+  <div class="logo">
+    XALLO-<span>GAMING</span>
+  </div>
+
+  <div class="subtitle">
+    Play • Earn • Enjoy
+  </div>
+
+  <h2>Welcome 🎮</h2>
+
+  <div class="email" id="userEmail"></div>
+
+
+  <!-- COINS -->
+
+  <div class="coins">
+
+    🪙 Your Coins
+
+    <div
+      class="coin-number"
+      id="coins">
+      0
+    </div>
+
+  </div>
+
+
+  <!-- DAILY REWARD -->
+
+  <button
+    class="reward-button"
+    id="rewardButton"
+    onclick="dailyReward()">
+
+    🎁 Daily Reward +10
+
+  </button>
+
+
+  <!-- ================= UPLOAD VIDEO ================= -->
+
+  <div class="box">
+
+    <h3>📹 Upload Video</h3>
+
+    <input
+      id="videoFile"
+      type="file"
+      accept="video/*"
+      onchange="showSelectedFile()">
+
+    <div
+      id="selectedFile"
+      class="file-name">
+    </div>
+
+    <textarea
+      id="videoCaption"
+      placeholder="Write a caption..."></textarea>
+
+    <button
+      class="upload-button"
+      id="uploadButton"
+      onclick="uploadVideo()">
+
+      ⬆️ Upload Video
+
+    </button>
+
+    <div class="small">
+      Maximum video size: 50 MB
+    </div>
+
+  </div>
+
+
+  <!-- ================= XALLO TIKTOK FEED ================= -->
+
+  <div class="tiktok-section">
+    <div class="tiktok-header">
+      <h3 class="tiktok-title">🎬 XALLO TikTok</h3>
+      <span class="tiktok-swipe-hint">↑ Swipe ↑</span>
+    </div>
+
+    <div id="tiktokFeed" class="tiktok-feed">
+      <div class="tiktok-empty">Loading TikTok Feed...</div>
+    </div>
+  </div>
+
+
+  <!-- ================= WITHDRAW ================= -->
+
+  <div class="box">
+
+    <h3>💳 Withdraw</h3>
+
+    <div class="balance">
+
+      Your balance:
+      <b>
+        <span id="withdrawCoins">0</span>
+        Coins
+      </b>
+
+    </div>
+
+    <select id="withdrawMethod">
+
+      <option value="">
+        Select payment method
+      </option>
+
+      <option value="Korek">
+        📱 Korek
+      </option>
+
+      <option value="Asiacell">
+        📱 Asiacell
+      </option>
+
+    </select>
+
+    <select id="withdrawAmount">
+
+      <option value="">
+        Select amount
+      </option>
+
+      <option value="1000">
+        1,000 Coins
+      </option>
+
+      <option value="5000">
+        5,000 Coins
+      </option>
+
+      <option value="10000">
+        10,000 Coins
+      </option>
+
+    </select>
+
+    <input
+      id="withdrawPhone"
+      type="tel"
+      placeholder="Phone number">
+
+    <button
+      class="withdraw-button"
+      id="withdrawButton"
+      onclick="requestWithdraw()">
+
+      💰 Request Withdraw
+
+    </button>
+
+    <div class="small">
+      Withdraw requests are reviewed by admin.
+    </div>
+
+  </div>
+
+
+  <div
+    id="dashboardMessage"
+    class="message">
+  </div>
+
+
+  <!-- WITHDRAW HISTORY -->
+
+  <div class="history">
+
+    <h3>📋 My Withdrawals</h3>
+
+    <div id="withdrawHistory">
+
+      <div class="small">
+        No requests yet.
+      </div>
+
+    </div>
+
+  </div>
 
 
 
-    <div id="commentsModal" class="comments-modal" aria-hidden="true">
-        <div class="comments-box">
-            <div class="comments-head">
-                <strong>کۆمێنتەکان</strong>
-                <button onclick="closeComments()">×</button>
+  <!-- ================= PUBLIC PROFILE MODAL ================= -->
+  <div id="profileModal" class="profile-modal" onclick="closeProfileModal(event)">
+    <div class="profile-card" onclick="event.stopPropagation()">
+      <button class="profile-close" type="button" onclick="closeProfileModal()">×</button>
+      <img id="profileAvatar" class="profile-avatar" src="" alt="Profile">
+      <div id="profileName" class="profile-name">Profile</div>
+      <div id="profileEmail" class="profile-email"></div>
+      <div id="profileBio" class="profile-bio"></div>
+      <div class="profile-stats">
+        <div><b id="profileFollowers">0</b><span>Followers</span></div>
+        <div><b id="profileFollowing">0</b><span>Following</span></div>
+      </div>
+      <button id="profileFollowButton" class="follow-button" type="button">Follow</button>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+
+  <div
+    id="adminBox"
+    class="box admin-box">
+
+    <h3>👑 Admin Panel</h3>
+
+    <div class="small">
+      Manage withdrawal requests.
+    </div>
+
+    <div id="adminRequests"></div>
+
+  </div>
+
+
+  <button
+    class="logout"
+    onclick="logout()">
+
+    Logout
+
+  </button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+"https://vnyprsjjmmjahkisozib.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+function showMessage(text,type){
+
+  const box =
+    document.getElementById("message");
+
+  box.textContent=text;
+
+  box.className =
+    "message " + type;
+}
+
+
+function dashboardMessage(text,type){
+
+  const box =
+    document.getElementById(
+      "dashboardMessage"
+    );
+
+  box.textContent=text;
+
+  box.className =
+    "message " + type;
+}
+
+
+/* =========================================
+   LOGIN / SIGNUP UI
+========================================= */
+
+function showLogin(){
+
+  document.getElementById("loginBox")
+    .style.display="block";
+
+  document.getElementById("signupBox")
+    .style.display="none";
+
+  document.getElementById("message")
+    .style.display="none";
+}
+
+
+function showSignup(){
+
+  document.getElementById("loginBox")
+    .style.display="none";
+
+  document.getElementById("signupBox")
+    .style.display="block";
+
+  document.getElementById("message")
+    .style.display="none";
+}
+
+
+/* =========================================
+   USER PROFILE
+========================================= */
+
+async function createUserProfile(email){
+
+  const {
+    data:existing,
+    error
+  } =
+    await supabaseClient
+      .from("users")
+      .select("email")
+      .eq("email",email)
+      .maybeSingle();
+
+  if(error){
+    console.log(
+      "Profile error:",
+      error.message
+    );
+    return;
+  }
+
+  if(existing){
+    return;
+  }
+
+  const {
+    error:insertError
+  } =
+    await supabaseClient
+      .from("users")
+      .insert({
+        email:email,
+        username:email.split("@")[0]
+      });
+
+  if(insertError){
+    console.log(
+      "Profile insert:",
+      insertError.message
+    );
+  }
+}
+
+
+/* =========================================
+   SIGN UP
+========================================= */
+
+async function signup(){
+
+  const email =
+    document.getElementById(
+      "signupEmail"
+    ).value.trim();
+
+  const password =
+    document.getElementById(
+      "signupPassword"
+    ).value;
+
+  if(!email || !password){
+
+    showMessage(
+      "Enter email and password.",
+      "error"
+    );
+
+    return;
+  }
+
+  if(password.length < 6){
+
+    showMessage(
+      "Password must be at least 6 characters.",
+      "error"
+    );
+
+    return;
+  }
+
+  const button =
+    document.getElementById(
+      "signupButton"
+    );
+
+  button.disabled=true;
+  button.textContent="Creating...";
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signUp({
+      email:email,
+      password:password
+    });
+
+  button.disabled=false;
+  button.textContent="Sign Up";
+
+  if(error){
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  if(data && data.session && data.user){
+
+    await createUserProfile(
+      data.user.email
+    );
+
+    await showDashboard(
+      data.user
+    );
+
+    return;
+  }
+
+  showMessage(
+    "Account created. Check your email, then login.",
+    "success"
+  );
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+async function login(){
+
+  const email =
+    document.getElementById(
+      "loginEmail"
+    ).value.trim();
+
+  const password =
+    document.getElementById(
+      "loginPassword"
+    ).value;
+
+  if(!email || !password){
+
+    showMessage(
+      "Enter email and password.",
+      "error"
+    );
+
+    return;
+  }
+
+  const button =
+    document.getElementById(
+      "loginButton"
+    );
+
+  button.disabled=true;
+  button.textContent="Logging in...";
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth
+      .signInWithPassword({
+        email:email,
+        password:password
+      });
+
+  button.disabled=false;
+  button.textContent="Login";
+
+  if(error){
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  if(data && data.user){
+
+    await createUserProfile(
+      data.user.email
+    );
+
+    await showDashboard(
+      data.user
+    );
+  }
+}
+
+
+/* =========================================
+   COINS
+========================================= */
+
+function setCoins(amount){
+
+  const value =
+    Number(amount) || 0;
+
+  document.getElementById("coins")
+    .textContent=value;
+
+  document.getElementById(
+    "withdrawCoins"
+  ).textContent=value;
+}
+
+
+async function loadCoins(user){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("users")
+      .select("coins,last_reward_date")
+      .eq("email",user.email)
+      .maybeSingle();
+
+  if(error || !data){
+
+    setCoins(0);
+
+    return null;
+  }
+
+  setCoins(data.coins);
+
+  return data;
+}
+
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+async function showDashboard(user){
+
+  document.getElementById("authBox")
+    .style.display="none";
+
+  document.getElementById("dashboard")
+    .style.display="block";
+
+  document.getElementById("userEmail")
+    .textContent=user.email;
+
+  await loadCoins(user);
+
+  await checkDailyRewardButton(user);
+
+  // Load both feeds independently so a problem in the old video/comments feed
+  // cannot leave the TikTok feed stuck on "Loading videos...".
+  await Promise.allSettled([
+    loadTikTokFeed(),
+    loadVideos()
+  ]);
+
+  await loadWithdrawHistory(user);
+
+  await checkAdmin();
+}
+
+
+/* =========================================
+   DAILY REWARD
+========================================= */
+
+async function checkDailyRewardButton(user){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("users")
+      .select("last_reward_date")
+      .eq("email",user.email)
+      .maybeSingle();
+
+  if(error || !data){
+    return;
+  }
+
+  const button =
+    document.getElementById(
+      "rewardButton"
+    );
+
+  const today =
+    new Date().toLocaleDateString("en-CA");
+
+  if(data.last_reward_date === today){
+
+    button.disabled=true;
+
+    button.textContent =
+      "✅ Reward Claimed";
+
+  }else{
+
+    button.disabled=false;
+
+    button.textContent =
+      "🎁 Daily Reward +10";
+  }
+}
+
+
+async function dailyReward(){
+
+  const button =
+    document.getElementById(
+      "rewardButton"
+    );
+
+  button.disabled=true;
+  button.textContent="Checking...";
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .rpc("claim_daily_reward");
+
+  if(error){
+
+    button.disabled=false;
+
+    button.textContent =
+      "🎁 Daily Reward +10";
+
+    dashboardMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  setCoins(data);
+
+  button.textContent =
+    "✅ Reward Claimed";
+
+  dashboardMessage(
+    "🎉 Daily Reward: +10 Coins!",
+    "success"
+  );
+}
+
+
+/* =========================================
+   SELECTED FILE
+========================================= */
+
+function showSelectedFile(){
+
+  const input =
+    document.getElementById(
+      "videoFile"
+    );
+
+  const box =
+    document.getElementById(
+      "selectedFile"
+    );
+
+  if(!input.files.length){
+
+    box.textContent="";
+    return;
+  }
+
+  const file=input.files[0];
+
+  const sizeMB =
+    file.size / (1024 * 1024);
+
+  box.textContent =
+    file.name +
+    " • " +
+    sizeMB.toFixed(1) +
+    " MB";
+}
+
+
+/* =========================================
+   UPLOAD VIDEO
+========================================= */
+
+async function uploadVideo(){
+
+  const {
+    data:userData,
+    error:userError
+  } =
+    await supabaseClient.auth.getUser();
+
+  if(userError || !userData.user){
+
+    dashboardMessage(
+      "Please login first.",
+      "error"
+    );
+
+    return;
+  }
+
+  const input =
+    document.getElementById(
+      "videoFile"
+    );
+
+  if(!input.files || !input.files.length){
+
+    dashboardMessage(
+      "Please choose a video.",
+      "error"
+    );
+
+    return;
+  }
+
+  const file=input.files[0];
+
+  if(!file.type.startsWith("video/")){
+
+    dashboardMessage(
+      "Please select a video file.",
+      "error"
+    );
+
+    return;
+  }
+
+  const maxSize =
+    50 * 1024 * 1024;
+
+  if(file.size > maxSize){
+
+    dashboardMessage(
+      "Video is larger than 50 MB.",
+      "error"
+    );
+
+    return;
+  }
+
+  const caption =
+    document.getElementById(
+      "videoCaption"
+    ).value.trim();
+
+  const button =
+    document.getElementById(
+      "uploadButton"
+    );
+
+  button.disabled=true;
+  button.textContent="Uploading...";
+
+  try{
+
+    const email =
+      userData.user.email;
+
+    const safeEmail =
+      email.replace(
+        /[^a-zA-Z0-9]/g,
+        "_"
+      );
+
+    const extension =
+      file.name.includes(".")
+      ? file.name.split(".").pop()
+      : "mp4";
+
+    const filePath =
+      safeEmail +
+      "/" +
+      Date.now() +
+      "_" +
+      Math.random()
+        .toString(36)
+        .substring(2,8) +
+      "." +
+      extension;
+
+    const {
+      error:uploadError
+    } =
+      await supabaseClient.storage
+        .from("videos")
+        .upload(
+          filePath,
+          file,
+          {
+            cacheControl:"3600",
+            upsert:false,
+            contentType:file.type
+          }
+        );
+
+    if(uploadError){
+
+      throw new Error(
+        "Storage Upload Error: " +
+        uploadError.message
+      );
+    }
+
+    const {
+      data:urlData
+    } =
+      supabaseClient.storage
+        .from("videos")
+        .getPublicUrl(filePath);
+
+    const videoUrl =
+      urlData.publicUrl;
+
+    if(!videoUrl){
+
+      throw new Error(
+        "Could not create video URL."
+      );
+    }
+
+    const {
+      error:dbError
+    } =
+      await supabaseClient
+        .from("videos")
+        .insert({
+          user_email:email,
+          video_url:videoUrl,
+          caption:caption,
+          likes:0
+        });
+
+    if(dbError){
+
+      await supabaseClient.storage
+        .from("videos")
+        .remove([filePath]);
+
+      throw new Error(
+        "Database Error: " +
+        dbError.message
+      );
+    }
+
+    input.value="";
+
+    document.getElementById(
+      "selectedFile"
+    ).textContent="";
+
+    document.getElementById(
+      "videoCaption"
+    ).value="";
+
+    dashboardMessage(
+      "✅ Video uploaded successfully!",
+      "success"
+    );
+
+    await loadVideos();
+
+  }catch(error){
+
+    console.error(error);
+
+    dashboardMessage(
+      error.message ||
+      "Video upload failed.",
+      "error"
+    );
+
+  }finally{
+
+    button.disabled=false;
+    button.textContent="⬆️ Upload Video";
+  }
+}
+
+
+/* =========================================
+   LOAD VIDEOS
+========================================= */
+
+async function loadVideos(){
+
+  const box =
+    document.getElementById(
+      "videoFeed"
+    );
+
+  box.innerHTML =
+    '<div class="small">Loading videos...</div>';
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("videos")
+      .select(
+        "id,user_email,video_url,caption,likes,created_at"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      )
+      .limit(50);
+
+  if(error){
+
+    box.innerHTML =
+      '<div class="small">Could not load videos: ' +
+      escapeHtml(error.message) +
+      '</div>';
+
+    return;
+  }
+
+  if(!data || !data.length){
+
+    box.innerHTML =
+      '<div class="small">No videos yet. Upload the first video! 🎬</div>';
+
+    return;
+  }
+
+
+  /* LOAD COMMENTS */
+
+  const videoIds =
+    data.map(video => video.id);
+
+  const {
+    data:comments,
+    error:commentsError
+  } =
+    await supabaseClient
+      .from("comments")
+      .select(
+        "id,video_id,user_email,comment,created_at"
+      )
+      .in(
+        "video_id",
+        videoIds
+      )
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
+
+
+  if(commentsError){
+
+    console.error(
+      "Comments error:",
+      commentsError.message
+    );
+  }
+
+
+  /* GROUP COMMENTS BY VIDEO */
+
+  const commentsByVideo = {};
+
+  (comments || []).forEach(comment => {
+
+    if(!commentsByVideo[comment.video_id]){
+      commentsByVideo[comment.video_id] = [];
+    }
+
+    commentsByVideo[comment.video_id].push(
+      comment
+    );
+
+  });
+
+
+  box.innerHTML =
+    data.map(video => {
+
+      const videoComments =
+        commentsByVideo[video.id] || [];
+
+      const commentsHtml =
+        videoComments.length
+
+        ? videoComments.map(comment => `
+
+            <div class="comment">
+
+              <div class="comment-user">
+                👤 ${escapeHtml(comment.user_email)}
+              </div>
+
+              <div class="comment-text">
+                ${escapeHtml(comment.comment)}
+              </div>
+
+              <div class="comment-date">
+                ${new Date(
+                  comment.created_at
+                ).toLocaleString()}
+              </div>
+
             </div>
-            <div id="commentsList"></div>
-            <div class="comment-form">
-                <input id="commentInput" maxlength="1000" placeholder="کۆمێنتێک بنووسە...">
-                <button onclick="sendComment()">ناردن</button>
+
+          `).join("")
+
+        : `
+            <div class="small">
+              No comments yet.
             </div>
-            <div id="commentMessage"></div>
-        </div>
-    </div>
+          `;
 
-    <div id="uploadModal" class="upload-modal" aria-hidden="true">
-        <div class="upload-box">
-            <button class="upload-close" onclick="closeUpload()">×</button>
-            <h2>بڵاوکردنەوەی ڤیدیۆ 🎥</h2>
-            <input id="videoFile" type="file" accept="video/*">
-            <textarea id="videoCaption" maxlength="500" placeholder="دەربارەی ڤیدیۆکە بنووسە..."></textarea>
-            <button id="uploadBtn" class="upload-main" onclick="uploadVideo()">بڵاوکردنەوە</button>
-            <div id="uploadMessage"></div>
-        </div>
-    </div>
 
-    <div id="authModal" class="auth-modal" aria-hidden="true">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeAuth()">×</button>
-            <h2 id="authTitle">چوونەژوورەوە</h2>
-            <p id="authHint">بۆ بەردەوامبوون بچۆ ژوورەوە یان هەژمارێک دروست بکە.</p>
-            <input id="authEmail" type="email" placeholder="ئیمەیڵ" autocomplete="email">
-            <input id="authPassword" type="password" placeholder="وشەی نهێنی" autocomplete="current-password">
-            <button class="auth-main" onclick="submitAuth()">چوونەژوورەوە</button>
-            <button class="auth-switch" onclick="toggleAuthMode()" id="authSwitch">هەژمارت نییە؟ هەژمار دروست بکە</button>
-            <div id="authMessage"></div>
-        </div>
-    </div>
+      return `
 
-    <div class="top-controls">
-        <button class="top-btn" id="muteBtn" onclick="toggleMute()">🔇</button>
-        <button class="account-btn" id="accountBtn" onclick="handleAccount()">چوونەژوورەوە</button>
-    </div>
-
-    <div class="video-feed" id="videoFeed">
         <div class="video-card">
-            <video src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline muted></video>
-            <div class="overlay">
-                <div class="user-info">
-                    <div class="username"><span>👤</span> XALLO_GAMER</div>
-                    <div class="caption">یەکەم ڤیدیۆی من لە XALLO-GAMING! 🎮🔥 #گەیمینگ #XALLO</div>
-                </div>
-                <div class="action-buttons">
-                    <button class="follow-btn" onclick="toggleFollow(this)">+</button>
-                    <button class="action-btn" onclick="likeVideo(this)">❤️ <span>1.2K</span></button>
-                    <button class="action-btn" onclick="openComments()">💬 <span>45</span></button>
-                    <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
-                </div>
+
+          <video
+            controls
+            playsinline
+            preload="metadata"
+            src="${escapeHtml(video.video_url)}">
+          </video>
+
+          <div class="video-info">
+
+            <div class="video-user">
+              👤 ${escapeHtml(video.user_email)}
             </div>
-        </div>
-        <div class="video-card">
-            <video src="https://www.w3schools.com/html/movie.mp4" loop playsinline muted></video>
-            <div class="overlay">
-                <div class="user-info">
-                    <div class="username"><span>👤</span> PRO_GAMER</div>
-                    <div class="caption">یارییەکی زۆر سەخت! 🕹️ ئەتوانی بیبەیت؟ #چالێنج</div>
-                </div>
-                <div class="action-buttons">
-                    <button class="follow-btn" onclick="toggleFollow(this)">+</button>
-                    <button class="action-btn" onclick="likeVideo(this)">❤️ <span>3.5K</span></button>
-                    <button class="action-btn" onclick="openComments()">💬 <span>120</span></button>
-                    <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
-                </div>
+
+            <div class="caption">
+              ${escapeHtml(video.caption || "")}
             </div>
+
+            <div class="video-date">
+              ${new Date(
+                video.created_at
+              ).toLocaleString()}
+            </div>
+
+
+            <!-- LIKE -->
+
+            <button
+              class="like-button"
+              onclick="likeVideo('${video.id}',this)">
+
+              ❤️ ${Number(video.likes) || 0}
+
+            </button>
+
+
+            <!-- COMMENT -->
+
+            <div class="comment-area">
+
+              <input
+                class="comment-input"
+                id="comment-${video.id}"
+                type="text"
+                maxlength="500"
+                placeholder="Write a comment...">
+
+              <button
+                class="comment-button"
+                onclick="addComment('${video.id}')">
+
+                💬 Add Comment
+
+              </button>
+
+              <div class="comments-list">
+
+                ${commentsHtml}
+
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
-    </div>
 
-    <div class="bottom-nav">
-        <a href="index.html" class="nav-item active"><span>🏠</span><span>ماڵەوە</span></a>
-        <a href="search.html" class="nav-item"><span>🔍</span><span>گەڕان</span></a>
-        <a href="#" class="nav-item" onclick="openUpload(); return false;"><span>➕</span><span>بڵاوکردنەوە</span></a>
-        <a href="#" class="nav-item"><span>💬</span><span>نامەکان</span></a>
-        <a href="profile.html" class="nav-item"><span>👤</span><span>پرۆفایل</span></a>
-    </div>
+      `;
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // Supabase configuration
-        const SUPABASE_URL = "https://vnyprsjjmmjahkisozib.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueXByc2pqbW1qYWhraXNvemliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5OTE0MjEsImV4cCI6MjEwNTU2NzQyMX0.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }).join("");
 
-        let authMode = "login";
-        let isMuted = true;
-        const videos = document.querySelectorAll('video');
-        const muteBtn = document.getElementById('muteBtn');
+}
 
-        function toggleMute() {
-            isMuted = !isMuted;
-            videos.forEach(v => v.muted = isMuted);
-            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+
+/* =========================================
+   LIKE VIDEO
+========================================= */
+
+async function likeVideo(id,button){
+
+  button.disabled=true;
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .rpc(
+        "like_video",
+        {
+          p_video_id:id
+        }
+      );
+
+  if(error){
+
+    button.disabled=false;
+
+    dashboardMessage(
+      "Like error: " +
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  button.textContent =
+    "❤️ " + Number(data);
+
+  button.disabled=false;
+}
+
+
+/* =========================================
+   ADD COMMENT
+========================================= */
+
+async function addComment(videoId){
+
+  const {
+    data:userData,
+    error:userError
+  } =
+    await supabaseClient.auth.getUser();
+
+  if(
+    userError ||
+    !userData.user
+  ){
+
+    dashboardMessage(
+      "Please login first.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const input =
+    document.getElementById(
+      "comment-" + videoId
+    );
+
+  if(!input){
+
+    return;
+  }
+
+
+  const comment =
+    input.value.trim();
+
+
+  if(!comment){
+
+    dashboardMessage(
+      "Write a comment first.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if(comment.length > 500){
+
+    dashboardMessage(
+      "Comment is too long.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const button =
+    input.nextElementSibling;
+
+  button.disabled=true;
+  button.textContent="Sending...";
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("comments")
+      .insert({
+
+        video_id:videoId,
+
+        user_email:
+          userData.user.email,
+
+        comment:comment
+
+      });
+
+
+  if(error){
+
+    console.error(error);
+
+    button.disabled=false;
+    button.textContent="💬 Add Comment";
+
+    dashboardMessage(
+      "Comment error: " +
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  input.value="";
+
+  button.disabled=false;
+  button.textContent="💬 Add Comment";
+
+
+  dashboardMessage(
+    "✅ Comment added!",
+    "success"
+  );
+
+
+  await loadVideos();
+}
+
+
+/* =========================================
+   WITHDRAW
+========================================= */
+
+async function requestWithdraw(){
+
+  const {
+    data:userData
+  } =
+    await supabaseClient.auth.getUser();
+
+  if(!userData.user){
+
+    dashboardMessage(
+      "Please login first.",
+      "error"
+    );
+
+    return;
+  }
+
+  const method =
+    document.getElementById(
+      "withdrawMethod"
+    ).value;
+
+  const coins =
+    Number(
+      document.getElementById(
+        "withdrawAmount"
+      ).value
+    );
+
+  const phone =
+    document.getElementById(
+      "withdrawPhone"
+    ).value.trim();
+
+
+  if(
+    !["Korek","Asiacell"]
+      .includes(method)
+  ){
+
+    dashboardMessage(
+      "Select Korek or Asiacell.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if(
+    ![1000,5000,10000]
+      .includes(coins)
+  ){
+
+    dashboardMessage(
+      "Select a valid amount.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  if(
+    !/^[0-9+\s-]{10,15}$/.test(phone)
+  ){
+
+    dashboardMessage(
+      "Enter a valid phone number.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  const button =
+    document.getElementById(
+      "withdrawButton"
+    );
+
+  button.disabled=true;
+  button.textContent="Sending...";
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .rpc(
+        "create_withdrawal",
+        {
+          p_coins:coins,
+          p_method:method,
+          p_phone:phone
+        }
+      );
+
+
+  button.disabled=false;
+
+  button.textContent =
+    "💰 Request Withdraw";
+
+
+  if(error){
+
+    dashboardMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  setCoins(
+    data?.new_balance ?? 0
+  );
+
+
+  document.getElementById(
+    "withdrawMethod"
+  ).value="";
+
+  document.getElementById(
+    "withdrawAmount"
+  ).value="";
+
+  document.getElementById(
+    "withdrawPhone"
+  ).value="";
+
+
+  dashboardMessage(
+    "✅ Withdrawal request sent.",
+    "success"
+  );
+
+
+  await loadWithdrawHistory(
+    userData.user
+  );
+}
+
+
+/* =========================================
+   WITHDRAW HISTORY
+========================================= */
+
+function statusClass(status){
+
+  if(status==="approved"){
+    return "approved";
+  }
+
+  if(status==="rejected"){
+    return "rejected";
+  }
+
+  return "pending";
+}
+
+
+async function loadWithdrawHistory(user){
+
+  const box =
+    document.getElementById(
+      "withdrawHistory"
+    );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("withdrawals")
+      .select(
+        "coins,amount,method,phone,status,created_at"
+      )
+      .eq(
+        "user_email",
+        user.email
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      )
+      .limit(20);
+
+
+  if(error){
+
+    box.innerHTML =
+      '<div class="small">Could not load history.</div>';
+
+    return;
+  }
+
+
+  if(!data || !data.length){
+
+    box.innerHTML =
+      '<div class="small">No requests yet.</div>';
+
+    return;
+  }
+
+
+  box.innerHTML =
+    data.map(r => `
+
+      <div class="request">
+
+        <b>
+          ${escapeHtml(r.method)}
+        </b>
+
+        •
+        ${Number(r.coins).toLocaleString()}
+        Coins
+
+        <br>
+
+        Phone:
+        ${escapeHtml(r.phone)}
+
+        <br>
+
+        Status:
+
+        <span class="${statusClass(r.status)}">
+          ${escapeHtml(r.status)}
+        </span>
+
+        <br>
+
+        ${new Date(
+          r.created_at
+        ).toLocaleString()}
+
+      </div>
+
+    `).join("");
+}
+
+
+/* =========================================
+   ADMIN
+========================================= */
+
+async function checkAdmin(){
+
+  const {
+    data:userData
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if(!userData.user){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("admins")
+      .select("email")
+      .eq(
+        "email",
+        userData.user.email
+      )
+      .maybeSingle();
+
+
+  const box =
+    document.getElementById(
+      "adminBox"
+    );
+
+
+  if(!error && data){
+
+    box.style.display="block";
+
+    await loadAdminRequests();
+
+  }else{
+
+    box.style.display="none";
+
+  }
+}
+
+
+async function loadAdminRequests(){
+
+  const box =
+    document.getElementById(
+      "adminRequests"
+    );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("withdrawals")
+      .select(
+        "id,user_email,coins,method,phone,status,created_at"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      )
+      .limit(50);
+
+
+  if(error){
+
+    box.innerHTML =
+      '<div class="small">Could not load requests.</div>';
+
+    return;
+  }
+
+
+  if(!data || !data.length){
+
+    box.innerHTML =
+      '<div class="small">No withdrawal requests.</div>';
+
+    return;
+  }
+
+
+  box.innerHTML =
+    data.map(r => `
+
+      <div class="admin-row">
+
+        <b>
+          ${escapeHtml(r.method)}
+        </b>
+
+        •
+        ${Number(r.coins).toLocaleString()}
+        Coins
+
+        <br>
+
+        User:
+        ${escapeHtml(r.user_email)}
+
+        <br>
+
+        Phone:
+        ${escapeHtml(r.phone)}
+
+        <br>
+
+        Status:
+
+        <span class="${statusClass(r.status)}">
+          ${escapeHtml(r.status)}
+        </span>
+
+
+        ${
+          r.status === "pending"
+
+          ? `
+
+            <div class="admin-actions">
+
+              <button
+                class="approve"
+                onclick="adminDecision('${r.id}','approved')">
+
+                Approve
+
+              </button>
+
+              <button
+                class="reject"
+                onclick="adminDecision('${r.id}','rejected')">
+
+                Reject
+
+              </button>
+
+            </div>
+
+          `
+
+          : ""
+
         }
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const video = entry.target.querySelector('video');
-                if (entry.isIntersecting) {
-                    video.play().catch(() => { video.muted = true; isMuted = true; muteBtn.textContent = '🔇'; });
-                } else {
-                    video.pause(); video.currentTime = 0;
-                }
-            });
-        }, { threshold: 0.6 });
-        document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
+      </div>
+
+    `).join("");
+}
+
+
+async function adminDecision(
+  id,
+  status
+){
+
+  if(!confirm(
+    status === "approved"
+    ? "Approve this request?"
+    : "Reject and return Coins?"
+  )){
+
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .rpc(
+        "admin_update_withdrawal",
+        {
+          p_withdrawal_id:id,
+          p_status:status
+        }
+      );
+
+
+  if(error){
+
+    dashboardMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  dashboardMessage(
+    "✅ Withdrawal status updated.",
+    "success"
+  );
+
+
+  await loadAdminRequests();
+
+
+  const {
+    data:userData
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if(userData.user){
+
+    await loadWithdrawHistory(
+      userData.user
+    );
+
+    await loadCoins(
+      userData.user
+    );
+  }
+}
 
 
 
-        function openUpload() {
-            supabaseClient.auth.getSession().then(({ data: { session } }) => {
-                if (!session) {
-                    openAuth("login");
-                    return;
-                }
-                document.getElementById("uploadMessage").textContent = "";
-                document.getElementById("videoFile").value = "";
-                document.getElementById("videoCaption").value = "";
-                document.getElementById("uploadModal").classList.add("show");
-                document.getElementById("uploadModal").setAttribute("aria-hidden", "false");
-            });
+/* =========================================
+   TIKTOK STYLE FEED
+========================================= */
+
+async function loadTikTokFeed(){
+
+  const box = document.getElementById("tiktokFeed");
+  if(!box) return;
+
+  box.innerHTML = '<div class="tiktok-empty">Loading TikTok Feed...</div>';
+
+  try {
+    // supabaseClient is a local const in this page, so do not check
+    // window.supabaseClient (that property does not exist).
+    if(!supabaseClient){
+      throw new Error("Supabase is not ready. Please refresh the page.");
+    }
+
+    // First try with views. If the database schema cache does not know
+    // the views column yet, fall back to the basic video columns.
+    let result = await Promise.race([
+      supabaseClient
+        .from("videos")
+        .select("id,user_email,video_url,caption,likes,views,created_at")
+        .order("created_at",{ascending:false})
+        .limit(50),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Video loading timed out. Check your Supabase connection.")), 12000)
+      )
+    ]);
+
+    let data = result.data;
+    let error = result.error;
+
+    if(error){
+      console.warn("TikTok feed query with views failed; retrying basic query", error);
+
+      const fallback = await supabaseClient
+        .from("videos")
+        .select("id,user_email,video_url,caption,likes,created_at")
+        .order("created_at",{ascending:false})
+        .limit(50);
+
+      data = fallback.data;
+      error = fallback.error;
+    }
+
+    if(error){
+      throw new Error(error.message || "Could not load videos.");
+    }
+
+    if(!data || !data.length){
+      box.innerHTML = `
+        <div class="tiktok-empty">
+          <div style="font-size:42px">🎬</div>
+          <div>No videos yet.</div>
+          <div class="small">Upload a video and it will appear here.</div>
+        </div>`;
+      return;
+    }
+
+    // Render each card safely. One bad video URL must not stop the whole feed.
+    box.innerHTML = data.map(video => {
+      const id = String(video.id || "");
+      const email = escapeHtml(video.user_email || "");
+      const url = escapeHtml(video.video_url || "");
+      const caption = escapeHtml(video.caption || "");
+      const likes = Number(video.likes) || 0;
+      const views = Number(video.views) || 0;
+
+      if(!id || !url) return "";
+
+      return `
+        <div class="tiktok-item" data-video-id="${escapeHtml(id)}">
+          <video
+            class="tiktok-video"
+            src="${url}"
+            playsinline
+            muted
+            loop
+            preload="metadata"
+            controlslist="nodownload"
+          ></video>
+
+          <div class="tiktok-gradient"></div>
+
+          <div class="tiktok-info">
+            <div class="tiktok-user">👤 ${email}</div>
+            <div class="tiktok-caption">${caption}</div>
+          </div>
+
+          <div class="tiktok-actions">
+            <button type="button" onclick="likeTikTokVideo('${escapeHtml(id)}',this)">
+              ❤️ <span class="count">${likes}</span>
+            </button>
+
+            <button type="button" onclick="focusTikTokComment('${escapeHtml(id)}')">
+              💬 <span class="count">Comment</span>
+            </button>
+
+            <button type="button" class="tiktok-view-button">
+              👁️ <span class="count tiktok-view-count">${views}</span>
+            </button>
+
+            <button type="button" class="tiktok-follow-button" onclick="openTikTokProfile('${escapeHtml(email)}')">
+              ➕ <span class="count">Follow</span>
+            </button>
+
+            <button type="button" onclick="openTikTokProfile('${escapeHtml(email)}')">
+              👤 <span class="count">Profile</span>
+            </button>
+          </div>
+
+          <button type="button" class="tiktok-play" aria-label="Play video">▶</button>
+        </div>`;
+    }).join("");
+
+    if(!box.querySelector(".tiktok-item")){
+      box.innerHTML = '<div class="tiktok-empty">The videos were found, but their video URLs are empty.</div>';
+      return;
+    }
+
+    setupTikTokObserver();
+
+    // Allow tap-to-play on mobile and pause all other videos.
+    box.querySelectorAll(".tiktok-video").forEach(video => {
+      video.addEventListener("click", async () => {
+        try {
+          if(video.paused){
+            box.querySelectorAll(".tiktok-video").forEach(v => { if(v !== video) v.pause(); });
+            await video.play();
+          }else{
+            video.pause();
+          }
+        }catch(e){
+          console.warn("Video playback error", e);
+        }
+      });
+    });
+
+  } catch(e) {
+    console.error("TikTok Feed error:", e);
+    box.innerHTML = `
+      <div class="tiktok-empty">
+        <div style="font-size:42px">⚠️</div>
+        <div>Could not load TikTok Feed.</div>
+        <div class="small" style="margin-top:8px">${escapeHtml(e.message || "Unknown error")}</div>
+        <button type="button" style="margin-top:14px" onclick="loadTikTokFeed()">🔄 Retry</button>
+      </div>`;
+  }
+}
+
+function setupTikTokObserver(){
+
+  const videos = document.querySelectorAll(".tiktok-video");
+  if(!videos.length) return;
+
+  if(window.__xalloTikTokObserver){
+    try{ window.__xalloTikTokObserver.disconnect(); }catch(e){}
+  }
+
+  const observer = new IntersectionObserver(async entries => {
+    for(const entry of entries){
+      const video = entry.target;
+
+      if(entry.isIntersecting && entry.intersectionRatio >= 0.65){
+        document.querySelectorAll(".tiktok-video").forEach(other => {
+          if(other !== video) other.pause();
+        });
+
+        try{ await video.play(); }catch(e){
+          // A first tap may be required by the mobile browser.
         }
 
-        function closeUpload() {
-            document.getElementById("uploadModal").classList.remove("show");
-            document.getElementById("uploadModal").setAttribute("aria-hidden", "true");
-        }
+        const item = video.closest(".tiktok-item");
+        if(item && !item.dataset.viewed){
+          item.dataset.viewed = "1";
+          const id = item.dataset.videoId;
 
-        async function uploadVideo() {
-            const fileInput = document.getElementById("videoFile");
-            const captionInput = document.getElementById("videoCaption");
-            const btn = document.getElementById("uploadBtn");
-            const message = document.getElementById("uploadMessage");
-            const file = fileInput.files[0];
-
-            if (!file) {
-                message.textContent = "تکایە ڤیدیۆیەک هەڵبژێرە.";
-                return;
+          try{
+            const {data,error} = await supabaseClient.rpc("view_video",{p_video_id:id});
+            if(!error){
+              const count = item.querySelector(".tiktok-view-count");
+              if(count) count.textContent = Number(data) || 0;
             }
-
-            if (!file.type.startsWith("video/")) {
-                message.textContent = "تەنها فایلە ڤیدیۆییەکان ڕێگەپێدراون.";
-                return;
-            }
-
-            const maxSize = 100 * 1024 * 1024;
-            if (file.size > maxSize) {
-                message.textContent = "قەبارەی ڤیدیۆ نابێت لە 100MB زیاتر بێت.";
-                return;
-            }
-
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                closeUpload();
-                openAuth("login");
-                return;
-            }
-
-            btn.disabled = true;
-            message.textContent = "ڤیدیۆکە بەرزدەکرێتەوە... تکایە چاوەڕێ بکە.";
-
-            const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-            const filePath = `${session.user.id}/${Date.now()}-${safeName}`;
-
-            const { error: storageError } = await supabaseClient
-                .storage
-                .from("videos")
-                .upload(filePath, file, {
-                    cacheControl: "3600",
-                    upsert: false,
-                    contentType: file.type
-                });
-
-            if (storageError) {
-                message.textContent = "هەڵە لە بەرزکردنەوە: " + storageError.message;
-                btn.disabled = false;
-                return;
-            }
-
-            const { data: publicData } = supabaseClient
-                .storage
-                .from("videos")
-                .getPublicUrl(filePath);
-
-            const { error: dbError } = await supabaseClient
-                .from("videos")
-                .insert({
-                    user_id: session.user.id,
-                    video_url: publicData.publicUrl,
-                    caption: captionInput.value.trim()
-                });
-
-            if (dbError) {
-                await supabaseClient.storage.from("videos").remove([filePath]);
-                message.textContent = "هەڵە لە Database: " + dbError.message;
-                btn.disabled = false;
-                return;
-            }
-
-            message.textContent = "بە سەرکەوتوویی بڵاوکرایەوە! 🎉";
-            btn.disabled = false;
-            setTimeout(() => closeUpload(), 700);
-            loadVideos();
+          }catch(e){
+            console.warn("View counter error", e);
+          }
         }
+      }else{
+        video.pause();
+      }
+    }
+  },{threshold:[0.65]});
 
-        async function loadVideos() {
-            const { data: videos, error } = await supabaseClient
-                .from("videos")
-                .select("id, user_id, video_url, caption, created_at")
-                .order("created_at", { ascending: false });
+  videos.forEach(video => observer.observe(video));
+  window.__xalloTikTokObserver = observer;
+}
 
-            if (error || !videos) return;
+async function likeTikTokVideo(id,button){
 
-            const userIds = [...new Set(videos.map(v => v.user_id))];
-            const { data: profiles } = userIds.length
-                ? await supabaseClient.from("profiles").select("id, username, display_name").in("id", userIds)
-                : { data: [] };
+  button.disabled = true;
 
-            const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
-            const { data: { session } } = await supabaseClient.auth.getSession();
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .rpc("like_video",{p_video_id:id});
 
-            const feed = document.getElementById("videoFeed");
-            feed.innerHTML = "";
+  if(error){
 
-            if (!videos.length) {
-                feed.innerHTML = '<div style="height:100vh;display:flex;align-items:center;justify-content:center;color:#aaa">هێشتا ڤیدیۆ نییە 🎥</div>';
-                return;
-            }
+    button.disabled = false;
 
-            for (const v of videos) {
-                const p = profileMap[v.user_id];
-                const username = p?.username || p?.display_name || "XALLO_GAMER";
-                const card = document.createElement("div");
-                card.className = "video-card";
-                card.dataset.videoId = v.id;
-                card.innerHTML = `
-                    <video src="${escapeHtml(v.video_url)}" loop playsinline muted></video>
-                    <div class="overlay">
-                        <div class="user-info">
-                            <div class="username"><span>👤</span> ${escapeHtml(username)}</div>
-                            <div class="caption">${escapeHtml(v.caption || "")}</div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="follow-btn" data-user-id="${v.user_id}" onclick="toggleFollow(this)">+</button>
-                            <button class="action-btn like-btn" data-video-id="${v.id}" onclick="likeVideo(this)">❤️ <span>0</span></button>
-                            <button class="action-btn comment-btn" data-video-id="${v.id}" onclick="openComments(${v.id})">💬 <span>0</span></button>
-                            <button class="action-btn" onclick="shareVideo(${v.id})">↗️ <span>Share</span></button>
-                        </div>
-                    </div>`;
-                feed.appendChild(card);
-                observer.observe(card);
+    dashboardMessage(
+      "Like error: " + error.message,
+      "error"
+    );
 
-                const likeBtn = card.querySelector(".like-btn");
-                const commentBtn = card.querySelector(".comment-btn");
-                await updateCountsAndState(v.id, likeBtn, commentBtn, session);
-            }
-        }
+    return;
+  }
 
-        async function updateCountsAndState(videoId, likeBtn, commentBtn, session) {
-            const { count: likes } = await supabaseClient
-                .from("video_likes")
-                .select("*", { count: "exact", head: true })
-                .eq("video_id", videoId);
+  const count = button.querySelector(".count");
 
-            const { count: comments } = await supabaseClient
-                .from("comments")
-                .select("*", { count: "exact", head: true })
-                .eq("video_id", videoId);
+  if(count){
+    count.textContent = Number(data) || 0;
+  }
 
-            likeBtn.querySelector("span").textContent = likes || 0;
-            commentBtn.querySelector("span").textContent = comments || 0;
+  button.disabled = false;
+}
 
-            if (session) {
-                const { data: mine } = await supabaseClient
-                    .from("video_likes")
-                    .select("video_id")
-                    .eq("video_id", videoId)
-                    .eq("user_id", session.user.id)
-                    .maybeSingle();
-                likeBtn.style.color = mine ? "#fe2c55" : "#fff";
+function focusTikTokComment(videoId){
 
-                const { data: video } = await supabaseClient
-                    .from("videos")
-                    .select("user_id")
-                    .eq("id", videoId)
-                    .maybeSingle();
+  const input =
+    document.getElementById("comment-" + videoId);
 
-                if (video && video.user_id !== session.user.id) {
-                    const followBtn = document.querySelector(`.video-card[data-video-id="${videoId}"] .follow-btn`);
-                    if (followBtn) {
-                        const { data: followed } = await supabaseClient
-                            .from("follows")
-                            .select("follower_id")
-                            .eq("follower_id", session.user.id)
-                            .eq("following_id", video.user_id)
-                            .maybeSingle();
-                        followBtn.textContent = followed ? "✓" : "+";
-                    }
-                }
-            }
-        }
+  if(input){
+
+    input.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+
+    input.focus();
+
+    dashboardMessage(
+      "Write your comment below in the XALLO Videos section.",
+      "success"
+    );
+
+  }else{
+
+    dashboardMessage(
+      "Open the comment box in XALLO Videos.",
+      "success"
+    );
+  }
+}
 
 
-        function escapeHtml(value) {
-            return String(value)
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll('"', "&quot;")
-                .replaceAll("'", "&#039;");
-        }
+/* =========================================
+   FOLLOW / PUBLIC PROFILE
+========================================= */
+
+let activeProfileEmail = "";
+
+async function openTikTokProfile(email){
+
+  const targetEmail = String(email || "").trim();
+  if(!targetEmail) return;
+
+  const {data:authData} = await supabaseClient.auth.getUser();
+  const currentEmail = authData && authData.user ? authData.user.email : "";
+
+  activeProfileEmail = targetEmail;
+
+  const modal = document.getElementById("profileModal");
+  const nameBox = document.getElementById("profileName");
+  const emailBox = document.getElementById("profileEmail");
+  const bioBox = document.getElementById("profileBio");
+  const avatar = document.getElementById("profileAvatar");
+  const followButton = document.getElementById("profileFollowButton");
+
+  modal.style.display = "flex";
+  nameBox.textContent = "Loading profile...";
+  emailBox.textContent = targetEmail;
+  bioBox.textContent = "";
+  avatar.src = "";
+  followButton.disabled = true;
+  followButton.textContent = "Loading...";
+
+  try{
+    const {data:profile,error:profileError} = await supabaseClient.rpc(
+      "get_public_profile",
+      {p_email:targetEmail}
+    );
+
+    if(profileError) throw profileError;
+
+    const profileData = profile || {};
+    nameBox.textContent = profileData.username || targetEmail.split("@")[0];
+    emailBox.textContent = targetEmail;
+    bioBox.textContent = profileData.bio || "";
+
+    avatar.src = profileData.avatar_url || "";
+    avatar.onerror = () => {
+      avatar.style.display = "none";
+    };
+    avatar.onload = () => {
+      avatar.style.display = "block";
+    };
+    if(!profileData.avatar_url) avatar.style.display = "none";
+
+    const [{count:followerCount,error:followerError},{count:followingCount,error:followingError}] = await Promise.all([
+      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("following_email",targetEmail),
+      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("follower_email",targetEmail)
+    ]);
+
+    if(followerError) throw followerError;
+    if(followingError) throw followingError;
+
+    document.getElementById("profileFollowers").textContent = Number(followerCount || 0);
+    document.getElementById("profileFollowing").textContent = Number(followingCount || 0);
+
+    if(currentEmail && currentEmail.toLowerCase() === targetEmail.toLowerCase()){
+      followButton.disabled = true;
+      followButton.textContent = "Your Profile";
+      followButton.classList.remove("following");
+      return;
+    }
+
+    const {data:existing,error:followCheckError} = await supabaseClient
+      .from("follows")
+      .select("id")
+      .eq("follower_email",currentEmail)
+      .eq("following_email",targetEmail)
+      .maybeSingle();
+
+    if(followCheckError) throw followCheckError;
+
+    setFollowButton(existing ? true : false);
+    followButton.disabled = false;
+    followButton.onclick = () => toggleFollow(targetEmail);
+
+  }catch(error){
+    nameBox.textContent = "Profile unavailable";
+    bioBox.textContent = error.message || "Could not load profile.";
+    followButton.disabled = true;
+    followButton.textContent = "Follow unavailable";
+  }
+}
+
+function setFollowButton(isFollowing){
+  const button = document.getElementById("profileFollowButton");
+  button.classList.toggle("following",!!isFollowing);
+  button.textContent = isFollowing ? "✓ Following" : "＋ Follow";
+}
+
+async function toggleFollow(targetEmail){
+
+  const button = document.getElementById("profileFollowButton");
+  const {data:authData} = await supabaseClient.auth.getUser();
+  const currentEmail = authData && authData.user ? authData.user.email : "";
+
+  if(!currentEmail){
+    dashboardMessage("Please login first.","error");
+    return;
+  }
+
+  if(currentEmail.toLowerCase() === targetEmail.toLowerCase()) return;
+
+  button.disabled = true;
+
+  try{
+    const {data:existing,error:checkError} = await supabaseClient
+      .from("follows")
+      .select("id")
+      .eq("follower_email",currentEmail)
+      .eq("following_email",targetEmail)
+      .maybeSingle();
+
+    if(checkError) throw checkError;
+
+    if(existing){
+      const {error} = await supabaseClient
+        .from("follows")
+        .delete()
+        .eq("id",existing.id)
+        .eq("follower_email",currentEmail);
+      if(error) throw error;
+      setFollowButton(false);
+    }else{
+      const {error} = await supabaseClient
+        .from("follows")
+        .insert({
+          follower_email:currentEmail,
+          following_email:targetEmail
+        });
+      if(error) throw error;
+      setFollowButton(true);
+    }
+
+    const {count} = await supabaseClient
+      .from("follows")
+      .select("id",{count:"exact",head:true})
+      .eq("following_email",targetEmail);
+
+    document.getElementById("profileFollowers").textContent = Number(count || 0);
+
+  }catch(error){
+    dashboardMessage("Follow error: " + (error.message || "Unknown error"),"error");
+  }finally{
+    button.disabled = false;
+  }
+}
+
+function closeProfileModal(event){
+  if(event && event.target && event.target.id !== "profileModal") return;
+  const modal = document.getElementById("profileModal");
+  if(modal) modal.style.display = "none";
+  activeProfileEmail = "";
+}
 
 
-        let activeCommentVideoId = null;
 
-        async function likeVideo(btn) {
-            const videoId = btn.dataset.videoId;
-            if (!videoId) return;
+/* =========================================
+   ESCAPE HTML
+========================================= */
 
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                openAuth("login");
-                return;
-            }
+function escapeHtml(value){
 
-            const { data: existing } = await supabaseClient
-                .from("video_likes")
-                .select("video_id")
-                .eq("video_id", videoId)
-                .eq("user_id", session.user.id)
-                .maybeSingle();
+  return String(
+    value ?? ""
+  ).replace(
+    /[&<>"']/g,
+    m => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[m])
+  );
+}
 
-            if (existing) {
-                await supabaseClient.from("video_likes")
-                    .delete()
-                    .eq("video_id", videoId)
-                    .eq("user_id", session.user.id);
-            } else {
-                await supabaseClient.from("video_likes")
-                    .insert({ video_id: videoId, user_id: session.user.id });
-            }
 
-            await refreshLikeButton(btn, videoId, session.user.id);
-        }
+/* =========================================
+   LOGOUT
+========================================= */
 
-        async function refreshLikeButton(btn, videoId, userId) {
-            const { count } = await supabaseClient
-                .from("video_likes")
-                .select("*", { count: "exact", head: true })
-                .eq("video_id", videoId);
+async function logout(){
 
-            const { data: mine } = await supabaseClient
-                .from("video_likes")
-                .select("video_id")
-                .eq("video_id", videoId)
-                .eq("user_id", userId)
-                .maybeSingle();
+  await supabaseClient.auth.signOut();
 
-            btn.style.color = mine ? "#fe2c55" : "#fff";
-            btn.querySelector("span").textContent = count || 0;
-        }
 
-        async function openComments(videoId) {
-            activeCommentVideoId = videoId;
-            document.getElementById("commentInput").value = "";
-            document.getElementById("commentMessage").textContent = "";
-            document.getElementById("commentsModal").classList.add("show");
-            document.getElementById("commentsModal").setAttribute("aria-hidden", "false");
-            await loadComments(videoId);
-        }
+  document.getElementById(
+    "dashboard"
+  ).style.display="none";
 
-        function closeComments() {
-            activeCommentVideoId = null;
-            document.getElementById("commentsModal").classList.remove("show");
-            document.getElementById("commentsModal").setAttribute("aria-hidden", "true");
-        }
 
-        async function loadComments(videoId) {
-            const list = document.getElementById("commentsList");
-            list.innerHTML = "چاوەڕێ بکە...";
+  document.getElementById(
+    "authBox"
+  ).style.display="block";
 
-            const { data, error } = await supabaseClient
-                .from("comments")
-                .select("id, user_id, body, created_at")
-                .eq("video_id", videoId)
-                .order("created_at", { ascending: false });
 
-            if (error) {
-                list.innerHTML = "هەڵە لە هێنانی کۆمێنتەکان.";
-                return;
-            }
+  showLogin();
+}
 
-            if (!data.length) {
-                list.innerHTML = '<div style="color:#888;text-align:center;padding:20px">هێشتا کۆمێنت نییە.</div>';
-                return;
-            }
 
-            const ids = [...new Set(data.map(c => c.user_id))];
-            const { data: profiles } = await supabaseClient
-                .from("profiles")
-                .select("id, username, display_name")
-                .in("id", ids);
+/* =========================================
+   CHECK LOGIN
+========================================= */
 
-            const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
+async function checkUser(){
 
-            list.innerHTML = data.map(c => {
-                const p = profileMap[c.user_id];
-                const name = p?.username || p?.display_name || "User";
-                return `<div class="comment-item">
-                    <div class="comment-user">${escapeHtml(name)}</div>
-                    <div class="comment-body">${escapeHtml(c.body)}</div>
-                </div>`;
-            }).join("");
-        }
+  const {
+    data
+  } =
+    await supabaseClient.auth.getUser();
 
-        async function sendComment() {
-            const input = document.getElementById("commentInput");
-            const message = document.getElementById("commentMessage");
-            const body = input.value.trim();
 
-            if (!activeCommentVideoId || !body) return;
+  if(data && data.user){
 
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                openAuth("login");
-                return;
-            }
+    await createUserProfile(
+      data.user.email
+    );
 
-            const { error } = await supabaseClient
-                .from("comments")
-                .insert({
-                    video_id: activeCommentVideoId,
-                    user_id: session.user.id,
-                    body
-                });
+    await showDashboard(
+      data.user
+    );
+  }
+}
 
-            if (error) {
-                message.textContent = error.message;
-                return;
-            }
 
-            input.value = "";
-            message.textContent = "";
-            await loadComments(activeCommentVideoId);
-            await updateCommentCount(activeCommentVideoId);
-        }
+/* =========================================
+   START
+========================================= */
 
-        async function updateCommentCount(videoId) {
-            const { count } = await supabaseClient
-                .from("comments")
-                .select("*", { count: "exact", head: true })
-                .eq("video_id", videoId);
+checkUser();
 
-            const btn = document.querySelector(`.comment-btn[data-video-id="${videoId}"]`);
-            if (btn) btn.querySelector("span").textContent = count || 0;
-        }
+</script>
 
-        async function toggleFollow(btn) {
-            const followingId = btn.dataset.userId;
-            if (!followingId) return;
-
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                openAuth("login");
-                return;
-            }
-            if (session.user.id === followingId) return;
-
-            const { data: existing } = await supabaseClient
-                .from("follows")
-                .select("follower_id")
-                .eq("follower_id", session.user.id)
-                .eq("following_id", followingId)
-                .maybeSingle();
-
-            if (existing) {
-                await supabaseClient.from("follows")
-                    .delete()
-                    .eq("follower_id", session.user.id)
-                    .eq("following_id", followingId);
-            } else {
-                await supabaseClient.from("follows")
-                    .insert({ follower_id: session.user.id, following_id: followingId });
-            }
-
-            btn.textContent = existing ? "+" : "✓";
-        }
-
-        async function shareVideo(videoId) {
-            const card = document.querySelector(`.video-card[data-video-id="${videoId}"]`);
-            const videoUrl = card?.querySelector("video")?.src || location.href;
-
-            try {
-                if (navigator.share) {
-                    await navigator.share({ title: "XALLO-GAMING", url: videoUrl });
-                } else if (navigator.clipboard) {
-                    await navigator.clipboard.writeText(videoUrl);
-                    alert("بەستەرەکە کۆپی کرا.");
-                } else {
-                    alert(videoUrl);
-                }
-            } catch (e) {}
-        }
-
-        function openAuth(mode = "login") {
-            authMode = mode;
-            document.getElementById("authTitle").textContent = mode === "login" ? "چوونەژوورەوە" : "دروستکردنی هەژمار";
-            document.getElementById("authHint").textContent = mode === "login"
-                ? "ئیمەیڵ و وشەی نهێنییەکەت بنووسە."
-                : "ئیمەیڵ و وشەی نهێنییەکەت بنووسە بۆ دروستکردنی هەژمار.";
-            document.getElementById("authSwitch").textContent = mode === "login"
-                ? "هەژمارت نییە؟ هەژمار دروست بکە"
-                : "هەژمارت هەیە؟ بچۆ ژوورەوە";
-            document.getElementById("authMessage").textContent = "";
-            document.getElementById("authModal").classList.add("show");
-            document.getElementById("authModal").setAttribute("aria-hidden", "false");
-        }
-
-        function closeAuth() {
-            document.getElementById("authModal").classList.remove("show");
-            document.getElementById("authModal").setAttribute("aria-hidden", "true");
-        }
-
-        function toggleAuthMode() {
-            openAuth(authMode === "login" ? "signup" : "login");
-        }
-
-        async function submitAuth() {
-            const email = document.getElementById("authEmail").value.trim();
-            const password = document.getElementById("authPassword").value;
-            const message = document.getElementById("authMessage");
-
-            if (!email || !password) {
-                message.textContent = "تکایە ئیمەیڵ و وشەی نهێنی پڕ بکەرەوە.";
-                return;
-            }
-            if (password.length < 6) {
-                message.textContent = "وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.";
-                return;
-            }
-
-            message.textContent = "تکایە چاوەڕێ بکە...";
-
-            if (authMode === "login") {
-                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (error) {
-                    message.textContent = error.message;
-                    return;
-                }
-                closeAuth();
-            } else {
-                const { data, error } = await supabaseClient.auth.signUp({ email, password });
-                if (error) {
-                    message.textContent = error.message;
-                    return;
-                }
-                if (data.session) {
-                    closeAuth();
-                } else {
-                    message.textContent = "هەژمار دروستکرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە.";
-                }
-            }
-            updateAccountButton();
-        loadVideos();
-        }
-
-        async function handleAccount() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                if (confirm("دەتەوێت لە هەژمارەکەت بچیتە دەرەوە؟")) {
-                    await supabaseClient.auth.signOut();
-                    updateAccountButton();
-                }
-            } else {
-                openAuth("login");
-            }
-        }
-
-        async function updateAccountButton() {
-            const btn = document.getElementById("accountBtn");
-            if (!btn) return;
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            btn.textContent = session ? "دەرچوون" : "چوونەژوورەوە";
-        }
-
-        supabaseClient.auth.onAuthStateChange(() => updateAccountButton());
-        updateAccountButton();
-
-    </script>
 </body>
 </html>
