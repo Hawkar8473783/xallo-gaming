@@ -369,6 +369,17 @@ button:disabled{
 }
 
 </style>
+
+<style id="xallo-social-css">
+.xallo-social-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.xallo-social-btn{border:1px solid #2a3b58;background:#07101e;color:#eaf2ff;border-radius:12px;padding:9px 12px;font-weight:700;cursor:pointer}
+.xallo-social-btn:active{transform:scale(.98)}
+.xallo-comments-box{margin-top:10px;display:none}
+.xallo-comments-box textarea{width:100%;min-height:70px;box-sizing:border-box;background:#07101e;color:#fff;border:1px solid #2a3b58;border-radius:10px;padding:10px;direction:rtl}
+.xallo-comment-send{margin-top:7px;width:100%;padding:10px;border:0;border-radius:10px;background:#08a9ff;color:#fff;font-weight:700}
+.xallo-social-note{font-size:13px;color:#aab7ca;margin-top:7px}
+</style>
+
 </head>
 
 <body dir="rtl">
@@ -2540,6 +2551,93 @@ async function checkUser(){
 
 checkUser();
 
+</script>
+
+
+<script id="xallo-social-js">
+async function xalloToggleLike(videoId, button){
+  try{
+    const {data:{user},error:authError}=await supabaseClient.auth.getUser();
+    if(authError || !user){
+      button.textContent="🔐 چوونەژوورەوە پێویستە";
+      return;
+    }
+    const {data:existing,error:findError}=await supabaseClient
+      .from("video_likes").select("id").eq("video_id",videoId).eq("user_id",user.id).maybeSingle();
+    if(findError){
+      button.textContent="❤️ Like";
+      console.error(findError);
+      return;
+    }
+    if(existing){
+      await supabaseClient.from("video_likes").delete().eq("id",existing.id);
+      button.textContent="♡ Like";
+    }else{
+      const {error}=await supabaseClient.from("video_likes").insert({
+        video_id:videoId,user_id:user.id
+      });
+      if(!error) button.textContent="❤️ Like";
+      else console.error(error);
+    }
+  }catch(e){ console.error(e); }
+}
+
+function xalloShowComments(videoId, root){
+  const box=root.querySelector(".xallo-comments-box");
+  if(box) box.style.display=box.style.display==="none"?"block":"none";
+}
+
+async function xalloSendComment(videoId, root){
+  const input=root.querySelector("textarea");
+  const note=root.querySelector(".xallo-social-note");
+  const text=(input?.value||"").trim();
+  if(!text){ if(note) note.textContent="تکایە کۆمێنتەکەت بنووسە."; return; }
+
+  try{
+    const {data:{user},error:authError}=await supabaseClient.auth.getUser();
+    if(authError || !user){
+      if(note) note.textContent="تکایە سەرەتا بچۆ ژوورەوە.";
+      return;
+    }
+
+    const {error}=await supabaseClient.from("video_comments").insert({
+      video_id:videoId,user_id:user.id,comment:text
+    });
+
+    if(error){
+      console.error(error);
+      if(note) note.textContent="کۆمێنتەکە نەنێردرا.";
+      return;
+    }
+
+    input.value="";
+    if(note) note.textContent="✅ کۆمێنتەکەت نێردرا.";
+  }catch(e){
+    console.error(e);
+    if(note) note.textContent="هەڵەیەک ڕوویدا.";
+  }
+}
+</script>
+
+
+<script id="xallo-social-helper">
+function xalloAttachSocialActions(root, videoId){
+  if(!root || root.querySelector(".xallo-social-actions")) return;
+  const wrap=document.createElement("div");
+  wrap.className="xallo-social-actions";
+  wrap.innerHTML=`
+    <button class="xallo-social-btn" type="button"
+      onclick="xalloToggleLike('${videoId}',this)">♡ Like</button>
+    <button class="xallo-social-btn" type="button"
+      onclick="xalloShowComments('${videoId}',this.parentElement.parentElement)">💬 کۆمێنت</button>
+    <div class="xallo-comments-box">
+      <textarea placeholder="کۆمێنتەکەت بنووسە..."></textarea>
+      <button class="xallo-comment-send" type="button"
+        onclick="xalloSendComment('${videoId}',this.parentElement.parentElement.parentElement)">ناردن</button>
+      <div class="xallo-social-note"></div>
+    </div>`;
+  root.appendChild(wrap);
+}
 </script>
 
 </body>
