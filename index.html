@@ -380,6 +380,13 @@ button:disabled{
 .xallo-social-note{font-size:13px;color:#aab7ca;margin-top:7px}
 </style>
 
+
+<style id="xallo-follow-css">
+.xallo-follow-btn{border:0;border-radius:12px;padding:9px 14px;background:#08a9ff;color:#fff;font-weight:700;cursor:pointer}
+.xallo-follow-btn.following{background:#263956}
+.xallo-follow-note{font-size:13px;color:#aab7ca;margin-top:6px}
+</style>
+
 </head>
 
 <body dir="rtl">
@@ -2637,6 +2644,72 @@ function xalloAttachSocialActions(root, videoId){
       <div class="xallo-social-note"></div>
     </div>`;
   root.appendChild(wrap);
+}
+</script>
+
+
+<script id="xallo-follow-js">
+async function xalloToggleFollow(targetUserId, button){
+  try{
+    const {data:{user},error:authError}=await supabaseClient.auth.getUser();
+    if(authError || !user){
+      button.textContent="🔐 چوونەژوورەوە";
+      return;
+    }
+    if(user.id === targetUserId){
+      button.textContent="ئەمە هەژماری خۆتە";
+      return;
+    }
+
+    const {data:existing,error:findError}=await supabaseClient
+      .from("user_follows")
+      .select("id")
+      .eq("follower_id",user.id)
+      .eq("following_id",targetUserId)
+      .maybeSingle();
+
+    if(findError){
+      console.error(findError);
+      button.textContent="Follow";
+      return;
+    }
+
+    if(existing){
+      const {error}=await supabaseClient
+        .from("user_follows").delete().eq("id",existing.id);
+      if(error) throw error;
+      button.textContent="➕ شوێنکەوتن";
+      button.classList.remove("following");
+    }else{
+      const {error}=await supabaseClient
+        .from("user_follows").insert({
+          follower_id:user.id,
+          following_id:targetUserId
+        });
+      if(error) throw error;
+      button.textContent="✓ شوێنکەوترا";
+      button.classList.add("following");
+    }
+  }catch(e){
+    console.error(e);
+    button.textContent="هەڵە ڕوویدا";
+  }
+}
+
+async function xalloSetupFollowButton(button,targetUserId){
+  try{
+    const {data:{user}}=await supabaseClient.auth.getUser();
+    if(!user || user.id===targetUserId) return;
+    const {data}=await supabaseClient
+      .from("user_follows").select("id")
+      .eq("follower_id",user.id)
+      .eq("following_id",targetUserId)
+      .maybeSingle();
+    if(data){
+      button.textContent="✓ شوێنکەوترا";
+      button.classList.add("following");
+    }
+  }catch(e){ console.error(e); }
 }
 </script>
 
