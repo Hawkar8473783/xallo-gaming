@@ -1164,6 +1164,7 @@ async function loadXalloVideoFeed(){
       const videoUrl=video.video_url || video.url || video.file_url || "";
       const caption=video.caption || video.description || "";
       const username=video.username || (video.user_email ? video.user_email.split("@")[0] : "بەکارهێنەر");
+      const targetUserId=video.user_id || "";
 
       if(!videoUrl){
         card.innerHTML='<div class="xallo-feed-empty">ئەم ڤیدیۆیە لینکێکی دروستی نییە.</div>';
@@ -1178,12 +1179,22 @@ async function loadXalloVideoFeed(){
           <button class="xallo-feed-action" onclick="shareXalloVideo('${escapeJs(videoUrl)}')">↗️</button>
         </div>
         <div class="xallo-feed-overlay">
-          <div class="xallo-feed-user">👤 ${escapeHtml(username)}</div>
+          <div class="xallo-feed-user">
+            👤 ${escapeHtml(username)}
+            ${targetUserId ? `<button class="xallo-follow-btn" data-follow-user="${escapeHtml(targetUserId)}" type="button"
+              onclick="xalloToggleFollow('${escapeJs(targetUserId)}',this)">➕ شوێنکەوتن</button>` : ""}
+          </div>
           <div class="xallo-feed-caption">${escapeHtml(caption)}</div>
+          <div class="xallo-follow-note"></div>
         </div>
       `;
 
       list.appendChild(card);
+
+      if(targetUserId){
+        const followBtn=card.querySelector("[data-follow-user]");
+        if(followBtn) xalloSetupFollowButton(followBtn,targetUserId);
+      }
     });
 
   }catch(err){
@@ -2710,6 +2721,22 @@ async function xalloSetupFollowButton(button,targetUserId){
       button.classList.add("following");
     }
   }catch(e){ console.error(e); }
+}
+</script>
+
+
+<script id="xallo-follow-counts">
+async function xalloGetFollowCounts(userId){
+  try{
+    const [{count:followers},{count:following}]=await Promise.all([
+      supabaseClient.from("user_follows").select("*",{count:"exact",head:true}).eq("following_id",userId),
+      supabaseClient.from("user_follows").select("*",{count:"exact",head:true}).eq("follower_id",userId)
+    ]);
+    return {followers:followers||0,following:following||0};
+  }catch(e){
+    console.error(e);
+    return {followers:0,following:0};
+  }
 }
 </script>
 
