@@ -1080,6 +1080,7 @@ async function uploadXalloVideo(){
     const {error:dbError}=await supabaseClient
       .from("videos")
       .insert({
+        user_id:user.id,
         user_email:user.email,
         username:username,
         caption:caption,
@@ -1547,6 +1548,7 @@ async function uploadVideo(){
       await supabaseClient
         .from("videos")
         .insert({
+          user_id:userData.user.id,
           user_email:email,
           video_url:videoUrl,
           caption:caption,
