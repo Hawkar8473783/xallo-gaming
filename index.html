@@ -150,6 +150,20 @@ button:disabled{
   display:none;
 }
 
+/* ===== XALLO AUTH GATE: never show Login and Dashboard together ===== */
+body:not(.xallo-logged-in) #dashboard{
+  display:none !important;
+}
+body:not(.xallo-logged-in) #authBox{
+  display:block !important;
+}
+body.xallo-logged-in #authBox{
+  display:none !important;
+}
+body.xallo-logged-in #dashboard{
+  display:block !important;
+}
+
 .email{
   color:#b8c1d4;
   margin:10px 0 18px;
@@ -1503,6 +1517,11 @@ async function loadدراو(user){
 ========================================= */
 
 async function showDashboard(user){
+
+  // Switch the whole app into authenticated mode first.
+  // The CSS auth gate guarantees the login form can never remain
+  // visible above the dashboard after a successful login/session restore.
+  document.body.classList.add("xallo-logged-in");
 
   document.getElementById("authBox")
     .style.display="none";
@@ -3433,16 +3452,16 @@ async function logout(){
 
   await supabaseClient.auth.signOut();
 
+  // Return to the authentication screen cleanly.
+  document.body.classList.remove("xallo-logged-in");
 
   document.getElementById(
     "dashboard"
   ).style.display="none";
 
-
   document.getElementById(
     "authBox"
   ).style.display="block";
-
 
   showLogin();
 }
@@ -3464,7 +3483,6 @@ async function checkUser(){
   } =
     await supabaseClient.auth.getUser();
 
-
   if(data && data.user){
 
     await createUserپرۆفایل(
@@ -3474,8 +3492,30 @@ async function checkUser(){
     await showDashboard(
       data.user
     );
+  }else{
+    // No active session: make sure an old/stale dashboard cannot remain visible.
+    document.body.classList.remove("xallo-logged-in");
+    document.getElementById("dashboard").style.display="none";
+    document.getElementById("authBox").style.display="block";
+    showLogin();
   }
 }
+
+// Keep the UI synchronized with Supabase session changes (login/logout in another tab, etc.).
+supabaseClient.auth.onAuthStateChange(async (event, session) => {
+  if(session && session.user){
+    document.body.classList.add("xallo-logged-in");
+    if(event === "SIGNED_IN" || event === "INITIAL_SESSION") {
+      await createUserپرۆفایل(session.user.email);
+      await showDashboard(session.user);
+    }
+  }else if(event === "SIGNED_OUT"){
+    document.body.classList.remove("xallo-logged-in");
+    document.getElementById("dashboard").style.display="none";
+    document.getElementById("authBox").style.display="block";
+    showLogin();
+  }
+});
 
 
 /* =========================================
