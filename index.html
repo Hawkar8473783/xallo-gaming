@@ -1367,12 +1367,12 @@ async function loadMyProfile(email){
 
 async function loadMyFollowStats(email){
   try{
-    const [a,b]=await Promise.all([
-      supabaseClient.from("follows").select("follower_email",{count:"exact",head:true}).eq("following_email",email),
-      supabaseClient.from("follows").select("follower_email",{count:"exact",head:true}).eq("follower_email",email)
-    ]);
-    document.getElementById("myFollowersCount").textContent=Number(a.count||0);
-    document.getElementById("myFollowingCount").textContent=Number(b.count||0);
+    const {data,error}=await supabaseClient.rpc("xallo_follow_stats",{
+      p_email:String(email||"").trim().toLowerCase()
+    });
+    if(error) throw error;
+    document.getElementById("myFollowersCount").textContent=Number(data?.followers||0);
+    document.getElementById("myFollowingCount").textContent=Number(data?.following||0);
   }catch(e){ console.warn("Follow stats:",e.message); }
 }
 
@@ -2782,20 +2782,12 @@ async function loadTikTokFeed(searchTerm="", mode="all"){
       return;
     }
 
-    // Load the current user's follow state in one query so each video can show Follow/Following.
+    // Load the current user's follow state through the ID-safe RPC.
     let followingSet = new Set();
     try{
-      const {data:authData} = await supabaseClient.auth.getUser();
-      const currentEmail = authData && authData.user ? authData.user.email : "";
-      const creatorEmails = [...new Set((data || []).map(v => v.user_email).filter(Boolean))];
-      if(currentEmail && creatorEmails.length){
-        const {data:followRows} = await supabaseClient
-          .from("follows")
-          .select("following_email")
-          .eq("follower_email",currentEmail)
-          .in("following_email",creatorEmails);
-        followingSet = new Set((followRows || []).map(row => String(row.following_email).toLowerCase()));
-      }
+      const {data:followRows,error:followError} = await supabaseClient.rpc("xallo_my_following_emails");
+      if(followError) throw followError;
+      followingSet = new Set((followRows || []).map(row => String(row).toLowerCase()));
     }catch(e){ console.warn("Follow state load error",e); }
 
     // Render each card safely. One bad video URL must not stop the whole feed.
@@ -2991,29 +2983,28 @@ function toggleTikTokMute(event,button){
 
 async function toggleTikTokFollow(event,targetEmail,button){
   if(event) event.stopPropagation();
-  const email = String(targetEmail || "").trim();
+  const email = String(targetEmail || "").trim().toLowerCase();
   if(!email || !button) return;
   const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData && authData.user ? authData.user.email : "";
+  const currentEmail = authData && authData.user ? String(authData.user.email||"").toLowerCase() : "";
   if(!currentEmail){ dashboardMessage("Please login first.","error"); return; }
-  if(currentEmail.toLowerCase() === email.toLowerCase()) return;
+  if(currentEmail === email) return;
   button.disabled = true;
   try{
-    const {data:existing,error:checkError} = await supabaseClient
-      .from("follows").select("follower_email,following_email").eq("follower_email",currentEmail).eq("following_email",email).maybeSingle();
-    if(checkError) throw checkError;
-    if(existing){
-      const {error} = await supabaseClient.from("follows").delete().eq("follower_email",currentEmail).eq("following_email",email);
-      if(error) throw error;
-      button.classList.remove("following");
-      button.innerHTML = "➕ <span class=\"count\">Follow</span>";
-    }else{
-      const {error} = await supabaseClient.from("follows").insert({follower_email:currentEmail,following_email:email});
-      if(error) throw error;
-      button.classList.add("following");
-      button.innerHTML = "✓ <span class=\"count\">Following</span>";
-      try{ await supabaseClient.rpc("notify_follow",{p_following_email:email}); }catch(e){ console.warn("Follow notification error",e); }
-    }
+    const {data,error} = await supabaseClient.rpc("toggle_follow",{
+      p_following_email:email
+    });
+    if(error) throw error;
+    const result=data||{};
+    button.classList.toggle("following",!!result.following);
+    button.innerHTML = result.following
+      ? "✓ <span class=\"count\">Following</span>"
+      : "➕ <span class=\"count\">Follow</span>";
+    try{
+      if(result.following){
+        await supabaseClient.rpc("notify_follow",{p_following_email:email});
+      }
+    }catch(e){ console.warn("Follow notification error",e); }
   }catch(error){
     dashboardMessage(error.message || "Follow action failed.","error");
   }finally{
@@ -3176,15 +3167,13 @@ async function openTikTokProfile(email){
       avatar.onerror = () => { avatar.style.display = "none"; };
     }
 
-    const [{count:followerCount,error:followerError},{count:followingCount,error:followingError}] = await Promise.all([
-      supabaseClient.from("follows").select("follower_email",{count:"exact",head:true}).eq("following_email",targetEmail),
-      supabaseClient.from("follows").select("follower_email",{count:"exact",head:true}).eq("follower_email",targetEmail)
-    ]);
-    if(followerError) throw followerError;
-    if(followingError) throw followingError;
+    const {data:stats,error:statsError}=await supabaseClient.rpc("xallo_follow_stats",{
+      p_email:targetEmail
+    });
+    if(statsError) throw statsError;
 
-    document.getElementById("profileFollowers").textContent = Number(followerCount || 0);
-    document.getElementById("profileFollowing").textContent = Number(followingCount || 0);
+    document.getElementById("profileFollowers").textContent = Number(stats?.followers || 0);
+    document.getElementById("profileFollowing").textContent = Number(stats?.following || 0);
 
     if(currentEmail && currentEmail === targetEmail){
       followButton.disabled = true;
@@ -3199,13 +3188,9 @@ async function openTikTokProfile(email){
       return;
     }
 
-    // Prefer the RPC; direct query is only a fallback.
-    const check = await supabaseClient
-      .from("follows")
-      .select("id")
-      .eq("follower_email",currentEmail)
-      .eq("following_email",targetEmail)
-      .maybeSingle();
+    const check = await supabaseClient.rpc("xallo_is_following",{
+      p_target_email:targetEmail
+    });
     if(check.error) throw check.error;
 
     setFollowButton(!!check.data);
@@ -3258,53 +3243,24 @@ async function toggleFollow(targetEmail){
   button.disabled = true;
 
   try{
-    // The RPC performs the operation with security-definer privileges and
-    // returns the new state + follower count in one request.
     const {data,error} = await supabaseClient.rpc("toggle_follow",{
       p_following_email:target
     });
     if(error) throw error;
 
-    const result = data || {};
+    const result=data||{};
     setFollowButton(!!result.following);
     document.getElementById("profileFollowers").textContent = Number(result.followers || 0);
 
-  }catch(error){
-    // Backward-compatible fallback for installations that have not run the patch yet.
     try{
-      const {data:existing,error:checkError} = await supabaseClient
-        .from("follows")
-        .select("id")
-        .eq("follower_email",currentEmail)
-        .eq("following_email",target)
-        .maybeSingle();
-      if(checkError) throw checkError;
-
-      if(existing){
-        const {error:deleteError} = await supabaseClient
-          .from("follows")
-          .delete()
-          .eq("id",existing.id)
-          .eq("follower_email",currentEmail);
-        if(deleteError) throw deleteError;
-        setFollowButton(false);
-      }else{
-        const {error:insertError} = await supabaseClient
-          .from("follows")
-          .insert({follower_email:currentEmail,following_email:target});
-        if(insertError) throw insertError;
-        setFollowButton(true);
+      if(result.following){
+        await supabaseClient.rpc("notify_follow",{p_following_email:target});
       }
+    }catch(e){ console.warn("Follow notification error",e); }
 
-      const {count} = await supabaseClient
-        .from("follows")
-        .select("id",{count:"exact",head:true})
-        .eq("following_email",target);
-      document.getElementById("profileFollowers").textContent = Number(count || 0);
-    }catch(fallbackError){
-      console.error("Follow error:",error,fallbackError);
-      dashboardMessage("Follow error: " + (fallbackError.message || error.message || "Unknown error"),"error");
-    }
+  }catch(error){
+    console.error("Follow error:",error);
+    dashboardMessage("Follow error: " + (error.message || "Unknown error"),"error");
   }finally{
     button.disabled = false;
   }
