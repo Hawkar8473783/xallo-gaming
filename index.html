@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html lang="ku" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>XALLO-GAMING</title>
-<meta name="xallo-version" content="xallo-full-kurdish-follow-fixed-2026-09-25">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 *{
   box-sizing:border-box;
   margin:0;
@@ -20,27 +18,29 @@
 
 body{
   min-height:100vh;
-  background:radial-gradient(circle at top,#123b5d,#050713 70%);
+  background:radial-gradient(circle at top,#123b5d,#050713 65%);
   color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   padding:20px;
 }
 
 .container{
   width:100%;
-  max-width:500px;
-  margin:auto;
+  max-width:430px;
   background:#11182d;
   border:1px solid #263553;
   border-radius:25px;
-  padding:25px 20px;
+  padding:30px 25px;
   box-shadow:0 0 40px rgba(0,170,255,.18);
 }
 
 .logo{
   text-align:center;
-  font-size:30px;
+  font-size:32px;
   font-weight:bold;
-  margin-bottom:6px;
+  margin-bottom:8px;
 }
 
 .logo span{
@@ -50,20 +50,18 @@ body{
 .subtitle{
   text-align:center;
   color:#9da8bd;
-  margin-bottom:25px;
+  margin-bottom:28px;
 }
 
-h2,h3{
-  margin-bottom:15px;
+h2{
+  margin-bottom:20px;
 }
 
-input,
-select,
-textarea{
+input,select{
   width:100%;
-  padding:15px;
-  margin-bottom:12px;
-  border-radius:12px;
+  padding:16px;
+  margin-bottom:14px;
+  border-radius:13px;
   border:1px solid #283653;
   background:#070b19;
   color:white;
@@ -71,30 +69,28 @@ textarea{
   outline:none;
 }
 
-textarea{
-  min-height:90px;
-  resize:none;
-}
-
 button{
   width:100%;
-  padding:15px;
+  padding:16px;
   border:0;
-  border-radius:12px;
+  border-radius:13px;
   color:white;
-  font-size:16px;
+  font-size:17px;
   font-weight:bold;
   cursor:pointer;
-  margin-top:7px;
+  margin-top:8px;
 }
 
 button:disabled{
-  opacity:.5;
-  cursor:not-allowed;
+  opacity:.6;
 }
 
 .login-btn{
   background:#08a9ff;
+}
+
+.coin-button{
+  background:#16b978;
 }
 
 .reward-button{
@@ -105,17 +101,13 @@ button:disabled{
   background:#ff9800;
 }
 
-.upload-button{
-  background:#00a878;
-}
-
 .logout{
   background:#e53935;
 }
 
 .switch{
   text-align:center;
-  margin-top:18px;
+  margin-top:20px;
   color:#9da8bd;
 }
 
@@ -126,12 +118,12 @@ button:disabled{
 }
 
 .message{
-  margin-top:15px;
+  margin-top:18px;
   padding:12px;
   border-radius:10px;
   text-align:center;
-  line-height:1.5;
   display:none;
+  line-height:1.5;
 }
 
 .success{
@@ -148,503 +140,65 @@ button:disabled{
 
 .dashboard{
   display:none;
-}
-
-/* ===== XALLO AUTH GATE: never show Login and Dashboard together ===== */
-body:not(.xallo-logged-in) #dashboard{
-  display:none !important;
-}
-body:not(.xallo-logged-in) #authBox{
-  display:block !important;
-}
-body.xallo-logged-in #authBox{
-  display:none !important;
-}
-body.xallo-logged-in #dashboard{
-  display:block !important;
+  text-align:center;
 }
 
 .email{
   color:#b8c1d4;
-  margin:10px 0 18px;
-  text-align:center;
+  margin:15px 0;
   word-break:break-word;
 }
 
 .coins{
-  padding:20px;
+  margin:25px 0 15px;
+  padding:22px;
   border-radius:18px;
   background:#0c1b2e;
   border:1px solid #315174;
-  text-align:center;
-  margin-bottom:15px;
 }
 
 .coin-number{
   color:#ffd54a;
   font-size:40px;
   font-weight:bold;
-  margin-top:7px;
+  margin-top:8px;
 }
 
-.box{
-  margin-top:20px;
-  padding:18px;
+.withdraw-box{
+  margin-top:25px;
+  padding:20px;
   background:#0c1b2e;
   border:1px solid #315174;
   border-radius:18px;
+  text-align:left;
 }
 
-.balance{
+.withdraw-box h3{
+  margin-bottom:15px;
+  text-align:center;
+}
+
+.balance-info{
   text-align:center;
   color:#9da8bd;
-  margin-bottom:12px;
-}
-
-.small{
-  color:#8f9bb3;
-  font-size:12px;
-  line-height:1.5;
-  text-align:center;
-  margin-top:8px;
-}
-
-.video-feed{
-  margin-top:20px;
-}
-
-.video-card{
-  background:#070b19;
-  border:1px solid #283653;
-  border-radius:18px;
-  overflow:hidden;
-  margin-top:15px;
-}
-
-.video-card video{
-  width:100%;
-  display:block;
-  max-height:600px;
-  background:black;
-}
-
-.video-info{
-  padding:14px;
-}
-
-.video-user{
-  color:#08a9ff;
-  font-weight:bold;
-  margin-bottom:8px;
-  word-break:break-word;
-}
-
-.caption{
-  color:#ddd;
-  line-height:1.5;
-  margin-bottom:10px;
-}
-
-.video-date{
-  color:#77839a;
-  font-size:11px;
-}
-
-.like-button{
-  background:#18243b;
-  margin-top:12px;
-}
-
-.comment-area{
-  margin-top:12px;
-}
-
-.comment-input{
-  margin-bottom:8px;
-  padding:12px;
+  margin-bottom:15px;
   font-size:14px;
 }
 
-.comment-button{
-  background:#263b63;
-  padding:12px;
-  margin-top:0;
-}
-
-.comments-list{
-  margin-top:12px;
-}
-
-.comment{
-  background:#101a2d;
-  border:1px solid #263553;
-  border-radius:10px;
-  padding:10px;
-  margin-top:8px;
+.info{
+  color:#8f9bb3;
   font-size:13px;
-  line-height:1.5;
-}
-
-.comment-user{
-  color:#08a9ff;
-  font-weight:bold;
-  margin-bottom:4px;
-  word-break:break-word;
-}
-
-.comment-text{
-  color:#ddd;
-  word-break:break-word;
-}
-
-.comment-date{
-  color:#77839a;
-  font-size:10px;
-  margin-top:5px;
-}
-
-.history{
-  margin-top:22px;
-}
-
-.request,
-.admin-row{
-  background:#070b19;
-  border:1px solid #283653;
-  border-radius:12px;
-  padding:12px;
-  margin-top:10px;
-  font-size:13px;
-  line-height:1.7;
-}
-
-.pending{
-  color:#ffd54a;
-}
-
-.approved{
-  color:#55e6a5;
-}
-
-.rejected{
-  color:#ff7777;
-}
-
-.admin-box{
-  display:none;
-}
-
-.admin-actions{
-  display:flex;
-  gap:8px;
-  margin-top:10px;
-}
-
-.admin-actions button{
-  margin:0;
-  font-size:13px;
-  padding:10px;
-}
-
-.approve{
-  background:#16b978;
-}
-
-.reject{
-  background:#e53935;
-}
-
-.logout{
-  margin-top:25px;
-}
-
-.file-name{
-  color:#08a9ff;
-  font-size:13px;
-  margin:5px 0 10px;
-  word-break:break-word;
-}
-
-
-/* ================= TIKTOK STYLE FEED ================= */
-.tiktok-section{
-  margin-top:20px;
-  padding:0;
-}
-.tiktok-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
-  padding:0 4px;
-}
-.tiktok-title{
-  margin:0;
-}
-.tiktok-swipe-hint{
-  color:#aeb8cc;
-  font-size:12px;
-}
-.tiktok-feed{
-  width:100%;
-  height:78vh;
-  min-height:560px;
-  max-height:none;
-  overflow-y:auto;
-  scroll-snap-type:y mandatory;
-  background:#000;
-  border-radius:20px;
-  border:1px solid #283653;
-  scrollbar-width:none;
-}
-.tiktok-feed::-webkit-scrollbar{display:none}
-.tiktok-item{
-  position:relative;
-  height:78vh;
-  min-height:560px;
-  max-height:none;
-  scroll-snap-align:start;
-  scroll-snap-stop:always;
-  background:#000;
-  overflow:hidden;
-}
-.tiktok-item video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  background:#000;
-}
-.tiktok-gradient{
-  position:absolute;
-  inset:45% 0 0;
-  background:linear-gradient(transparent,rgba(0,0,0,.9));
-  pointer-events:none;
-}
-.tiktok-info{
-  position:absolute;
-  left:14px;
-  right:76px;
-  bottom:18px;
-  z-index:2;
-}
-.tiktok-user{
-  color:#fff;
-  font-weight:bold;
-  margin-bottom:8px;
-  word-break:break-word;
-}
-.tiktok-caption{
-  color:#fff;
-  line-height:1.45;
-  word-break:break-word;
-}
-.tiktok-actions{
-  position:absolute;
-  right:10px;
-  bottom:18px;
-  width:58px;
-  z-index:3;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.tiktok-actions button{
-  width:58px;
-  height:58px;
-  flex:0 0 58px;
-  margin:0;
-  padding:4px;
-  border-radius:50%;
-  background:rgba(20,28,45,.85);
-  border:1px solid rgba(255,255,255,.18);
-  font-size:12px;
-}
-.tiktok-actions .count{
-  display:block;
-  font-size:11px;
-  margin-top:2px;
-}
-.tiktok-empty{
-  padding:35px 18px;
+  margin-top:15px;
   text-align:center;
-  color:#9da8bd;
-}
-@media(max-width:520px){
-  .tiktok-section{
-    margin-top:16px;
-  }
-  .tiktok-feed,.tiktok-item{
-    height:78vh;
-    min-height:540px;
-  }
-  .tiktok-feed{
-    border-radius:16px;
-  }
-  .tiktok-info{
-    left:12px;
-    right:72px;
-    bottom:16px;
-  }
-  .tiktok-actions{
-    right:7px;
-    bottom:14px;
-  }
-}
-
-
-/* ===== XALLO TIKTOK: hide legacy feed if present ===== */
-.video-feed{display:none !important;}
-
-
-/* =========================================
-   FOLLOW / PUBLIC PROFILE
-========================================= */
-.profile-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px}
-.profile-card{width:min(420px,100%);background:#0c1a2b;border:1px solid #31506f;border-radius:22px;padding:22px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.5);position:relative}
-.profile-close{position:absolute;right:12px;top:10px;width:40px;height:40px;border-radius:50%;background:#182a40;color:#fff;border:1px solid #38516d;font-size:20px}
-.profile-avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;background:#16263a;border:3px solid #fff;margin:8px auto 12px;display:block}
-.profile-name{font-size:21px;font-weight:800;color:#fff;word-break:break-word}
-.profile-email{font-size:12px;color:#9eacc0;margin-top:5px;word-break:break-word}
-.profile-bio{color:#d7deea;margin:14px 8px;line-height:1.5;word-break:break-word}
-.profile-stats{display:flex;justify-content:center;gap:34px;margin:16px 0;color:#fff}
-.profile-stats b{display:block;font-size:19px}.profile-stats span{font-size:12px;color:#9eacc0}
-.follow-button{width:100%;margin:6px 0 0;padding:13px;border-radius:13px;border:0;background:#e91e63;color:#fff;font-weight:800;font-size:16px}
-.follow-button.following{background:#26384e;border:1px solid #52657c}
-.tiktok-follow-button{background:rgba(233,30,99,.9)!important}
-
-
-
-
-/* ===== XALLO TIKTOK ENHANCED ACTIONS ===== */
-.tiktok-actions .tiktok-small-btn{font-size:18px;}
-.tiktok-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.45);color:#fff;font-size:26px;z-index:4;display:flex;align-items:center;justify-content:center;}
-.tiktok-mute{position:absolute;right:12px;top:12px;z-index:4;width:44px!important;height:44px!important;border-radius:50%!important;background:rgba(0,0,0,.5)!important;border:1px solid rgba(255,255,255,.3)!important;margin:0!important;padding:0!important;font-size:20px!important;}
-.tiktok-follow-button.following{background:rgba(38,56,78,.95)!important;}
-.tiktok-share-note{font-size:11px;color:#9eacc0;margin-top:3px;}
-.tiktok-comment-modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:flex-end;justify-content:center;z-index:12000;padding:0;}
-.tiktok-comment-card{width:min(560px,100%);height:min(68vh,620px);background:#0b1626;border:1px solid #304864;border-bottom:0;border-radius:22px 22px 0 0;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -20px 70px rgba(0,0,0,.5);}
-.tiktok-comment-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #263b55;color:#fff;font-weight:800;}
-.tiktok-comment-list{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
-.tiktok-comment-row{background:#15263b;border-radius:13px;padding:10px 12px;color:#e7edf7;}
-.tiktok-comment-user{font-weight:800;font-size:12px;margin-bottom:4px;}
-.tiktok-comment-text{word-break:break-word;line-height:1.45;}
-.tiktok-comment-form{display:flex;gap:8px;padding:12px;border-top:1px solid #263b55;}
-.tiktok-comment-form input{flex:1;margin:0;min-width:0;}
-.tiktok-comment-form button{width:auto;margin:0;padding:10px 14px;}
-@media(max-width:520px){.tiktok-comment-card{height:72vh}.tiktok-mute{right:9px;top:9px}}
-
-/* =========================================
-   XALLO CHAT / MESSAGES
-========================================= */
-.chat-box{margin-top:16px;background:#0b1626;border:1px solid #263c58;border-radius:18px;padding:16px}
-.chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.chat-head h3{margin:0}
-.chat-open{width:auto;margin:0;padding:10px 16px;border-radius:12px;background:#e91e63;color:#fff;border:0;font-weight:800}
-.chat-modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:10000;padding:12px}
-.chat-card{width:min(520px,100%);height:min(760px,94vh);background:#081321;border:1px solid #304864;border-radius:22px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.6)}
-.chat-top{padding:14px;border-bottom:1px solid #263b55;display:flex;gap:8px;align-items:center}
-.chat-top input{flex:1;margin:0}
-.chat-close{width:42px!important;height:42px!important;margin:0!important;padding:0!important;border-radius:50%!important;background:#1b2d43!important}
-.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:9px}
-.chat-msg{max-width:82%;padding:10px 13px;border-radius:16px;line-height:1.4;word-break:break-word}
-.chat-msg.mine{align-self:flex-end;background:#e91e63;color:#fff;border-bottom-right-radius:5px}
-.chat-msg.theirs{align-self:flex-start;background:#1b2c42;color:#e7edf7;border-bottom-left-radius:5px}
-.chat-time{font-size:10px;opacity:.65;margin-top:4px}
-.chat-compose{display:flex;gap:8px;padding:12px;border-top:1px solid #263b55}
-.chat-compose textarea{flex:1;margin:0;min-height:46px;max-height:110px;resize:none}
-.chat-send{width:58px!important;margin:0!important;border-radius:14px!important;background:#e91e63!important}
-.chat-status{padding:0 14px 8px;color:#9eacc0;font-size:12px}
-
-
-/* XALLO TikTok Feed final mobile layout */
-.tiktok-section{position:relative;}
-.tiktok-feed{width:100%;height:72vh;min-height:520px;overflow-y:auto;scroll-snap-type:y mandatory;background:#000;border-radius:18px;}
-.tiktok-item{position:relative;width:100%;height:72vh;min-height:520px;scroll-snap-align:start;scroll-snap-stop:always;background:#000;overflow:hidden;}
-.tiktok-video{width:100%;height:100%;object-fit:cover;display:block;background:#000;}
-.tiktok-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:0;border-radius:50%;width:58px;height:58px;font-size:24px;background:rgba(0,0,0,.45);color:#fff;display:none;}
-.tiktok-item:hover .tiktok-play{display:block;}
-@media (max-width:600px){.tiktok-feed,.tiktok-item{height:76vh;min-height:520px}.tiktok-actions{right:10px}.tiktok-info{left:12px;right:70px;bottom:18px}}
-
-/* ===== XALLO USERS / SEARCH ===== */
-.users-box{margin-top:16px}
-.users-search-row{display:flex;gap:8px}
-.users-search-row input{margin-bottom:0}
-.users-search-row button{width:58px;flex:0 0 58px;margin-top:0;background:#08a9ff}
-.users-list{margin-top:12px;display:flex;flex-direction:column;gap:9px}
-.user-card{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid #283653;background:#0b1425;border-radius:14px}
-.user-card img,.user-avatar-placeholder{width:46px;height:46px;border-radius:50%;object-fit:cover;flex:0 0 46px;background:#17263b;display:flex;align-items:center;justify-content:center}
-.user-card-info{min-width:0;flex:1}
-.user-card-name{font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user-card-email{font-size:11px;color:#8f9db4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user-card button{width:auto;margin:0;padding:9px 12px;background:#e91e63;font-size:13px}
-.users-empty{padding:14px;text-align:center;color:#9da8bd}
-
-
-/* ===== XALLO NOTIFICATIONS ===== */
-.notifications-box{margin-top:16px}
-.notifications-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.notifications-head h3{margin:0}
-.notifications-refresh{width:auto;margin:0;padding:8px 12px;background:#26384e;font-size:12px}
-.notifications-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto}
-.notification-item{padding:12px;border:1px solid #283653;background:#0b1425;border-radius:13px}
-.notification-item.unread{border-color:#e91e63;background:#111b30}
-.notification-title{font-weight:800;margin-bottom:4px}
-.notification-message{font-size:13px;color:#c1ccdc;line-height:1.4}
-.notification-time{font-size:10px;color:#7f8da5;margin-top:7px}
-.notification-read{width:auto;margin:8px 0 0;padding:7px 10px;background:#1c2c42;font-size:11px}
-.notification-badge{display:inline-flex;min-width:22px;height:22px;padding:0 6px;align-items:center;justify-content:center;border-radius:999px;background:#e91e63;color:#fff;font-size:11px;margin-left:5px}
-
-
-/* ===== XALLO MY PROFILE EDITOR ===== */
-/* ===== XALLO HOME / EXPLORE NAV ===== */
-.xallo-nav{display:flex;gap:8px;margin:16px 0;position:sticky;top:8px;z-index:50;background:rgba(8,19,33,.94);padding:8px;border:1px solid #263c58;border-radius:16px;backdrop-filter:blur(10px)}
-.xallo-nav button{flex:1;margin:0;padding:11px 8px;border-radius:12px;background:#101d31;color:#cbd6e6;border:1px solid #2b405c;font-weight:800;font-size:13px}
-.xallo-nav button.active{background:#08a9ff;color:#fff;border-color:#08a9ff}
-.explore-box{display:none;margin:0 0 16px;background:#0b1626;border:1px solid #263c58;border-radius:18px;padding:14px}
-.explore-box.show{display:block}
-.explore-search{display:flex;gap:8px}
-.explore-search input{flex:1;margin:0}
-.explore-search button{width:auto;margin:0;padding:10px 16px;background:#08a9ff}
-.explore-hints{display:flex;gap:8px;overflow-x:auto;margin-top:10px;scrollbar-width:none}
-.explore-hints::-webkit-scrollbar{display:none}
-.explore-hints button{width:auto;flex:0 0 auto;margin:0;padding:8px 12px;border-radius:999px;background:#17263b;border:1px solid #304864;color:#dce5f2;font-size:12px}
-@media(max-width:520px){.xallo-nav{top:4px}.xallo-nav button{font-size:12px;padding:10px 5px}}
-
-.my-profile-box{margin-top:16px}
-.my-profile-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-.my-profile-avatar,.my-profile-initial{width:82px;height:82px;border-radius:50%;flex:0 0 82px;object-fit:cover;background:#17263b;border:3px solid #08a9ff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800}
-.my-profile-label{font-size:12px;color:#9eacc0;margin:8px 0 6px}
-.my-profile-save{background:#08a9ff}
-.my-profile-upload{background:#00a878}
-.my-profile-stats-row{display:flex;gap:10px;margin:12px 0}
-.my-profile-stat{flex:1;text-align:center;background:#101d31;border:1px solid #283b55;border-radius:12px;padding:10px}
-.my-profile-stat b{display:block;font-size:18px}
-.my-profile-stat span{font-size:11px;color:#8f9db4}
-
-
-/* ===== FINAL MOBILE POLISH ===== */
-html{scroll-behavior:smooth}
-body{overflow-x:hidden}
-img,video{max-width:100%}
-@media(max-width:600px){
-  body{padding:8px}
-  .container{max-width:100%;padding:16px 12px;border-radius:20px}
-  .logo{font-size:26px}
-  .tiktok-feed,.tiktok-item{height:76vh;min-height:500px}
-  .xallo-nav{gap:5px;overflow-x:auto}
-  .xallo-nav button{white-space:nowrap}
 }
 </style>
-
 </head>
 
-<body dir="rtl">
+<body>
 
 <div class="container">
 
-<!-- ================= AUTH ================= -->
+<!-- AUTH -->
 
 <div id="authBox">
 
@@ -653,22 +207,24 @@ img,video{max-width:100%}
   </div>
 
   <div class="subtitle">
-    یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
+    Play • Earn • Enjoy
   </div>
+
+  <!-- LOGIN -->
 
   <div id="loginBox">
 
-    <h2>چوونەژوورەوە</h2>
+    <h2>Login</h2>
 
     <input
       id="loginEmail"
       type="email"
-      placeholder="ئیمەیڵ">
+      placeholder="Email">
 
     <input
       id="loginPassword"
       type="password"
-      placeholder="وشەی نهێنی">
+      placeholder="Password">
 
     <button
       class="login-btn"
@@ -678,25 +234,28 @@ img,video{max-width:100%}
     </button>
 
     <div class="switch">
-      هەژمارت نییە؟
-      <a onclick="showSignup()">تۆمارکردن</a>
+      Don't have an account?
+      <a onclick="showSignup()">Sign Up</a>
     </div>
 
   </div>
 
-  <div id="signupBox" style="display:none">
 
-    <h2>دروستکردنی هەژمار</h2>
+  <!-- SIGN UP -->
+
+  <div id="signupBox" style="display:none;">
+
+    <h2>Create Account</h2>
 
     <input
       id="signupEmail"
       type="email"
-      placeholder="ئیمەیڵ">
+      placeholder="Email">
 
     <input
       id="signupPassword"
       type="password"
-      placeholder="وشەی نهێنی">
+      placeholder="Password">
 
     <button
       class="login-btn"
@@ -706,8 +265,8 @@ img,video{max-width:100%}
     </button>
 
     <div class="switch">
-      هەژمارت هەیە؟
-      <a onclick="showLogin()" >چوونەژوورەوە</a>
+      Already have an account?
+      <a onclick="showLogin()">Login</a>
     </div>
 
   </div>
@@ -717,82 +276,28 @@ img,video{max-width:100%}
 </div>
 
 
-<!-- ================= DASHBOARD ================= -->
+<!-- DASHBOARD -->
 
-<div id="dashboard">
+<div id="dashboard" class="dashboard">
 
   <div class="logo">
     XALLO-<span>GAMING</span>
   </div>
 
   <div class="subtitle">
-    یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
+    Play • Earn • Enjoy
   </div>
 
-  <h2>بەخێربێیت 🎮</h2>
+  <h2>Welcome 🎮</h2>
 
   <div class="email" id="userEmail"></div>
 
-  <!-- ================= HOME / EXPLORE NAV ================= -->
-  <div class="xallo-nav" aria-label="XALLO navigation">
-    <button id="homeNavButton" class="active" type="button" onclick="xalloGoHome()">🏠 سەرەکی</button>
-    <button id="exploreNavButton" type="button" onclick="xalloGoExplore()">🔎 گەڕان</button>
-    <button type="button" onclick="xalloGoپرۆفایل()">👤 پرۆفایل</button>
-    <button type="button" onclick="xalloGoپەیامs()">💬 پەیامەکان</button>
-  </div>
-
-  <div id="exploreBox" class="explore-box">
-    <h3 style="margin-top:0">🔎 گەڕان لە XALLO</h3>
-    <div class="small" style="margin-bottom:10px">ڤیدیۆ بە دەربارەیی یان ئیمەیڵی بەکارهێنەر بگەڕێ.</div>
-    <div class="explore-search">
-      <input id="exploreSearchInput" type="search" placeholder="گەڕان لە ڤیدیۆکان..." onkeydown="if(event.key==='Enter') searchExploreVideos()">
-      <button type="button" onclick="searchExploreVideos()">گەڕان</button>
-    </div>
-    <div class="explore-hints">
-      <button type="button" onclick="setExploreMode('all')">🔥 هەموو</button>
-      <button type="button" onclick="setExploreMode('trending')">📈 باڵادارەکان</button>
-      <button type="button" onclick="setExploreMode('new')">🆕 نوێ</button>
-      <button type="button" onclick="setExploreSearch('gaming')">🎮 یاری</button>
-      <button type="button" onclick="setExploreSearch('pubg')">🔫 PUBG</button>
-      <button type="button" onclick="setExploreSearch('fun')">😂 خۆشی</button>
-    </div>
-  </div>
-
-  <!-- ================= MY PROFILE ================= -->
-  <div class="box my-profile-box">
-    <h3>👤 پرۆفایلی من</h3>
-    <div class="my-profile-top">
-      <img id="myپرۆفایلAvatar" class="my-profile-avatar" alt="وێنەی پرۆفایل" style="display:none">
-      <div id="myپرۆفایلInitial" class="my-profile-initial">X</div>
-      <div style="min-width:0">
-        <div id="myپرۆفایلDisplayName" class="profile-name">User</div>
-        <div class="small" style="text-align:left">پرۆفایلی گشتی خۆت دەستکاری بکە</div>
-      </div>
-    </div>
-
-    <div class="my-profile-label">وێنەی پرۆفایل</div>
-    <input id="myAvatarFile" type="file" accept="image/*">
-    <button type="button" class="my-profile-upload" id="myAvatarButton" onclick="uploadMyAvatar()">🖼️ وێنەی پرۆفایل دابنێ</button>
-
-    <div class="my-profile-label">ناوی بەکارهێنەر</div>
-    <input id="myپرۆفایلناوی بەکارهێنەر" type="text" maxlength="30" placeholder="ناوی بەکارهێنەر">
-
-    <div class="my-profile-label">دەربارەی خۆت</div>
-    <textarea id="myپرۆفایلدەربارەی خۆت" maxlength="160" placeholder="دەربارەی خۆت شتێک بنووسە..."></textarea>
-
-    <button type="button" class="my-profile-save" id="myپرۆفایلSaveButton" onclick="saveMyپرۆفایل()">💾 پاشەکەوتکردنی پرۆفایل</button>
-
-    <div class="my-profile-stats-row">
-      <div class="my-profile-stat"><b id="myFollowersCount">0</b><span>شوێنکەوتوو</span></div>
-      <div class="my-profile-stat"><b id="myFollowingCount">0</b><span>شوێنکەوتووەکان</span></div>
-    </div>
-  </div>
 
   <!-- COINS -->
 
   <div class="coins">
 
-    🪙 دراوەکانی تۆ
+    🪙 Your Coins
 
     <div
       class="coin-number"
@@ -810,123 +315,29 @@ img,video{max-width:100%}
     id="rewardButton"
     onclick="dailyReward()">
 
-    🎁 پاداشتی ڕۆژانە +١٠
+    🎁 Daily Reward +10
 
   </button>
 
 
-  <!-- ================= UPLOAD VIDEO ================= -->
+  <!-- WITHDRAW -->
 
-  <div class="box">
+  <div class="withdraw-box">
 
-    <h3>📹 Upload Video</h3>
+    <h3>💳 Withdraw</h3>
 
-    <input
-      id="videoFile"
-      type="file"
-      accept="video/*"
-      onchange="showSelectedFile()">
-
-    <div
-      id="selectedFile"
-      class="file-name">
-    </div>
-
-    <textarea
-      id="videoCaption"
-      placeholder="Write a caption..."></textarea>
-
-    <button
-      class="upload-button"
-      id="uploadButton"
-      onclick="uploadVideo()">
-
-      ⬆️ Upload Video
-
-    </button>
-
-    <div class="small">
-      Maximum video size: 50 MB
-    </div>
-
-  </div>
-
-
-  <!-- ================= XALLO TIKTOK FEED ================= -->
-
-  <div class="tiktok-section">
-    <div class="tiktok-header">
-      <h3 class="tiktok-title">🎬 ڤیدیۆکانی XALLO</h3>
-      <span class="tiktok-swipe-hint">⬆️ بۆ سەرەوە بکێشە</span>
-    </div>
-
-    <div id="tiktokFeed" class="tiktok-feed">
-      <div class="tiktok-empty">ڤیدیۆکان بار دەکرێن...</div>
-    </div>
-  </div>
-
-  <!-- TikTok comments drawer -->
-  <div id="tiktokCommentModal" class="tiktok-comment-modal" onclick="closeTikTokکۆمێنتەکان(event)">
-    <div class="tiktok-comment-card" onclick="event.stopPropagation()">
-      <div class="tiktok-comment-head">
-        <span>💬 کۆمێنتەکان</span>
-        <button type="button" class="chat-close" onclick="closeTikTokکۆمێنتەکان()">×</button>
-      </div>
-      <div id="tiktokCommentList" class="tiktok-comment-list">
-        <div class="small">Loading comments...</div>
-      </div>
-      <div class="tiktok-comment-form">
-        <input id="tiktokCommentInput" type="text" maxlength="500" placeholder="کۆمێنتەکەت بنووسە..." onkeydown="if(event.key==='Enter') submitTikTokComment()">
-        <button type="button" onclick="submitTikTokComment()">ناردن</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= USERS / SEARCH ================= -->
-  <div class="box users-box">
-    <h3>👥 بەکارهێنەران بدۆزەوە</h3>
-    <div class="users-search-row">
-      <input id="userSearchInput" type="search"
-             placeholder="گەڕان بە ناوی بەکارهێنەر یان ئیمەیڵ..."
-             onkeydown="if(event.key==='Enter') searchUsers()">
-      <button type="button" onclick="searchUsers()">🔎</button>
-    </div>
-    <div id="usersList" class="users-list">
-      <div class="users-empty">بەکارهێنەر بگەڕێ بۆ دەستپێکردنی گفتوگۆ.</div>
-    </div>
-  </div>
-
-  <!-- ================= NOTIFICATIONS ================= -->
-  <div class="box notifications-box">
-    <div class="notifications-head">
-      <h3>🔔 ئاگادارییەکان <span id="notificationBadge" class="notification-badge" style="display:none">0</span></h3>
-      <button type="button" class="notifications-refresh" onclick="loadNotifications()">نوێکردنەوە</button>
-    </div>
-    <div id="notificationsList" class="notifications-list">
-      <div class="users-empty">ئاگادارییەکان بار دەکرێن...</div>
-    </div>
-  </div>
-
-<!-- ================= WITHDRAW ================= -->
-
-  <div class="box">
-
-    <h3>💳 کێشانەوەی پارە</h3>
-
-    <div class="balance">
-
-      باڵانسی تۆ:
+    <div class="balance-info">
+      Your balance:
       <b>
-        <span id="withdrawدراو">0</span>
-        دراو
+        <span id="withdrawCoins">0</span> Coins
       </b>
-
     </div>
+
 
     <select id="withdrawMethod">
 
       <option value="">
-        شێوازی پارەدان هەڵبژێرە
+        Select payment method
       </option>
 
       <option value="Korek">
@@ -939,30 +350,33 @@ img,video{max-width:100%}
 
     </select>
 
+
     <select id="withdrawAmount">
 
       <option value="">
-        بڕ هەڵبژێرە
+        Select amount
       </option>
 
       <option value="1000">
-        1,000 دراو
+        1,000 Coins
       </option>
 
       <option value="5000">
-        5,000 دراو
+        5,000 Coins
       </option>
 
       <option value="10000">
-        10,000 دراو
+        10,000 Coins
       </option>
 
     </select>
 
+
     <input
       id="withdrawPhone"
       type="tel"
-      placeholder="ژمارەی مۆبایل">
+      placeholder="Phone number">
+
 
     <button
       class="withdraw-button"
@@ -973,100 +387,17 @@ img,video{max-width:100%}
 
     </button>
 
-    <div class="small">
-      داواکارییەکانی کێشانەوە لەلایەن بەڕێوەبەرەوە پشکنین دەکرێن.
-    </div>
-
   </div>
 
 
   <div
-    id="dashboardپەیام"
+    id="dashboardMessage"
     class="message">
   </div>
 
 
-  <!-- WITHDRAW HISTORY -->
-
-  <div class="history">
-
-    <h3>📋 داواکارییەکانی من</h3>
-
-    <div id="withdrawHistory">
-
-      <div class="small">
-        هێشتا هیچ داواکارییەک نییە.
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-
-
-  <!-- ================= MESSAGES ================= -->
-  <div class="chat-box">
-    <div class="chat-head">
-      <div>
-        <h3>💬 پەیامەکان</h3>
-        <div class="small">پەیامی تایبەت بۆ بەکارهێنەرێکی تری XALLO بنێرە.</div>
-      </div>
-      <button class="chat-open" type="button" onclick="openChat()">کردنەوەی گفتوگۆ</button>
-    </div>
-  </div>
-
-  <div id="chatModal" class="chat-modal" onclick="closeChat(event)">
-    <div class="chat-card" onclick="event.stopPropagation()">
-      <div class="chat-top">
-        <input id="chatRecipient" type="email" placeholder="Receiver email">
-        <button class="chat-close" type="button" onclick="closeChat()">×</button>
-      </div>
-      <div id="chatStatus" class="chat-status">Enter a user's email, then press Load.</div>
-      <div class="chat-top" style="border-top:0">
-        <button class="chat-open" type="button" onclick="loadChat()">Load Chat</button>
-      </div>
-      <div id="chatپەیامs" class="chat-messages">
-        <div class="small">No chat loaded.</div>
-      </div>
-      <div class="chat-compose">
-        <textarea id="chatInput" placeholder="Write a message..."></textarea>
-        <button class="chat-send" type="button" onclick="sendChatپەیام()">➤</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= PUBLIC PROFILE MODAL ================= -->
-  <div id="profileModal" class="profile-modal" onclick="closeپرۆفایلModal(event)">
-    <div class="profile-card" onclick="event.stopPropagation()">
-      <button class="profile-close" type="button" onclick="closeپرۆفایلModal()">×</button>
-      <img id="profileAvatar" class="profile-avatar" src="" alt="پرۆفایل">
-      <div id="profileName" class="profile-name">پرۆفایل</div>
-      <div id="profileEmail" class="profile-email"></div>
-      <div id="profileدەربارەی خۆت" class="profile-bio"></div>
-      <div class="profile-stats">
-        <div><b id="profileFollowers">0</b><span>شوێنکەوتوو</span></div>
-        <div><b id="profileFollowing">0</b><span>شوێنکەوتووەکان</span></div>
-      </div>
-      <button id="profileFollowButton" class="follow-button" type="button">شوێن بکەوە</button>
-    </div>
-  </div>
-
-  <!-- ADMIN -->
-
-  <div
-    id="adminBox"
-    class="box admin-box">
-
-    <h3>👑 پانێڵی بەڕێوەبەر</h3>
-
-    <div class="small">
-      بەڕێوەبردنی داواکارییەکانی کێشانەوە.
-    </div>
-
-    <div id="adminRequests"></div>
-
+  <div class="info">
+    Withdraw requests are reviewed before payment.
   </div>
 
 
@@ -1085,9 +416,9 @@ img,video{max-width:100%}
 
 <script>
 
-/* =========================================
+/* =====================================
    SUPABASE
-========================================= */
+===================================== */
 
 const SUPABASE_URL =
 "https://vnyprsjjmmjahkisozib.supabase.co";
@@ -1102,39 +433,47 @@ window.supabase.createClient(
 );
 
 
-/* =========================================
+/* =====================================
    MESSAGE
-========================================= */
+===================================== */
 
-function showپەیام(text,type){
+function showMessage(text,type){
 
   const box =
     document.getElementById("message");
 
   box.textContent=text;
-
-  box.className =
-    "message " + type;
+  box.className="message "+type;
 }
 
 
-function dashboardپەیام(text,type){
+function dashboardMessage(text,type){
 
   const box =
-    document.getElementById(
-      "dashboardپەیام"
-    );
+    document.getElementById("dashboardMessage");
 
   box.textContent=text;
-
-  box.className =
-    "message " + type;
+  box.className="message "+type;
 }
 
 
-/* =========================================
-   LOGIN / SIGNUP UI
-========================================= */
+/* =====================================
+   LOCAL DATE
+===================================== */
+
+function getLocalDate(){
+
+  const now=new Date();
+
+  return now.getFullYear()+"-"+
+    String(now.getMonth()+1).padStart(2,"0")+"-"+
+    String(now.getDate()).padStart(2,"0");
+}
+
+
+/* =====================================
+   SHOW LOGIN
+===================================== */
 
 function showLogin(){
 
@@ -1149,6 +488,10 @@ function showLogin(){
 }
 
 
+/* =====================================
+   SHOW SIGNUP
+===================================== */
+
 function showSignup(){
 
   document.getElementById("loginBox")
@@ -1162,27 +505,26 @@ function showSignup(){
 }
 
 
-/* =========================================
-   USER PROFILE
-========================================= */
+/* =====================================
+   CREATE PROFILE
+===================================== */
 
-async function createUserپرۆفایل(email){
+async function createUserProfile(email){
 
-  const {
-    data:existing,
-    error
-  } =
+  const {data:existing,error:selectError} =
     await supabaseClient
       .from("users")
       .select("email")
       .eq("email",email)
       .maybeSingle();
 
-  if(error){
+  if(selectError){
+
     console.log(
-      "پرۆفایل error:",
-      error.message
+      "Profile check:",
+      selectError.message
     );
+
     return;
   }
 
@@ -1190,9 +532,7 @@ async function createUserپرۆفایل(email){
     return;
   }
 
-  const {
-    error:insertError
-  } =
+  const {error} =
     await supabaseClient
       .from("users")
       .insert({
@@ -1200,321 +540,221 @@ async function createUserپرۆفایل(email){
         username:email.split("@")[0]
       });
 
-  if(insertError){
+  if(error){
+
     console.log(
-      "پرۆفایل insert:",
-      insertError.message
+      "Profile:",
+      error.message
     );
   }
 }
 
 
-/* =========================================
+/* =====================================
    SIGN UP
-========================================= */
+===================================== */
 
 async function signup(){
-  const email = document.getElementById("signupEmail").value.trim();
-  const password = document.getElementById("signupPassword").value;
+
+  const email =
+    document.getElementById("signupEmail")
+      .value.trim();
+
+  const password =
+    document.getElementById("signupPassword")
+      .value;
 
   if(!email || !password){
-    showپەیام("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
-    return;
-  }
-  if(password.length < 6){
-    showپەیام("وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.","error");
+
+    showMessage(
+      "Enter email and password.",
+      "error"
+    );
+
     return;
   }
 
-  const button=document.getElementById("signupButton");
+  if(password.length<6){
+
+    showMessage(
+      "Password must be at least 6 characters.",
+      "error"
+    );
+
+    return;
+  }
+
+  const button =
+    document.getElementById("signupButton");
+
   button.disabled=true;
   button.textContent="Creating...";
 
-  try{
-    const {data,error}=await supabaseClient.auth.signUp({email,password});
-    if(error){
-      showپەیام(error.message,"error");
-      return;
-    }
+  const {data,error} =
+    await supabaseClient.auth.signUp({
+      email:email,
+      password:password
+    });
 
-    if(data?.session && data?.user){
-      enterXalloApp(data.user);
-      return;
-    }
+  button.disabled=false;
+  button.textContent="Sign Up";
 
-    showLogin();
-    showپەیام("هەژمار دروست کرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە، پاشان Login بکە.","success");
-  }catch(err){
-    console.error("signup exception:",err);
-    showپەیام("کێشەیەک ڕوویدا لە دروستکردنی هەژمار.","error");
-  }finally{
-    button.disabled=false;
-    button.textContent="Sign Up";
+  if(error){
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
   }
+
+  if(data && data.session && data.user){
+
+    await createUserProfile(
+      data.user.email
+    );
+
+    await showDashboard(
+      data.user
+    );
+
+    return;
+  }
+
+  showMessage(
+    "Account created! Check your email.",
+    "success"
+  );
 }
 
-/* =========================================
+
+/* =====================================
    LOGIN
-========================================= */
+===================================== */
 
 async function login(){
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value;
+
+  const email =
+    document.getElementById("loginEmail")
+      .value.trim();
+
+  const password =
+    document.getElementById("loginPassword")
+      .value;
 
   if(!email || !password){
-    showپەیام("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
+
+    showMessage(
+      "Enter email and password.",
+      "error"
+    );
+
     return;
   }
 
-  const button = document.getElementById("loginButton");
-  button.disabled = true;
-  button.textContent = "Logging in...";
-  showپەیام("","success");
+  const button =
+    document.getElementById("loginButton");
 
-  try{
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+  button.disabled=true;
+  button.textContent="Logging in...";
 
-    if(error){
-      console.error("login error:", error);
-      const msg = String(error.message || "");
-      if(msg.toLowerCase().includes("email not confirmed")){
-        showپەیام("ئیمەیڵەکەت پشتڕاست نەکراوەتەوە. سەرەتا ئیمەیڵەکەت پشتڕاست بکەرەوە.","error");
-      }else if(msg.toLowerCase().includes("invalid login credentials")){
-        showپەیام("ئیمەیڵ یان وشەی نهێنی هەڵەیە.","error");
-      }else{
-        showپەیام(msg || "چوونەژوورەوە سەرکەوتوو نەبوو.","error");
-      }
-      return;
-    }
+  const {data,error} =
+    await supabaseClient.auth
+      .signInWithPassword({
+        email:email,
+        password:password
+      });
 
-    if(data?.user){
-      // Auth succeeded: enter immediately. Database/storage modules run in the background.
-      enterXalloApp(data.user);
-    }else{
-      showپەیام("هیچ بەکارهێنەرێکی login نەدۆزرایەوە.","error");
-    }
-  }catch(err){
-    console.error("login exception:", err);
-    showپەیام("کێشەی پەیوەندی هەیە. ئینتەرنێت و Supabase پشکنین بکە.","error");
-  }finally{
-    button.disabled=false;
-    button.textContent="Login";
-  }
-}
+  button.disabled=false;
+  button.textContent="Login";
 
-async function resetPassword(){
-  const email=document.getElementById("loginEmail").value.trim();
-  if(!email){
-    showپەیام("تکایە سەرەتا ئیمەیڵەکەت بنووسە.","error");
+  if(error){
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
     return;
   }
-  try{
-    const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{
-      redirectTo:window.location.origin
-    });
-    if(error) throw error;
-    showپەیام("لینکی گۆڕینی وشەی نهێنی بۆ ئیمەیڵەکەت نێردرا.","success");
-  }catch(e){
-    showپەیام(e.message || "نەتوانرا لینکی گۆڕینی وشەی نهێنی بنێردرێت.","error");
+
+  if(data && data.user){
+
+    await createUserProfile(
+      data.user.email
+    );
+
+    await showDashboard(
+      data.user
+    );
   }
 }
 
-/* =========================================
-   MY PROFILE
-========================================= */
-async function loadMyپرۆفایل(email){
-  if(!email) return;
-  try{
-    const {data,error}=await supabaseClient.from("users")
-      .select("username,avatar_url,bio").eq("email",email).maybeSingle();
-    if(error) throw error;
 
-    const username=data?.username || email.split("@")[0];
-    document.getElementById("myپرۆفایلناوی بەکارهێنەر").value=username;
-    document.getElementById("myپرۆفایلدەربارەی خۆت").value=data?.bio || "";
-    document.getElementById("myپرۆفایلDisplayName").textContent=username;
+/* =====================================
+   LOAD COINS
+===================================== */
 
-    const avatar=document.getElementById("myپرۆفایلAvatar");
-    const initial=document.getElementById("myپرۆفایلInitial");
-    if(data?.avatar_url){
-      avatar.src=data.avatar_url; avatar.style.display="block"; initial.style.display="none";
-    }else{
-      avatar.style.display="none"; initial.style.display="flex";
-      initial.textContent=username.charAt(0).toUpperCase();
-    }
-    await loadMyFollowStats(email);
-  }catch(e){ console.warn("پرۆفایل load:",e.message); }
-}
+async function loadCoins(user){
 
-async function loadMyFollowStats(email){
-  try{
-    const {data,error}=await supabaseClient.rpc("get_follow_stats",{p_email:email});
-    if(error) throw error;
-    document.getElementById("myFollowersCount").textContent=Number(data?.followers||0);
-    document.getElementById("myFollowingCount").textContent=Number(data?.following||0);
-  }catch(e){
-    console.warn("شوێن بکەوە stats:",e.message);
-    document.getElementById("myFollowersCount").textContent="0";
-    document.getElementById("myFollowingCount").textContent="0";
-  }
-}
-
-async function saveMyپرۆفایل(){
-  const {data:userData}=await supabaseClient.auth.getUser();
-  if(!userData?.user){ dashboardپەیام("Please login first.","error"); return; }
-
-  const username=(document.getElementById("myپرۆفایلناوی بەکارهێنەر").value||"").trim();
-  const bio=(document.getElementById("myپرۆفایلدەربارەی خۆت").value||"").trim();
-  if(!username){ dashboardپەیام("ناوی بەکارهێنەر cannot be empty.","error"); return; }
-
-  const button=document.getElementById("myپرۆفایلSaveButton");
-  button.disabled=true; button.textContent="Saving...";
-
-  const {error}=await supabaseClient.from("users").update({username,bio})
-    .eq("email",userData.user.email);
-
-  button.disabled=false; button.textContent="💾 Save پرۆفایل";
-  if(error){ dashboardپەیام("پرۆفایل save error: "+error.message,"error"); return; }
-
-  document.getElementById("myپرۆفایلDisplayName").textContent=username;
-  document.getElementById("myپرۆفایلInitial").textContent=username.charAt(0).toUpperCase();
-  dashboardپەیام("✅ پرۆفایل updated successfully.","success");
-}
-
-async function uploadMyAvatar(){
-  const {data:userData}=await supabaseClient.auth.getUser();
-  if(!userData?.user){ dashboardپەیام("Please login first.","error"); return; }
-
-  const input=document.getElementById("myAvatarFile");
-  const file=input?.files?.[0];
-  if(!file){ dashboardپەیام("Please choose an image first.","error"); return; }
-  if(!file.type.startsWith("image/")){ dashboardپەیام("Please select an image file.","error"); return; }
-  if(file.size>5*1024*1024){ dashboardپەیام("Image must be smaller than 5 MB.","error"); return; }
-
-  const button=document.getElementById("myAvatarButton");
-  button.disabled=true; button.textContent="Uploading...";
-
-  try{
-    const email=userData.user.email;
-    const safeEmail=email.replace(/[^a-zA-Z0-9]/g,"_");
-    const ext=file.name.includes(".")?file.name.split(".").pop().toLowerCase():"jpg";
-    const path=safeEmail+"/avatar_"+Date.now()+"."+ext;
-
-    const {error:uploadError}=await supabaseClient.storage.from("avatars").upload(path,file,{
-      cacheControl:"3600",upsert:false,contentType:file.type
-    });
-    if(uploadError) throw new Error(uploadError.message);
-
-    const {data:urlData}=supabaseClient.storage.from("avatars").getPublicUrl(path);
-    const avatarUrl=urlData?.publicUrl;
-    if(!avatarUrl) throw new Error("Could not create avatar URL.");
-
-    const {error:updateError}=await supabaseClient.from("users")
-      .update({avatar_url:avatarUrl}).eq("email",email);
-    if(updateError) throw new Error(updateError.message);
-
-    const avatar=document.getElementById("myپرۆفایلAvatar");
-    avatar.src=avatarUrl; avatar.style.display="block";
-    document.getElementById("myپرۆفایلInitial").style.display="none";
-    input.value="";
-    dashboardپەیام("✅ وێنەی پرۆفایل updated.","success");
-  }catch(e){
-    dashboardپەیام("Avatar upload error: "+(e.message||"Unknown error"),"error");
-  }finally{
-    button.disabled=false; button.textContent="🖼️ Upload پرۆفایل Picture";
-  }
-}
-
-/* =========================================
-   COINS
-========================================= */
-
-function setدراو(amount){
-
-  const value =
-    Number(amount) || 0;
-
-  document.getElementById("coins")
-    .textContent=value;
-
-  document.getElementById(
-    "withdrawدراو"
-  ).textContent=value;
-}
-
-
-async function loadدراو(user){
-
-  const {
-    data,
-    error
-  } =
+  const {data,error} =
     await supabaseClient
       .from("users")
-      .select("coins,last_reward_date")
+      .select("coins")
       .eq("email",user.email)
       .maybeSingle();
 
-  if(error || !data){
+  if(!error && data){
 
-    setدراو(0);
+    const amount =
+      Number(data.coins)||0;
 
-    return null;
+    document.getElementById("coins")
+      .textContent=amount;
+
+    document.getElementById("withdrawCoins")
+      .textContent=amount;
+
+  }else{
+
+    document.getElementById("coins")
+      .textContent="0";
+
+    document.getElementById("withdrawCoins")
+      .textContent="0";
   }
-
-  setدراو(data.coins);
-
-  return data;
 }
 
 
-/* =========================================
+/* =====================================
    DASHBOARD
-========================================= */
-
-function enterXalloApp(user){
-  // IMPORTANT: authentication success must NEVER wait for database/storage
-  // queries. Show the dashboard immediately, then load optional data in the
-  // background. This prevents RLS/table errors from looking like Login failed.
-  if(!user) return;
-
-  document.body.classList.add("xallo-logged-in");
-  document.getElementById("authBox").style.display="none";
-  document.getElementById("dashboard").style.display="block";
-  document.getElementById("userEmail").textContent=user.email || "";
-
-  Promise.allSettled([
-    loadMyپرۆفایل(user.email),
-    loadدراو(user),
-    checkDailyRewardButton(user),
-    loadTikTokFeed(),
-    loadVideos(),
-    loadWithdrawHistory(user),
-    checkAdmin()
-  ]).then(results=>{
-    const failed=results.filter(r=>r.status==="rejected");
-    if(failed.length) console.warn("Some dashboard modules failed:",failed);
-  });
-}
+===================================== */
 
 async function showDashboard(user){
-  enterXalloApp(user);
+
+  document.getElementById("authBox")
+    .style.display="none";
+
+  document.getElementById("dashboard")
+    .style.display="block";
+
+  document.getElementById("userEmail")
+    .textContent=user.email;
+
+  await loadCoins(user);
+
+  await checkDailyRewardButton(user);
 }
 
 
-/* =========================================
-   DAILY REWARD
-========================================= */
+/* =====================================
+   DAILY BUTTON
+===================================== */
 
 async function checkDailyRewardButton(user){
 
-  const {
-    data,
-    error
-  } =
+  const {data,error} =
     await supabaseClient
       .from("users")
       .select("last_reward_date")
@@ -1526,2151 +766,215 @@ async function checkDailyRewardButton(user){
   }
 
   const button =
-    document.getElementById(
-      "rewardButton"
-    );
+    document.getElementById("rewardButton");
 
-  const today =
-    new Date().toLocaleDateString("en-CA");
-
-  if(data.last_reward_date === today){
+  if(data.last_reward_date===getLocalDate()){
 
     button.disabled=true;
-
-    button.textContent =
-      "✅ Reward Claimed";
+    button.textContent="✅ Reward Claimed";
 
   }else{
 
     button.disabled=false;
-
-    button.textContent =
-      "🎁 پاداشتی ڕۆژانە +١٠";
+    button.textContent="🎁 Daily Reward +10";
   }
 }
 
+
+/* =====================================
+   GET 10 COINS
+===================================== */
+
+async function addCoins(){
+
+  const {data:userData} =
+    await supabaseClient.auth.getUser();
+
+  if(!userData.user){
+    return;
+  }
+
+  const email=userData.user.email;
+
+  const button =
+    document.getElementById("coinButton");
+
+  button.disabled=true;
+  button.textContent="Adding...";
+
+  const {data,error} =
+    await supabaseClient
+      .from("users")
+      .select("coins")
+      .eq("email",email)
+      .maybeSingle();
+
+  if(error || !data){
+
+    button.disabled=false;
+    button.textContent="🎁 Get 10 Coins";
+
+    dashboardMessage(
+      "User profile not found.",
+      "error"
+    );
+
+    return;
+  }
+
+  const newCoins =
+    (Number(data.coins)||0)+10;
+
+  const {error:updateError} =
+    await supabaseClient
+      .from("users")
+      .update({
+        coins:newCoins
+      })
+      .eq("email",email);
+
+  button.disabled=false;
+  button.textContent="🎁 Get 10 Coins";
+
+  if(updateError){
+
+    dashboardMessage(
+      updateError.message,
+      "error"
+    );
+
+    return;
+  }
+
+  document.getElementById("coins")
+    .textContent=newCoins;
+
+  document.getElementById("withdrawCoins")
+    .textContent=newCoins;
+
+  dashboardMessage(
+    "🎉 10 Coins added!",
+    "success"
+  );
+}
+
+
+/* =====================================
+   DAILY REWARD
+===================================== */
 
 async function dailyReward(){
 
-  const button =
-    document.getElementById(
-      "rewardButton"
-    );
-
-  button.disabled=true;
-  button.textContent="Checking...";
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .rpc("claim_daily_reward");
-
-  if(error){
-
-    button.disabled=false;
-
-    button.textContent =
-      "🎁 پاداشتی ڕۆژانە +١٠";
-
-    dashboardپەیام(
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-  setدراو(data);
-
-  button.textContent =
-    "✅ Reward Claimed";
-
-  dashboardپەیام(
-    "🎉 Daily Reward: +10 دراو!",
-    "success"
-  );
-}
-
-
-/* =========================================
-   SELECTED FILE
-========================================= */
-
-function showSelectedFile(){
-
-  const input =
-    document.getElementById(
-      "videoFile"
-    );
-
-  const box =
-    document.getElementById(
-      "selectedFile"
-    );
-
-  if(!input.files.length){
-
-    box.textContent="";
-    return;
-  }
-
-  const file=input.files[0];
-
-  const sizeMB =
-    file.size / (1024 * 1024);
-
-  box.textContent =
-    file.name +
-    " • " +
-    sizeMB.toFixed(1) +
-    " MB";
-}
-
-
-/* =========================================
-   UPLOAD VIDEO
-========================================= */
-
-async function uploadVideo(){
-
-  const {
-    data:userData,
-    error:userError
-  } =
-    await supabaseClient.auth.getUser();
-
-  if(userError || !userData.user){
-
-    dashboardپەیام(
-      "Please login first.",
-      "error"
-    );
-
-    return;
-  }
-
-  const input =
-    document.getElementById(
-      "videoFile"
-    );
-
-  if(!input.files || !input.files.length){
-
-    dashboardپەیام(
-      "Please choose a video.",
-      "error"
-    );
-
-    return;
-  }
-
-  const file=input.files[0];
-
-  if(!file.type.startsWith("video/")){
-
-    dashboardپەیام(
-      "Please select a video file.",
-      "error"
-    );
-
-    return;
-  }
-
-  const maxSize =
-    50 * 1024 * 1024;
-
-  if(file.size > maxSize){
-
-    dashboardپەیام(
-      "Video is larger than 50 MB.",
-      "error"
-    );
-
-    return;
-  }
-
-  const caption =
-    document.getElementById(
-      "videoCaption"
-    ).value.trim();
-
-  const button =
-    document.getElementById(
-      "uploadButton"
-    );
-
-  button.disabled=true;
-  button.textContent="Uploading...";
+  const button=document.getElementById("rewardButton");
+  if(button){ button.disabled=true; button.textContent="Checking..."; }
 
   try{
+    const {data:userData}=await supabaseClient.auth.getUser();
+    if(!userData || !userData.user) throw new Error("Please login first.");
 
-    const email =
-      userData.user.email;
+    const {data:newBalance,error}=await supabaseClient.rpc("claim_daily_reward");
+    if(error) throw error;
 
-    const safeEmail =
-      email.replace(
-        /[^a-zA-Z0-9]/g,
-        "_"
-      );
-
-    const extension =
-      file.name.includes(".")
-      ? file.name.split(".").pop()
-      : "mp4";
-
-    const filePath =
-      safeEmail +
-      "/" +
-      Date.now() +
-      "_" +
-      Math.random()
-        .toString(36)
-        .substring(2,8) +
-      "." +
-      extension;
-
-    const {
-      error:uploadError
-    } =
-      await supabaseClient.storage
-        .from("videos")
-        .upload(
-          filePath,
-          file,
-          {
-            cacheControl:"3600",
-            upsert:false,
-            contentType:file.type
-          }
-        );
-
-    if(uploadError){
-
-      throw new Error(
-        "Storage Upload Error: " +
-        uploadError.message
-      );
-    }
-
-    const {
-      data:urlData
-    } =
-      supabaseClient.storage
-        .from("videos")
-        .getPublicUrl(filePath);
-
-    const videoUrl =
-      urlData.publicUrl;
-
-    if(!videoUrl){
-
-      throw new Error(
-        "Could not create video URL."
-      );
-    }
-
-    const {
-      error:dbError
-    } =
-      await supabaseClient
-        .from("videos")
-        .insert({
-          user_email:email,
-          video_url:videoUrl,
-          caption:caption,
-          likes:0
-        });
-
-    if(dbError){
-
-      await supabaseClient.storage
-        .from("videos")
-        .remove([filePath]);
-
-      throw new Error(
-        "Database Error: " +
-        dbError.message
-      );
-    }
-
-    input.value="";
-
-    document.getElementById(
-      "selectedFile"
-    ).textContent="";
-
-    document.getElementById(
-      "videoCaption"
-    ).value="";
-
-    dashboardپەیام(
-      "✅ Video uploaded successfully!",
-      "success"
-    );
-
-    await loadVideos();
-
+    const balance=Number(newBalance)||0;
+    document.getElementById("coins").textContent=balance;
+    document.getElementById("withdrawCoins").textContent=balance;
+    if(button){ button.disabled=true; button.textContent="✅ Reward Claimed"; }
+    dashboardMessage("🎉 Daily Reward: +10 Coins!","success");
   }catch(error){
-
-    console.error(error);
-
-    dashboardپەیام(
-      error.message ||
-      "Video upload failed.",
-      "error"
-    );
-
-  }finally{
-
-    button.disabled=false;
-    button.textContent="⬆️ Upload Video";
+    if(button){ button.disabled=false; button.textContent="🎁 Daily Reward +10"; }
+    dashboardMessage(error.message || "Daily reward failed.","error");
   }
 }
 
 
-/* =========================================
-   LOAD VIDEOS
-========================================= */
-
-async function loadVideos(){
-
-  const box =
-    document.getElementById(
-      "videoFeed"
-    );
-
-  box.innerHTML =
-    '<div class="small">Loading videos...</div>';
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("videos")
-      .select(
-        "id,user_email,video_url,caption,likes,created_at"
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-      .limit(50);
-
-  if(error){
-
-    box.innerHTML =
-      '<div class="small">Could not load videos: ' +
-      escapeHtml(error.message) +
-      '</div>';
-
-    return;
-  }
-
-  if(!data || !data.length){
-
-    box.innerHTML =
-      '<div class="small">هێشتا هیچ ڤیدیۆیەک نییە. Upload the first video! 🎬</div>';
-
-    return;
-  }
-
-
-  /* LOAD COMMENTS */
-
-  const videoIds =
-    data.map(video => video.id);
-
-  const {
-    data:comments,
-    error:commentsError
-  } =
-    await supabaseClient
-      .from("comments")
-      .select(
-        "id,video_id,user_email,comment,created_at"
-      )
-      .in(
-        "video_id",
-        videoIds
-      )
-      .order(
-        "created_at",
-        {
-          ascending:true
-        }
-      );
-
-
-  if(commentsError){
-
-    console.error(
-      "کۆمێنتەکان error:",
-      commentsError.message
-    );
-  }
-
-
-  /* GROUP COMMENTS BY VIDEO */
-
-  const commentsByVideo = {};
-
-  (comments || []).forEach(comment => {
-
-    if(!commentsByVideo[comment.video_id]){
-      commentsByVideo[comment.video_id] = [];
-    }
-
-    commentsByVideo[comment.video_id].push(
-      comment
-    );
-
-  });
-
-
-  box.innerHTML =
-    data.map(video => {
-
-      const videoکۆمێنتەکان =
-        commentsByVideo[video.id] || [];
-
-      const commentsHtml =
-        videoکۆمێنتەکان.length
-
-        ? videoکۆمێنتەکان.map(comment => `
-
-            <div class="comment">
-
-              <div class="comment-user">
-                👤 ${escapeHtml(comment.user_email)}
-              </div>
-
-              <div class="comment-text">
-                ${escapeHtml(comment.comment)}
-              </div>
-
-              <div class="comment-date">
-                ${new Date(
-                  comment.created_at
-                ).toLocaleString()}
-              </div>
-
-            </div>
-
-          `).join("")
-
-        : `
-            <div class="small">
-              No comments yet.
-            </div>
-          `;
-
-
-      return `
-
-        <div class="video-card">
-
-          <video
-            controls
-            playsinline
-            preload="metadata"
-            src="${escapeHtml(video.video_url)}">
-          </video>
-
-          <div class="video-info">
-
-            <div class="video-user">
-              👤 ${escapeHtml(video.user_email)}
-            </div>
-
-            <div class="caption">
-              ${escapeHtml(video.caption || "")}
-            </div>
-
-            <div class="video-date">
-              ${new Date(
-                video.created_at
-              ).toLocaleString()}
-            </div>
-
-
-            <!-- LIKE -->
-
-            <button
-              class="like-button"
-              onclick="likeVideo('${video.id}',this)">
-
-              ❤️ ${Number(video.likes) || 0}
-
-            </button>
-
-
-            <!-- COMMENT -->
-
-            <div class="comment-area">
-
-              <input
-                class="comment-input"
-                id="comment-${video.id}"
-                type="text"
-                maxlength="500"
-                placeholder="کۆمێنتەکەت بنووسە...">
-
-              <button
-                class="comment-button"
-                onclick="addComment('${video.id}')">
-
-                💬 Add Comment
-
-              </button>
-
-              <div class="comments-list">
-
-                ${commentsHtml}
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      `;
-
-    }).join("");
-
-}
-
-
-/* =========================================
-   LIKE VIDEO
-========================================= */
-
-async function likeVideo(id,button){
-
-  button.disabled=true;
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .rpc(
-        "like_video",
-        {
-          p_video_id:id
-        }
-      );
-
-  if(error){
-
-    button.disabled=false;
-
-    dashboardپەیام(
-      "Like error: " +
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-  button.textContent =
-    "❤️ " + Number(data);
-
-  button.disabled=false;
-}
-
-
-/* =========================================
-   ADD COMMENT
-========================================= */
-
-async function addComment(videoId){
-
-  const {
-    data:userData,
-    error:userError
-  } =
-    await supabaseClient.auth.getUser();
-
-  if(
-    userError ||
-    !userData.user
-  ){
-
-    dashboardپەیام(
-      "Please login first.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const input =
-    document.getElementById(
-      "comment-" + videoId
-    );
-
-  if(!input){
-
-    return;
-  }
-
-
-  const comment =
-    input.value.trim();
-
-
-  if(!comment){
-
-    dashboardپەیام(
-      "Write a comment first.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if(comment.length > 500){
-
-    dashboardپەیام(
-      "Comment is too long.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const button =
-    input.nextElementSibling;
-
-  button.disabled=true;
-  button.textContent="Sending...";
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("comments")
-      .insert({
-
-        video_id:videoId,
-
-        user_email:
-          userData.user.email,
-
-        comment:comment
-
-      });
-
-
-  if(error){
-
-    console.error(error);
-
-    button.disabled=false;
-    button.textContent="💬 Add Comment";
-
-    dashboardپەیام(
-      "Comment error: " +
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-
-  input.value="";
-
-  button.disabled=false;
-  button.textContent="💬 Add Comment";
-
-
-  dashboardپەیام(
-    "✅ Comment added!",
-    "success"
-  );
-
-
-  await loadVideos();
-}
-
-
-/* =========================================
-   WITHDRAW
-========================================= */
+/* =====================================
+   WITHDRAW REQUEST
+===================================== */
 
 async function requestWithdraw(){
 
-  const {
-    data:userData
-  } =
-    await supabaseClient.auth.getUser();
-
-  if(!userData.user){
-
-    dashboardپەیام(
-      "Please login first.",
-      "error"
-    );
-
-    return;
-  }
-
-  const method =
-    document.getElementById(
-      "withdrawMethod"
-    ).value;
-
-  const coins =
-    Number(
-      document.getElementById(
-        "withdrawAmount"
-      ).value
-    );
-
-  const phone =
-    document.getElementById(
-      "withdrawPhone"
-    ).value.trim();
-
-
-  if(
-    !["Korek","Asiacell"]
-      .includes(method)
-  ){
-
-    dashboardپەیام(
-      "Select Korek or Asiacell.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if(
-    ![1000,5000,10000]
-      .includes(coins)
-  ){
-
-    dashboardپەیام(
-      "Select a valid amount.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if(
-    !/^[0-9+\s-]{10,15}$/.test(phone)
-  ){
-
-    dashboardپەیام(
-      "Enter a valid phone number.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const button =
-    document.getElementById(
-      "withdrawButton"
-    );
-
-  button.disabled=true;
-  button.textContent="Sending...";
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .rpc(
-        "create_withdrawal",
-        {
-          p_coins:coins,
-          p_method:method,
-          p_phone:phone
-        }
-      );
-
-
-  button.disabled=false;
-
-  button.textContent =
-    "💰 Request Withdraw";
-
-
-  if(error){
-
-    dashboardپەیام(
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-
-  setدراو(
-    data?.new_balance ?? 0
-  );
-
-
-  document.getElementById(
-    "withdrawMethod"
-  ).value="";
-
-  document.getElementById(
-    "withdrawAmount"
-  ).value="";
-
-  document.getElementById(
-    "withdrawPhone"
-  ).value="";
-
-
-  dashboardپەیام(
-    "✅ Withdrawal request sent.",
-    "success"
-  );
-
-
-  await loadWithdrawHistory(
-    userData.user
-  );
-}
-
-
-/* =========================================
-   WITHDRAW HISTORY
-========================================= */
-
-function statusClass(status){
-
-  if(status==="approved"){
-    return "approved";
-  }
-
-  if(status==="rejected"){
-    return "rejected";
-  }
-
-  return "pending";
-}
-
-
-async function loadWithdrawHistory(user){
-
-  const box =
-    document.getElementById(
-      "withdrawHistory"
-    );
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("withdrawals")
-      .select(
-        "coins,amount,method,phone,status,created_at"
-      )
-      .eq(
-        "user_email",
-        user.email
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-      .limit(20);
-
-
-  if(error){
-
-    box.innerHTML =
-      '<div class="small">Could not load history.</div>';
-
-    return;
-  }
-
-
-  if(!data || !data.length){
-
-    box.innerHTML =
-      '<div class="small">هێشتا هیچ داواکارییەک نییە.</div>';
-
-    return;
-  }
-
-
-  box.innerHTML =
-    data.map(r => `
-
-      <div class="request">
-
-        <b>
-          ${escapeHtml(r.method)}
-        </b>
-
-        •
-        ${Number(r.coins).toLocaleString()}
-        دراو
-
-        <br>
-
-        Phone:
-        ${escapeHtml(r.phone)}
-
-        <br>
-
-        Status:
-
-        <span class="${statusClass(r.status)}">
-          ${escapeHtml(r.status)}
-        </span>
-
-        <br>
-
-        ${new Date(
-          r.created_at
-        ).toLocaleString()}
-
-      </div>
-
-    `).join("");
-}
-
-
-/* =========================================
-   ADMIN
-========================================= */
-
-async function checkAdmin(){
-
-  const {
-    data:userData
-  } =
-    await supabaseClient.auth.getUser();
-
-
-  if(!userData.user){
-    return;
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("admins")
-      .select("email")
-      .eq(
-        "email",
-        userData.user.email
-      )
-      .maybeSingle();
-
-
-  const box =
-    document.getElementById(
-      "adminBox"
-    );
-
-
-  if(!error && data){
-
-    box.style.display="block";
-
-    await loadAdminRequests();
-
-  }else{
-
-    box.style.display="none";
-
-  }
-}
-
-
-async function loadAdminRequests(){
-
-  const box =
-    document.getElementById(
-      "adminRequests"
-    );
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("withdrawals")
-      .select(
-        "id,user_email,coins,method,phone,status,created_at"
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-      .limit(50);
-
-
-  if(error){
-
-    box.innerHTML =
-      '<div class="small">Could not load requests.</div>';
-
-    return;
-  }
-
-
-  if(!data || !data.length){
-
-    box.innerHTML =
-      '<div class="small">No withdrawal requests.</div>';
-
-    return;
-  }
-
-
-  box.innerHTML =
-    data.map(r => `
-
-      <div class="admin-row">
-
-        <b>
-          ${escapeHtml(r.method)}
-        </b>
-
-        •
-        ${Number(r.coins).toLocaleString()}
-        دراو
-
-        <br>
-
-        User:
-        ${escapeHtml(r.user_email)}
-
-        <br>
-
-        Phone:
-        ${escapeHtml(r.phone)}
-
-        <br>
-
-        Status:
-
-        <span class="${statusClass(r.status)}">
-          ${escapeHtml(r.status)}
-        </span>
-
-
-        ${
-          r.status === "pending"
-
-          ? `
-
-            <div class="admin-actions">
-
-              <button
-                class="approve"
-                onclick="adminDecision('${r.id}','approved')">
-
-                Approve
-
-              </button>
-
-              <button
-                class="reject"
-                onclick="adminDecision('${r.id}','rejected')">
-
-                Reject
-
-              </button>
-
-            </div>
-
-          `
-
-          : ""
-
-        }
-
-      </div>
-
-    `).join("");
-}
-
-
-async function adminDecision(
-  id,
-  status
-){
-
-  if(!confirm(
-    status === "approved"
-    ? "Approve this request?"
-    : "Reject and return دراو?"
-  )){
-
-    return;
-  }
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .rpc(
-        "admin_update_withdrawal",
-        {
-          p_withdrawal_id:id,
-          p_status:status
-        }
-      );
-
-
-  if(error){
-
-    dashboardپەیام(
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-
-  dashboardپەیام(
-    "✅ Withdrawal status updated.",
-    "success"
-  );
-
-
-  await loadAdminRequests();
-
-
-  const {
-    data:userData
-  } =
-    await supabaseClient.auth.getUser();
-
-
-  if(userData.user){
-
-    await loadWithdrawHistory(
-      userData.user
-    );
-
-    await loadدراو(
-      userData.user
-    );
-  }
-}
-
-
-
-/* =========================================
-   TIKTOK STYLE FEED
-========================================= */
-
-async function loadTikTokFeed(searchTerm="", mode="all"){
-
-  const box = document.getElementById("tiktokFeed");
-  if(!box) return;
-
-  box.innerHTML = '<div class="tiktok-empty">ڤیدیۆکان بار دەکرێن...</div>';
-
-  try {
-    // supabaseClient is a local const in this page, so do not check
-    // window.supabaseClient (that property does not exist).
-    if(!supabaseClient){
-      throw new Error("Supabase is not ready. Please refresh the page.");
-    }
-
-    // First try with views. If the database schema cache does not know
-    // the views column yet, fall back to the basic video columns.
-    let result = await Promise.race([
-      supabaseClient
-        .from("videos")
-        .select("id,user_email,video_url,caption,likes,views,created_at")
-        .order("created_at",{ascending:false})
-        .limit(50),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Video loading timed out. Check your Supabase connection.")), 12000)
-      )
-    ]);
-
-    let data = result.data;
-    let error = result.error;
-
-    if(error){
-      console.warn("TikTok feed query with views failed; retrying basic query", error);
-
-      const fallback = await supabaseClient
-        .from("videos")
-        .select("id,user_email,video_url,caption,likes,created_at")
-        .order("created_at",{ascending:false})
-        .limit(50);
-
-      data = fallback.data;
-      error = fallback.error;
-    }
-
-    if(error){
-      throw new Error(error.message || "Could not load videos.");
-    }
-
-    const term = String(searchTerm || "").trim().toLowerCase();
-    if(mode === "trending") {
-      data = (data || []).slice().sort((a,b) => (Number(b.likes)||0) + (Number(b.views)||0) - ((Number(a.likes)||0) + (Number(a.views)||0)));
-    } else if(mode === "new") {
-      data = (data || []).slice().sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
-    }
-    if(term){
-      data = (data || []).filter(video => {
-        const haystack = `${video.caption || ""} ${video.user_email || ""}`.toLowerCase();
-        return haystack.includes(term);
-      });
-    }
-
-    if(!data || !data.length){
-      box.innerHTML = `
-        <div class="tiktok-empty">
-          <div style="font-size:42px">🎬</div>
-          <div>${term ? "هیچ ڤیدیۆیەکی هاوشێوە نەدۆزرایەوە." : "هێشتا هیچ ڤیدیۆیەک نییە."}</div>
-          <div class="small">${term ? "گەڕانێکی تری تاقی بکەوە." : "ڤیدیۆیەک دابنێ و لێرە دەردەکەوێت."}</div>
-        </div>`;
-      return;
-    }
-
-    // Load follow state through a schema-safe RPC.
-    let followingSet = new Set();
-    try{
-      const {data:followRows,error:followStateError}=await supabaseClient.rpc("get_my_following_emails");
-      if(followStateError) throw followStateError;
-      followingSet = new Set((followRows || []).map(x => String(x).toLowerCase()));
-    }catch(e){ console.warn("شوێن بکەوە state load error",e); }
-
-    // Render each card safely. One bad video URL must not stop the whole feed.
-    box.innerHTML = data.map(video => {
-      const id = String(video.id || "");
-      const email = escapeHtml(video.user_email || "");
-      const url = escapeHtml(video.video_url || "");
-      const caption = escapeHtml(video.caption || "");
-      const likes = Number(video.likes) || 0;
-      const views = Number(video.views) || 0;
-      const isFollowing = followingSet.has(String(video.user_email || "").toLowerCase());
-
-      if(!id || !url) return "";
-
-      return `
-        <div class="tiktok-item" data-video-id="${escapeHtml(id)}">
-          <video
-            class="tiktok-video"
-            src="${url}"
-            playsinline
-            muted
-            loop
-            preload="metadata"
-            controlslist="nodownload"
-          ></video>
-
-          <div class="tiktok-gradient"></div>
-          <button type="button" class="tiktok-mute" aria-label="Unmute" onclick="toggleTikTokMute(event,this)">🔇</button>
-
-          <div class="tiktok-info">
-            <div class="tiktok-user">👤 ${email}</div>
-            <div class="tiktok-caption">${caption}</div>
-          </div>
-
-          <div class="tiktok-actions">
-            <button type="button" onclick="likeTikTokVideo('${escapeHtml(id)}',this)">
-              ❤️ <span class="count">${likes}</span>
-            </button>
-
-            <button type="button" onclick="openTikTokکۆمێنتەکان('${escapeHtml(id)}')">
-              💬 <span class="count">Comment</span>
-            </button>
-
-            <button type="button" class="tiktok-view-button">
-              👁️ <span class="count tiktok-view-count">${views}</span>
-            </button>
-
-            <button type="button" class="tiktok-follow-button ${isFollowing ? "following" : ""}" onclick="toggleTikTokFollow(event,'${escapeHtml(email)}',this)">
-              ${followingSet.has(String(video.user_email || "").toLowerCase()) ? "✓" : "➕"} <span class="count">${followingSet.has(String(video.user_email || "").toLowerCase()) ? "شوێنکەوترا" : "شوێن بکەوە"}</span>
-            </button>
-
-            <button type="button" class="tiktok-small-btn" onclick="shareTikTokVideo('${escapeHtml(id)}')">
-              ↗️ <span class="count">Share</span>
-            </button>
-
-            <button type="button" onclick="openTikTokپرۆفایل('${escapeHtml(email)}')">
-              👤 <span class="count">پرۆفایل</span>
-            </button>
-          </div>
-
-          <button type="button" class="tiktok-play" aria-label="Play video">▶</button>
-        </div>`;
-    }).join("");
-
-    if(!box.querySelector(".tiktok-item")){
-      box.innerHTML = '<div class="tiktok-empty">The videos were found, but their video URLs are empty.</div>';
-      return;
-    }
-
-    setupTikTokObserver();
-
-    // Allow tap-to-play on mobile and pause all other videos.
-    box.querySelectorAll(".tiktok-video").forEach(video => {
-      video.addEventListener("click", async () => {
-        try {
-          if(video.paused){
-            box.querySelectorAll(".tiktok-video").forEach(v => { if(v !== video) v.pause(); });
-            await video.play();
-          }else{
-            video.pause();
-          }
-        }catch(e){
-          console.warn("Video playback error", e);
-        }
-      });
+  const method=document.getElementById("withdrawMethod").value;
+  const coins=Number(document.getElementById("withdrawAmount").value);
+  const phone=document.getElementById("withdrawPhone").value.trim();
+  const button=document.getElementById("withdrawButton");
+
+  if(!method){ dashboardMessage("Select Korek or Asiacell.","error"); return; }
+  if(!coins){ dashboardMessage("Select withdrawal amount.","error"); return; }
+  if(!phone || !/^[0-9+\s-]{10,15}$/.test(phone)){ dashboardMessage("Enter a valid phone number.","error"); return; }
+
+  button.disabled=true; button.textContent="Sending...";
+
+  try{
+    const {data:userData}=await supabaseClient.auth.getUser();
+    if(!userData || !userData.user) throw new Error("Please login first.");
+
+    // Secure RPC checks the real balance and reserves Coins atomically.
+    const {data,error}=await supabaseClient.rpc("create_withdrawal",{
+      p_coins:coins,
+      p_method:method,
+      p_phone:phone
     });
-
-  } catch(e) {
-    console.error("TikTok Feed error:", e);
-    box.innerHTML = `
-      <div class="tiktok-empty">
-        <div style="font-size:42px">⚠️</div>
-        <div>Could not load TikTok Feed.</div>
-        <div class="small" style="margin-top:8px">${escapeHtml(e.message || "Unknown error")}</div>
-        <button type="button" style="margin-top:14px" onclick="loadTikTokFeed()">🔄 دووبارە هەوڵدان</button>
-      </div>`;
-  }
-}
-
-function setupTikTokObserver(){
-
-  const videos = document.querySelectorAll(".tiktok-video");
-  if(!videos.length) return;
-
-  if(window.__xalloTikTokObserver){
-    try{ window.__xalloTikTokObserver.disconnect(); }catch(e){}
-  }
-
-  const observer = new IntersectionObserver(async entries => {
-    for(const entry of entries){
-      const video = entry.target;
-
-      if(entry.isIntersecting && entry.intersectionRatio >= 0.65){
-        document.querySelectorAll(".tiktok-video").forEach(other => {
-          if(other !== video) other.pause();
-        });
-
-        try{ await video.play(); }catch(e){
-          // A first tap may be required by the mobile browser.
-        }
-        const activeItem = video.closest(".tiktok-item");
-        if(activeItem){
-          const muteBtn = activeItem.querySelector(".tiktok-mute");
-          if(muteBtn) muteBtn.textContent = video.muted ? "🔇" : "🔊";
-        }
-
-        const item = video.closest(".tiktok-item");
-        if(item && !item.dataset.viewed){
-          item.dataset.viewed = "1";
-          const id = item.dataset.videoId;
-
-          try{
-            const {data,error} = await supabaseClient.rpc("view_video",{p_video_id:id});
-            if(!error){
-              const count = item.querySelector(".tiktok-view-count");
-              if(count) count.textContent = Number(data) || 0;
-            }
-          }catch(e){
-            console.warn("View counter error", e);
-          }
-        }
-      }else{
-        video.pause();
-      }
-    }
-  },{threshold:[0.65]});
-
-  videos.forEach(video => observer.observe(video));
-  window.__xalloTikTokObserver = observer;
-}
-
-async function likeTikTokVideo(id,button){
-
-  button.disabled = true;
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .rpc("like_video",{p_video_id:id});
-
-  if(error){
-
-    button.disabled = false;
-
-    dashboardپەیام(
-      "Like error: " + error.message,
-      "error"
-    );
-
-    return;
-  }
-
-  const count = button.querySelector(".count");
-
-  if(count){
-    count.textContent = Number(data) || 0;
-  }
-
-  button.disabled = false;
-}
-
-
-function toggleTikTokMute(event,button){
-  if(event) event.stopPropagation();
-  const item = button ? button.closest(".tiktok-item") : null;
-  const video = item ? item.querySelector(".tiktok-video") : null;
-  if(!video) return;
-  video.muted = !video.muted;
-  button.textContent = video.muted ? "🔇" : "🔊";
-  button.setAttribute("aria-label", video.muted ? "Unmute" : "Mute");
-}
-
-async function toggleTikTokFollow(event,targetEmail,button){
-  if(event) event.stopPropagation();
-  const email = String(targetEmail || "").trim();
-  if(!email || !button) return;
-  const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData?.user?.email || "";
-  if(!currentEmail){ dashboardپەیام("Please login first.","error"); return; }
-  if(currentEmail.toLowerCase() === email.toLowerCase()) return;
-  button.disabled = true;
-  try{
-    const {data,error}=await supabaseClient.rpc("toggle_follow",{p_following_email:email});
     if(error) throw error;
-    const isFollowing=!!data?.following;
-    button.classList.toggle("following",isFollowing);
-    button.innerHTML=isFollowing
-      ? "✓ <span class=\"count\">شوێنکەوتووە</span>"
-      : "➕ <span class=\"count\">شوێن بکەوە</span>";
-    if(isFollowing){
-      try{ await supabaseClient.rpc("notify_follow",{p_following_email:email}); }catch(e){ console.warn("شوێن بکەوە notification error",e); }
-    }
+
+    const newBalance=Number(data && data.new_balance)||0;
+    document.getElementById("coins").textContent=newBalance;
+    document.getElementById("withdrawCoins").textContent=newBalance;
+
+    document.getElementById("withdrawMethod").value="";
+    document.getElementById("withdrawAmount").value="";
+    document.getElementById("withdrawPhone").value="";
+
+    dashboardMessage("✅ Withdraw request sent successfully! Status: Pending.","success");
   }catch(error){
-    dashboardپەیام("شوێن بکەوە error: " + (error.message || "Unknown error"),"error");
+    dashboardMessage(error.message || "Withdraw request failed.","error");
   }finally{
-    button.disabled = false;
-  }
-}
-
-async function shareTikTokVideo(videoId){
-  const url = window.location.href.split("#")[0] + "#video=" + encodeURIComponent(videoId);
-  try{
-    if(navigator.share){
-      await navigator.share({title:"XALLO-GAMING",text:"Watch this video on XALLO-GAMING",url});
-      return;
-    }
-    await navigator.clipboard.writeText(url);
-    dashboardپەیام("🔗 Video link copied.","success");
-  }catch(error){
-    if(error && error.name === "AbortError") return;
-    dashboardپەیام("نەتوانرا ئەم ڤیدیۆیە هاوبەش بکرێت.","error");
-  }
-}
-
-let activeTikTokCommentVideoId = "";
-
-async function openTikTokکۆمێنتەکان(videoId){
-  activeTikTokCommentVideoId = String(videoId || "");
-  if(!activeTikTokCommentVideoId) return;
-  const modal = document.getElementById("tiktokCommentModal");
-  const list = document.getElementById("tiktokCommentList");
-  const input = document.getElementById("tiktokCommentInput");
-  modal.style.display = "flex";
-  list.innerHTML = '<div class="small">Loading comments...</div>';
-  input.value = "";
-  try{
-    const {data,error} = await supabaseClient.from("comments")
-      .select("id,user_email,comment,created_at")
-      .eq("video_id",activeTikTokCommentVideoId)
-      .order("created_at",{ascending:true});
-    if(error) throw error;
-    list.innerHTML = (data || []).length ? data.map(c => `
-      <div class="tiktok-comment-row">
-        <div class="tiktok-comment-user">👤 ${escapeHtml(c.user_email || "")}</div>
-        <div class="tiktok-comment-text">${escapeHtml(c.comment || "")}</div>
-        <div class="chat-time">${new Date(c.created_at).toLocaleString()}</div>
-      </div>`).join("") : '<div class="small">هێشتا هیچ کۆمێنتێک نییە. یەکەم کەس بە! 💬</div>';
-    setTimeout(()=>input.focus(),80);
-  }catch(error){
-    list.innerHTML = `<div class="small">نەتوانرا کۆمێنتەکان بار بکرێن: ${escapeHtml(error.message || "Unknown error")}</div>`;
-  }
-}
-
-function closeTikTokکۆمێنتەکان(event){
-  if(event && event.target !== event.currentTarget) return;
-  const modal = document.getElementById("tiktokCommentModal");
-  if(modal) modal.style.display = "none";
-  activeTikTokCommentVideoId = "";
-}
-
-async function submitTikTokComment(){
-  const videoId = activeTikTokCommentVideoId;
-  const input = document.getElementById("tiktokCommentInput");
-  const comment = input ? input.value.trim() : "";
-  if(!videoId || !comment) return;
-  const {data:userData} = await supabaseClient.auth.getUser();
-  if(!userData.user){ dashboardپەیام("Please login first.","error"); return; }
-  try{
-    const {error} = await supabaseClient.from("comments").insert({video_id:videoId,user_email:userData.user.email,comment});
-    if(error) throw error;
-    input.value = "";
-    await openTikTokکۆمێنتەکان(videoId);
-  }catch(error){
-    dashboardپەیام("Comment error: " + (error.message || "Unknown error"),"error");
-  }
-}
-
-function focusTikTokComment(videoId){
-
-  const input =
-    document.getElementById("comment-" + videoId);
-
-  if(input){
-
-    input.scrollIntoView({
-      behavior:"smooth",
-      block:"center"
-    });
-
-    input.focus();
-
-    dashboardپەیام(
-      "کۆمێنتەکەت لە بەشی ڤیدیۆکانی XALLO بنووسە.",
-      "success"
-    );
-
-  }else{
-
-    dashboardپەیام(
-      "بۆ نووسینی کۆمێنت، سندوقی کۆمێنت لە ڤیدیۆکانی XALLO بکەرەوە.",
-      "success"
-    );
+    button.disabled=false; button.textContent="💰 Request Withdraw";
   }
 }
 
 
-/* =========================================
-   FOLLOW / PUBLIC PROFILE
-========================================= */
-
-let activeپرۆفایلEmail = "";
-
-async function openTikTokپرۆفایل(email){
-
-  const targetEmail = String(email || "").trim();
-  if(!targetEmail) return;
-
-  const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData && authData.user ? authData.user.email : "";
-
-  activeپرۆفایلEmail = targetEmail;
-
-  const modal = document.getElementById("profileModal");
-  const nameBox = document.getElementById("profileName");
-  const emailBox = document.getElementById("profileEmail");
-  const bioBox = document.getElementById("profileدەربارەی خۆت");
-  const avatar = document.getElementById("profileAvatar");
-  const followButton = document.getElementById("profileFollowButton");
-
-  modal.style.display = "flex";
-  nameBox.textContent = "پرۆفایل بار دەکرێت...";
-  emailBox.textContent = targetEmail;
-  bioBox.textContent = "";
-  avatar.src = "";
-  followButton.disabled = true;
-  followButton.textContent = "Loading...";
-
-  try{
-    const {data:profile,error:profileError} = await supabaseClient.rpc(
-      "get_public_profile",
-      {p_email:targetEmail}
-    );
-
-    if(profileError) throw profileError;
-
-    const profileData = profile || {};
-    nameBox.textContent = profileData.username || targetEmail.split("@")[0];
-    emailBox.textContent = targetEmail;
-    bioBox.textContent = profileData.bio || "";
-
-    avatar.src = profileData.avatar_url || "";
-    avatar.onerror = () => {
-      avatar.style.display = "none";
-    };
-    avatar.onload = () => {
-      avatar.style.display = "block";
-    };
-    if(!profileData.avatar_url) avatar.style.display = "none";
-
-    const {data:stats,error:statsError}=await supabaseClient.rpc("get_follow_stats",{p_email:targetEmail});
-    if(statsError) throw statsError;
-    document.getElementById("profileFollowers").textContent = Number(stats?.followers || 0);
-    document.getElementById("profileFollowing").textContent = Number(stats?.following || 0);
-
-    if(currentEmail && currentEmail.toLowerCase() === targetEmail.toLowerCase()){
-      followButton.disabled = true;
-      followButton.textContent = "Your پرۆفایل";
-      followButton.classList.remove("following");
-      return;
-    }
-
-    const {data:followState,error:followCheckError}=await supabaseClient.rpc("is_following",{p_target_email:targetEmail});
-    if(followCheckError) throw followCheckError;
-
-    setFollowButton(!!followState);
-    followButton.disabled = false;
-    followButton.onclick = () => toggleFollow(targetEmail);
-
-  }catch(error){
-    nameBox.textContent = "پرۆفایل unavailable";
-    bioBox.textContent = error.message || "نەتوانرا پرۆفایل بار بکرێت.";
-    followButton.disabled = true;
-    followButton.textContent = "شوێنکەوتن بەردەست نییە";
-  }
-}
-
-function setFollowButton(isFollowing){
-  const button = document.getElementById("profileFollowButton");
-  button.classList.toggle("following",!!isFollowing);
-  button.textContent = isFollowing ? "✓ شوێنکەوترا" : "＋ شوێن بکەوە";
-}
-
-async function toggleFollow(targetEmail){
-  const button = document.getElementById("profileFollowButton");
-  const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData?.user?.email || "";
-
-  if(!currentEmail){
-    dashboardپەیام("Please login first.","error");
-    return;
-  }
-  if(currentEmail.toLowerCase() === String(targetEmail).toLowerCase()) return;
-
-  button.disabled = true;
-  try{
-    const {data,error}=await supabaseClient.rpc("toggle_follow",{p_following_email:targetEmail});
-    if(error) throw error;
-    setFollowButton(!!data?.following);
-    document.getElementById("profileFollowers").textContent = Number(data?.followers || 0);
-
-    if(data?.following){
-      try{ await supabaseClient.rpc("notify_follow",{p_following_email:targetEmail}); }catch(e){ console.warn("شوێن بکەوە notification unavailable:",e); }
-    }
-  }catch(error){
-    dashboardپەیام("شوێن بکەوە error: " + (error.message || "Unknown error"),"error");
-  }finally{
-    button.disabled = false;
-  }
-}
-
-function closeپرۆفایلModal(event){
-  if(event && event.target && event.target.id !== "profileModal") return;
-  const modal = document.getElementById("profileModal");
-  if(modal) modal.style.display = "none";
-  activeپرۆفایلEmail = "";
-}
-
-
-
-
-
-
-
-/* =========================================
-   XALLO CHAT / MESSAGES
-========================================= */
-let activeChatEmail = "";
-let activeChatUserEmail = "";
-
-async function openChat(){
-  const modal=document.getElementById("chatModal");
-  if(!modal) return;
-  modal.style.display="flex";
-  const {data}=await supabaseClient.auth.getUser();
-  activeChatUserEmail=data?.user?.email || "";
-}
-
-function closeChat(event){
-  if(event && event.target && event.target.id!=="chatModal") return;
-  const modal=document.getElementById("chatModal");
-  if(modal) modal.style.display="none";
-}
-
-function chatSafe(text){
-  return escapeHtml(text);
-}
-
-async function loadChat(){
-  const input=document.getElementById("chatRecipient");
-  const box=document.getElementById("chatپەیامs");
-  const status=document.getElementById("chatStatus");
-  const recipient=(input?.value||"").trim().toLowerCase();
-  if(!recipient || !recipient.includes("@")){
-    status.textContent="Enter a valid receiver email.";
-    return;
-  }
-  const {data:userData}=await supabaseClient.auth.getUser();
-  const me=(userData?.user?.email||"").toLowerCase();
-  if(!me){ status.textContent="Please login first."; return; }
-  if(recipient===me){ status.textContent="ناتوانیت بۆ خۆت پەیام بنێریت."; return; }
-  activeChatEmail=recipient; activeChatUserEmail=me;
-  box.innerHTML='<div class="small">Loading chat...</div>';
-  const {data,error}=await supabaseClient
-    .from("messages")
-    .select("id,sender_email,receiver_email,message,is_read,created_at")
-    .or(`and(sender_email.eq.${me},receiver_email.eq.${recipient}),and(sender_email.eq.${recipient},receiver_email.eq.${me})`)
-    .order("created_at",{ascending:true})
-    .limit(100);
-  if(error){
-    box.innerHTML='<div class="small">Could not load chat: '+chatSafe(error.message)+'</div>';
-    return;
-  }
-  status.textContent="Chat with "+recipient;
-  if(!data?.length){
-    box.innerHTML='<div class="small">هێشتا هیچ پەیامێک نییە. یەکەم پەیام بنێرە.</div>';
-  }else{
-    box.innerHTML=data.map(m=>{
-      const mine=(m.sender_email||"").toLowerCase()===me;
-      const time=m.created_at?new Date(m.created_at).toLocaleString():"";
-      return `<div class="chat-msg ${mine?'mine':'theirs'}">${chatSafe(m.message)}<div class="chat-time">${chatSafe(time)}</div></div>`;
-    }).join("");
-  }
-  box.scrollTop=box.scrollHeight;
-  const unread=(data||[]).filter(m=>(m.receiver_email||"").toLowerCase()===me && !m.is_read).map(m=>m.id);
-  if(unread.length){
-    await supabaseClient.from("messages").update({is_read:true}).in("id",unread);
-  }
-}
-
-async function sendChatپەیام(){
-  const text=(document.getElementById("chatInput")?.value||"").trim();
-  if(!activeChatEmail){
-    document.getElementById("chatStatus").textContent="Load a chat first.";
-    return;
-  }
-  if(!text) return;
-  const {data:userData}=await supabaseClient.auth.getUser();
-  const me=userData?.user?.email||"";
-  if(!me) return;
-  const button=document.querySelector(".chat-send");
-  if(button) button.disabled=true;
-  const {error}=await supabaseClient.from("messages").insert({
-    sender_email:me, receiver_email:activeChatEmail, message:text
-  });
-  if(button) button.disabled=false;
-  if(error){
-    document.getElementById("chatStatus").textContent="Send error: "+error.message;
-    return;
-  }
-
-  const {error:notifyError}=await supabaseClient.rpc(
-    "notify_message",
-    {p_receiver_email:activeChatEmail,p_preview:text.slice(0,120)}
-  );
-  if(notifyError) console.warn("پەیام notification unavailable:", notifyError.message);
-
-  document.getElementById("chatInput").value="";
-  await loadChat();
-}
-
-
-/* =========================================
-   ESCAPE HTML
-========================================= */
-
-function escapeHtml(value){
-
-  return String(
-    value ?? ""
-  ).replace(
-    /[&<>"']/g,
-    m => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#039;"
-    }[m])
-  );
-}
-
-
-/* =========================================
+/* =====================================
    LOGOUT
-========================================= */
+===================================== */
 
 async function logout(){
 
   await supabaseClient.auth.signOut();
 
-  // Return to the authentication screen cleanly.
-  document.body.classList.remove("xallo-logged-in");
+  document.getElementById("dashboard")
+    .style.display="none";
 
-  document.getElementById(
-    "dashboard"
-  ).style.display="none";
-
-  document.getElementById(
-    "authBox"
-  ).style.display="block";
+  document.getElementById("authBox")
+    .style.display="block";
 
   showLogin();
 }
 
 
-/* =========================================
-   CHECK LOGIN
-========================================= */
-
-
-document.addEventListener("keydown",(event)=>{
-  if(event.key === "Escape") closeTikTokکۆمێنتەکان();
-});
+/* =====================================
+   CHECK USER
+===================================== */
 
 async function checkUser(){
-  try{
-    const { data, error } = await supabaseClient.auth.getSession();
 
-    if(error){
-      console.error("getSession error:", error);
-      document.body.classList.remove("xallo-logged-in");
-      document.getElementById("dashboard").style.display="none";
-      document.getElementById("authBox").style.display="block";
-      showLogin();
-      showپەیام("کێشەی پەیوەندی بە Supabase هەیە. تکایە دووبارە هەوڵ بدە.","error");
-      return;
-    }
+  const {data} =
+    await supabaseClient.auth.getUser();
 
-    const session = data?.session;
-    if(session?.user){
-      enterXalloApp(session.user);
-    }else{
-      document.body.classList.remove("xallo-logged-in");
-      document.getElementById("dashboard").style.display="none";
-      document.getElementById("authBox").style.display="block";
-      showLogin();
-    }
-  }catch(err){
-    console.error("checkUser error:", err);
-    document.body.classList.remove("xallo-logged-in");
-    document.getElementById("dashboard").style.display="none";
-    document.getElementById("authBox").style.display="block";
-    showLogin();
-    showپەیام("کێشەیەک ڕوویدا لە چوونەژوورەوە.","error");
+  if(data && data.user){
+
+    await showDashboard(
+      data.user
+    );
   }
 }
 
-// IMPORTANT: do not run Supabase database queries directly inside
-// onAuthStateChange. Supabase holds an auth lock while firing this callback;
-// doing extra awaited queries here can make login appear to freeze.
-supabaseClient.auth.onAuthStateChange((event, session) => {
-  if(session?.user){
-    // Do not await any database query inside the auth callback.
-    enterXalloApp(session.user);
-  }else if(event === "SIGNED_OUT"){
-    document.body.classList.remove("xallo-logged-in");
-    document.getElementById("dashboard").style.display="none";
-    document.getElementById("authBox").style.display="block";
-    showLogin();
-  }
-});
 
-/* =========================================
+/* =====================================
    START
-========================================= */
+===================================== */
 
 checkUser();
 
-</script>
-
-
-<script>
-/* ===== XALLO NOTIFICATIONS ===== */
-function notificationSafe(value){
-  const div = document.createElement("div");
-  div.textContent = value == null ? "" : String(value);
-  return div.innerHTML;
-}
-
-function notificationTime(value){
-  if(!value) return "";
-  try{return new Date(value).toLocaleString();}catch(e){return "";}
-}
-
-async function loadNotifications(){
-  const list = document.getElementById("notificationsList");
-  const badge = document.getElementById("notificationBadge");
-  if(!list || !badge || typeof supabaseClient === "undefined") return;
-
-  list.innerHTML = '<div class="users-empty">ئاگادارییەکان بار دەکرێن...</div>';
-
-  try{
-    const {data,error} = await supabaseClient
-      .from("notifications")
-      .select("id,title,message,type,is_read,created_at")
-      .order("created_at",{ascending:false})
-      .limit(50);
-
-    if(error) throw error;
-
-    const rows = data || [];
-    const unread = rows.filter(n => !n.is_read).length;
-
-    if(unread){
-      badge.textContent = String(unread);
-      badge.style.display = "inline-flex";
-    }else{
-      badge.style.display = "none";
-    }
-
-    if(!rows.length){
-      list.innerHTML = '<div class="users-empty">No notifications yet.</div>';
-      return;
-    }
-
-    list.innerHTML = rows.map(n => `
-      <div class="notification-item ${n.is_read ? "" : "unread"}">
-        <div class="notification-title">${notificationSafe(n.title || "Notification")}</div>
-        <div class="notification-message">${notificationSafe(n.message || "")}</div>
-        <div class="notification-time">${notificationSafe(notificationTime(n.created_at))}</div>
-        ${n.is_read ? "" : `<button type="button" class="notification-read" onclick="markNotificationRead('${String(n.id).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">✓ Mark as read</button>`}
-      </div>
-    `).join("");
-  }catch(error){
-    console.error(error);
-    list.innerHTML = `<div class="users-empty">Could not load notifications.<br>${notificationSafe(error.message || "Unknown error")}</div>`;
-  }
-}
-
-async function markNotificationRead(id){
-  if(!id) return;
-
-  const {error} = await supabaseClient
-    .from("notifications")
-    .update({is_read:true})
-    .eq("id",id);
-
-  if(error){
-    dashboardپەیام("Notification error: " + (error.message || "Unknown error"),"error");
-    return;
-  }
-
-  await loadNotifications();
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    if(typeof supabaseClient !== "undefined") loadNotifications();
-  }, 900);
-});
-/* ===== XALLO HOME / EXPLORE NAV ===== */
-function xalloSetNav(active){
-  document.getElementById("homeNavButton")?.classList.toggle("active",active==="home");
-  document.getElementById("exploreNavButton")?.classList.toggle("active",active==="explore");
-}
-
-function xalloGoHome(){
-  const explore=document.getElementById("exploreBox");
-  if(explore) explore.classList.remove("show");
-  xalloSetNav("home");
-  document.getElementById("tiktokFeed")?.scrollIntoView({behavior:"smooth",block:"start"});
-  setTimeout(()=>loadTikTokFeed("", "all"),250);
-}
-
-function xalloGoExplore(){
-  const explore=document.getElementById("exploreBox");
-  if(explore) explore.classList.add("show");
-  xalloSetNav("explore");
-  document.getElementById("tiktokFeed")?.scrollIntoView({behavior:"smooth",block:"start"});
-  setTimeout(()=>loadTikTokFeed("", "trending"),250);
-}
-
-function searchExploreVideos(){
-  const q=(document.getElementById("exploreSearchInput")?.value || "").trim();
-  loadTikTokFeed(q, "all");
-}
-
-function setExploreSearch(value){
-  const input=document.getElementById("exploreSearchInput");
-  if(input) input.value=value;
-  loadTikTokFeed(value, "all");
-}
-
-function setExploreMode(mode){
-  const input=document.getElementById("exploreSearchInput");
-  if(input) input.value="";
-  loadTikTokFeed("", mode);
-}
-
-function xalloGoپرۆفایل(){
-  document.getElementById("my-profile-box")?.scrollIntoView({behavior:"smooth",block:"start"});
-  document.querySelector(".my-profile-box")?.scrollIntoView({behavior:"smooth",block:"start"});
-}
-
-function xalloGoپەیامs(){
-  document.querySelector(".chat-box")?.scrollIntoView({behavior:"smooth",block:"start"});
-  setTimeout(()=>openChat(),300);
-}
-
-</script>
-
-<script>
-/* ===== XALLO USERS SEARCH ===== */
-function escapeUserText(value){
-  const div = document.createElement("div");
-  div.textContent = value == null ? "" : String(value);
-  return div.innerHTML;
-}
-
-function userAvatarHtml(url, name){
-  if(url){
-    return `<img src="${escapeUserText(url)}" alt="avatar">`;
-  }
-  const letter = (name || "U").trim().charAt(0).toUpperCase() || "U";
-  return `<div class="user-avatar-placeholder">${escapeUserText(letter)}</div>`;
-}
-
-async function searchUsers(){
-  const input = document.getElementById("userSearchInput");
-  const list = document.getElementById("usersList");
-  if(!input || !list) return;
-
-  const q = input.value.trim();
-  list.innerHTML = '<div class="users-empty">Loading users...</div>';
-
-  try{
-    const { data, error } = await supabaseClient.rpc(
-      "search_public_users",
-      { p_search: q }
-    );
-
-    if(error) throw error;
-
-    if(!data || !data.length){
-      list.innerHTML = '<div class="users-empty">No users found.</div>';
-      return;
-    }
-
-    list.innerHTML = data.map(u => {
-      const name = u.username || u.email || "User";
-      return `
-        <div class="user-card">
-          ${userAvatarHtml(u.avatar_url, name)}
-          <div class="user-card-info">
-            <div class="user-card-name">${escapeUserText(name)}</div>
-            <div class="user-card-email">${escapeUserText(u.email)}</div>
-          </div>
-          <button type="button"
-            onclick="startUserChat('${String(u.email).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">
-            💬 پەیام
-          </button>
-        </div>`;
-    }).join("");
-  }catch(err){
-    console.error(err);
-    list.innerHTML =
-      `<div class="users-empty">Could not load users.<br>${escapeUserText(err.message || "Unknown error")}</div>`;
-  }
-}
-
-function startUserChat(email){
-  if(!email) return;
-
-  // Reuse the existing secure Chat modal/function from the current XALLO page.
-  const receiver = document.getElementById("chatRecipient");
-  if(receiver) receiver.value = email;
-
-  if(typeof openChat === "function"){
-    openChat();
-    if(typeof loadChat === "function"){
-      setTimeout(() => loadChat(), 50);
-    }
-  }else{
-    alert("Chat is not available. Please refresh the page.");
-  }
-}
-
-async function loadInitialUsers(){
-  const list = document.getElementById("usersList");
-  if(!list) return;
-  // Show a small initial list without requiring the user to type anything.
-  try{
-    const { data, error } = await supabaseClient.rpc(
-      "search_public_users",
-      { p_search: "" }
-    );
-    if(error) throw error;
-    if(!data || !data.length){
-      list.innerHTML = '<div class="users-empty">No other users yet.</div>';
-      return;
-    }
-    list.innerHTML = data.slice(0,10).map(u => {
-      const name = u.username || u.email || "User";
-      return `
-        <div class="user-card">
-          ${userAvatarHtml(u.avatar_url, name)}
-          <div class="user-card-info">
-            <div class="user-card-name">${escapeUserText(name)}</div>
-            <div class="user-card-email">${escapeUserText(u.email)}</div>
-          </div>
-          <button type="button"
-            onclick="startUserChat('${String(u.email).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">
-            💬 پەیام
-          </button>
-        </div>`;
-    }).join("");
-  }catch(err){
-    console.warn("Initial users list unavailable:", err);
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    if(typeof supabaseClient !== "undefined") loadInitialUsers();
-  }, 700);
-});
 </script>
 
 </body>
