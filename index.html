@@ -638,8 +638,7 @@ img,video{max-width:100%}
 }
 </style>
 
-
-<style id="x3-css">.x3box{margin-top:16px;padding:14px;border:1px solid #304864;border-radius:18px;background:#0b1626}.x3tabs{display:flex;gap:8px}.x3tabs button{width:auto;flex:1;margin:0}.x3tabs .on{background:#08a9ff}.x3row{display:flex;gap:8px;margin-top:10px}.x3row input{margin:0;flex:1}.x3row button{width:auto;margin:0}.x3res{display:flex;flex-direction:column;gap:8px;margin-top:10px}.x3card{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #2b405b;border-radius:13px;background:#0d1b2d}.x3av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;object-fit:cover;background:#17263b}.x3main{min-width:0;flex:1}.x3name{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.x3sub{font-size:11px;color:#93a1b6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.x3card button{width:auto;margin:0;padding:8px 11px}.x3empty{text-align:center;color:#93a1b6;padding:12px}</style></head>
+</head>
 
 <body dir="rtl">
 
@@ -677,6 +676,9 @@ img,video{max-width:100%}
       onclick="login()">
       Login
     </button>
+<button type="button" onclick="resendVerification()" style="margin-top:10px;background:#17263b;border:1px solid #304864;">
+📧 ناردنەوەی پشتڕاستکردنەوەی ئیمەیڵ
+</button>
 
     <div class="switch">
       هەژمارت نییە؟
@@ -742,8 +744,7 @@ img,video{max-width:100%}
     <button type="button" onclick="xalloGoپەیامs()">💬 پەیامەکان</button>
   </div>
 
-  <div id="x3box" class="x3box"><h3>🔎 Search & Explore</h3><div class="x3tabs"><button id="x3u" class="on" onclick="x3mode('users')">👥 بەکارهێنەر</button><button id="x3v" onclick="x3mode('videos')">🎬 ڤیدیۆ</button></div><div class="x3row"><input id="x3q" type="search" placeholder="ناوی بەکارهێنەر یان ئیمەیڵ..." onkeydown="if(event.key==='Enter')x3search()"><button onclick="x3search()">گەڕان</button></div><div id="x3res" class="x3res"><div class="x3empty">وشەی گەڕان بنووسە.</div></div></div>
-<div id="exploreBox" class="explore-box">
+  <div id="exploreBox" class="explore-box">
     <h3 style="margin-top:0">🔎 گەڕان لە XALLO</h3>
     <div class="small" style="margin-bottom:10px">ڤیدیۆ بە دەربارەیی یان ئیمەیڵی بەکارهێنەر بگەڕێ.</div>
     <div class="explore-search">
@@ -1260,8 +1261,8 @@ async function signup(){
 ========================================= */
 
 async function login(){
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPassword").value;
+  const email = String(document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
+  const password = String(document.getElementById("loginPassword")?.value || "");
 
   if(!email || !password){
     showپەیام("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
@@ -1269,41 +1270,56 @@ async function login(){
   }
 
   const button = document.getElementById("loginButton");
-  button.disabled = true;
-  button.textContent = "Logging in...";
-  showپەیام("","success");
+  if(button){ button.disabled = true; button.textContent = "Logging in..."; }
 
   try{
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
     if(error){
-      console.error("login error:", error);
-      const msg = String(error.message || "");
-      if(msg.toLowerCase().includes("email not confirmed")){
-        showپەیام("ئیمەیڵەکەت پشتڕاست نەکراوەتەوە. سەرەتا ئیمەیڵەکەت پشتڕاست بکەرەوە.","error");
-      }else if(msg.toLowerCase().includes("invalid login credentials")){
+      console.error("XALLO LOGIN:", error);
+      const msg = String(error.message || "").toLowerCase();
+
+      if(msg.includes("email not confirmed")){
+        showپەیام("ئیمەیڵەکەت پشتڕاست نەکراوەتەوە. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە.","error");
+      }else if(msg.includes("invalid login credentials") || msg.includes("invalid credentials")){
         showپەیام("ئیمەیڵ یان وشەی نهێنی هەڵەیە.","error");
       }else{
-        showپەیام(msg || "چوونەژوورەوە سەرکەوتوو نەبوو.","error");
+        showپەیام(error.message || "Login سەرکەوتوو نەبوو.","error");
       }
       return;
     }
 
     if(data?.user){
-      // Auth succeeded: enter immediately. Database/storage modules run in the background.
       enterXalloApp(data.user);
-    }else{
-      showپەیام("هیچ بەکارهێنەرێکی login نەدۆزرایەوە.","error");
+      return;
     }
+
+    showپەیام("Login سەرکەوتوو نەبوو.","error");
   }catch(err){
-    console.error("login exception:", err);
-    showپەیام("کێشەی پەیوەندی هەیە. ئینتەرنێت و Supabase پشکنین بکە.","error");
+    console.error("XALLO LOGIN EXCEPTION:", err);
+    showپەیام(err?.message || "کێشەیەک لە Login ڕوویدا.","error");
   }finally{
-    button.disabled=false;
-    button.textContent="Login";
+    if(button){ button.disabled = false; button.textContent = "Login"; }
+  }
+}
+
+async function resendVerification(){
+  const email = String(document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
+  if(!email){
+    showپەیام("سەرەتا ئیمەیڵەکەت بنووسە.","error");
+    return;
+  }
+
+  try{
+    const { error } = await supabaseClient.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: window.location.origin }
+    });
+    if(error) throw error;
+    showپەیام("ئیمەیڵی پشتڕاستکردنەوە دوبارە نێردرا. Inbox و Spam پشکنە.","success");
+  }catch(err){
+    showپەیام(err?.message || "نەتوانرا ئیمەیڵی پشتڕاستکردنەوە بنێردرێت.","error");
   }
 }
 
@@ -3734,5 +3750,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-<script id="x3-js">let x3m="users";function x3mode(m){x3m=m;document.getElementById("x3u").classList.toggle("on",m==="users");document.getElementById("x3v").classList.toggle("on",m==="videos");document.getElementById("x3q").placeholder=m==="users"?"ناوی بەکارهێنەر یان ئیمەیڵ...":"گەڕان لە caption ی ڤیدیۆ...";x3search()}function x3esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",""":"&quot;","'":"&#039;"}[c]))}async function x3search(){let q=document.getElementById("x3q").value.trim(),b=document.getElementById("x3res");if(!q){b.innerHTML='<div class="x3empty">وشەی گەڕان بنووسە.</div>';return}b.innerHTML='<div class="x3empty">🔄 گەڕان...</div>';try{if(x3m==="users"){let r=await supabaseClient.from("users").select("email,username,avatar_url,bio").or(`username.ilike.%${q}%,email.ilike.%${q}%`).limit(30);if(r.error)throw r.error;if(!r.data?.length){b.innerHTML='<div class="x3empty">هیچ بەکارهێنەرێک نەدۆزرایەوە.</div>';return}b.innerHTML=r.data.map(u=>{let n=u.username||u.email?.split("@")[0]||"User";return `<div class="x3card"><div class="x3av">${u.avatar_url?`<img class="x3av" src="${x3esc(u.avatar_url)}">`:x3esc(n[0]?.toUpperCase()||"U")}</div><div class="x3main"><div class="x3name">${x3esc(n)}</div><div class="x3sub">${x3esc(u.email||"")}</div></div><button onclick="x3profile('${x3esc(u.email)}')">پرۆفایل</button></div>`}).join("")}else{let r=await supabaseClient.from("videos").select("id,user_email,video_url,caption,likes,created_at").ilike("caption",`%${q}%`).order("created_at",{ascending:false}).limit(30);if(r.error)throw r.error;if(!r.data?.length){b.innerHTML='<div class="x3empty">هیچ ڤیدیۆیەک نەدۆزرایەوە.</div>';return}b.innerHTML=r.data.map(v=>`<div class="x3card"><div class="x3av">🎬</div><div class="x3main"><div class="x3name">${x3esc(v.caption||"بێ ناونیشان")}</div><div class="x3sub">👤 ${x3esc(v.user_email||"")} · ❤️ ${Number(v.likes||0)}</div></div><button onclick="window.open('${x3esc(v.video_url)}','_blank')">بینین</button></div>`).join("")}}catch(e){b.innerHTML=`<div class="x3empty">هەڵە: ${x3esc(e.message||e)}</div>`}}async function x3profile(email){if(typeof loadPublicProfile==="function"){try{return await loadPublicProfile(email)}catch(e){}}if(typeof openPublicProfile==="function"){try{return await openPublicProfile(email)}catch(e){}}alert(email)}</script></body>
+</body>
 </html>
