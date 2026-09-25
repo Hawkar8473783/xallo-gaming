@@ -1,3764 +1,697 @@
 <!DOCTYPE html>
 <html lang="ku" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>XALLO-GAMING</title>
-<meta name="xallo-version" content="xallo-full-kurdish-fixed-2026-09-24">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Arial,sans-serif;
-}
-
-body{
-  min-height:100vh;
-  background:radial-gradient(circle at top,#123b5d,#050713 70%);
-  color:white;
-  padding:20px;
-}
-
-.container{
-  width:100%;
-  max-width:500px;
-  margin:auto;
-  background:#11182d;
-  border:1px solid #263553;
-  border-radius:25px;
-  padding:25px 20px;
-  box-shadow:0 0 40px rgba(0,170,255,.18);
-}
-
-.logo{
-  text-align:center;
-  font-size:30px;
-  font-weight:bold;
-  margin-bottom:6px;
-}
-
-.logo span{
-  color:#08a9ff;
-}
-
-.subtitle{
-  text-align:center;
-  color:#9da8bd;
-  margin-bottom:25px;
-}
-
-h2,h3{
-  margin-bottom:15px;
-}
-
-input,
-select,
-textarea{
-  width:100%;
-  padding:15px;
-  margin-bottom:12px;
-  border-radius:12px;
-  border:1px solid #283653;
-  background:#070b19;
-  color:white;
-  font-size:16px;
-  outline:none;
-}
-
-textarea{
-  min-height:90px;
-  resize:none;
-}
-
-button{
-  width:100%;
-  padding:15px;
-  border:0;
-  border-radius:12px;
-  color:white;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-  margin-top:7px;
-}
-
-button:disabled{
-  opacity:.5;
-  cursor:not-allowed;
-}
-
-.login-btn{
-  background:#08a9ff;
-}
-
-.reward-button{
-  background:#9c27b0;
-}
-
-.withdraw-button{
-  background:#ff9800;
-}
-
-.upload-button{
-  background:#00a878;
-}
-
-.logout{
-  background:#e53935;
-}
-
-.switch{
-  text-align:center;
-  margin-top:18px;
-  color:#9da8bd;
-}
-
-.switch a{
-  color:#08a9ff;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.message{
-  margin-top:15px;
-  padding:12px;
-  border-radius:10px;
-  text-align:center;
-  line-height:1.5;
-  display:none;
-}
-
-.success{
-  display:block;
-  color:#55e6a5;
-  background:rgba(0,200,120,.12);
-}
-
-.error{
-  display:block;
-  color:#ff7777;
-  background:rgba(255,60,60,.12);
-}
-
-.dashboard{
-  display:none;
-}
-
-/* ===== XALLO AUTH GATE: never show Login and Dashboard together ===== */
-body:not(.xallo-logged-in) #dashboard{
-  display:none !important;
-}
-body:not(.xallo-logged-in) #authBox{
-  display:block !important;
-}
-body.xallo-logged-in #authBox{
-  display:none !important;
-}
-body.xallo-logged-in #dashboard{
-  display:block !important;
-}
-
-.email{
-  color:#b8c1d4;
-  margin:10px 0 18px;
-  text-align:center;
-  word-break:break-word;
-}
-
-.coins{
-  padding:20px;
-  border-radius:18px;
-  background:#0c1b2e;
-  border:1px solid #315174;
-  text-align:center;
-  margin-bottom:15px;
-}
-
-.coin-number{
-  color:#ffd54a;
-  font-size:40px;
-  font-weight:bold;
-  margin-top:7px;
-}
-
-.box{
-  margin-top:20px;
-  padding:18px;
-  background:#0c1b2e;
-  border:1px solid #315174;
-  border-radius:18px;
-}
-
-.balance{
-  text-align:center;
-  color:#9da8bd;
-  margin-bottom:12px;
-}
-
-.small{
-  color:#8f9bb3;
-  font-size:12px;
-  line-height:1.5;
-  text-align:center;
-  margin-top:8px;
-}
-
-.video-feed{
-  margin-top:20px;
-}
-
-.video-card{
-  background:#070b19;
-  border:1px solid #283653;
-  border-radius:18px;
-  overflow:hidden;
-  margin-top:15px;
-}
-
-.video-card video{
-  width:100%;
-  display:block;
-  max-height:600px;
-  background:black;
-}
-
-.video-info{
-  padding:14px;
-}
-
-.video-user{
-  color:#08a9ff;
-  font-weight:bold;
-  margin-bottom:8px;
-  word-break:break-word;
-}
-
-.caption{
-  color:#ddd;
-  line-height:1.5;
-  margin-bottom:10px;
-}
-
-.video-date{
-  color:#77839a;
-  font-size:11px;
-}
-
-.like-button{
-  background:#18243b;
-  margin-top:12px;
-}
-
-.comment-area{
-  margin-top:12px;
-}
-
-.comment-input{
-  margin-bottom:8px;
-  padding:12px;
-  font-size:14px;
-}
-
-.comment-button{
-  background:#263b63;
-  padding:12px;
-  margin-top:0;
-}
-
-.comments-list{
-  margin-top:12px;
-}
-
-.comment{
-  background:#101a2d;
-  border:1px solid #263553;
-  border-radius:10px;
-  padding:10px;
-  margin-top:8px;
-  font-size:13px;
-  line-height:1.5;
-}
-
-.comment-user{
-  color:#08a9ff;
-  font-weight:bold;
-  margin-bottom:4px;
-  word-break:break-word;
-}
-
-.comment-text{
-  color:#ddd;
-  word-break:break-word;
-}
-
-.comment-date{
-  color:#77839a;
-  font-size:10px;
-  margin-top:5px;
-}
-
-.history{
-  margin-top:22px;
-}
-
-.request,
-.admin-row{
-  background:#070b19;
-  border:1px solid #283653;
-  border-radius:12px;
-  padding:12px;
-  margin-top:10px;
-  font-size:13px;
-  line-height:1.7;
-}
-
-.pending{
-  color:#ffd54a;
-}
-
-.approved{
-  color:#55e6a5;
-}
-
-.rejected{
-  color:#ff7777;
-}
-
-.admin-box{
-  display:none;
-}
-
-.admin-actions{
-  display:flex;
-  gap:8px;
-  margin-top:10px;
-}
-
-.admin-actions button{
-  margin:0;
-  font-size:13px;
-  padding:10px;
-}
-
-.approve{
-  background:#16b978;
-}
-
-.reject{
-  background:#e53935;
-}
-
-.logout{
-  margin-top:25px;
-}
-
-.file-name{
-  color:#08a9ff;
-  font-size:13px;
-  margin:5px 0 10px;
-  word-break:break-word;
-}
-
-
-/* ================= TIKTOK STYLE FEED ================= */
-.tiktok-section{
-  margin-top:20px;
-  padding:0;
-}
-.tiktok-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
-  padding:0 4px;
-}
-.tiktok-title{
-  margin:0;
-}
-.tiktok-swipe-hint{
-  color:#aeb8cc;
-  font-size:12px;
-}
-.tiktok-feed{
-  width:100%;
-  height:78vh;
-  min-height:560px;
-  max-height:none;
-  overflow-y:auto;
-  scroll-snap-type:y mandatory;
-  background:#000;
-  border-radius:20px;
-  border:1px solid #283653;
-  scrollbar-width:none;
-}
-.tiktok-feed::-webkit-scrollbar{display:none}
-.tiktok-item{
-  position:relative;
-  height:78vh;
-  min-height:560px;
-  max-height:none;
-  scroll-snap-align:start;
-  scroll-snap-stop:always;
-  background:#000;
-  overflow:hidden;
-}
-.tiktok-item video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  background:#000;
-}
-.tiktok-gradient{
-  position:absolute;
-  inset:45% 0 0;
-  background:linear-gradient(transparent,rgba(0,0,0,.9));
-  pointer-events:none;
-}
-.tiktok-info{
-  position:absolute;
-  left:14px;
-  right:76px;
-  bottom:18px;
-  z-index:2;
-}
-.tiktok-user{
-  color:#fff;
-  font-weight:bold;
-  margin-bottom:8px;
-  word-break:break-word;
-}
-.tiktok-caption{
-  color:#fff;
-  line-height:1.45;
-  word-break:break-word;
-}
-.tiktok-actions{
-  position:absolute;
-  right:10px;
-  bottom:18px;
-  width:58px;
-  z-index:3;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.tiktok-actions button{
-  width:58px;
-  height:58px;
-  flex:0 0 58px;
-  margin:0;
-  padding:4px;
-  border-radius:50%;
-  background:rgba(20,28,45,.85);
-  border:1px solid rgba(255,255,255,.18);
-  font-size:12px;
-}
-.tiktok-actions .count{
-  display:block;
-  font-size:11px;
-  margin-top:2px;
-}
-.tiktok-empty{
-  padding:35px 18px;
-  text-align:center;
-  color:#9da8bd;
-}
-@media(max-width:520px){
-  .tiktok-section{
-    margin-top:16px;
-  }
-  .tiktok-feed,.tiktok-item{
-    height:78vh;
-    min-height:540px;
-  }
-  .tiktok-feed{
-    border-radius:16px;
-  }
-  .tiktok-info{
-    left:12px;
-    right:72px;
-    bottom:16px;
-  }
-  .tiktok-actions{
-    right:7px;
-    bottom:14px;
-  }
-}
-
-
-/* ===== XALLO TIKTOK: hide legacy feed if present ===== */
-.video-feed{display:none !important;}
-
-
-/* =========================================
-   FOLLOW / PUBLIC PROFILE
-========================================= */
-.profile-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px}
-.profile-card{width:min(420px,100%);background:#0c1a2b;border:1px solid #31506f;border-radius:22px;padding:22px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.5);position:relative}
-.profile-close{position:absolute;right:12px;top:10px;width:40px;height:40px;border-radius:50%;background:#182a40;color:#fff;border:1px solid #38516d;font-size:20px}
-.profile-avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;background:#16263a;border:3px solid #fff;margin:8px auto 12px;display:block}
-.profile-name{font-size:21px;font-weight:800;color:#fff;word-break:break-word}
-.profile-email{font-size:12px;color:#9eacc0;margin-top:5px;word-break:break-word}
-.profile-bio{color:#d7deea;margin:14px 8px;line-height:1.5;word-break:break-word}
-.profile-stats{display:flex;justify-content:center;gap:34px;margin:16px 0;color:#fff}
-.profile-stats b{display:block;font-size:19px}.profile-stats span{font-size:12px;color:#9eacc0}
-.follow-button{width:100%;margin:6px 0 0;padding:13px;border-radius:13px;border:0;background:#e91e63;color:#fff;font-weight:800;font-size:16px}
-.follow-button.following{background:#26384e;border:1px solid #52657c}
-.tiktok-follow-button{background:rgba(233,30,99,.9)!important}
-
-
-
-
-/* ===== XALLO TIKTOK ENHANCED ACTIONS ===== */
-.tiktok-actions .tiktok-small-btn{font-size:18px;}
-.tiktok-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.45);color:#fff;font-size:26px;z-index:4;display:flex;align-items:center;justify-content:center;}
-.tiktok-mute{position:absolute;right:12px;top:12px;z-index:4;width:44px!important;height:44px!important;border-radius:50%!important;background:rgba(0,0,0,.5)!important;border:1px solid rgba(255,255,255,.3)!important;margin:0!important;padding:0!important;font-size:20px!important;}
-.tiktok-follow-button.following{background:rgba(38,56,78,.95)!important;}
-.tiktok-share-note{font-size:11px;color:#9eacc0;margin-top:3px;}
-.tiktok-comment-modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:flex-end;justify-content:center;z-index:12000;padding:0;}
-.tiktok-comment-card{width:min(560px,100%);height:min(68vh,620px);background:#0b1626;border:1px solid #304864;border-bottom:0;border-radius:22px 22px 0 0;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 -20px 70px rgba(0,0,0,.5);}
-.tiktok-comment-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #263b55;color:#fff;font-weight:800;}
-.tiktok-comment-list{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
-.tiktok-comment-row{background:#15263b;border-radius:13px;padding:10px 12px;color:#e7edf7;}
-.tiktok-comment-user{font-weight:800;font-size:12px;margin-bottom:4px;}
-.tiktok-comment-text{word-break:break-word;line-height:1.45;}
-.tiktok-comment-form{display:flex;gap:8px;padding:12px;border-top:1px solid #263b55;}
-.tiktok-comment-form input{flex:1;margin:0;min-width:0;}
-.tiktok-comment-form button{width:auto;margin:0;padding:10px 14px;}
-@media(max-width:520px){.tiktok-comment-card{height:72vh}.tiktok-mute{right:9px;top:9px}}
-
-/* =========================================
-   XALLO CHAT / MESSAGES
-========================================= */
-.chat-box{margin-top:16px;background:#0b1626;border:1px solid #263c58;border-radius:18px;padding:16px}
-.chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.chat-head h3{margin:0}
-.chat-open{width:auto;margin:0;padding:10px 16px;border-radius:12px;background:#e91e63;color:#fff;border:0;font-weight:800}
-.chat-modal{position:fixed;inset:0;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center;z-index:10000;padding:12px}
-.chat-card{width:min(520px,100%);height:min(760px,94vh);background:#081321;border:1px solid #304864;border-radius:22px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.6)}
-.chat-top{padding:14px;border-bottom:1px solid #263b55;display:flex;gap:8px;align-items:center}
-.chat-top input{flex:1;margin:0}
-.chat-close{width:42px!important;height:42px!important;margin:0!important;padding:0!important;border-radius:50%!important;background:#1b2d43!important}
-.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:9px}
-.chat-msg{max-width:82%;padding:10px 13px;border-radius:16px;line-height:1.4;word-break:break-word}
-.chat-msg.mine{align-self:flex-end;background:#e91e63;color:#fff;border-bottom-right-radius:5px}
-.chat-msg.theirs{align-self:flex-start;background:#1b2c42;color:#e7edf7;border-bottom-left-radius:5px}
-.chat-time{font-size:10px;opacity:.65;margin-top:4px}
-.chat-compose{display:flex;gap:8px;padding:12px;border-top:1px solid #263b55}
-.chat-compose textarea{flex:1;margin:0;min-height:46px;max-height:110px;resize:none}
-.chat-send{width:58px!important;margin:0!important;border-radius:14px!important;background:#e91e63!important}
-.chat-status{padding:0 14px 8px;color:#9eacc0;font-size:12px}
-
-
-/* XALLO TikTok Feed final mobile layout */
-.tiktok-section{position:relative;}
-.tiktok-feed{width:100%;height:72vh;min-height:520px;overflow-y:auto;scroll-snap-type:y mandatory;background:#000;border-radius:18px;}
-.tiktok-item{position:relative;width:100%;height:72vh;min-height:520px;scroll-snap-align:start;scroll-snap-stop:always;background:#000;overflow:hidden;}
-.tiktok-video{width:100%;height:100%;object-fit:cover;display:block;background:#000;}
-.tiktok-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:0;border-radius:50%;width:58px;height:58px;font-size:24px;background:rgba(0,0,0,.45);color:#fff;display:none;}
-.tiktok-item:hover .tiktok-play{display:block;}
-@media (max-width:600px){.tiktok-feed,.tiktok-item{height:76vh;min-height:520px}.tiktok-actions{right:10px}.tiktok-info{left:12px;right:70px;bottom:18px}}
-
-/* ===== XALLO USERS / SEARCH ===== */
-.users-box{margin-top:16px}
-.users-search-row{display:flex;gap:8px}
-.users-search-row input{margin-bottom:0}
-.users-search-row button{width:58px;flex:0 0 58px;margin-top:0;background:#08a9ff}
-.users-list{margin-top:12px;display:flex;flex-direction:column;gap:9px}
-.user-card{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid #283653;background:#0b1425;border-radius:14px}
-.user-card img,.user-avatar-placeholder{width:46px;height:46px;border-radius:50%;object-fit:cover;flex:0 0 46px;background:#17263b;display:flex;align-items:center;justify-content:center}
-.user-card-info{min-width:0;flex:1}
-.user-card-name{font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user-card-email{font-size:11px;color:#8f9db4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user-card button{width:auto;margin:0;padding:9px 12px;background:#e91e63;font-size:13px}
-.users-empty{padding:14px;text-align:center;color:#9da8bd}
-
-
-/* ===== XALLO NOTIFICATIONS ===== */
-.notifications-box{margin-top:16px}
-.notifications-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.notifications-head h3{margin:0}
-.notifications-refresh{width:auto;margin:0;padding:8px 12px;background:#26384e;font-size:12px}
-.notifications-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto}
-.notification-item{padding:12px;border:1px solid #283653;background:#0b1425;border-radius:13px}
-.notification-item.unread{border-color:#e91e63;background:#111b30}
-.notification-title{font-weight:800;margin-bottom:4px}
-.notification-message{font-size:13px;color:#c1ccdc;line-height:1.4}
-.notification-time{font-size:10px;color:#7f8da5;margin-top:7px}
-.notification-read{width:auto;margin:8px 0 0;padding:7px 10px;background:#1c2c42;font-size:11px}
-.notification-badge{display:inline-flex;min-width:22px;height:22px;padding:0 6px;align-items:center;justify-content:center;border-radius:999px;background:#e91e63;color:#fff;font-size:11px;margin-left:5px}
-
-
-/* ===== XALLO MY PROFILE EDITOR ===== */
-/* ===== XALLO HOME / EXPLORE NAV ===== */
-.xallo-nav{display:flex;gap:8px;margin:16px 0;position:sticky;top:8px;z-index:50;background:rgba(8,19,33,.94);padding:8px;border:1px solid #263c58;border-radius:16px;backdrop-filter:blur(10px)}
-.xallo-nav button{flex:1;margin:0;padding:11px 8px;border-radius:12px;background:#101d31;color:#cbd6e6;border:1px solid #2b405c;font-weight:800;font-size:13px}
-.xallo-nav button.active{background:#08a9ff;color:#fff;border-color:#08a9ff}
-.explore-box{display:none;margin:0 0 16px;background:#0b1626;border:1px solid #263c58;border-radius:18px;padding:14px}
-.explore-box.show{display:block}
-.explore-search{display:flex;gap:8px}
-.explore-search input{flex:1;margin:0}
-.explore-search button{width:auto;margin:0;padding:10px 16px;background:#08a9ff}
-.explore-hints{display:flex;gap:8px;overflow-x:auto;margin-top:10px;scrollbar-width:none}
-.explore-hints::-webkit-scrollbar{display:none}
-.explore-hints button{width:auto;flex:0 0 auto;margin:0;padding:8px 12px;border-radius:999px;background:#17263b;border:1px solid #304864;color:#dce5f2;font-size:12px}
-@media(max-width:520px){.xallo-nav{top:4px}.xallo-nav button{font-size:12px;padding:10px 5px}}
-
-.my-profile-box{margin-top:16px}
-.my-profile-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-.my-profile-avatar,.my-profile-initial{width:82px;height:82px;border-radius:50%;flex:0 0 82px;object-fit:cover;background:#17263b;border:3px solid #08a9ff;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800}
-.my-profile-label{font-size:12px;color:#9eacc0;margin:8px 0 6px}
-.my-profile-save{background:#08a9ff}
-.my-profile-upload{background:#00a878}
-.my-profile-stats-row{display:flex;gap:10px;margin:12px 0}
-.my-profile-stat{flex:1;text-align:center;background:#101d31;border:1px solid #283b55;border-radius:12px;padding:10px}
-.my-profile-stat b{display:block;font-size:18px}
-.my-profile-stat span{font-size:11px;color:#8f9db4}
-
-
-/* ===== FINAL MOBILE POLISH ===== */
-html{scroll-behavior:smooth}
-body{overflow-x:hidden}
-img,video{max-width:100%}
-@media(max-width:600px){
-  body{padding:8px}
-  .container{max-width:100%;padding:16px 12px;border-radius:20px}
-  .logo{font-size:26px}
-  .tiktok-feed,.tiktok-item{height:76vh;min-height:500px}
-  .xallo-nav{gap:5px;overflow-x:auto}
-  .xallo-nav button{white-space:nowrap}
-}
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>XALLO-GAMING | TikTok Feed</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; }
+
+        .video-feed { height: 100vh; width: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+        .video-feed::-webkit-scrollbar { display: none; }
+
+        .video-card { position: relative; height: 100vh; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; background-color: #000; overflow: hidden; }
+        .video-card video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
+
+        .overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            z-index: 2; display: flex; justify-content: space-between; padding: 12px;
+            padding-bottom: calc(55px + env(safe-area-inset-bottom)); pointer-events: none;
+        }
+        .overlay * { pointer-events: auto; }
+
+        .user-info { width: 70%; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; margin-bottom: 5px; text-align: right; }
+        .username { font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .caption { font-size: 0.7rem; line-height: 1.3; color: #eee; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .action-buttons { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 5px; }
+        .action-btn {
+            background: rgba(255, 255, 255, 0.15); border: none; color: #fff; font-size: 1rem;
+            cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px;
+            border-radius: 50%; width: 36px; height: 36px; justify-content: center; backdrop-filter: blur(5px);
+        }
+        .action-btn span { font-size: 0.55rem; font-weight: bold; }
+        .follow-btn { background: #fe2c55; border-radius: 50%; width: 32px; height: 32px; font-size: 1rem; display: flex; justify-content: center; align-items: center; color: white; border: none; cursor: pointer; }
+
+        .top-controls { position: absolute; top: 15px; right: 15px; z-index: 3; display: flex; gap: 10px; padding-top: env(safe-area-inset-top); }
+        .top-btn { background: rgba(0, 0, 0, 0.5); border: none; color: white; font-size: 1.1rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background-color: rgba(30, 30, 30, 0.95); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around; padding: 6px 0;
+            border-top: 1px solid #333; padding-bottom: calc(6px + env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; text-decoration: none; font-size: 0.6rem; gap: 2px; }
+        .nav-item.active { color: #fe2c55; }
+        .nav-item span { font-size: 1rem; }
+    
+        .auth-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.78); padding: 20px; }
+        .auth-modal.show { display: flex; }
+        .auth-box { width: min(420px, 100%); background: #171717; border: 1px solid #333; border-radius: 18px; padding: 24px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.55); text-align: right; }
+        .auth-box h2 { font-size: 1.35rem; margin-bottom: 8px; }
+        .auth-box p { color: #aaa; font-size: .85rem; line-height: 1.6; margin-bottom: 18px; }
+        .auth-box input { width: 100%; border: 1px solid #444; background: #0c0c0c; color: #fff; border-radius: 10px; padding: 13px; margin: 6px 0; outline: none; direction: ltr; }
+        .auth-box input:focus { border-color: #fe2c55; }
+        .auth-main { width: 100%; border: 0; background: #fe2c55; color: #fff; padding: 13px; border-radius: 10px; margin-top: 10px; font-weight: bold; cursor: pointer; }
+        .auth-switch { width: 100%; border: 0; background: transparent; color: #ddd; padding: 12px 4px 2px; cursor: pointer; }
+        .auth-close { position: absolute; left: 12px; top: 10px; border: 0; background: transparent; color: #fff; font-size: 1.6rem; cursor: pointer; }
+        #authMessage { min-height: 22px; margin-top: 10px; color: #ffd1da; font-size: .8rem; line-height: 1.5; }
+        .account-btn { background: rgba(0,0,0,.5); border: 1px solid #444; color: #fff; font-size: .75rem; min-width: 90px; height: 32px; border-radius: 18px; cursor: pointer; padding: 0 10px; backdrop-filter: blur(5px); }
+
+    
+        .upload-modal { position: fixed; inset: 0; z-index: 1001; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.8); padding: 20px; }
+        .upload-modal.show { display: flex; }
+        .upload-box { width: min(440px, 100%); background: #171717; border: 1px solid #333; border-radius: 18px; padding: 22px; position: relative; }
+        .upload-box h2 { margin-bottom: 14px; font-size: 1.25rem; }
+        .upload-box input[type=file], .upload-box textarea { width: 100%; background: #0c0c0c; color: #fff; border: 1px solid #444; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+        .upload-box textarea { min-height: 90px; resize: vertical; direction: rtl; }
+        .upload-main { width: 100%; border: 0; background: #fe2c55; color: #fff; padding: 13px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .upload-main:disabled { opacity: .55; cursor: not-allowed; }
+        .upload-close { position: absolute; left: 12px; top: 8px; border: 0; background: transparent; color: #fff; font-size: 1.6rem; cursor: pointer; }
+        #uploadMessage { min-height: 22px; color: #ffd1da; font-size: .8rem; margin-top: 10px; line-height: 1.5; }
+
+    
+        .comments-modal { position: fixed; inset: 0; z-index: 1002; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,.55); }
+        .comments-modal.show { display: flex; }
+        .comments-box { width: min(520px,100%); max-height: 72vh; background: #171717; border-radius: 20px 20px 0 0; padding: 18px; display: flex; flex-direction: column; }
+        .comments-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+        .comments-head button { border:0; background:transparent; color:#fff; font-size:1.5rem; cursor:pointer; }
+        #commentsList { overflow:auto; min-height:80px; max-height:45vh; }
+        .comment-item { padding:9px 0; border-bottom:1px solid #292929; }
+        .comment-user { font-weight:bold; font-size:.78rem; }
+        .comment-body { color:#ddd; font-size:.82rem; margin-top:3px; word-break:break-word; }
+        .comment-form { display:flex; gap:7px; margin-top:12px; }
+        .comment-form input { flex:1; background:#0c0c0c; border:1px solid #444; color:#fff; border-radius:10px; padding:11px; direction:rtl; }
+        .comment-form button { border:0; background:#fe2c55; color:#fff; border-radius:10px; padding:0 14px; font-weight:bold; }
+        #commentMessage { color:#aaa; font-size:.72rem; margin-top:7px; min-height:18px; }
+
+    </style>
 </head>
+<body>
 
-<body dir="rtl">
 
-<div class="container">
 
-<!-- ================= AUTH ================= -->
 
-<div id="authBox">
-
-  <div class="logo">
-    XALLO-<span>GAMING</span>
-  </div>
-
-  <div class="subtitle">
-    یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
-  </div>
-
-  <div id="loginBox">
-
-    <h2>چوونەژوورەوە</h2>
-
-    <input
-      id="loginEmail"
-      type="email"
-      placeholder="ئیمەیڵ">
-
-    <input
-      id="loginPassword"
-      type="password"
-      placeholder="وشەی نهێنی">
-
-    <button
-      class="login-btn"
-      id="loginButton"
-      onclick="login()">
-      Login
-    </button>
-<button type="button" onclick="resendVerification()" style="margin-top:10px;background:#17263b;border:1px solid #304864;">
-📧 ناردنەوەی پشتڕاستکردنەوەی ئیمەیڵ
-</button>
-<div id="loginHelp" style="display:block;margin-top:12px;padding:12px;border-radius:12px;
-background:#101b2e;color:#aebbd0;font-size:14px;line-height:1.7;text-align:center;">
-ئەگەر هیچ ئیمەیڵێک نەهات، کێشەکە لە SMTP ـی Supabase ـە، نەک لە دوگمەکە.
-</div>
-
-    <div class="switch">
-      هەژمارت نییە؟
-      <a onclick="showSignup()">تۆمارکردن</a>
-    </div>
-
-  </div>
-
-  <div id="signupBox" style="display:none">
-
-    <h2>دروستکردنی هەژمار</h2>
-
-    <input
-      id="signupEmail"
-      type="email"
-      placeholder="ئیمەیڵ">
-
-    <input
-      id="signupPassword"
-      type="password"
-      placeholder="وشەی نهێنی">
-
-    <button
-      class="login-btn"
-      id="signupButton"
-      onclick="signup()">
-      Sign Up
-    </button>
-
-    <div class="switch">
-      هەژمارت هەیە؟
-      <a onclick="showLogin()" >چوونەژوورەوە</a>
-    </div>
-
-  </div>
-
-  <div id="message" class="message"></div>
-
-</div>
-
-
-<!-- ================= DASHBOARD ================= -->
-
-<div id="dashboard">
-
-  <div class="logo">
-    XALLO-<span>GAMING</span>
-  </div>
-
-  <div class="subtitle">
-    یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
-  </div>
-
-  <h2>بەخێربێیت 🎮</h2>
-
-  <div class="email" id="userEmail"></div>
-
-  <!-- ================= HOME / EXPLORE NAV ================= -->
-  <div class="xallo-nav" aria-label="XALLO navigation">
-    <button id="homeNavButton" class="active" type="button" onclick="xalloGoHome()">🏠 سەرەکی</button>
-    <button id="exploreNavButton" type="button" onclick="xalloGoExplore()">🔎 گەڕان</button>
-    <button type="button" onclick="xalloGoپرۆفایل()">👤 پرۆفایل</button>
-    <button type="button" onclick="xalloGoپەیامs()">💬 پەیامەکان</button>
-  </div>
-
-  <div id="exploreBox" class="explore-box">
-    <h3 style="margin-top:0">🔎 گەڕان لە XALLO</h3>
-    <div class="small" style="margin-bottom:10px">ڤیدیۆ بە دەربارەیی یان ئیمەیڵی بەکارهێنەر بگەڕێ.</div>
-    <div class="explore-search">
-      <input id="exploreSearchInput" type="search" placeholder="گەڕان لە ڤیدیۆکان..." onkeydown="if(event.key==='Enter') searchExploreVideos()">
-      <button type="button" onclick="searchExploreVideos()">گەڕان</button>
-    </div>
-    <div class="explore-hints">
-      <button type="button" onclick="setExploreMode('all')">🔥 هەموو</button>
-      <button type="button" onclick="setExploreMode('trending')">📈 باڵادارەکان</button>
-      <button type="button" onclick="setExploreMode('new')">🆕 نوێ</button>
-      <button type="button" onclick="setExploreSearch('gaming')">🎮 یاری</button>
-      <button type="button" onclick="setExploreSearch('pubg')">🔫 PUBG</button>
-      <button type="button" onclick="setExploreSearch('fun')">😂 خۆشی</button>
-    </div>
-  </div>
-
-  <!-- ================= MY PROFILE ================= -->
-  <div class="box my-profile-box">
-    <h3>👤 پرۆفایلی من</h3>
-    <div class="my-profile-top">
-      <img id="myپرۆفایلAvatar" class="my-profile-avatar" alt="وێنەی پرۆفایل" style="display:none">
-      <div id="myپرۆفایلInitial" class="my-profile-initial">X</div>
-      <div style="min-width:0">
-        <div id="myپرۆفایلDisplayName" class="profile-name">User</div>
-        <div class="small" style="text-align:left">پرۆفایلی گشتی خۆت دەستکاری بکە</div>
-      </div>
-    </div>
-
-    <div class="my-profile-label">وێنەی پرۆفایل</div>
-    <input id="myAvatarFile" type="file" accept="image/*">
-    <button type="button" class="my-profile-upload" id="myAvatarButton" onclick="uploadMyAvatar()">🖼️ وێنەی پرۆفایل دابنێ</button>
-
-    <div class="my-profile-label">ناوی بەکارهێنەر</div>
-    <input id="myپرۆفایلناوی بەکارهێنەر" type="text" maxlength="30" placeholder="ناوی بەکارهێنەر">
-
-    <div class="my-profile-label">دەربارەی خۆت</div>
-    <textarea id="myپرۆفایلدەربارەی خۆت" maxlength="160" placeholder="دەربارەی خۆت شتێک بنووسە..."></textarea>
-
-    <button type="button" class="my-profile-save" id="myپرۆفایلSaveButton" onclick="saveMyپرۆفایل()">💾 پاشەکەوتکردنی پرۆفایل</button>
-
-    <div class="my-profile-stats-row">
-      <div class="my-profile-stat"><b id="myشوێن بکەوەersCount">0</b><span>شوێنکەوتوو</span></div>
-      <div class="my-profile-stat"><b id="myشوێن بکەوەingCount">0</b><span>شوێنکەوتووەکان</span></div>
-    </div>
-  </div>
-
-  <!-- COINS -->
-
-  <div class="coins">
-
-    🪙 دراوەکانی تۆ
-
-    <div
-      class="coin-number"
-      id="coins">
-      0
-    </div>
-
-  </div>
-
-
-  <!-- DAILY REWARD -->
-
-  <button
-    class="reward-button"
-    id="rewardButton"
-    onclick="dailyReward()">
-
-    🎁 پاداشتی ڕۆژانە +١٠
-
-  </button>
-
-
-  <!-- ================= UPLOAD VIDEO ================= -->
-
-  <div class="box">
-
-    <h3>📹 Upload Video</h3>
-
-    <input
-      id="videoFile"
-      type="file"
-      accept="video/*"
-      onchange="showSelectedFile()">
-
-    <div
-      id="selectedFile"
-      class="file-name">
-    </div>
-
-    <textarea
-      id="videoCaption"
-      placeholder="Write a caption..."></textarea>
-
-    <button
-      class="upload-button"
-      id="uploadButton"
-      onclick="uploadVideo()">
-
-      ⬆️ Upload Video
-
-    </button>
-
-    <div class="small">
-      Maximum video size: 50 MB
-    </div>
-
-  </div>
-
-
-  <!-- ================= XALLO TIKTOK FEED ================= -->
-
-  <div class="tiktok-section">
-    <div class="tiktok-header">
-      <h3 class="tiktok-title">🎬 ڤیدیۆکانی XALLO</h3>
-      <span class="tiktok-swipe-hint">⬆️ بۆ سەرەوە بکێشە</span>
-    </div>
-
-    <div id="tiktokFeed" class="tiktok-feed">
-      <div class="tiktok-empty">ڤیدیۆکان بار دەکرێن...</div>
-    </div>
-  </div>
-
-  <!-- TikTok comments drawer -->
-  <div id="tiktokCommentModal" class="tiktok-comment-modal" onclick="closeTikTokکۆمێنتەکان(event)">
-    <div class="tiktok-comment-card" onclick="event.stopPropagation()">
-      <div class="tiktok-comment-head">
-        <span>💬 کۆمێنتەکان</span>
-        <button type="button" class="chat-close" onclick="closeTikTokکۆمێنتەکان()">×</button>
-      </div>
-      <div id="tiktokCommentList" class="tiktok-comment-list">
-        <div class="small">Loading comments...</div>
-      </div>
-      <div class="tiktok-comment-form">
-        <input id="tiktokCommentInput" type="text" maxlength="500" placeholder="کۆمێنتەکەت بنووسە..." onkeydown="if(event.key==='Enter') submitTikTokComment()">
-        <button type="button" onclick="submitTikTokComment()">ناردن</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= USERS / SEARCH ================= -->
-  <div class="box users-box">
-    <h3>👥 بەکارهێنەران بدۆزەوە</h3>
-    <div class="users-search-row">
-      <input id="userSearchInput" type="search"
-             placeholder="گەڕان بە ناوی بەکارهێنەر یان ئیمەیڵ..."
-             onkeydown="if(event.key==='Enter') searchUsers()">
-      <button type="button" onclick="searchUsers()">🔎</button>
-    </div>
-    <div id="usersList" class="users-list">
-      <div class="users-empty">بەکارهێنەر بگەڕێ بۆ دەستپێکردنی گفتوگۆ.</div>
-    </div>
-  </div>
-
-  <!-- ================= NOTIFICATIONS ================= -->
-  <div class="box notifications-box">
-    <div class="notifications-head">
-      <h3>🔔 ئاگادارییەکان <span id="notificationBadge" class="notification-badge" style="display:none">0</span></h3>
-      <button type="button" class="notifications-refresh" onclick="loadNotifications()">نوێکردنەوە</button>
-    </div>
-    <div id="notificationsList" class="notifications-list">
-      <div class="users-empty">ئاگادارییەکان بار دەکرێن...</div>
-    </div>
-  </div>
-
-<!-- ================= WITHDRAW ================= -->
-
-  <div class="box">
-
-    <h3>💳 کێشانەوەی پارە</h3>
-
-    <div class="balance">
-
-      باڵانسی تۆ:
-      <b>
-        <span id="withdrawدراو">0</span>
-        دراو
-      </b>
-
-    </div>
-
-    <select id="withdrawMethod">
-
-      <option value="">
-        شێوازی پارەدان هەڵبژێرە
-      </option>
-
-      <option value="Korek">
-        📱 Korek
-      </option>
-
-      <option value="Asiacell">
-        📱 Asiacell
-      </option>
-
-    </select>
-
-    <select id="withdrawAmount">
-
-      <option value="">
-        بڕ هەڵبژێرە
-      </option>
-
-      <option value="1000">
-        1,000 دراو
-      </option>
-
-      <option value="5000">
-        5,000 دراو
-      </option>
-
-      <option value="10000">
-        10,000 دراو
-      </option>
-
-    </select>
-
-    <input
-      id="withdrawPhone"
-      type="tel"
-      placeholder="ژمارەی مۆبایل">
-
-    <button
-      class="withdraw-button"
-      id="withdrawButton"
-      onclick="requestWithdraw()">
-
-      💰 Request Withdraw
-
-    </button>
-
-    <div class="small">
-      داواکارییەکانی کێشانەوە لەلایەن بەڕێوەبەرەوە پشکنین دەکرێن.
-    </div>
-
-  </div>
-
-
-  <div
-    id="dashboardپەیام"
-    class="message">
-  </div>
-
-
-  <!-- WITHDRAW HISTORY -->
-
-  <div class="history">
-
-    <h3>📋 داواکارییەکانی من</h3>
-
-    <div id="withdrawHistory">
-
-      <div class="small">
-        هێشتا هیچ داواکارییەک نییە.
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-
-
-  <!-- ================= MESSAGES ================= -->
-  <div class="chat-box">
-    <div class="chat-head">
-      <div>
-        <h3>💬 پەیامەکان</h3>
-        <div class="small">پەیامی تایبەت بۆ بەکارهێنەرێکی تری XALLO بنێرە.</div>
-      </div>
-      <button class="chat-open" type="button" onclick="openChat()">کردنەوەی گفتوگۆ</button>
-    </div>
-  </div>
-
-  <div id="chatModal" class="chat-modal" onclick="closeChat(event)">
-    <div class="chat-card" onclick="event.stopPropagation()">
-      <div class="chat-top">
-        <input id="chatRecipient" type="email" placeholder="Receiver email">
-        <button class="chat-close" type="button" onclick="closeChat()">×</button>
-      </div>
-      <div id="chatStatus" class="chat-status">Enter a user's email, then press Load.</div>
-      <div class="chat-top" style="border-top:0">
-        <button class="chat-open" type="button" onclick="loadChat()">Load Chat</button>
-      </div>
-      <div id="chatپەیامs" class="chat-messages">
-        <div class="small">No chat loaded.</div>
-      </div>
-      <div class="chat-compose">
-        <textarea id="chatInput" placeholder="Write a message..."></textarea>
-        <button class="chat-send" type="button" onclick="sendChatپەیام()">➤</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= PUBLIC PROFILE MODAL ================= -->
-  <div id="profileModal" class="profile-modal" onclick="closeپرۆفایلModal(event)">
-    <div class="profile-card" onclick="event.stopPropagation()">
-      <button class="profile-close" type="button" onclick="closeپرۆفایلModal()">×</button>
-      <img id="profileAvatar" class="profile-avatar" src="" alt="پرۆفایل">
-      <div id="profileName" class="profile-name">پرۆفایل</div>
-      <div id="profileEmail" class="profile-email"></div>
-      <div id="profileدەربارەی خۆت" class="profile-bio"></div>
-      <div class="profile-stats">
-        <div><b id="profileشوێن بکەوەers">0</b><span>شوێنکەوتوو</span></div>
-        <div><b id="profileشوێن بکەوەing">0</b><span>شوێنکەوتووەکان</span></div>
-      </div>
-      <button id="profileشوێن بکەوەButton" class="follow-button" type="button">شوێن بکەوە</button>
-    </div>
-  </div>
-
-  <!-- ADMIN -->
-
-  <div
-    id="adminBox"
-    class="box admin-box">
-
-    <h3>👑 پانێڵی بەڕێوەبەر</h3>
-
-    <div class="small">
-      بەڕێوەبردنی داواکارییەکانی کێشانەوە.
-    </div>
-
-    <div id="adminRequests"></div>
-
-  </div>
-
-
-  <button
-    class="logout"
-    onclick="logout()">
-
-    Logout
-
-  </button>
-
-</div>
-
-</div>
-
-
-<script>
-
-/* =========================================
-   SUPABASE
-========================================= */
-
-const SUPABASE_URL =
-"https://vnyprsjjmmjahkisozib.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp";
-
-const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-
-/* =========================================
-   MESSAGE
-========================================= */
-
-function showپەیام(text,type){
-
-  const box =
-    document.getElementById("message");
-
-  box.textContent=text;
-
-  box.className =
-    "message " + type;
-}
-
-
-function dashboardپەیام(text,type){
-
-  const box =
-    document.getElementById(
-      "dashboardپەیام"
-    );
-
-  box.textContent=text;
-
-  box.className =
-    "message " + type;
-}
-
-
-/* =========================================
-   LOGIN / SIGNUP UI
-========================================= */
-
-function showLogin(){
-
-  document.getElementById("loginBox")
-    .style.display="block";
-
-  document.getElementById("signupBox")
-    .style.display="none";
-
-  document.getElementById("message")
-    .style.display="none";
-}
-
-
-function showSignup(){
-
-  document.getElementById("loginBox")
-    .style.display="none";
-
-  document.getElementById("signupBox")
-    .style.display="block";
-
-  document.getElementById("message")
-    .style.display="none";
-}
-
-
-/* =========================================
-   USER PROFILE
-========================================= */
-
-async function createUserپرۆفایل(email){
-
-  const {
-    data:existing,
-    error
-  } =
-    await supabaseClient
-      .from("users")
-      .select("email")
-      .eq("email",email)
-      .maybeSingle();
-
-  if(error){
-    console.log(
-      "پرۆفایل error:",
-      error.message
-    );
-    return;
-  }
-
-  if(existing){
-    return;
-  }
-
-  const {
-    error:insertError
-  } =
-    await supabaseClient
-      .from("users")
-      .insert({
-        email:email,
-        username:email.split("@")[0]
-      });
-
-  if(insertError){
-    console.log(
-      "پرۆفایل insert:",
-      insertError.message
-    );
-  }
-}
-
-
-/* =========================================
-   SIGN UP
-========================================= */
-
-async function signup(){
-  const email = document.getElementById("signupEmail").value.trim();
-  const password = document.getElementById("signupPassword").value;
-
-  if(!email || !password){
-    showپەیام("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
-    return;
-  }
-  if(password.length < 6){
-    showپەیام("وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.","error");
-    return;
-  }
-
-  const button=document.getElementById("signupButton");
-  button.disabled=true;
-  button.textContent="Creating...";
-
-  try{
-    const {data,error}=await supabaseClient.auth.signUp({email,password});
-    if(error){
-      showپەیام(error.message,"error");
-      return;
-    }
-
-    if(data?.session && data?.user){
-      enterXalloApp(data.user);
-      return;
-    }
-
-    showLogin();
-    showپەیام("هەژمار دروست کرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە، پاشان Login بکە.","success");
-  }catch(err){
-    console.error("signup exception:",err);
-    showپەیام("کێشەیەک ڕوویدا لە دروستکردنی هەژمار.","error");
-  }finally{
-    button.disabled=false;
-    button.textContent="Sign Up";
-  }
-}
-
-/* =========================================
-   LOGIN
-========================================= */
-
-
-function showLoginHelp(){
-  const box = document.getElementById("loginHelp");
-  if(box) box.style.display = "block";
-}
-
-async function login(){
-  const email = String(document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
-  const password = String(document.getElementById("loginPassword")?.value || "");
-
-  if(!email || !password){
-    showپەیام("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
-    return;
-  }
-
-  const button = document.getElementById("loginButton");
-  if(button){ button.disabled = true; button.textContent = "Logging in..."; }
-
-  try{
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-    if(error){
-      console.error("XALLO LOGIN:", error);
-      const msg = String(error.message || "").toLowerCase();
-
-      if(msg.includes("email not confirmed")){
-        showپەیام("ئیمەیڵەکەت پشتڕاست نەکراوەتەوە. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە.","error");
-      }else if(msg.includes("invalid login credentials") || msg.includes("invalid credentials")){
-        showپەیام("ئیمەیڵ یان وشەی نهێنی هەڵەیە.","error");
-      }else{
-        showپەیام(error.message || "Login سەرکەوتوو نەبوو.","error");
-      }
-      return;
-    }
-
-    if(data?.user){
-      enterXalloApp(data.user);
-      return;
-    }
-
-    showپەیام("Login سەرکەوتوو نەبوو.","error");
-  }catch(err){
-    console.error("XALLO LOGIN EXCEPTION:", err);
-    showپەیام(err?.message || "کێشەیەک لە Login ڕوویدا.","error");
-  }finally{
-    if(button){ button.disabled = false; button.textContent = "Login"; }
-  }
-}
-
-async function resendVerification(){
-  const email = String(document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
-  if(!email){
-    showپەیام("سەرەتا ئیمەیڵەکەت بنووسە.","error");
-    return;
-  }
-
-  try{
-    const { error } = await supabaseClient.auth.resend({
-      type: "signup",
-      email,
-      options: { emailRedirectTo: window.location.origin }
-    });
-    if(error) throw error;
-    showپەیام("ئیمەیڵی پشتڕاستکردنەوە نێردرا بۆ هەمان ئیمەیڵ. Inbox و Spam پشکنە.","success");
-  }catch(err){
-    showپەیام(err?.message || "نەتوانرا ئیمەیڵی پشتڕاستکردنەوە بنێردرێت.","error");
-  }
-}
-
-async function resetPassword(){
-  const email=document.getElementById("loginEmail").value.trim();
-  if(!email){
-    showپەیام("تکایە سەرەتا ئیمەیڵەکەت بنووسە.","error");
-    return;
-  }
-  try{
-    const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{
-      redirectTo:window.location.origin
-    });
-    if(error) throw error;
-    showپەیام("لینکی گۆڕینی وشەی نهێنی بۆ ئیمەیڵەکەت نێردرا.","success");
-  }catch(e){
-    showپەیام(e.message || "نەتوانرا لینکی گۆڕینی وشەی نهێنی بنێردرێت.","error");
-  }
-}
-
-/* =========================================
-   MY PROFILE
-========================================= */
-async function loadMyپرۆفایل(email){
-  if(!email) return;
-  try{
-    const {data,error}=await supabaseClient.from("users")
-      .select("username,avatar_url,bio").eq("email",email).maybeSingle();
-    if(error) throw error;
-
-    const username=data?.username || email.split("@")[0];
-    document.getElementById("myپرۆفایلناوی بەکارهێنەر").value=username;
-    document.getElementById("myپرۆفایلدەربارەی خۆت").value=data?.bio || "";
-    document.getElementById("myپرۆفایلDisplayName").textContent=username;
-
-    const avatar=document.getElementById("myپرۆفایلAvatar");
-    const initial=document.getElementById("myپرۆفایلInitial");
-    if(data?.avatar_url){
-      avatar.src=data.avatar_url; avatar.style.display="block"; initial.style.display="none";
-    }else{
-      avatar.style.display="none"; initial.style.display="flex";
-      initial.textContent=username.charAt(0).toUpperCase();
-    }
-    await loadMyشوێن بکەوەStats(email);
-  }catch(e){ console.warn("پرۆفایل load:",e.message); }
-}
-
-async function loadMyشوێن بکەوەStats(email){
-  try{
-    const [a,b]=await Promise.all([
-      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("following_email",email),
-      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("follower_email",email)
-    ]);
-    document.getElementById("myشوێن بکەوەersCount").textContent=Number(a.count||0);
-    document.getElementById("myشوێن بکەوەingCount").textContent=Number(b.count||0);
-  }catch(e){ console.warn("شوێن بکەوە stats:",e.message); }
-}
-
-async function saveMyپرۆفایل(){
-  const {data:userData}=await supabaseClient.auth.getUser();
-  if(!userData?.user){ dashboardپەیام("Please login first.","error"); return; }
-
-  const username=(document.getElementById("myپرۆفایلناوی بەکارهێنەر").value||"").trim();
-  const bio=(document.getElementById("myپرۆفایلدەربارەی خۆت").value||"").trim();
-  if(!username){ dashboardپەیام("ناوی بەکارهێنەر cannot be empty.","error"); return; }
-
-  const button=document.getElementById("myپرۆفایلSaveButton");
-  button.disabled=true; button.textContent="Saving...";
-
-  const {error}=await supabaseClient.from("users").update({username,bio})
-    .eq("email",userData.user.email);
-
-  button.disabled=false; button.textContent="💾 Save پرۆفایل";
-  if(error){ dashboardپەیام("پرۆفایل save error: "+error.message,"error"); return; }
-
-  document.getElementById("myپرۆفایلDisplayName").textContent=username;
-  document.getElementById("myپرۆفایلInitial").textContent=username.charAt(0).toUpperCase();
-  dashboardپەیام("✅ پرۆفایل updated successfully.","success");
-}
-
-async function uploadMyAvatar(){
-  const {data:userData}=await supabaseClient.auth.getUser();
-  if(!userData?.user){ dashboardپەیام("Please login first.","error"); return; }
-
-  const input=document.getElementById("myAvatarFile");
-  const file=input?.files?.[0];
-  if(!file){ dashboardپەیام("Please choose an image first.","error"); return; }
-  if(!file.type.startsWith("image/")){ dashboardپەیام("Please select an image file.","error"); return; }
-  if(file.size>5*1024*1024){ dashboardپەیام("Image must be smaller than 5 MB.","error"); return; }
-
-  const button=document.getElementById("myAvatarButton");
-  button.disabled=true; button.textContent="Uploading...";
-
-  try{
-    const email=userData.user.email;
-    const safeEmail=email.replace(/[^a-zA-Z0-9]/g,"_");
-    const ext=file.name.includes(".")?file.name.split(".").pop().toLowerCase():"jpg";
-    const path=safeEmail+"/avatar_"+Date.now()+"."+ext;
-
-    const {error:uploadError}=await supabaseClient.storage.from("avatars").upload(path,file,{
-      cacheControl:"3600",upsert:false,contentType:file.type
-    });
-    if(uploadError) throw new Error(uploadError.message);
-
-    const {data:urlData}=supabaseClient.storage.from("avatars").getPublicUrl(path);
-    const avatarUrl=urlData?.publicUrl;
-    if(!avatarUrl) throw new Error("Could not create avatar URL.");
-
-    const {error:updateError}=await supabaseClient.from("users")
-      .update({avatar_url:avatarUrl}).eq("email",email);
-    if(updateError) throw new Error(updateError.message);
-
-    const avatar=document.getElementById("myپرۆفایلAvatar");
-    avatar.src=avatarUrl; avatar.style.display="block";
-    document.getElementById("myپرۆفایلInitial").style.display="none";
-    input.value="";
-    dashboardپەیام("✅ وێنەی پرۆفایل updated.","success");
-  }catch(e){
-    dashboardپەیام("Avatar upload error: "+(e.message||"Unknown error"),"error");
-  }finally{
-    button.disabled=false; button.textContent="🖼️ Upload پرۆفایل Picture";
-  }
-}
-
-/* =========================================
-   COINS
-========================================= */
-
-function setدراو(amount){
-
-  const value =
-    Number(amount) || 0;
-
-  document.getElementById("coins")
-    .textContent=value;
-
-  document.getElementById(
-    "withdrawدراو"
-  ).textContent=value;
-}
-
-
-async function loadدراو(user){
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("users")
-      .select("coins,last_reward_date")
-      .eq("email",user.email)
-      .maybeSingle();
-
-  if(error || !data){
-
-    setدراو(0);
-
-    return null;
-  }
-
-  setدراو(data.coins);
-
-  return data;
-}
-
-
-/* =========================================
-   DASHBOARD
-========================================= */
-
-function enterXalloApp(user){
-  // IMPORTANT: authentication success must NEVER wait for database/storage
-  // queries. Show the dashboard immediately, then load optional data in the
-  // background. This prevents RLS/table errors from looking like Login failed.
-  if(!user) return;
-
-  document.body.classList.add("xallo-logged-in");
-  document.getElementById("authBox").style.display="none";
-  document.getElementById("dashboard").style.display="block";
-  document.getElementById("userEmail").textContent=user.email || "";
-
-  Promise.allSettled([
-    loadMyپرۆفایل(user.email),
-    loadدراو(user),
-    checkDailyRewardButton(user),
-    loadTikTokFeed(),
-    loadVideos(),
-    loadWithdrawHistory(user),
-    checkAdmin()
-  ]).then(results=>{
-    const failed=results.filter(r=>r.status==="rejected");
-    if(failed.length) console.warn("Some dashboard modules failed:",failed);
-  });
-}
-
-async function showDashboard(user){
-  enterXalloApp(user);
-}
-
-
-/* =========================================
-   DAILY REWARD
-========================================= */
-
-async function checkDailyRewardButton(user){
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("users")
-      .select("last_reward_date")
-      .eq("email",user.email)
-      .maybeSingle();
-
-  if(error || !data){
-    return;
-  }
-
-  const button =
-    document.getElementById(
-      "rewardButton"
-    );
-
-  const today =
-    new Date().toLocaleDateString("en-CA");
-
-  if(data.last_reward_date === today){
-
-    button.disabled=true;
-
-    button.textContent =
-      "✅ Reward Claimed";
-
-  }else{
-
-    button.disabled=false;
-
-    button.textContent =
-      "🎁 پاداشتی ڕۆژانە +١٠";
-  }
-}
-
-
-async function dailyReward(){
-
-  const button =
-    document.getElementById(
-      "rewardButton"
-    );
-
-  button.disabled=true;
-  button.textContent="Checking...";
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .rpc("claim_daily_reward");
-
-  if(error){
-
-    button.disabled=false;
-
-    button.textContent =
-      "🎁 پاداشتی ڕۆژانە +١٠";
-
-    dashboardپەیام(
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-  setدراو(data);
-
-  button.textContent =
-    "✅ Reward Claimed";
-
-  dashboardپەیام(
-    "🎉 Daily Reward: +10 دراو!",
-    "success"
-  );
-}
-
-
-/* =========================================
-   SELECTED FILE
-========================================= */
-
-function showSelectedFile(){
-
-  const input =
-    document.getElementById(
-      "videoFile"
-    );
-
-  const box =
-    document.getElementById(
-      "selectedFile"
-    );
-
-  if(!input.files.length){
-
-    box.textContent="";
-    return;
-  }
-
-  const file=input.files[0];
-
-  const sizeMB =
-    file.size / (1024 * 1024);
-
-  box.textContent =
-    file.name +
-    " • " +
-    sizeMB.toFixed(1) +
-    " MB";
-}
-
-
-/* =========================================
-   UPLOAD VIDEO
-========================================= */
-
-async function uploadVideo(){
-
-  const {
-    data:userData,
-    error:userError
-  } =
-    await supabaseClient.auth.getUser();
-
-  if(userError || !userData.user){
-
-    dashboardپەیام(
-      "Please login first.",
-      "error"
-    );
-
-    return;
-  }
-
-  const input =
-    document.getElementById(
-      "videoFile"
-    );
-
-  if(!input.files || !input.files.length){
-
-    dashboardپەیام(
-      "Please choose a video.",
-      "error"
-    );
-
-    return;
-  }
-
-  const file=input.files[0];
-
-  if(!file.type.startsWith("video/")){
-
-    dashboardپەیام(
-      "Please select a video file.",
-      "error"
-    );
-
-    return;
-  }
-
-  const maxSize =
-    50 * 1024 * 1024;
-
-  if(file.size > maxSize){
-
-    dashboardپەیام(
-      "Video is larger than 50 MB.",
-      "error"
-    );
-
-    return;
-  }
-
-  const caption =
-    document.getElementById(
-      "videoCaption"
-    ).value.trim();
-
-  const button =
-    document.getElementById(
-      "uploadButton"
-    );
-
-  button.disabled=true;
-  button.textContent="Uploading...";
-
-  try{
-
-    const email =
-      userData.user.email;
-
-    const safeEmail =
-      email.replace(
-        /[^a-zA-Z0-9]/g,
-        "_"
-      );
-
-    const extension =
-      file.name.includes(".")
-      ? file.name.split(".").pop()
-      : "mp4";
-
-    const filePath =
-      safeEmail +
-      "/" +
-      Date.now() +
-      "_" +
-      Math.random()
-        .toString(36)
-        .substring(2,8) +
-      "." +
-      extension;
-
-    const {
-      error:uploadError
-    } =
-      await supabaseClient.storage
-        .from("videos")
-        .upload(
-          filePath,
-          file,
-          {
-            cacheControl:"3600",
-            upsert:false,
-            contentType:file.type
-          }
-        );
-
-    if(uploadError){
-
-      throw new Error(
-        "Storage Upload Error: " +
-        uploadError.message
-      );
-    }
-
-    const {
-      data:urlData
-    } =
-      supabaseClient.storage
-        .from("videos")
-        .getPublicUrl(filePath);
-
-    const videoUrl =
-      urlData.publicUrl;
-
-    if(!videoUrl){
-
-      throw new Error(
-        "Could not create video URL."
-      );
-    }
-
-    const {
-      error:dbError
-    } =
-      await supabaseClient
-        .from("videos")
-        .insert({
-          user_email:email,
-          video_url:videoUrl,
-          caption:caption,
-          likes:0
-        });
-
-    if(dbError){
-
-      await supabaseClient.storage
-        .from("videos")
-        .remove([filePath]);
-
-      throw new Error(
-        "Database Error: " +
-        dbError.message
-      );
-    }
-
-    input.value="";
-
-    document.getElementById(
-      "selectedFile"
-    ).textContent="";
-
-    document.getElementById(
-      "videoCaption"
-    ).value="";
-
-    dashboardپەیام(
-      "✅ Video uploaded successfully!",
-      "success"
-    );
-
-    await loadVideos();
-
-  }catch(error){
-
-    console.error(error);
-
-    dashboardپەیام(
-      error.message ||
-      "Video upload failed.",
-      "error"
-    );
-
-  }finally{
-
-    button.disabled=false;
-    button.textContent="⬆️ Upload Video";
-  }
-}
-
-
-/* =========================================
-   LOAD VIDEOS
-========================================= */
-
-async function loadVideos(){
-
-  const box =
-    document.getElementById(
-      "videoFeed"
-    );
-
-  box.innerHTML =
-    '<div class="small">Loading videos...</div>';
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("videos")
-      .select(
-        "id,user_email,video_url,caption,likes,created_at"
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-      .limit(50);
-
-  if(error){
-
-    box.innerHTML =
-      '<div class="small">Could not load videos: ' +
-      escapeHtml(error.message) +
-      '</div>';
-
-    return;
-  }
-
-  if(!data || !data.length){
-
-    box.innerHTML =
-      '<div class="small">هێشتا هیچ ڤیدیۆیەک نییە. Upload the first video! 🎬</div>';
-
-    return;
-  }
-
-
-  /* LOAD COMMENTS */
-
-  const videoIds =
-    data.map(video => video.id);
-
-  const {
-    data:comments,
-    error:commentsError
-  } =
-    await supabaseClient
-      .from("comments")
-      .select(
-        "id,video_id,user_email,comment,created_at"
-      )
-      .in(
-        "video_id",
-        videoIds
-      )
-      .order(
-        "created_at",
-        {
-          ascending:true
-        }
-      );
-
-
-  if(commentsError){
-
-    console.error(
-      "کۆمێنتەکان error:",
-      commentsError.message
-    );
-  }
-
-
-  /* GROUP COMMENTS BY VIDEO */
-
-  const commentsByVideo = {};
-
-  (comments || []).forEach(comment => {
-
-    if(!commentsByVideo[comment.video_id]){
-      commentsByVideo[comment.video_id] = [];
-    }
-
-    commentsByVideo[comment.video_id].push(
-      comment
-    );
-
-  });
-
-
-  box.innerHTML =
-    data.map(video => {
-
-      const videoکۆمێنتەکان =
-        commentsByVideo[video.id] || [];
-
-      const commentsHtml =
-        videoکۆمێنتەکان.length
-
-        ? videoکۆمێنتەکان.map(comment => `
-
-            <div class="comment">
-
-              <div class="comment-user">
-                👤 ${escapeHtml(comment.user_email)}
-              </div>
-
-              <div class="comment-text">
-                ${escapeHtml(comment.comment)}
-              </div>
-
-              <div class="comment-date">
-                ${new Date(
-                  comment.created_at
-                ).toLocaleString()}
-              </div>
-
+    <div id="commentsModal" class="comments-modal" aria-hidden="true">
+        <div class="comments-box">
+            <div class="comments-head">
+                <strong>کۆمێنتەکان</strong>
+                <button onclick="closeComments()">×</button>
             </div>
-
-          `).join("")
-
-        : `
-            <div class="small">
-              No comments yet.
+            <div id="commentsList"></div>
+            <div class="comment-form">
+                <input id="commentInput" maxlength="1000" placeholder="کۆمێنتێک بنووسە...">
+                <button onclick="sendComment()">ناردن</button>
             </div>
-          `;
-
-
-      return `
-
-        <div class="video-card">
-
-          <video
-            controls
-            playsinline
-            preload="metadata"
-            src="${escapeHtml(video.video_url)}">
-          </video>
-
-          <div class="video-info">
-
-            <div class="video-user">
-              👤 ${escapeHtml(video.user_email)}
-            </div>
-
-            <div class="caption">
-              ${escapeHtml(video.caption || "")}
-            </div>
-
-            <div class="video-date">
-              ${new Date(
-                video.created_at
-              ).toLocaleString()}
-            </div>
-
-
-            <!-- LIKE -->
-
-            <button
-              class="like-button"
-              onclick="likeVideo('${video.id}',this)">
-
-              ❤️ ${Number(video.likes) || 0}
-
-            </button>
-
-
-            <!-- COMMENT -->
-
-            <div class="comment-area">
-
-              <input
-                class="comment-input"
-                id="comment-${video.id}"
-                type="text"
-                maxlength="500"
-                placeholder="کۆمێنتەکەت بنووسە...">
-
-              <button
-                class="comment-button"
-                onclick="addComment('${video.id}')">
-
-                💬 Add Comment
-
-              </button>
-
-              <div class="comments-list">
-
-                ${commentsHtml}
-
-              </div>
-
-            </div>
-
-          </div>
-
+            <div id="commentMessage"></div>
         </div>
-
-      `;
-
-    }).join("");
-
-}
-
-
-/* =========================================
-   LIKE VIDEO
-========================================= */
-
-async function likeVideo(id,button){
-
-  button.disabled=true;
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .rpc(
-        "like_video",
-        {
-          p_video_id:id
-        }
-      );
-
-  if(error){
-
-    button.disabled=false;
-
-    dashboardپەیام(
-      "Like error: " +
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-  button.textContent =
-    "❤️ " + Number(data);
-
-  button.disabled=false;
-}
-
-
-/* =========================================
-   ADD COMMENT
-========================================= */
-
-async function addComment(videoId){
-
-  const {
-    data:userData,
-    error:userError
-  } =
-    await supabaseClient.auth.getUser();
-
-  if(
-    userError ||
-    !userData.user
-  ){
-
-    dashboardپەیام(
-      "Please login first.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const input =
-    document.getElementById(
-      "comment-" + videoId
-    );
-
-  if(!input){
-
-    return;
-  }
-
-
-  const comment =
-    input.value.trim();
-
-
-  if(!comment){
-
-    dashboardپەیام(
-      "Write a comment first.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if(comment.length > 500){
-
-    dashboardپەیام(
-      "Comment is too long.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const button =
-    input.nextElementSibling;
-
-  button.disabled=true;
-  button.textContent="Sending...";
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("comments")
-      .insert({
-
-        video_id:videoId,
-
-        user_email:
-          userData.user.email,
-
-        comment:comment
-
-      });
-
-
-  if(error){
-
-    console.error(error);
-
-    button.disabled=false;
-    button.textContent="💬 Add Comment";
-
-    dashboardپەیام(
-      "Comment error: " +
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-
-  input.value="";
-
-  button.disabled=false;
-  button.textContent="💬 Add Comment";
-
-
-  dashboardپەیام(
-    "✅ Comment added!",
-    "success"
-  );
-
-
-  await loadVideos();
-}
-
-
-/* =========================================
-   WITHDRAW
-========================================= */
-
-async function requestWithdraw(){
-
-  const {
-    data:userData
-  } =
-    await supabaseClient.auth.getUser();
-
-  if(!userData.user){
-
-    dashboardپەیام(
-      "Please login first.",
-      "error"
-    );
-
-    return;
-  }
-
-  const method =
-    document.getElementById(
-      "withdrawMethod"
-    ).value;
-
-  const coins =
-    Number(
-      document.getElementById(
-        "withdrawAmount"
-      ).value
-    );
-
-  const phone =
-    document.getElementById(
-      "withdrawPhone"
-    ).value.trim();
-
-
-  if(
-    !["Korek","Asiacell"]
-      .includes(method)
-  ){
-
-    dashboardپەیام(
-      "Select Korek or Asiacell.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if(
-    ![1000,5000,10000]
-      .includes(coins)
-  ){
-
-    dashboardپەیام(
-      "Select a valid amount.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  if(
-    !/^[0-9+\s-]{10,15}$/.test(phone)
-  ){
-
-    dashboardپەیام(
-      "Enter a valid phone number.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const button =
-    document.getElementById(
-      "withdrawButton"
-    );
-
-  button.disabled=true;
-  button.textContent="Sending...";
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .rpc(
-        "create_withdrawal",
-        {
-          p_coins:coins,
-          p_method:method,
-          p_phone:phone
-        }
-      );
-
-
-  button.disabled=false;
-
-  button.textContent =
-    "💰 Request Withdraw";
-
-
-  if(error){
-
-    dashboardپەیام(
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-
-  setدراو(
-    data?.new_balance ?? 0
-  );
-
-
-  document.getElementById(
-    "withdrawMethod"
-  ).value="";
-
-  document.getElementById(
-    "withdrawAmount"
-  ).value="";
-
-  document.getElementById(
-    "withdrawPhone"
-  ).value="";
-
-
-  dashboardپەیام(
-    "✅ Withdrawal request sent.",
-    "success"
-  );
-
-
-  await loadWithdrawHistory(
-    userData.user
-  );
-}
-
-
-/* =========================================
-   WITHDRAW HISTORY
-========================================= */
-
-function statusClass(status){
-
-  if(status==="approved"){
-    return "approved";
-  }
-
-  if(status==="rejected"){
-    return "rejected";
-  }
-
-  return "pending";
-}
-
-
-async function loadWithdrawHistory(user){
-
-  const box =
-    document.getElementById(
-      "withdrawHistory"
-    );
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("withdrawals")
-      .select(
-        "coins,amount,method,phone,status,created_at"
-      )
-      .eq(
-        "user_email",
-        user.email
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-      .limit(20);
-
-
-  if(error){
-
-    box.innerHTML =
-      '<div class="small">Could not load history.</div>';
-
-    return;
-  }
-
-
-  if(!data || !data.length){
-
-    box.innerHTML =
-      '<div class="small">هێشتا هیچ داواکارییەک نییە.</div>';
-
-    return;
-  }
-
-
-  box.innerHTML =
-    data.map(r => `
-
-      <div class="request">
-
-        <b>
-          ${escapeHtml(r.method)}
-        </b>
-
-        •
-        ${Number(r.coins).toLocaleString()}
-        دراو
-
-        <br>
-
-        Phone:
-        ${escapeHtml(r.phone)}
-
-        <br>
-
-        Status:
-
-        <span class="${statusClass(r.status)}">
-          ${escapeHtml(r.status)}
-        </span>
-
-        <br>
-
-        ${new Date(
-          r.created_at
-        ).toLocaleString()}
-
-      </div>
-
-    `).join("");
-}
-
-
-/* =========================================
-   ADMIN
-========================================= */
-
-async function checkAdmin(){
-
-  const {
-    data:userData
-  } =
-    await supabaseClient.auth.getUser();
-
-
-  if(!userData.user){
-    return;
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("admins")
-      .select("email")
-      .eq(
-        "email",
-        userData.user.email
-      )
-      .maybeSingle();
-
-
-  const box =
-    document.getElementById(
-      "adminBox"
-    );
-
-
-  if(!error && data){
-
-    box.style.display="block";
-
-    await loadAdminRequests();
-
-  }else{
-
-    box.style.display="none";
-
-  }
-}
-
-
-async function loadAdminRequests(){
-
-  const box =
-    document.getElementById(
-      "adminRequests"
-    );
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("withdrawals")
-      .select(
-        "id,user_email,coins,method,phone,status,created_at"
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-      .limit(50);
-
-
-  if(error){
-
-    box.innerHTML =
-      '<div class="small">Could not load requests.</div>';
-
-    return;
-  }
-
-
-  if(!data || !data.length){
-
-    box.innerHTML =
-      '<div class="small">No withdrawal requests.</div>';
-
-    return;
-  }
-
-
-  box.innerHTML =
-    data.map(r => `
-
-      <div class="admin-row">
-
-        <b>
-          ${escapeHtml(r.method)}
-        </b>
-
-        •
-        ${Number(r.coins).toLocaleString()}
-        دراو
-
-        <br>
-
-        User:
-        ${escapeHtml(r.user_email)}
-
-        <br>
-
-        Phone:
-        ${escapeHtml(r.phone)}
-
-        <br>
-
-        Status:
-
-        <span class="${statusClass(r.status)}">
-          ${escapeHtml(r.status)}
-        </span>
-
-
-        ${
-          r.status === "pending"
-
-          ? `
-
-            <div class="admin-actions">
-
-              <button
-                class="approve"
-                onclick="adminDecision('${r.id}','approved')">
-
-                Approve
-
-              </button>
-
-              <button
-                class="reject"
-                onclick="adminDecision('${r.id}','rejected')">
-
-                Reject
-
-              </button>
-
+    </div>
+
+    <div id="uploadModal" class="upload-modal" aria-hidden="true">
+        <div class="upload-box">
+            <button class="upload-close" onclick="closeUpload()">×</button>
+            <h2>بڵاوکردنەوەی ڤیدیۆ 🎥</h2>
+            <input id="videoFile" type="file" accept="video/*">
+            <textarea id="videoCaption" maxlength="500" placeholder="دەربارەی ڤیدیۆکە بنووسە..."></textarea>
+            <button id="uploadBtn" class="upload-main" onclick="uploadVideo()">بڵاوکردنەوە</button>
+            <div id="uploadMessage"></div>
+        </div>
+    </div>
+
+    <div id="authModal" class="auth-modal" aria-hidden="true">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeAuth()">×</button>
+            <h2 id="authTitle">چوونەژوورەوە</h2>
+            <p id="authHint">بۆ بەردەوامبوون بچۆ ژوورەوە یان هەژمارێک دروست بکە.</p>
+            <input id="authEmail" type="email" placeholder="ئیمەیڵ" autocomplete="email">
+            <input id="authPassword" type="password" placeholder="وشەی نهێنی" autocomplete="current-password">
+            <button class="auth-main" onclick="submitAuth()">چوونەژوورەوە</button>
+            <button class="auth-switch" onclick="toggleAuthMode()" id="authSwitch">هەژمارت نییە؟ هەژمار دروست بکە</button>
+            <div id="authMessage"></div>
+        </div>
+    </div>
+
+    <div class="top-controls">
+        <button class="top-btn" id="muteBtn" onclick="toggleMute()">🔇</button>
+        <button class="account-btn" id="accountBtn" onclick="handleAccount()">چوونەژوورەوە</button>
+    </div>
+
+    <div class="video-feed" id="videoFeed">
+        <div class="video-card">
+            <video src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline muted></video>
+            <div class="overlay">
+                <div class="user-info">
+                    <div class="username"><span>👤</span> XALLO_GAMER</div>
+                    <div class="caption">یەکەم ڤیدیۆی من لە XALLO-GAMING! 🎮🔥 #گەیمینگ #XALLO</div>
+                </div>
+                <div class="action-buttons">
+                    <button class="follow-btn" onclick="toggleFollow(this)">+</button>
+                    <button class="action-btn" onclick="likeVideo(this)">❤️ <span>1.2K</span></button>
+                    <button class="action-btn" onclick="openComments()">💬 <span>45</span></button>
+                    <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
+                </div>
             </div>
+        </div>
+        <div class="video-card">
+            <video src="https://www.w3schools.com/html/movie.mp4" loop playsinline muted></video>
+            <div class="overlay">
+                <div class="user-info">
+                    <div class="username"><span>👤</span> PRO_GAMER</div>
+                    <div class="caption">یارییەکی زۆر سەخت! 🕹️ ئەتوانی بیبەیت؟ #چالێنج</div>
+                </div>
+                <div class="action-buttons">
+                    <button class="follow-btn" onclick="toggleFollow(this)">+</button>
+                    <button class="action-btn" onclick="likeVideo(this)">❤️ <span>3.5K</span></button>
+                    <button class="action-btn" onclick="openComments()">💬 <span>120</span></button>
+                    <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-          `
+    <div class="bottom-nav">
+        <a href="index.html" class="nav-item active"><span>🏠</span><span>ماڵەوە</span></a>
+        <a href="search.html" class="nav-item"><span>🔍</span><span>گەڕان</span></a>
+        <a href="#" class="nav-item" onclick="openUpload(); return false;"><span>➕</span><span>بڵاوکردنەوە</span></a>
+        <a href="#" class="nav-item"><span>💬</span><span>نامەکان</span></a>
+        <a href="profile.html" class="nav-item"><span>👤</span><span>پرۆفایل</span></a>
+    </div>
 
-          : ""
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = "https://vnyprsjjmmjahkisozib.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueXByc2pqbW1qYWhraXNvemliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5OTE0MjEsImV4cCI6MjEwNTU2NzQyMX0.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let authMode = "login";
+        let isMuted = true;
+        const videos = document.querySelectorAll('video');
+        const muteBtn = document.getElementById('muteBtn');
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            videos.forEach(v => v.muted = isMuted);
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
         }
 
-      </div>
-
-    `).join("");
-}
-
-
-async function adminDecision(
-  id,
-  status
-){
-
-  if(!confirm(
-    status === "approved"
-    ? "Approve this request?"
-    : "Reject and return دراو?"
-  )){
-
-    return;
-  }
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .rpc(
-        "admin_update_withdrawal",
-        {
-          p_withdrawal_id:id,
-          p_status:status
-        }
-      );
-
-
-  if(error){
-
-    dashboardپەیام(
-      error.message,
-      "error"
-    );
-
-    return;
-  }
-
-
-  dashboardپەیام(
-    "✅ Withdrawal status updated.",
-    "success"
-  );
-
-
-  await loadAdminRequests();
-
-
-  const {
-    data:userData
-  } =
-    await supabaseClient.auth.getUser();
-
-
-  if(userData.user){
-
-    await loadWithdrawHistory(
-      userData.user
-    );
-
-    await loadدراو(
-      userData.user
-    );
-  }
-}
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target.querySelector('video');
+                if (entry.isIntersecting) {
+                    video.play().catch(() => { video.muted = true; isMuted = true; muteBtn.textContent = '🔇'; });
+                } else {
+                    video.pause(); video.currentTime = 0;
+                }
+            });
+        }, { threshold: 0.6 });
+        document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
 
 
 
-/* =========================================
-   TIKTOK STYLE FEED
-========================================= */
-
-async function loadTikTokFeed(searchTerm="", mode="all"){
-
-  const box = document.getElementById("tiktokFeed");
-  if(!box) return;
-
-  box.innerHTML = '<div class="tiktok-empty">ڤیدیۆکان بار دەکرێن...</div>';
-
-  try {
-    // supabaseClient is a local const in this page, so do not check
-    // window.supabaseClient (that property does not exist).
-    if(!supabaseClient){
-      throw new Error("Supabase is not ready. Please refresh the page.");
-    }
-
-    // First try with views. If the database schema cache does not know
-    // the views column yet, fall back to the basic video columns.
-    let result = await Promise.race([
-      supabaseClient
-        .from("videos")
-        .select("id,user_email,video_url,caption,likes,views,created_at")
-        .order("created_at",{ascending:false})
-        .limit(50),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Video loading timed out. Check your Supabase connection.")), 12000)
-      )
-    ]);
-
-    let data = result.data;
-    let error = result.error;
-
-    if(error){
-      console.warn("TikTok feed query with views failed; retrying basic query", error);
-
-      const fallback = await supabaseClient
-        .from("videos")
-        .select("id,user_email,video_url,caption,likes,created_at")
-        .order("created_at",{ascending:false})
-        .limit(50);
-
-      data = fallback.data;
-      error = fallback.error;
-    }
-
-    if(error){
-      throw new Error(error.message || "Could not load videos.");
-    }
-
-    const term = String(searchTerm || "").trim().toLowerCase();
-    if(mode === "trending") {
-      data = (data || []).slice().sort((a,b) => (Number(b.likes)||0) + (Number(b.views)||0) - ((Number(a.likes)||0) + (Number(a.views)||0)));
-    } else if(mode === "new") {
-      data = (data || []).slice().sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
-    }
-    if(term){
-      data = (data || []).filter(video => {
-        const haystack = `${video.caption || ""} ${video.user_email || ""}`.toLowerCase();
-        return haystack.includes(term);
-      });
-    }
-
-    if(!data || !data.length){
-      box.innerHTML = `
-        <div class="tiktok-empty">
-          <div style="font-size:42px">🎬</div>
-          <div>${term ? "هیچ ڤیدیۆیەکی هاوشێوە نەدۆزرایەوە." : "هێشتا هیچ ڤیدیۆیەک نییە."}</div>
-          <div class="small">${term ? "گەڕانێکی تری تاقی بکەوە." : "ڤیدیۆیەک دابنێ و لێرە دەردەکەوێت."}</div>
-        </div>`;
-      return;
-    }
-
-    // Load the current user's follow state in one query so each video can show شوێن بکەوە/شوێن بکەوەing.
-    let followingSet = new Set();
-    try{
-      const {data:authData} = await supabaseClient.auth.getUser();
-      const currentEmail = authData && authData.user ? authData.user.email : "";
-      const creatorEmails = [...new Set((data || []).map(v => v.user_email).filter(Boolean))];
-      if(currentEmail && creatorEmails.length){
-        const {data:followRows} = await supabaseClient
-          .from("follows")
-          .select("following_email")
-          .eq("follower_email",currentEmail)
-          .in("following_email",creatorEmails);
-        followingSet = new Set((followRows || []).map(row => String(row.following_email).toLowerCase()));
-      }
-    }catch(e){ console.warn("شوێن بکەوە state load error",e); }
-
-    // Render each card safely. One bad video URL must not stop the whole feed.
-    box.innerHTML = data.map(video => {
-      const id = String(video.id || "");
-      const email = escapeHtml(video.user_email || "");
-      const url = escapeHtml(video.video_url || "");
-      const caption = escapeHtml(video.caption || "");
-      const likes = Number(video.likes) || 0;
-      const views = Number(video.views) || 0;
-      const isشوێن بکەوەing = followingSet.has(String(video.user_email || "").toLowerCase());
-
-      if(!id || !url) return "";
-
-      return `
-        <div class="tiktok-item" data-video-id="${escapeHtml(id)}">
-          <video
-            class="tiktok-video"
-            src="${url}"
-            playsinline
-            muted
-            loop
-            preload="metadata"
-            controlslist="nodownload"
-          ></video>
-
-          <div class="tiktok-gradient"></div>
-          <button type="button" class="tiktok-mute" aria-label="Unmute" onclick="toggleTikTokMute(event,this)">🔇</button>
-
-          <div class="tiktok-info">
-            <div class="tiktok-user">👤 ${email}</div>
-            <div class="tiktok-caption">${caption}</div>
-          </div>
-
-          <div class="tiktok-actions">
-            <button type="button" onclick="likeTikTokVideo('${escapeHtml(id)}',this)">
-              ❤️ <span class="count">${likes}</span>
-            </button>
-
-            <button type="button" onclick="openTikTokکۆمێنتەکان('${escapeHtml(id)}')">
-              💬 <span class="count">Comment</span>
-            </button>
-
-            <button type="button" class="tiktok-view-button">
-              👁️ <span class="count tiktok-view-count">${views}</span>
-            </button>
-
-            <button type="button" class="tiktok-follow-button ${isشوێن بکەوەing ? "following" : ""}" onclick="toggleTikTokشوێن بکەوە(event,'${escapeHtml(email)}',this)">
-              ${followingSet.has(String(video.user_email || "").toLowerCase()) ? "✓" : "➕"} <span class="count">${followingSet.has(String(video.user_email || "").toLowerCase()) ? "شوێن بکەوەing" : "شوێن بکەوە"}</span>
-            </button>
-
-            <button type="button" class="tiktok-small-btn" onclick="shareTikTokVideo('${escapeHtml(id)}')">
-              ↗️ <span class="count">Share</span>
-            </button>
-
-            <button type="button" onclick="openTikTokپرۆفایل('${escapeHtml(email)}')">
-              👤 <span class="count">پرۆفایل</span>
-            </button>
-          </div>
-
-          <button type="button" class="tiktok-play" aria-label="Play video">▶</button>
-        </div>`;
-    }).join("");
-
-    if(!box.querySelector(".tiktok-item")){
-      box.innerHTML = '<div class="tiktok-empty">The videos were found, but their video URLs are empty.</div>';
-      return;
-    }
-
-    setupTikTokObserver();
-
-    // Allow tap-to-play on mobile and pause all other videos.
-    box.querySelectorAll(".tiktok-video").forEach(video => {
-      video.addEventListener("click", async () => {
-        try {
-          if(video.paused){
-            box.querySelectorAll(".tiktok-video").forEach(v => { if(v !== video) v.pause(); });
-            await video.play();
-          }else{
-            video.pause();
-          }
-        }catch(e){
-          console.warn("Video playback error", e);
-        }
-      });
-    });
-
-  } catch(e) {
-    console.error("TikTok Feed error:", e);
-    box.innerHTML = `
-      <div class="tiktok-empty">
-        <div style="font-size:42px">⚠️</div>
-        <div>Could not load TikTok Feed.</div>
-        <div class="small" style="margin-top:8px">${escapeHtml(e.message || "Unknown error")}</div>
-        <button type="button" style="margin-top:14px" onclick="loadTikTokFeed()">🔄 دووبارە هەوڵدان</button>
-      </div>`;
-  }
-}
-
-function setupTikTokObserver(){
-
-  const videos = document.querySelectorAll(".tiktok-video");
-  if(!videos.length) return;
-
-  if(window.__xalloTikTokObserver){
-    try{ window.__xalloTikTokObserver.disconnect(); }catch(e){}
-  }
-
-  const observer = new IntersectionObserver(async entries => {
-    for(const entry of entries){
-      const video = entry.target;
-
-      if(entry.isIntersecting && entry.intersectionRatio >= 0.65){
-        document.querySelectorAll(".tiktok-video").forEach(other => {
-          if(other !== video) other.pause();
-        });
-
-        try{ await video.play(); }catch(e){
-          // A first tap may be required by the mobile browser.
-        }
-        const activeItem = video.closest(".tiktok-item");
-        if(activeItem){
-          const muteBtn = activeItem.querySelector(".tiktok-mute");
-          if(muteBtn) muteBtn.textContent = video.muted ? "🔇" : "🔊";
+        function openUpload() {
+            supabaseClient.auth.getSession().then(({ data: { session } }) => {
+                if (!session) {
+                    openAuth("login");
+                    return;
+                }
+                document.getElementById("uploadMessage").textContent = "";
+                document.getElementById("videoFile").value = "";
+                document.getElementById("videoCaption").value = "";
+                document.getElementById("uploadModal").classList.add("show");
+                document.getElementById("uploadModal").setAttribute("aria-hidden", "false");
+            });
         }
 
-        const item = video.closest(".tiktok-item");
-        if(item && !item.dataset.viewed){
-          item.dataset.viewed = "1";
-          const id = item.dataset.videoId;
+        function closeUpload() {
+            document.getElementById("uploadModal").classList.remove("show");
+            document.getElementById("uploadModal").setAttribute("aria-hidden", "true");
+        }
 
-          try{
-            const {data,error} = await supabaseClient.rpc("view_video",{p_video_id:id});
-            if(!error){
-              const count = item.querySelector(".tiktok-view-count");
-              if(count) count.textContent = Number(data) || 0;
+        async function uploadVideo() {
+            const fileInput = document.getElementById("videoFile");
+            const captionInput = document.getElementById("videoCaption");
+            const btn = document.getElementById("uploadBtn");
+            const message = document.getElementById("uploadMessage");
+            const file = fileInput.files[0];
+
+            if (!file) {
+                message.textContent = "تکایە ڤیدیۆیەک هەڵبژێرە.";
+                return;
             }
-          }catch(e){
-            console.warn("View counter error", e);
-          }
+
+            if (!file.type.startsWith("video/")) {
+                message.textContent = "تەنها فایلە ڤیدیۆییەکان ڕێگەپێدراون.";
+                return;
+            }
+
+            const maxSize = 100 * 1024 * 1024;
+            if (file.size > maxSize) {
+                message.textContent = "قەبارەی ڤیدیۆ نابێت لە 100MB زیاتر بێت.";
+                return;
+            }
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                closeUpload();
+                openAuth("login");
+                return;
+            }
+
+            btn.disabled = true;
+            message.textContent = "ڤیدیۆکە بەرزدەکرێتەوە... تکایە چاوەڕێ بکە.";
+
+            const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+            const filePath = `${session.user.id}/${Date.now()}-${safeName}`;
+
+            const { error: storageError } = await supabaseClient
+                .storage
+                .from("videos")
+                .upload(filePath, file, {
+                    cacheControl: "3600",
+                    upsert: false,
+                    contentType: file.type
+                });
+
+            if (storageError) {
+                message.textContent = "هەڵە لە بەرزکردنەوە: " + storageError.message;
+                btn.disabled = false;
+                return;
+            }
+
+            const { data: publicData } = supabaseClient
+                .storage
+                .from("videos")
+                .getPublicUrl(filePath);
+
+            const { error: dbError } = await supabaseClient
+                .from("videos")
+                .insert({
+                    user_id: session.user.id,
+                    video_url: publicData.publicUrl,
+                    caption: captionInput.value.trim()
+                });
+
+            if (dbError) {
+                await supabaseClient.storage.from("videos").remove([filePath]);
+                message.textContent = "هەڵە لە Database: " + dbError.message;
+                btn.disabled = false;
+                return;
+            }
+
+            message.textContent = "بە سەرکەوتوویی بڵاوکرایەوە! 🎉";
+            btn.disabled = false;
+            setTimeout(() => closeUpload(), 700);
+            loadVideos();
         }
-      }else{
-        video.pause();
-      }
-    }
-  },{threshold:[0.65]});
-
-  videos.forEach(video => observer.observe(video));
-  window.__xalloTikTokObserver = observer;
-}
-
-async function likeTikTokVideo(id,button){
-
-  button.disabled = true;
-
-  const {
-    data,
-    error
-  } = await supabaseClient
-    .rpc("like_video",{p_video_id:id});
-
-  if(error){
-
-    button.disabled = false;
-
-    dashboardپەیام(
-      "Like error: " + error.message,
-      "error"
-    );
-
-    return;
-  }
-
-  const count = button.querySelector(".count");
-
-  if(count){
-    count.textContent = Number(data) || 0;
-  }
-
-  button.disabled = false;
-}
-
-
-function toggleTikTokMute(event,button){
-  if(event) event.stopPropagation();
-  const item = button ? button.closest(".tiktok-item") : null;
-  const video = item ? item.querySelector(".tiktok-video") : null;
-  if(!video) return;
-  video.muted = !video.muted;
-  button.textContent = video.muted ? "🔇" : "🔊";
-  button.setAttribute("aria-label", video.muted ? "Unmute" : "Mute");
-}
-
-async function toggleTikTokشوێن بکەوە(event,targetEmail,button){
-  if(event) event.stopPropagation();
-  const email = String(targetEmail || "").trim();
-  if(!email || !button) return;
-  const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData && authData.user ? authData.user.email : "";
-  if(!currentEmail){ dashboardپەیام("Please login first.","error"); return; }
-  if(currentEmail.toLowerCase() === email.toLowerCase()) return;
-  button.disabled = true;
-  try{
-    const {data:existing,error:checkError} = await supabaseClient
-      .from("follows").select("id").eq("follower_email",currentEmail).eq("following_email",email).maybeSingle();
-    if(checkError) throw checkError;
-    if(existing){
-      const {error} = await supabaseClient.from("follows").delete().eq("id",existing.id).eq("follower_email",currentEmail);
-      if(error) throw error;
-      button.classList.remove("following");
-      button.innerHTML = "➕ <span class=\"count\">شوێن بکەوە</span>";
-    }else{
-      const {error} = await supabaseClient.from("follows").insert({follower_email:currentEmail,following_email:email});
-      if(error) throw error;
-      button.classList.add("following");
-      button.innerHTML = "✓ <span class=\"count\">شوێنکەوتووەکان</span>";
-      try{ await supabaseClient.rpc("notify_follow",{p_following_email:email}); }catch(e){ console.warn("شوێن بکەوە notification error",e); }
-    }
-  }catch(error){
-    dashboardپەیام(error.message || "شوێن بکەوە action failed.","error");
-  }finally{
-    button.disabled = false;
-  }
-}
-
-async function shareTikTokVideo(videoId){
-  const url = window.location.href.split("#")[0] + "#video=" + encodeURIComponent(videoId);
-  try{
-    if(navigator.share){
-      await navigator.share({title:"XALLO-GAMING",text:"Watch this video on XALLO-GAMING",url});
-      return;
-    }
-    await navigator.clipboard.writeText(url);
-    dashboardپەیام("🔗 Video link copied.","success");
-  }catch(error){
-    if(error && error.name === "AbortError") return;
-    dashboardپەیام("نەتوانرا ئەم ڤیدیۆیە هاوبەش بکرێت.","error");
-  }
-}
-
-let activeTikTokCommentVideoId = "";
-
-async function openTikTokکۆمێنتەکان(videoId){
-  activeTikTokCommentVideoId = String(videoId || "");
-  if(!activeTikTokCommentVideoId) return;
-  const modal = document.getElementById("tiktokCommentModal");
-  const list = document.getElementById("tiktokCommentList");
-  const input = document.getElementById("tiktokCommentInput");
-  modal.style.display = "flex";
-  list.innerHTML = '<div class="small">Loading comments...</div>';
-  input.value = "";
-  try{
-    const {data,error} = await supabaseClient.from("comments")
-      .select("id,user_email,comment,created_at")
-      .eq("video_id",activeTikTokCommentVideoId)
-      .order("created_at",{ascending:true});
-    if(error) throw error;
-    list.innerHTML = (data || []).length ? data.map(c => `
-      <div class="tiktok-comment-row">
-        <div class="tiktok-comment-user">👤 ${escapeHtml(c.user_email || "")}</div>
-        <div class="tiktok-comment-text">${escapeHtml(c.comment || "")}</div>
-        <div class="chat-time">${new Date(c.created_at).toLocaleString()}</div>
-      </div>`).join("") : '<div class="small">هێشتا هیچ کۆمێنتێک نییە. یەکەم کەس بە! 💬</div>';
-    setTimeout(()=>input.focus(),80);
-  }catch(error){
-    list.innerHTML = `<div class="small">نەتوانرا کۆمێنتەکان بار بکرێن: ${escapeHtml(error.message || "Unknown error")}</div>`;
-  }
-}
-
-function closeTikTokکۆمێنتەکان(event){
-  if(event && event.target !== event.currentTarget) return;
-  const modal = document.getElementById("tiktokCommentModal");
-  if(modal) modal.style.display = "none";
-  activeTikTokCommentVideoId = "";
-}
-
-async function submitTikTokComment(){
-  const videoId = activeTikTokCommentVideoId;
-  const input = document.getElementById("tiktokCommentInput");
-  const comment = input ? input.value.trim() : "";
-  if(!videoId || !comment) return;
-  const {data:userData} = await supabaseClient.auth.getUser();
-  if(!userData.user){ dashboardپەیام("Please login first.","error"); return; }
-  try{
-    const {error} = await supabaseClient.from("comments").insert({video_id:videoId,user_email:userData.user.email,comment});
-    if(error) throw error;
-    input.value = "";
-    await openTikTokکۆمێنتەکان(videoId);
-  }catch(error){
-    dashboardپەیام("Comment error: " + (error.message || "Unknown error"),"error");
-  }
-}
-
-function focusTikTokComment(videoId){
-
-  const input =
-    document.getElementById("comment-" + videoId);
-
-  if(input){
-
-    input.scrollIntoView({
-      behavior:"smooth",
-      block:"center"
-    });
-
-    input.focus();
-
-    dashboardپەیام(
-      "کۆمێنتەکەت لە بەشی ڤیدیۆکانی XALLO بنووسە.",
-      "success"
-    );
-
-  }else{
-
-    dashboardپەیام(
-      "بۆ نووسینی کۆمێنت، سندوقی کۆمێنت لە ڤیدیۆکانی XALLO بکەرەوە.",
-      "success"
-    );
-  }
-}
-
-
-/* =========================================
-   FOLLOW / PUBLIC PROFILE
-========================================= */
-
-let activeپرۆفایلEmail = "";
-
-async function openTikTokپرۆفایل(email){
-
-  const targetEmail = String(email || "").trim();
-  if(!targetEmail) return;
-
-  const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData && authData.user ? authData.user.email : "";
-
-  activeپرۆفایلEmail = targetEmail;
-
-  const modal = document.getElementById("profileModal");
-  const nameBox = document.getElementById("profileName");
-  const emailBox = document.getElementById("profileEmail");
-  const bioBox = document.getElementById("profileدەربارەی خۆت");
-  const avatar = document.getElementById("profileAvatar");
-  const followButton = document.getElementById("profileشوێن بکەوەButton");
-
-  modal.style.display = "flex";
-  nameBox.textContent = "پرۆفایل بار دەکرێت...";
-  emailBox.textContent = targetEmail;
-  bioBox.textContent = "";
-  avatar.src = "";
-  followButton.disabled = true;
-  followButton.textContent = "Loading...";
-
-  try{
-    const {data:profile,error:profileError} = await supabaseClient.rpc(
-      "get_public_profile",
-      {p_email:targetEmail}
-    );
-
-    if(profileError) throw profileError;
-
-    const profileData = profile || {};
-    nameBox.textContent = profileData.username || targetEmail.split("@")[0];
-    emailBox.textContent = targetEmail;
-    bioBox.textContent = profileData.bio || "";
-
-    avatar.src = profileData.avatar_url || "";
-    avatar.onerror = () => {
-      avatar.style.display = "none";
-    };
-    avatar.onload = () => {
-      avatar.style.display = "block";
-    };
-    if(!profileData.avatar_url) avatar.style.display = "none";
-
-    const [{count:followerCount,error:followerError},{count:followingCount,error:followingError}] = await Promise.all([
-      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("following_email",targetEmail),
-      supabaseClient.from("follows").select("id",{count:"exact",head:true}).eq("follower_email",targetEmail)
-    ]);
-
-    if(followerError) throw followerError;
-    if(followingError) throw followingError;
-
-    document.getElementById("profileشوێن بکەوەers").textContent = Number(followerCount || 0);
-    document.getElementById("profileشوێن بکەوەing").textContent = Number(followingCount || 0);
-
-    if(currentEmail && currentEmail.toLowerCase() === targetEmail.toLowerCase()){
-      followButton.disabled = true;
-      followButton.textContent = "Your پرۆفایل";
-      followButton.classList.remove("following");
-      return;
-    }
-
-    const {data:existing,error:followCheckError} = await supabaseClient
-      .from("follows")
-      .select("id")
-      .eq("follower_email",currentEmail)
-      .eq("following_email",targetEmail)
-      .maybeSingle();
-
-    if(followCheckError) throw followCheckError;
-
-    setشوێن بکەوەButton(existing ? true : false);
-    followButton.disabled = false;
-    followButton.onclick = () => toggleشوێن بکەوە(targetEmail);
-
-  }catch(error){
-    nameBox.textContent = "پرۆفایل unavailable";
-    bioBox.textContent = error.message || "نەتوانرا پرۆفایل بار بکرێت.";
-    followButton.disabled = true;
-    followButton.textContent = "شوێن بکەوە unavailable";
-  }
-}
-
-function setشوێن بکەوەButton(isشوێن بکەوەing){
-  const button = document.getElementById("profileشوێن بکەوەButton");
-  button.classList.toggle("following",!!isشوێن بکەوەing);
-  button.textContent = isشوێن بکەوەing ? "✓ شوێن بکەوەing" : "＋ شوێن بکەوە";
-}
-
-async function toggleشوێن بکەوە(targetEmail){
-
-  const button = document.getElementById("profileشوێن بکەوەButton");
-  const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData && authData.user ? authData.user.email : "";
-
-  if(!currentEmail){
-    dashboardپەیام("Please login first.","error");
-    return;
-  }
-
-  if(currentEmail.toLowerCase() === targetEmail.toLowerCase()) return;
-
-  button.disabled = true;
-
-  try{
-    const {data:existing,error:checkError} = await supabaseClient
-      .from("follows")
-      .select("id")
-      .eq("follower_email",currentEmail)
-      .eq("following_email",targetEmail)
-      .maybeSingle();
-
-    if(checkError) throw checkError;
-
-    if(existing){
-      const {error} = await supabaseClient
-        .from("follows")
-        .delete()
-        .eq("id",existing.id)
-        .eq("follower_email",currentEmail);
-      if(error) throw error;
-      setشوێن بکەوەButton(false);
-    }else{
-      const {error} = await supabaseClient
-        .from("follows")
-        .insert({
-          follower_email:currentEmail,
-          following_email:targetEmail
-        });
-      if(error) throw error;
-      setشوێن بکەوەButton(true);
-
-      const {error:notifyError} = await supabaseClient.rpc(
-        "notify_follow",
-        {p_following_email:targetEmail}
-      );
-      if(notifyError) console.warn("شوێن بکەوە notification unavailable:", notifyError.message);
-    }
-
-    const {count} = await supabaseClient
-      .from("follows")
-      .select("id",{count:"exact",head:true})
-      .eq("following_email",targetEmail);
-
-    document.getElementById("profileشوێن بکەوەers").textContent = Number(count || 0);
-
-  }catch(error){
-    dashboardپەیام("شوێن بکەوە error: " + (error.message || "Unknown error"),"error");
-  }finally{
-    button.disabled = false;
-  }
-}
-
-function closeپرۆفایلModal(event){
-  if(event && event.target && event.target.id !== "profileModal") return;
-  const modal = document.getElementById("profileModal");
-  if(modal) modal.style.display = "none";
-  activeپرۆفایلEmail = "";
-}
-
-
-
-
-
-
-
-/* =========================================
-   XALLO CHAT / MESSAGES
-========================================= */
-let activeChatEmail = "";
-let activeChatUserEmail = "";
-
-async function openChat(){
-  const modal=document.getElementById("chatModal");
-  if(!modal) return;
-  modal.style.display="flex";
-  const {data}=await supabaseClient.auth.getUser();
-  activeChatUserEmail=data?.user?.email || "";
-}
-
-function closeChat(event){
-  if(event && event.target && event.target.id!=="chatModal") return;
-  const modal=document.getElementById("chatModal");
-  if(modal) modal.style.display="none";
-}
-
-function chatSafe(text){
-  return escapeHtml(text);
-}
-
-async function loadChat(){
-  const input=document.getElementById("chatRecipient");
-  const box=document.getElementById("chatپەیامs");
-  const status=document.getElementById("chatStatus");
-  const recipient=(input?.value||"").trim().toLowerCase();
-  if(!recipient || !recipient.includes("@")){
-    status.textContent="Enter a valid receiver email.";
-    return;
-  }
-  const {data:userData}=await supabaseClient.auth.getUser();
-  const me=(userData?.user?.email||"").toLowerCase();
-  if(!me){ status.textContent="Please login first."; return; }
-  if(recipient===me){ status.textContent="ناتوانیت بۆ خۆت پەیام بنێریت."; return; }
-  activeChatEmail=recipient; activeChatUserEmail=me;
-  box.innerHTML='<div class="small">Loading chat...</div>';
-  const {data,error}=await supabaseClient
-    .from("messages")
-    .select("id,sender_email,receiver_email,message,is_read,created_at")
-    .or(`and(sender_email.eq.${me},receiver_email.eq.${recipient}),and(sender_email.eq.${recipient},receiver_email.eq.${me})`)
-    .order("created_at",{ascending:true})
-    .limit(100);
-  if(error){
-    box.innerHTML='<div class="small">Could not load chat: '+chatSafe(error.message)+'</div>';
-    return;
-  }
-  status.textContent="Chat with "+recipient;
-  if(!data?.length){
-    box.innerHTML='<div class="small">هێشتا هیچ پەیامێک نییە. یەکەم پەیام بنێرە.</div>';
-  }else{
-    box.innerHTML=data.map(m=>{
-      const mine=(m.sender_email||"").toLowerCase()===me;
-      const time=m.created_at?new Date(m.created_at).toLocaleString():"";
-      return `<div class="chat-msg ${mine?'mine':'theirs'}">${chatSafe(m.message)}<div class="chat-time">${chatSafe(time)}</div></div>`;
-    }).join("");
-  }
-  box.scrollTop=box.scrollHeight;
-  const unread=(data||[]).filter(m=>(m.receiver_email||"").toLowerCase()===me && !m.is_read).map(m=>m.id);
-  if(unread.length){
-    await supabaseClient.from("messages").update({is_read:true}).in("id",unread);
-  }
-}
-
-async function sendChatپەیام(){
-  const text=(document.getElementById("chatInput")?.value||"").trim();
-  if(!activeChatEmail){
-    document.getElementById("chatStatus").textContent="Load a chat first.";
-    return;
-  }
-  if(!text) return;
-  const {data:userData}=await supabaseClient.auth.getUser();
-  const me=userData?.user?.email||"";
-  if(!me) return;
-  const button=document.querySelector(".chat-send");
-  if(button) button.disabled=true;
-  const {error}=await supabaseClient.from("messages").insert({
-    sender_email:me, receiver_email:activeChatEmail, message:text
-  });
-  if(button) button.disabled=false;
-  if(error){
-    document.getElementById("chatStatus").textContent="Send error: "+error.message;
-    return;
-  }
-
-  const {error:notifyError}=await supabaseClient.rpc(
-    "notify_message",
-    {p_receiver_email:activeChatEmail,p_preview:text.slice(0,120)}
-  );
-  if(notifyError) console.warn("پەیام notification unavailable:", notifyError.message);
-
-  document.getElementById("chatInput").value="";
-  await loadChat();
-}
-
-
-/* =========================================
-   ESCAPE HTML
-========================================= */
-
-function escapeHtml(value){
-
-  return String(
-    value ?? ""
-  ).replace(
-    /[&<>"']/g,
-    m => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#039;"
-    }[m])
-  );
-}
-
-
-/* =========================================
-   LOGOUT
-========================================= */
-
-async function logout(){
-
-  await supabaseClient.auth.signOut();
-
-  // Return to the authentication screen cleanly.
-  document.body.classList.remove("xallo-logged-in");
-
-  document.getElementById(
-    "dashboard"
-  ).style.display="none";
-
-  document.getElementById(
-    "authBox"
-  ).style.display="block";
-
-  showLogin();
-}
-
-
-/* =========================================
-   CHECK LOGIN
-========================================= */
-
-
-document.addEventListener("keydown",(event)=>{
-  if(event.key === "Escape") closeTikTokکۆمێنتەکان();
-});
-
-async function checkUser(){
-  try{
-    const { data, error } = await supabaseClient.auth.getSession();
-
-    if(error){
-      console.error("getSession error:", error);
-      document.body.classList.remove("xallo-logged-in");
-      document.getElementById("dashboard").style.display="none";
-      document.getElementById("authBox").style.display="block";
-      showLogin();
-      showپەیام("کێشەی پەیوەندی بە Supabase هەیە. تکایە دووبارە هەوڵ بدە.","error");
-      return;
-    }
-
-    const session = data?.session;
-    if(session?.user){
-      enterXalloApp(session.user);
-    }else{
-      document.body.classList.remove("xallo-logged-in");
-      document.getElementById("dashboard").style.display="none";
-      document.getElementById("authBox").style.display="block";
-      showLogin();
-    }
-  }catch(err){
-    console.error("checkUser error:", err);
-    document.body.classList.remove("xallo-logged-in");
-    document.getElementById("dashboard").style.display="none";
-    document.getElementById("authBox").style.display="block";
-    showLogin();
-    showپەیام("کێشەیەک ڕوویدا لە چوونەژوورەوە.","error");
-  }
-}
-
-// IMPORTANT: do not run Supabase database queries directly inside
-// onAuthStateChange. Supabase holds an auth lock while firing this callback;
-// doing extra awaited queries here can make login appear to freeze.
-supabaseClient.auth.onAuthStateChange((event, session) => {
-  if(session?.user){
-    // Do not await any database query inside the auth callback.
-    enterXalloApp(session.user);
-  }else if(event === "SIGNED_OUT"){
-    document.body.classList.remove("xallo-logged-in");
-    document.getElementById("dashboard").style.display="none";
-    document.getElementById("authBox").style.display="block";
-    showLogin();
-  }
-});
-
-/* =========================================
-   START
-========================================= */
-
-checkUser();
-
-</script>
-
-
-<script>
-/* ===== XALLO NOTIFICATIONS ===== */
-function notificationSafe(value){
-  const div = document.createElement("div");
-  div.textContent = value == null ? "" : String(value);
-  return div.innerHTML;
-}
-
-function notificationTime(value){
-  if(!value) return "";
-  try{return new Date(value).toLocaleString();}catch(e){return "";}
-}
-
-async function loadNotifications(){
-  const list = document.getElementById("notificationsList");
-  const badge = document.getElementById("notificationBadge");
-  if(!list || !badge || typeof supabaseClient === "undefined") return;
-
-  list.innerHTML = '<div class="users-empty">ئاگادارییەکان بار دەکرێن...</div>';
-
-  try{
-    const {data,error} = await supabaseClient
-      .from("notifications")
-      .select("id,title,message,type,is_read,created_at")
-      .order("created_at",{ascending:false})
-      .limit(50);
-
-    if(error) throw error;
-
-    const rows = data || [];
-    const unread = rows.filter(n => !n.is_read).length;
-
-    if(unread){
-      badge.textContent = String(unread);
-      badge.style.display = "inline-flex";
-    }else{
-      badge.style.display = "none";
-    }
-
-    if(!rows.length){
-      list.innerHTML = '<div class="users-empty">No notifications yet.</div>';
-      return;
-    }
-
-    list.innerHTML = rows.map(n => `
-      <div class="notification-item ${n.is_read ? "" : "unread"}">
-        <div class="notification-title">${notificationSafe(n.title || "Notification")}</div>
-        <div class="notification-message">${notificationSafe(n.message || "")}</div>
-        <div class="notification-time">${notificationSafe(notificationTime(n.created_at))}</div>
-        ${n.is_read ? "" : `<button type="button" class="notification-read" onclick="markNotificationRead('${String(n.id).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">✓ Mark as read</button>`}
-      </div>
-    `).join("");
-  }catch(error){
-    console.error(error);
-    list.innerHTML = `<div class="users-empty">Could not load notifications.<br>${notificationSafe(error.message || "Unknown error")}</div>`;
-  }
-}
-
-async function markNotificationRead(id){
-  if(!id) return;
-
-  const {error} = await supabaseClient
-    .from("notifications")
-    .update({is_read:true})
-    .eq("id",id);
-
-  if(error){
-    dashboardپەیام("Notification error: " + (error.message || "Unknown error"),"error");
-    return;
-  }
-
-  await loadNotifications();
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    if(typeof supabaseClient !== "undefined") loadNotifications();
-  }, 900);
-});
-/* ===== XALLO HOME / EXPLORE NAV ===== */
-function xalloSetNav(active){
-  document.getElementById("homeNavButton")?.classList.toggle("active",active==="home");
-  document.getElementById("exploreNavButton")?.classList.toggle("active",active==="explore");
-}
-
-function xalloGoHome(){
-  const explore=document.getElementById("exploreBox");
-  if(explore) explore.classList.remove("show");
-  xalloSetNav("home");
-  document.getElementById("tiktokFeed")?.scrollIntoView({behavior:"smooth",block:"start"});
-  setTimeout(()=>loadTikTokFeed("", "all"),250);
-}
-
-function xalloGoExplore(){
-  const explore=document.getElementById("exploreBox");
-  if(explore) explore.classList.add("show");
-  xalloSetNav("explore");
-  document.getElementById("tiktokFeed")?.scrollIntoView({behavior:"smooth",block:"start"});
-  setTimeout(()=>loadTikTokFeed("", "trending"),250);
-}
-
-function searchExploreVideos(){
-  const q=(document.getElementById("exploreSearchInput")?.value || "").trim();
-  loadTikTokFeed(q, "all");
-}
-
-function setExploreSearch(value){
-  const input=document.getElementById("exploreSearchInput");
-  if(input) input.value=value;
-  loadTikTokFeed(value, "all");
-}
-
-function setExploreMode(mode){
-  const input=document.getElementById("exploreSearchInput");
-  if(input) input.value="";
-  loadTikTokFeed("", mode);
-}
-
-function xalloGoپرۆفایل(){
-  document.getElementById("my-profile-box")?.scrollIntoView({behavior:"smooth",block:"start"});
-  document.querySelector(".my-profile-box")?.scrollIntoView({behavior:"smooth",block:"start"});
-}
-
-function xalloGoپەیامs(){
-  document.querySelector(".chat-box")?.scrollIntoView({behavior:"smooth",block:"start"});
-  setTimeout(()=>openChat(),300);
-}
-
-</script>
-
-<script>
-/* ===== XALLO USERS SEARCH ===== */
-function escapeUserText(value){
-  const div = document.createElement("div");
-  div.textContent = value == null ? "" : String(value);
-  return div.innerHTML;
-}
-
-function userAvatarHtml(url, name){
-  if(url){
-    return `<img src="${escapeUserText(url)}" alt="avatar">`;
-  }
-  const letter = (name || "U").trim().charAt(0).toUpperCase() || "U";
-  return `<div class="user-avatar-placeholder">${escapeUserText(letter)}</div>`;
-}
-
-async function searchUsers(){
-  const input = document.getElementById("userSearchInput");
-  const list = document.getElementById("usersList");
-  if(!input || !list) return;
-
-  const q = input.value.trim();
-  list.innerHTML = '<div class="users-empty">Loading users...</div>';
-
-  try{
-    const { data, error } = await supabaseClient.rpc(
-      "search_public_users",
-      { p_search: q }
-    );
-
-    if(error) throw error;
-
-    if(!data || !data.length){
-      list.innerHTML = '<div class="users-empty">No users found.</div>';
-      return;
-    }
-
-    list.innerHTML = data.map(u => {
-      const name = u.username || u.email || "User";
-      return `
-        <div class="user-card">
-          ${userAvatarHtml(u.avatar_url, name)}
-          <div class="user-card-info">
-            <div class="user-card-name">${escapeUserText(name)}</div>
-            <div class="user-card-email">${escapeUserText(u.email)}</div>
-          </div>
-          <button type="button"
-            onclick="startUserChat('${String(u.email).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">
-            💬 پەیام
-          </button>
-        </div>`;
-    }).join("");
-  }catch(err){
-    console.error(err);
-    list.innerHTML =
-      `<div class="users-empty">Could not load users.<br>${escapeUserText(err.message || "Unknown error")}</div>`;
-  }
-}
-
-function startUserChat(email){
-  if(!email) return;
-
-  // Reuse the existing secure Chat modal/function from the current XALLO page.
-  const receiver = document.getElementById("chatRecipient");
-  if(receiver) receiver.value = email;
-
-  if(typeof openChat === "function"){
-    openChat();
-    if(typeof loadChat === "function"){
-      setTimeout(() => loadChat(), 50);
-    }
-  }else{
-    alert("Chat is not available. Please refresh the page.");
-  }
-}
-
-async function loadInitialUsers(){
-  const list = document.getElementById("usersList");
-  if(!list) return;
-  // Show a small initial list without requiring the user to type anything.
-  try{
-    const { data, error } = await supabaseClient.rpc(
-      "search_public_users",
-      { p_search: "" }
-    );
-    if(error) throw error;
-    if(!data || !data.length){
-      list.innerHTML = '<div class="users-empty">No other users yet.</div>';
-      return;
-    }
-    list.innerHTML = data.slice(0,10).map(u => {
-      const name = u.username || u.email || "User";
-      return `
-        <div class="user-card">
-          ${userAvatarHtml(u.avatar_url, name)}
-          <div class="user-card-info">
-            <div class="user-card-name">${escapeUserText(name)}</div>
-            <div class="user-card-email">${escapeUserText(u.email)}</div>
-          </div>
-          <button type="button"
-            onclick="startUserChat('${String(u.email).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">
-            💬 پەیام
-          </button>
-        </div>`;
-    }).join("");
-  }catch(err){
-    console.warn("Initial users list unavailable:", err);
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    if(typeof supabaseClient !== "undefined") loadInitialUsers();
-  }, 700);
-});
-</script>
 
+        async function loadVideos() {
+            const { data: videos, error } = await supabaseClient
+                .from("videos")
+                .select("id, user_id, video_url, caption, created_at")
+                .order("created_at", { ascending: false });
+
+            if (error || !videos) return;
+
+            const userIds = [...new Set(videos.map(v => v.user_id))];
+            const { data: profiles } = userIds.length
+                ? await supabaseClient.from("profiles").select("id, username, display_name").in("id", userIds)
+                : { data: [] };
+
+            const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
+            const { data: { session } } = await supabaseClient.auth.getSession();
+
+            const feed = document.getElementById("videoFeed");
+            feed.innerHTML = "";
+
+            if (!videos.length) {
+                feed.innerHTML = '<div style="height:100vh;display:flex;align-items:center;justify-content:center;color:#aaa">هێشتا ڤیدیۆ نییە 🎥</div>';
+                return;
+            }
+
+            for (const v of videos) {
+                const p = profileMap[v.user_id];
+                const username = p?.username || p?.display_name || "XALLO_GAMER";
+                const card = document.createElement("div");
+                card.className = "video-card";
+                card.dataset.videoId = v.id;
+                card.innerHTML = `
+                    <video src="${escapeHtml(v.video_url)}" loop playsinline muted></video>
+                    <div class="overlay">
+                        <div class="user-info">
+                            <div class="username"><span>👤</span> ${escapeHtml(username)}</div>
+                            <div class="caption">${escapeHtml(v.caption || "")}</div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="follow-btn" data-user-id="${v.user_id}" onclick="toggleFollow(this)">+</button>
+                            <button class="action-btn like-btn" data-video-id="${v.id}" onclick="likeVideo(this)">❤️ <span>0</span></button>
+                            <button class="action-btn comment-btn" data-video-id="${v.id}" onclick="openComments(${v.id})">💬 <span>0</span></button>
+                            <button class="action-btn" onclick="shareVideo(${v.id})">↗️ <span>Share</span></button>
+                        </div>
+                    </div>`;
+                feed.appendChild(card);
+                observer.observe(card);
+
+                const likeBtn = card.querySelector(".like-btn");
+                const commentBtn = card.querySelector(".comment-btn");
+                await updateCountsAndState(v.id, likeBtn, commentBtn, session);
+            }
+        }
+
+        async function updateCountsAndState(videoId, likeBtn, commentBtn, session) {
+            const { count: likes } = await supabaseClient
+                .from("video_likes")
+                .select("*", { count: "exact", head: true })
+                .eq("video_id", videoId);
+
+            const { count: comments } = await supabaseClient
+                .from("comments")
+                .select("*", { count: "exact", head: true })
+                .eq("video_id", videoId);
+
+            likeBtn.querySelector("span").textContent = likes || 0;
+            commentBtn.querySelector("span").textContent = comments || 0;
+
+            if (session) {
+                const { data: mine } = await supabaseClient
+                    .from("video_likes")
+                    .select("video_id")
+                    .eq("video_id", videoId)
+                    .eq("user_id", session.user.id)
+                    .maybeSingle();
+                likeBtn.style.color = mine ? "#fe2c55" : "#fff";
+
+                const { data: video } = await supabaseClient
+                    .from("videos")
+                    .select("user_id")
+                    .eq("id", videoId)
+                    .maybeSingle();
+
+                if (video && video.user_id !== session.user.id) {
+                    const followBtn = document.querySelector(`.video-card[data-video-id="${videoId}"] .follow-btn`);
+                    if (followBtn) {
+                        const { data: followed } = await supabaseClient
+                            .from("follows")
+                            .select("follower_id")
+                            .eq("follower_id", session.user.id)
+                            .eq("following_id", video.user_id)
+                            .maybeSingle();
+                        followBtn.textContent = followed ? "✓" : "+";
+                    }
+                }
+            }
+        }
+
+
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+
+        let activeCommentVideoId = null;
+
+        async function likeVideo(btn) {
+            const videoId = btn.dataset.videoId;
+            if (!videoId) return;
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                openAuth("login");
+                return;
+            }
+
+            const { data: existing } = await supabaseClient
+                .from("video_likes")
+                .select("video_id")
+                .eq("video_id", videoId)
+                .eq("user_id", session.user.id)
+                .maybeSingle();
+
+            if (existing) {
+                await supabaseClient.from("video_likes")
+                    .delete()
+                    .eq("video_id", videoId)
+                    .eq("user_id", session.user.id);
+            } else {
+                await supabaseClient.from("video_likes")
+                    .insert({ video_id: videoId, user_id: session.user.id });
+            }
+
+            await refreshLikeButton(btn, videoId, session.user.id);
+        }
+
+        async function refreshLikeButton(btn, videoId, userId) {
+            const { count } = await supabaseClient
+                .from("video_likes")
+                .select("*", { count: "exact", head: true })
+                .eq("video_id", videoId);
+
+            const { data: mine } = await supabaseClient
+                .from("video_likes")
+                .select("video_id")
+                .eq("video_id", videoId)
+                .eq("user_id", userId)
+                .maybeSingle();
+
+            btn.style.color = mine ? "#fe2c55" : "#fff";
+            btn.querySelector("span").textContent = count || 0;
+        }
+
+        async function openComments(videoId) {
+            activeCommentVideoId = videoId;
+            document.getElementById("commentInput").value = "";
+            document.getElementById("commentMessage").textContent = "";
+            document.getElementById("commentsModal").classList.add("show");
+            document.getElementById("commentsModal").setAttribute("aria-hidden", "false");
+            await loadComments(videoId);
+        }
+
+        function closeComments() {
+            activeCommentVideoId = null;
+            document.getElementById("commentsModal").classList.remove("show");
+            document.getElementById("commentsModal").setAttribute("aria-hidden", "true");
+        }
+
+        async function loadComments(videoId) {
+            const list = document.getElementById("commentsList");
+            list.innerHTML = "چاوەڕێ بکە...";
+
+            const { data, error } = await supabaseClient
+                .from("comments")
+                .select("id, user_id, body, created_at")
+                .eq("video_id", videoId)
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                list.innerHTML = "هەڵە لە هێنانی کۆمێنتەکان.";
+                return;
+            }
+
+            if (!data.length) {
+                list.innerHTML = '<div style="color:#888;text-align:center;padding:20px">هێشتا کۆمێنت نییە.</div>';
+                return;
+            }
+
+            const ids = [...new Set(data.map(c => c.user_id))];
+            const { data: profiles } = await supabaseClient
+                .from("profiles")
+                .select("id, username, display_name")
+                .in("id", ids);
+
+            const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
+
+            list.innerHTML = data.map(c => {
+                const p = profileMap[c.user_id];
+                const name = p?.username || p?.display_name || "User";
+                return `<div class="comment-item">
+                    <div class="comment-user">${escapeHtml(name)}</div>
+                    <div class="comment-body">${escapeHtml(c.body)}</div>
+                </div>`;
+            }).join("");
+        }
+
+        async function sendComment() {
+            const input = document.getElementById("commentInput");
+            const message = document.getElementById("commentMessage");
+            const body = input.value.trim();
+
+            if (!activeCommentVideoId || !body) return;
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                openAuth("login");
+                return;
+            }
+
+            const { error } = await supabaseClient
+                .from("comments")
+                .insert({
+                    video_id: activeCommentVideoId,
+                    user_id: session.user.id,
+                    body
+                });
+
+            if (error) {
+                message.textContent = error.message;
+                return;
+            }
+
+            input.value = "";
+            message.textContent = "";
+            await loadComments(activeCommentVideoId);
+            await updateCommentCount(activeCommentVideoId);
+        }
+
+        async function updateCommentCount(videoId) {
+            const { count } = await supabaseClient
+                .from("comments")
+                .select("*", { count: "exact", head: true })
+                .eq("video_id", videoId);
+
+            const btn = document.querySelector(`.comment-btn[data-video-id="${videoId}"]`);
+            if (btn) btn.querySelector("span").textContent = count || 0;
+        }
+
+        async function toggleFollow(btn) {
+            const followingId = btn.dataset.userId;
+            if (!followingId) return;
+
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                openAuth("login");
+                return;
+            }
+            if (session.user.id === followingId) return;
+
+            const { data: existing } = await supabaseClient
+                .from("follows")
+                .select("follower_id")
+                .eq("follower_id", session.user.id)
+                .eq("following_id", followingId)
+                .maybeSingle();
+
+            if (existing) {
+                await supabaseClient.from("follows")
+                    .delete()
+                    .eq("follower_id", session.user.id)
+                    .eq("following_id", followingId);
+            } else {
+                await supabaseClient.from("follows")
+                    .insert({ follower_id: session.user.id, following_id: followingId });
+            }
+
+            btn.textContent = existing ? "+" : "✓";
+        }
+
+        async function shareVideo(videoId) {
+            const card = document.querySelector(`.video-card[data-video-id="${videoId}"]`);
+            const videoUrl = card?.querySelector("video")?.src || location.href;
+
+            try {
+                if (navigator.share) {
+                    await navigator.share({ title: "XALLO-GAMING", url: videoUrl });
+                } else if (navigator.clipboard) {
+                    await navigator.clipboard.writeText(videoUrl);
+                    alert("بەستەرەکە کۆپی کرا.");
+                } else {
+                    alert(videoUrl);
+                }
+            } catch (e) {}
+        }
+
+        function openAuth(mode = "login") {
+            authMode = mode;
+            document.getElementById("authTitle").textContent = mode === "login" ? "چوونەژوورەوە" : "دروستکردنی هەژمار";
+            document.getElementById("authHint").textContent = mode === "login"
+                ? "ئیمەیڵ و وشەی نهێنییەکەت بنووسە."
+                : "ئیمەیڵ و وشەی نهێنییەکەت بنووسە بۆ دروستکردنی هەژمار.";
+            document.getElementById("authSwitch").textContent = mode === "login"
+                ? "هەژمارت نییە؟ هەژمار دروست بکە"
+                : "هەژمارت هەیە؟ بچۆ ژوورەوە";
+            document.getElementById("authMessage").textContent = "";
+            document.getElementById("authModal").classList.add("show");
+            document.getElementById("authModal").setAttribute("aria-hidden", "false");
+        }
+
+        function closeAuth() {
+            document.getElementById("authModal").classList.remove("show");
+            document.getElementById("authModal").setAttribute("aria-hidden", "true");
+        }
+
+        function toggleAuthMode() {
+            openAuth(authMode === "login" ? "signup" : "login");
+        }
+
+        async function submitAuth() {
+            const email = document.getElementById("authEmail").value.trim();
+            const password = document.getElementById("authPassword").value;
+            const message = document.getElementById("authMessage");
+
+            if (!email || !password) {
+                message.textContent = "تکایە ئیمەیڵ و وشەی نهێنی پڕ بکەرەوە.";
+                return;
+            }
+            if (password.length < 6) {
+                message.textContent = "وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.";
+                return;
+            }
+
+            message.textContent = "تکایە چاوەڕێ بکە...";
+
+            if (authMode === "login") {
+                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) {
+                    message.textContent = error.message;
+                    return;
+                }
+                closeAuth();
+            } else {
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                if (error) {
+                    message.textContent = error.message;
+                    return;
+                }
+                if (data.session) {
+                    closeAuth();
+                } else {
+                    message.textContent = "هەژمار دروستکرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە.";
+                }
+            }
+            updateAccountButton();
+        loadVideos();
+        }
+
+        async function handleAccount() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                if (confirm("دەتەوێت لە هەژمارەکەت بچیتە دەرەوە؟")) {
+                    await supabaseClient.auth.signOut();
+                    updateAccountButton();
+                }
+            } else {
+                openAuth("login");
+            }
+        }
+
+        async function updateAccountButton() {
+            const btn = document.getElementById("accountBtn");
+            if (!btn) return;
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            btn.textContent = session ? "دەرچوون" : "چوونەژوورەوە";
+        }
+
+        supabaseClient.auth.onAuthStateChange(() => updateAccountButton());
+        updateAccountButton();
+
+    </script>
 </body>
 </html>

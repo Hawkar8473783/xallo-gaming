@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XALLO-GAMING - Ú¯Û•Ú•Ø§Ù†</title>
+<title>XALLO-GAMING - گەڕان</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
@@ -31,26 +31,26 @@ button{border:0;border-radius:13px;padding:12px 18px;font-weight:bold;cursor:poi
 </style>
 </head>
 <body>
-<header>XALLO-GAMING ðŸŽ®</header>
+<header>XALLO-GAMING 🎮</header>
 <main>
 <div class="search">
-<input id="q" type="search" placeholder="Ø¨Ú¯Û•Ú•ÛŽ Ø¨Û• Ù†Ø§ÙˆÛŒ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±..." autocomplete="off">
-<button onclick="runSearch()">Ú¯Û•Ú•Ø§Ù†</button>
+<input id="q" type="search" placeholder="بگەڕێ بە ناوی بەکارهێنەر..." autocomplete="off">
+<button onclick="runSearch()">گەڕان</button>
 </div>
 
 <div class="tabs">
-<button id="uTab" class="active" onclick="setTab('users')">ðŸ‘¤ Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±Û•Ú©Ø§Ù†</button>
-<button id="vTab" onclick="setTab('videos')">ðŸŽ¬ Ú¤ÛŒØ¯ÛŒÛ†Ú©Ø§Ù†</button>
+<button id="uTab" class="active" onclick="setTab('users')">👤 بەکارهێنەرەکان</button>
+<button id="vTab" onclick="setTab('videos')">🎬 ڤیدیۆکان</button>
 </div>
 
-<div id="result" class="message">ÙˆØ´Û•ÛŒÛ•Ú© Ø¨Ù†ÙˆÙˆØ³Û• Ùˆ Ú¯Û•Ú•Ø§Ù† Ø¨Ú©Û•.</div>
+<div id="result" class="message">وشەیەک بنووسە و گەڕان بکە.</div>
 </main>
 
 <nav class="nav">
-<a href="index.html"><span class="icon">ðŸ </span>Ø³Û•Ø±Û•Ú©ÛŒ</a>
-<a class="active" href="search.html"><span class="icon">ðŸ”Ž</span>Ú¯Û•Ú•Ø§Ù†</a>
-<a href="index.html"><span class="icon">âž•</span>Ø¨ÚµØ§ÙˆÚ©Ø±Ø¯Ù†Û•ÙˆÛ•</a>
-<a href="profile.html"><span class="icon">ðŸ‘¤</span>Ù¾Ø±Û†ÙØ§ÛŒÙ„</a>
+<a href="index.html"><span class="icon">🏠</span>سەرەکی</a>
+<a class="active" href="search.html"><span class="icon">🔎</span>گەڕان</a>
+<a href="index.html"><span class="icon">➕</span>بڵاوکردنەوە</a>
+<a href="profile.html"><span class="icon">👤</span>پرۆفایل</a>
 </nav>
 
 <script>
@@ -69,18 +69,18 @@ function setTab(x){
 async function runSearch(){
  const q=document.getElementById("q").value.trim();
  const box=document.getElementById("result");
- if(!q){box.className="message";box.textContent="ÙˆØ´Û•ÛŒÛ•Ú© Ø¨Ù†ÙˆÙˆØ³Û• Ùˆ Ú¯Û•Ú•Ø§Ù† Ø¨Ú©Û•.";return}
- box.className="message";box.textContent="Ú¯Û•Ú•Ø§Ù† Ø¯Û•Ú©Ø§Øª...";
+ if(!q){box.className="message";box.textContent="وشەیەک بنووسە و گەڕان بکە.";return}
+ box.className="message";box.textContent="گەڕان دەکات...";
  if(tab==="users"){
   const r=await db.from("profiles").select("id,username,display_name,bio").or("username.ilike.%"+q+"%,display_name.ilike.%"+q+"%").limit(30);
-  if(r.error){console.error(r.error);box.textContent="Ù‡Û•ÚµÛ•ÛŒÛ•Ú© Ú•ÙˆÙˆÛŒØ¯Ø§ Ù„Û• Ú¯Û•Ú•Ø§Ù†.";return}
-  if(!r.data.length){box.textContent="Ù‡ÛŒÚ† Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±ÛŽÚ© Ù†Û•Ø¯Û†Ø²Ø±Ø§ÛŒÛ•ÙˆÛ•.";return}
+  if(r.error){console.error(r.error);box.textContent="هەڵەیەک ڕوویدا لە گەڕان.";return}
+  if(!r.data.length){box.textContent="هیچ بەکارهێنەرێک نەدۆزرایەوە.";return}
   box.className="";
-  box.innerHTML=r.data.map(p=>'<div class="item"><div class="avatar">ðŸ‘¤</div><div class="info"><div class="name">'+esc(p.display_name||p.username||"Ø¨Û•Ú©Ø§Ø±Ù‡ÛŽÙ†Û•Ø±")+'</div><div class="handle">'+(p.username?"@"+esc(p.username):"")+'</div></div><button class="view" onclick="openUser(''+esc(p.id)+'')">Ø¨ÛŒÙ†ÛŒÙ†</button></div>').join("");
+  box.innerHTML=r.data.map(p=>'<div class="item"><div class="avatar">👤</div><div class="info"><div class="name">'+esc(p.display_name||p.username||"بەکارهێنەر")+'</div><div class="handle">'+(p.username?"@"+esc(p.username):"")+'</div></div><button class="view" onclick="openUser(''+esc(p.id)+'')">بینین</button></div>').join("");
  }else{
   const r=await db.from("videos").select("*").ilike("caption","%"+q+"%").order("created_at",{ascending:false}).limit(30);
-  if(r.error){console.error(r.error);box.textContent="Ù‡Û•ÚµÛ•ÛŒÛ•Ú© Ú•ÙˆÙˆÛŒØ¯Ø§ Ù„Û• Ú¯Û•Ú•Ø§Ù†ÛŒ Ú¤ÛŒØ¯ÛŒÛ†.";return}
-  if(!r.data.length){box.textContent="Ù‡ÛŒÚ† Ú¤ÛŒØ¯ÛŒÛ†ÛŒÛ•Ú© Ù†Û•Ø¯Û†Ø²Ø±Ø§ÛŒÛ•ÙˆÛ•.";return}
+  if(r.error){console.error(r.error);box.textContent="هەڵەیەک ڕوویدا لە گەڕانی ڤیدیۆ.";return}
+  if(!r.data.length){box.textContent="هیچ ڤیدیۆیەک نەدۆزرایەوە.";return}
   box.className="grid";
   box.innerHTML=r.data.map(v=>'<video src="'+esc(v.video_url)+'" controls muted playsinline preload="metadata"></video>').join("");
  }
