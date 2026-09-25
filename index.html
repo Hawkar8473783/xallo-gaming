@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>XALLO-GAMING</title>
-<meta name="xallo-version" content="xallo-profile-follow-fixed-2026-09-25">
+<meta name="xallo-version" content="xallo-full-kurdish-follow-fixed-2026-09-25">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -148,6 +148,20 @@ button:disabled{
 
 .dashboard{
   display:none;
+}
+
+/* ===== XALLO AUTH GATE: never show Login and Dashboard together ===== */
+body:not(.xallo-logged-in) #dashboard{
+  display:none !important;
+}
+body:not(.xallo-logged-in) #authBox{
+  display:block !important;
+}
+body.xallo-logged-in #authBox{
+  display:none !important;
+}
+body.xallo-logged-in #dashboard{
+  display:block !important;
 }
 
 .email{
@@ -609,11 +623,24 @@ button:disabled{
 .my-profile-stat b{display:block;font-size:18px}
 .my-profile-stat span{font-size:11px;color:#8f9db4}
 
+
+/* ===== FINAL MOBILE POLISH ===== */
+html{scroll-behavior:smooth}
+body{overflow-x:hidden}
+img,video{max-width:100%}
+@media(max-width:600px){
+  body{padding:8px}
+  .container{max-width:100%;padding:16px 12px;border-radius:20px}
+  .logo{font-size:26px}
+  .tiktok-feed,.tiktok-item{height:76vh;min-height:500px}
+  .xallo-nav{gap:5px;overflow-x:auto}
+  .xallo-nav button{white-space:nowrap}
+}
 </style>
 
 </head>
 
-<body>
+<body dir="rtl">
 
 <div class="container">
 
@@ -626,22 +653,22 @@ button:disabled{
   </div>
 
   <div class="subtitle">
-    Play • Earn • Enjoy
+    یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
   </div>
 
   <div id="loginBox">
 
-    <h2>Login</h2>
+    <h2>چوونەژوورەوە</h2>
 
     <input
       id="loginEmail"
       type="email"
-      placeholder="Email">
+      placeholder="ئیمەیڵ">
 
     <input
       id="loginPassword"
       type="password"
-      placeholder="Password">
+      placeholder="وشەی نهێنی">
 
     <button
       class="login-btn"
@@ -651,25 +678,25 @@ button:disabled{
     </button>
 
     <div class="switch">
-      Don't have an account?
-      <a onclick="showSignup()">Sign Up</a>
+      هەژمارت نییە؟
+      <a onclick="showSignup()">تۆمارکردن</a>
     </div>
 
   </div>
 
   <div id="signupBox" style="display:none">
 
-    <h2>Create Account</h2>
+    <h2>دروستکردنی هەژمار</h2>
 
     <input
       id="signupEmail"
       type="email"
-      placeholder="Email">
+      placeholder="ئیمەیڵ">
 
     <input
       id="signupPassword"
       type="password"
-      placeholder="Password">
+      placeholder="وشەی نهێنی">
 
     <button
       class="login-btn"
@@ -679,8 +706,8 @@ button:disabled{
     </button>
 
     <div class="switch">
-      Already have an account?
-      <a onclick="showLogin()">Login</a>
+      هەژمارت هەیە؟
+      <a onclick="showLogin()" >چوونەژوورەوە</a>
     </div>
 
   </div>
@@ -699,65 +726,65 @@ button:disabled{
   </div>
 
   <div class="subtitle">
-    Play • Earn • Enjoy
+    یاری بکە • پاداشت وەربگرە • چێژ وەربگرە
   </div>
 
-  <h2>Welcome 🎮</h2>
+  <h2>بەخێربێیت 🎮</h2>
 
   <div class="email" id="userEmail"></div>
 
   <!-- ================= HOME / EXPLORE NAV ================= -->
   <div class="xallo-nav" aria-label="XALLO navigation">
-    <button id="homeNavButton" class="active" type="button" onclick="xalloGoHome()">🏠 Home</button>
-    <button id="exploreNavButton" type="button" onclick="xalloGoExplore()">🔎 Explore</button>
-    <button type="button" onclick="xalloGoProfile()">👤 Profile</button>
-    <button type="button" onclick="xalloGoMessages()">💬 Messages</button>
+    <button id="homeNavButton" class="active" type="button" onclick="xalloGoHome()">🏠 سەرەکی</button>
+    <button id="exploreNavButton" type="button" onclick="xalloGoExplore()">🔎 گەڕان</button>
+    <button type="button" onclick="xalloGoپرۆفایل()">👤 پرۆفایل</button>
+    <button type="button" onclick="xalloGoپەیامs()">💬 پەیامەکان</button>
   </div>
 
   <div id="exploreBox" class="explore-box">
-    <h3 style="margin-top:0">🔎 Explore XALLO</h3>
-    <div class="small" style="margin-bottom:10px">Search videos by caption or creator email.</div>
+    <h3 style="margin-top:0">🔎 گەڕان لە XALLO</h3>
+    <div class="small" style="margin-bottom:10px">ڤیدیۆ بە دەربارەیی یان ئیمەیڵی بەکارهێنەر بگەڕێ.</div>
     <div class="explore-search">
-      <input id="exploreSearchInput" type="search" placeholder="Search videos..." onkeydown="if(event.key==='Enter') searchExploreVideos()">
-      <button type="button" onclick="searchExploreVideos()">Search</button>
+      <input id="exploreSearchInput" type="search" placeholder="گەڕان لە ڤیدیۆکان..." onkeydown="if(event.key==='Enter') searchExploreVideos()">
+      <button type="button" onclick="searchExploreVideos()">گەڕان</button>
     </div>
     <div class="explore-hints">
-      <button type="button" onclick="setExploreMode('all')">🔥 All</button>
-      <button type="button" onclick="setExploreMode('trending')">📈 Trending</button>
-      <button type="button" onclick="setExploreMode('new')">🆕 New</button>
-      <button type="button" onclick="setExploreSearch('gaming')">🎮 Gaming</button>
+      <button type="button" onclick="setExploreMode('all')">🔥 هەموو</button>
+      <button type="button" onclick="setExploreMode('trending')">📈 باڵادارەکان</button>
+      <button type="button" onclick="setExploreMode('new')">🆕 نوێ</button>
+      <button type="button" onclick="setExploreSearch('gaming')">🎮 یاری</button>
       <button type="button" onclick="setExploreSearch('pubg')">🔫 PUBG</button>
-      <button type="button" onclick="setExploreSearch('fun')">😂 Fun</button>
+      <button type="button" onclick="setExploreSearch('fun')">😂 خۆشی</button>
     </div>
   </div>
 
   <!-- ================= MY PROFILE ================= -->
   <div class="box my-profile-box">
-    <h3>👤 My Profile</h3>
+    <h3>👤 پرۆفایلی من</h3>
     <div class="my-profile-top">
-      <img id="myProfileAvatar" class="my-profile-avatar" alt="Profile picture" style="display:none">
-      <div id="myProfileInitial" class="my-profile-initial">X</div>
+      <img id="myپرۆفایلAvatar" class="my-profile-avatar" alt="وێنەی پرۆفایل" style="display:none">
+      <div id="myپرۆفایلInitial" class="my-profile-initial">X</div>
       <div style="min-width:0">
-        <div id="myProfileDisplayName" class="profile-name">User</div>
-        <div class="small" style="text-align:left">Edit your public profile</div>
+        <div id="myپرۆفایلDisplayName" class="profile-name">User</div>
+        <div class="small" style="text-align:left">پرۆفایلی گشتی خۆت دەستکاری بکە</div>
       </div>
     </div>
 
-    <div class="my-profile-label">Profile picture</div>
+    <div class="my-profile-label">وێنەی پرۆفایل</div>
     <input id="myAvatarFile" type="file" accept="image/*">
-    <button type="button" class="my-profile-upload" id="myAvatarButton" onclick="uploadMyAvatar()">🖼️ Upload Profile Picture</button>
+    <button type="button" class="my-profile-upload" id="myAvatarButton" onclick="uploadMyAvatar()">🖼️ وێنەی پرۆفایل دابنێ</button>
 
-    <div class="my-profile-label">Username</div>
-    <input id="myProfileUsername" type="text" maxlength="30" placeholder="Username">
+    <div class="my-profile-label">ناوی بەکارهێنەر</div>
+    <input id="myپرۆفایلناوی بەکارهێنەر" type="text" maxlength="30" placeholder="ناوی بەکارهێنەر">
 
-    <div class="my-profile-label">Bio</div>
-    <textarea id="myProfileBio" maxlength="160" placeholder="Write something about yourself..."></textarea>
+    <div class="my-profile-label">دەربارەی خۆت</div>
+    <textarea id="myپرۆفایلدەربارەی خۆت" maxlength="160" placeholder="دەربارەی خۆت شتێک بنووسە..."></textarea>
 
-    <button type="button" class="my-profile-save" id="myProfileSaveButton" onclick="saveMyProfile()">💾 Save Profile</button>
+    <button type="button" class="my-profile-save" id="myپرۆفایلSaveButton" onclick="saveMyپرۆفایل()">💾 پاشەکەوتکردنی پرۆفایل</button>
 
     <div class="my-profile-stats-row">
-      <div class="my-profile-stat"><b id="myFollowersCount">0</b><span>Followers</span></div>
-      <div class="my-profile-stat"><b id="myFollowingCount">0</b><span>Following</span></div>
+      <div class="my-profile-stat"><b id="myFollowersCount">0</b><span>شوێنکەوتوو</span></div>
+      <div class="my-profile-stat"><b id="myFollowingCount">0</b><span>شوێنکەوتووەکان</span></div>
     </div>
   </div>
 
@@ -765,7 +792,7 @@ button:disabled{
 
   <div class="coins">
 
-    🪙 Your Coins
+    🪙 دراوەکانی تۆ
 
     <div
       class="coin-number"
@@ -783,7 +810,7 @@ button:disabled{
     id="rewardButton"
     onclick="dailyReward()">
 
-    🎁 Daily Reward +10
+    🎁 پاداشتی ڕۆژانە +١٠
 
   </button>
 
@@ -829,54 +856,54 @@ button:disabled{
 
   <div class="tiktok-section">
     <div class="tiktok-header">
-      <h3 class="tiktok-title">🎬 XALLO TikTok</h3>
-      <span class="tiktok-swipe-hint">↑ Swipe ↑</span>
+      <h3 class="tiktok-title">🎬 ڤیدیۆکانی XALLO</h3>
+      <span class="tiktok-swipe-hint">⬆️ بۆ سەرەوە بکێشە</span>
     </div>
 
     <div id="tiktokFeed" class="tiktok-feed">
-      <div class="tiktok-empty">Loading TikTok Feed...</div>
+      <div class="tiktok-empty">ڤیدیۆکان بار دەکرێن...</div>
     </div>
   </div>
 
   <!-- TikTok comments drawer -->
-  <div id="tiktokCommentModal" class="tiktok-comment-modal" onclick="closeTikTokComments(event)">
+  <div id="tiktokCommentModal" class="tiktok-comment-modal" onclick="closeTikTokکۆمێنتەکان(event)">
     <div class="tiktok-comment-card" onclick="event.stopPropagation()">
       <div class="tiktok-comment-head">
-        <span>💬 Comments</span>
-        <button type="button" class="chat-close" onclick="closeTikTokComments()">×</button>
+        <span>💬 کۆمێنتەکان</span>
+        <button type="button" class="chat-close" onclick="closeTikTokکۆمێنتەکان()">×</button>
       </div>
       <div id="tiktokCommentList" class="tiktok-comment-list">
         <div class="small">Loading comments...</div>
       </div>
       <div class="tiktok-comment-form">
-        <input id="tiktokCommentInput" type="text" maxlength="500" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') submitTikTokComment()">
-        <button type="button" onclick="submitTikTokComment()">Send</button>
+        <input id="tiktokCommentInput" type="text" maxlength="500" placeholder="کۆمێنتەکەت بنووسە..." onkeydown="if(event.key==='Enter') submitTikTokComment()">
+        <button type="button" onclick="submitTikTokComment()">ناردن</button>
       </div>
     </div>
   </div>
 
   <!-- ================= USERS / SEARCH ================= -->
   <div class="box users-box">
-    <h3>👥 Find Users</h3>
+    <h3>👥 بەکارهێنەران بدۆزەوە</h3>
     <div class="users-search-row">
       <input id="userSearchInput" type="search"
-             placeholder="Search username or email..."
+             placeholder="گەڕان بە ناوی بەکارهێنەر یان ئیمەیڵ..."
              onkeydown="if(event.key==='Enter') searchUsers()">
       <button type="button" onclick="searchUsers()">🔎</button>
     </div>
     <div id="usersList" class="users-list">
-      <div class="users-empty">Search for users to start a chat.</div>
+      <div class="users-empty">بەکارهێنەر بگەڕێ بۆ دەستپێکردنی گفتوگۆ.</div>
     </div>
   </div>
 
   <!-- ================= NOTIFICATIONS ================= -->
   <div class="box notifications-box">
     <div class="notifications-head">
-      <h3>🔔 Notifications <span id="notificationBadge" class="notification-badge" style="display:none">0</span></h3>
-      <button type="button" class="notifications-refresh" onclick="loadNotifications()">Refresh</button>
+      <h3>🔔 ئاگادارییەکان <span id="notificationBadge" class="notification-badge" style="display:none">0</span></h3>
+      <button type="button" class="notifications-refresh" onclick="loadNotifications()">نوێکردنەوە</button>
     </div>
     <div id="notificationsList" class="notifications-list">
-      <div class="users-empty">Loading notifications...</div>
+      <div class="users-empty">ئاگادارییەکان بار دەکرێن...</div>
     </div>
   </div>
 
@@ -884,14 +911,14 @@ button:disabled{
 
   <div class="box">
 
-    <h3>💳 Withdraw</h3>
+    <h3>💳 کێشانەوەی پارە</h3>
 
     <div class="balance">
 
-      Your balance:
+      باڵانسی تۆ:
       <b>
-        <span id="withdrawCoins">0</span>
-        Coins
+        <span id="withdrawدراو">0</span>
+        دراو
       </b>
 
     </div>
@@ -899,7 +926,7 @@ button:disabled{
     <select id="withdrawMethod">
 
       <option value="">
-        Select payment method
+        شێوازی پارەدان هەڵبژێرە
       </option>
 
       <option value="Korek">
@@ -915,19 +942,19 @@ button:disabled{
     <select id="withdrawAmount">
 
       <option value="">
-        Select amount
+        بڕ هەڵبژێرە
       </option>
 
       <option value="1000">
-        1,000 Coins
+        1,000 دراو
       </option>
 
       <option value="5000">
-        5,000 Coins
+        5,000 دراو
       </option>
 
       <option value="10000">
-        10,000 Coins
+        10,000 دراو
       </option>
 
     </select>
@@ -935,7 +962,7 @@ button:disabled{
     <input
       id="withdrawPhone"
       type="tel"
-      placeholder="Phone number">
+      placeholder="ژمارەی مۆبایل">
 
     <button
       class="withdraw-button"
@@ -947,14 +974,14 @@ button:disabled{
     </button>
 
     <div class="small">
-      Withdraw requests are reviewed by admin.
+      داواکارییەکانی کێشانەوە لەلایەن بەڕێوەبەرەوە پشکنین دەکرێن.
     </div>
 
   </div>
 
 
   <div
-    id="dashboardMessage"
+    id="dashboardپەیام"
     class="message">
   </div>
 
@@ -963,12 +990,12 @@ button:disabled{
 
   <div class="history">
 
-    <h3>📋 My Withdrawals</h3>
+    <h3>📋 داواکارییەکانی من</h3>
 
     <div id="withdrawHistory">
 
       <div class="small">
-        No requests yet.
+        هێشتا هیچ داواکارییەک نییە.
       </div>
 
     </div>
@@ -983,10 +1010,10 @@ button:disabled{
   <div class="chat-box">
     <div class="chat-head">
       <div>
-        <h3>💬 Messages</h3>
-        <div class="small">Send private messages to another XALLO user.</div>
+        <h3>💬 پەیامەکان</h3>
+        <div class="small">پەیامی تایبەت بۆ بەکارهێنەرێکی تری XALLO بنێرە.</div>
       </div>
-      <button class="chat-open" type="button" onclick="openChat()">Open Chat</button>
+      <button class="chat-open" type="button" onclick="openChat()">کردنەوەی گفتوگۆ</button>
     </div>
   </div>
 
@@ -1000,29 +1027,29 @@ button:disabled{
       <div class="chat-top" style="border-top:0">
         <button class="chat-open" type="button" onclick="loadChat()">Load Chat</button>
       </div>
-      <div id="chatMessages" class="chat-messages">
+      <div id="chatپەیامs" class="chat-messages">
         <div class="small">No chat loaded.</div>
       </div>
       <div class="chat-compose">
         <textarea id="chatInput" placeholder="Write a message..."></textarea>
-        <button class="chat-send" type="button" onclick="sendChatMessage()">➤</button>
+        <button class="chat-send" type="button" onclick="sendChatپەیام()">➤</button>
       </div>
     </div>
   </div>
 
   <!-- ================= PUBLIC PROFILE MODAL ================= -->
-  <div id="profileModal" class="profile-modal" onclick="closeProfileModal(event)">
+  <div id="profileModal" class="profile-modal" onclick="closeپرۆفایلModal(event)">
     <div class="profile-card" onclick="event.stopPropagation()">
-      <button class="profile-close" type="button" onclick="closeProfileModal()">×</button>
-      <img id="profileAvatar" class="profile-avatar" src="" alt="Profile">
-      <div id="profileName" class="profile-name">Profile</div>
+      <button class="profile-close" type="button" onclick="closeپرۆفایلModal()">×</button>
+      <img id="profileAvatar" class="profile-avatar" src="" alt="پرۆفایل">
+      <div id="profileName" class="profile-name">پرۆفایل</div>
       <div id="profileEmail" class="profile-email"></div>
-      <div id="profileBio" class="profile-bio"></div>
+      <div id="profileدەربارەی خۆت" class="profile-bio"></div>
       <div class="profile-stats">
-        <div><b id="profileFollowers">0</b><span>Followers</span></div>
-        <div><b id="profileFollowing">0</b><span>Following</span></div>
+        <div><b id="profileFollowers">0</b><span>شوێنکەوتوو</span></div>
+        <div><b id="profileFollowing">0</b><span>شوێنکەوتووەکان</span></div>
       </div>
-      <button id="profileFollowButton" class="follow-button" type="button">Follow</button>
+      <button id="profileFollowButton" class="follow-button" type="button">شوێن بکەوە</button>
     </div>
   </div>
 
@@ -1032,10 +1059,10 @@ button:disabled{
     id="adminBox"
     class="box admin-box">
 
-    <h3>👑 Admin Panel</h3>
+    <h3>👑 پانێڵی بەڕێوەبەر</h3>
 
     <div class="small">
-      Manage withdrawal requests.
+      بەڕێوەبردنی داواکارییەکانی کێشانەوە.
     </div>
 
     <div id="adminRequests"></div>
@@ -1079,7 +1106,7 @@ window.supabase.createClient(
    MESSAGE
 ========================================= */
 
-function showMessage(text,type){
+function showپەیام(text,type){
 
   const box =
     document.getElementById("message");
@@ -1091,11 +1118,11 @@ function showMessage(text,type){
 }
 
 
-function dashboardMessage(text,type){
+function dashboardپەیام(text,type){
 
   const box =
     document.getElementById(
-      "dashboardMessage"
+      "dashboardپەیام"
     );
 
   box.textContent=text;
@@ -1139,7 +1166,7 @@ function showSignup(){
    USER PROFILE
 ========================================= */
 
-async function createUserProfile(email){
+async function createUserپرۆفایل(email){
 
   const {
     data:existing,
@@ -1153,7 +1180,7 @@ async function createUserProfile(email){
 
   if(error){
     console.log(
-      "Profile error:",
+      "پرۆفایل error:",
       error.message
     );
     return;
@@ -1175,7 +1202,7 @@ async function createUserProfile(email){
 
   if(insertError){
     console.log(
-      "Profile insert:",
+      "پرۆفایل insert:",
       insertError.message
     );
   }
@@ -1187,161 +1214,118 @@ async function createUserProfile(email){
 ========================================= */
 
 async function signup(){
-
-  const email =
-    document.getElementById(
-      "signupEmail"
-    ).value.trim();
-
-  const password =
-    document.getElementById(
-      "signupPassword"
-    ).value;
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
 
   if(!email || !password){
-
-    showMessage(
-      "Enter email and password.",
-      "error"
-    );
-
+    showپەیام("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
     return;
   }
-
   if(password.length < 6){
-
-    showMessage(
-      "Password must be at least 6 characters.",
-      "error"
-    );
-
+    showپەیام("وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.","error");
     return;
   }
 
-  const button =
-    document.getElementById(
-      "signupButton"
-    );
-
+  const button=document.getElementById("signupButton");
   button.disabled=true;
   button.textContent="Creating...";
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth.signUp({
-      email:email,
-      password:password
-    });
+  try{
+    const {data,error}=await supabaseClient.auth.signUp({email,password});
+    if(error){
+      showپەیام(error.message,"error");
+      return;
+    }
 
-  button.disabled=false;
-  button.textContent="Sign Up";
+    if(data?.session && data?.user){
+      enterXalloApp(data.user);
+      return;
+    }
 
-  if(error){
-
-    showMessage(
-      error.message,
-      "error"
-    );
-
-    return;
+    showLogin();
+    showپەیام("هەژمار دروست کرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە، پاشان Login بکە.","success");
+  }catch(err){
+    console.error("signup exception:",err);
+    showپەیام("کێشەیەک ڕوویدا لە دروستکردنی هەژمار.","error");
+  }finally{
+    button.disabled=false;
+    button.textContent="Sign Up";
   }
-
-  if(data && data.session && data.user){
-
-    await createUserProfile(
-      data.user.email
-    );
-
-    await showDashboard(
-      data.user
-    );
-
-    return;
-  }
-
-  showMessage(
-    "Account created. Check your email (and Spam/Junk) for the verification link, then login.",
-    "success"
-  );
 }
-
 
 /* =========================================
    LOGIN
 ========================================= */
 
 async function login(){
-
-  const email =
-    document.getElementById(
-      "loginEmail"
-    ).value.trim();
-
-  const password =
-    document.getElementById(
-      "loginPassword"
-    ).value;
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
 
   if(!email || !password){
-
-    showMessage(
-      "Enter email and password.",
-      "error"
-    );
-
+    showپەیام("تکایە ئیمەیڵ و وشەی نهێنی بنووسە.","error");
     return;
   }
 
-  const button =
-    document.getElementById(
-      "loginButton"
-    );
+  const button = document.getElementById("loginButton");
+  button.disabled = true;
+  button.textContent = "Logging in...";
+  showپەیام("","success");
 
-  button.disabled=true;
-  button.textContent="Logging in...";
+  try{
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth
-      .signInWithPassword({
-        email:email,
-        password:password
-      });
-
-  button.disabled=false;
-  button.textContent="Login";
-
-  if(error){
-    const msg = String(error.message || "Login failed");
-    if(msg.toLowerCase().includes("email not confirmed")){
-      showMessage("Email verification is required. Check your inbox and Spam/Junk, then try again.","error");
-    }else{
-      showMessage(msg,"error");
+    if(error){
+      console.error("login error:", error);
+      const msg = String(error.message || "");
+      if(msg.toLowerCase().includes("email not confirmed")){
+        showپەیام("ئیمەیڵەکەت پشتڕاست نەکراوەتەوە. سەرەتا ئیمەیڵەکەت پشتڕاست بکەرەوە.","error");
+      }else if(msg.toLowerCase().includes("invalid login credentials")){
+        showپەیام("ئیمەیڵ یان وشەی نهێنی هەڵەیە.","error");
+      }else{
+        showپەیام(msg || "چوونەژوورەوە سەرکەوتوو نەبوو.","error");
+      }
+      return;
     }
-    return;
-  }
 
-  if(data && data.user){
-
-    await createUserProfile(
-      data.user.email
-    );
-
-    await showDashboard(
-      data.user
-    );
+    if(data?.user){
+      // Auth succeeded: enter immediately. Database/storage modules run in the background.
+      enterXalloApp(data.user);
+    }else{
+      showپەیام("هیچ بەکارهێنەرێکی login نەدۆزرایەوە.","error");
+    }
+  }catch(err){
+    console.error("login exception:", err);
+    showپەیام("کێشەی پەیوەندی هەیە. ئینتەرنێت و Supabase پشکنین بکە.","error");
+  }finally{
+    button.disabled=false;
+    button.textContent="Login";
   }
 }
 
+async function resetPassword(){
+  const email=document.getElementById("loginEmail").value.trim();
+  if(!email){
+    showپەیام("تکایە سەرەتا ئیمەیڵەکەت بنووسە.","error");
+    return;
+  }
+  try{
+    const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{
+      redirectTo:window.location.origin
+    });
+    if(error) throw error;
+    showپەیام("لینکی گۆڕینی وشەی نهێنی بۆ ئیمەیڵەکەت نێردرا.","success");
+  }catch(e){
+    showپەیام(e.message || "نەتوانرا لینکی گۆڕینی وشەی نهێنی بنێردرێت.","error");
+  }
+}
 
 /* =========================================
    MY PROFILE
 ========================================= */
-async function loadMyProfile(email){
+async function loadMyپرۆفایل(email){
   if(!email) return;
   try{
     const {data,error}=await supabaseClient.from("users")
@@ -1349,12 +1333,12 @@ async function loadMyProfile(email){
     if(error) throw error;
 
     const username=data?.username || email.split("@")[0];
-    document.getElementById("myProfileUsername").value=username;
-    document.getElementById("myProfileBio").value=data?.bio || "";
-    document.getElementById("myProfileDisplayName").textContent=username;
+    document.getElementById("myپرۆفایلناوی بەکارهێنەر").value=username;
+    document.getElementById("myپرۆفایلدەربارەی خۆت").value=data?.bio || "";
+    document.getElementById("myپرۆفایلDisplayName").textContent=username;
 
-    const avatar=document.getElementById("myProfileAvatar");
-    const initial=document.getElementById("myProfileInitial");
+    const avatar=document.getElementById("myپرۆفایلAvatar");
+    const initial=document.getElementById("myپرۆفایلInitial");
     if(data?.avatar_url){
       avatar.src=data.avatar_url; avatar.style.display="block"; initial.style.display="none";
     }else{
@@ -1362,51 +1346,53 @@ async function loadMyProfile(email){
       initial.textContent=username.charAt(0).toUpperCase();
     }
     await loadMyFollowStats(email);
-  }catch(e){ console.warn("Profile load:",e.message); }
+  }catch(e){ console.warn("پرۆفایل load:",e.message); }
 }
 
 async function loadMyFollowStats(email){
   try{
-    const {data,error}=await supabaseClient.rpc("xallo_follow_stats",{
-      p_email:String(email||"").trim().toLowerCase()
-    });
+    const {data,error}=await supabaseClient.rpc("get_follow_stats",{p_email:email});
     if(error) throw error;
     document.getElementById("myFollowersCount").textContent=Number(data?.followers||0);
     document.getElementById("myFollowingCount").textContent=Number(data?.following||0);
-  }catch(e){ console.warn("Follow stats:",e.message); }
+  }catch(e){
+    console.warn("شوێن بکەوە stats:",e.message);
+    document.getElementById("myFollowersCount").textContent="0";
+    document.getElementById("myFollowingCount").textContent="0";
+  }
 }
 
-async function saveMyProfile(){
+async function saveMyپرۆفایل(){
   const {data:userData}=await supabaseClient.auth.getUser();
-  if(!userData?.user){ dashboardMessage("Please login first.","error"); return; }
+  if(!userData?.user){ dashboardپەیام("Please login first.","error"); return; }
 
-  const username=(document.getElementById("myProfileUsername").value||"").trim();
-  const bio=(document.getElementById("myProfileBio").value||"").trim();
-  if(!username){ dashboardMessage("Username cannot be empty.","error"); return; }
+  const username=(document.getElementById("myپرۆفایلناوی بەکارهێنەر").value||"").trim();
+  const bio=(document.getElementById("myپرۆفایلدەربارەی خۆت").value||"").trim();
+  if(!username){ dashboardپەیام("ناوی بەکارهێنەر cannot be empty.","error"); return; }
 
-  const button=document.getElementById("myProfileSaveButton");
+  const button=document.getElementById("myپرۆفایلSaveButton");
   button.disabled=true; button.textContent="Saving...";
 
   const {error}=await supabaseClient.from("users").update({username,bio})
     .eq("email",userData.user.email);
 
-  button.disabled=false; button.textContent="💾 Save Profile";
-  if(error){ dashboardMessage("Profile save error: "+error.message,"error"); return; }
+  button.disabled=false; button.textContent="💾 Save پرۆفایل";
+  if(error){ dashboardپەیام("پرۆفایل save error: "+error.message,"error"); return; }
 
-  document.getElementById("myProfileDisplayName").textContent=username;
-  document.getElementById("myProfileInitial").textContent=username.charAt(0).toUpperCase();
-  dashboardMessage("✅ Profile updated successfully.","success");
+  document.getElementById("myپرۆفایلDisplayName").textContent=username;
+  document.getElementById("myپرۆفایلInitial").textContent=username.charAt(0).toUpperCase();
+  dashboardپەیام("✅ پرۆفایل updated successfully.","success");
 }
 
 async function uploadMyAvatar(){
   const {data:userData}=await supabaseClient.auth.getUser();
-  if(!userData?.user){ dashboardMessage("Please login first.","error"); return; }
+  if(!userData?.user){ dashboardپەیام("Please login first.","error"); return; }
 
   const input=document.getElementById("myAvatarFile");
   const file=input?.files?.[0];
-  if(!file){ dashboardMessage("Please choose an image first.","error"); return; }
-  if(!file.type.startsWith("image/")){ dashboardMessage("Please select an image file.","error"); return; }
-  if(file.size>5*1024*1024){ dashboardMessage("Image must be smaller than 5 MB.","error"); return; }
+  if(!file){ dashboardپەیام("Please choose an image first.","error"); return; }
+  if(!file.type.startsWith("image/")){ dashboardپەیام("Please select an image file.","error"); return; }
+  if(file.size>5*1024*1024){ dashboardپەیام("Image must be smaller than 5 MB.","error"); return; }
 
   const button=document.getElementById("myAvatarButton");
   button.disabled=true; button.textContent="Uploading...";
@@ -1430,15 +1416,15 @@ async function uploadMyAvatar(){
       .update({avatar_url:avatarUrl}).eq("email",email);
     if(updateError) throw new Error(updateError.message);
 
-    const avatar=document.getElementById("myProfileAvatar");
+    const avatar=document.getElementById("myپرۆفایلAvatar");
     avatar.src=avatarUrl; avatar.style.display="block";
-    document.getElementById("myProfileInitial").style.display="none";
+    document.getElementById("myپرۆفایلInitial").style.display="none";
     input.value="";
-    dashboardMessage("✅ Profile picture updated.","success");
+    dashboardپەیام("✅ وێنەی پرۆفایل updated.","success");
   }catch(e){
-    dashboardMessage("Avatar upload error: "+(e.message||"Unknown error"),"error");
+    dashboardپەیام("Avatar upload error: "+(e.message||"Unknown error"),"error");
   }finally{
-    button.disabled=false; button.textContent="🖼️ Upload Profile Picture";
+    button.disabled=false; button.textContent="🖼️ Upload پرۆفایل Picture";
   }
 }
 
@@ -1446,7 +1432,7 @@ async function uploadMyAvatar(){
    COINS
 ========================================= */
 
-function setCoins(amount){
+function setدراو(amount){
 
   const value =
     Number(amount) || 0;
@@ -1455,12 +1441,12 @@ function setCoins(amount){
     .textContent=value;
 
   document.getElementById(
-    "withdrawCoins"
+    "withdrawدراو"
   ).textContent=value;
 }
 
 
-async function loadCoins(user){
+async function loadدراو(user){
 
   const {
     data,
@@ -1474,12 +1460,12 @@ async function loadCoins(user){
 
   if(error || !data){
 
-    setCoins(0);
+    setدراو(0);
 
     return null;
   }
 
-  setCoins(data.coins);
+  setدراو(data.coins);
 
   return data;
 }
@@ -1489,33 +1475,33 @@ async function loadCoins(user){
    DASHBOARD
 ========================================= */
 
-async function showDashboard(user){
+function enterXalloApp(user){
+  // IMPORTANT: authentication success must NEVER wait for database/storage
+  // queries. Show the dashboard immediately, then load optional data in the
+  // background. This prevents RLS/table errors from looking like Login failed.
+  if(!user) return;
 
-  document.getElementById("authBox")
-    .style.display="none";
+  document.body.classList.add("xallo-logged-in");
+  document.getElementById("authBox").style.display="none";
+  document.getElementById("dashboard").style.display="block";
+  document.getElementById("userEmail").textContent=user.email || "";
 
-  document.getElementById("dashboard")
-    .style.display="block";
-
-  document.getElementById("userEmail")
-    .textContent=user.email;
-
-  await loadMyProfile(user.email);
-
-  await loadCoins(user);
-
-  await checkDailyRewardButton(user);
-
-  // Load both feeds independently so a problem in the old video/comments feed
-  // cannot leave the TikTok feed stuck on "Loading videos...".
-  await Promise.allSettled([
+  Promise.allSettled([
+    loadMyپرۆفایل(user.email),
+    loadدراو(user),
+    checkDailyRewardButton(user),
     loadTikTokFeed(),
-    loadVideos()
-  ]);
+    loadVideos(),
+    loadWithdrawHistory(user),
+    checkAdmin()
+  ]).then(results=>{
+    const failed=results.filter(r=>r.status==="rejected");
+    if(failed.length) console.warn("Some dashboard modules failed:",failed);
+  });
+}
 
-  await loadWithdrawHistory(user);
-
-  await checkAdmin();
+async function showDashboard(user){
+  enterXalloApp(user);
 }
 
 
@@ -1559,7 +1545,7 @@ async function checkDailyRewardButton(user){
     button.disabled=false;
 
     button.textContent =
-      "🎁 Daily Reward +10";
+      "🎁 پاداشتی ڕۆژانە +١٠";
   }
 }
 
@@ -1586,9 +1572,9 @@ async function dailyReward(){
     button.disabled=false;
 
     button.textContent =
-      "🎁 Daily Reward +10";
+      "🎁 پاداشتی ڕۆژانە +١٠";
 
-    dashboardMessage(
+    dashboardپەیام(
       error.message,
       "error"
     );
@@ -1596,13 +1582,13 @@ async function dailyReward(){
     return;
   }
 
-  setCoins(data);
+  setدراو(data);
 
   button.textContent =
     "✅ Reward Claimed";
 
-  dashboardMessage(
-    "🎉 Daily Reward: +10 Coins!",
+  dashboardپەیام(
+    "🎉 Daily Reward: +10 دراو!",
     "success"
   );
 }
@@ -1657,7 +1643,7 @@ async function uploadVideo(){
 
   if(userError || !userData.user){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Please login first.",
       "error"
     );
@@ -1672,7 +1658,7 @@ async function uploadVideo(){
 
   if(!input.files || !input.files.length){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Please choose a video.",
       "error"
     );
@@ -1684,7 +1670,7 @@ async function uploadVideo(){
 
   if(!file.type.startsWith("video/")){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Please select a video file.",
       "error"
     );
@@ -1697,7 +1683,7 @@ async function uploadVideo(){
 
   if(file.size > maxSize){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Video is larger than 50 MB.",
       "error"
     );
@@ -1819,7 +1805,7 @@ async function uploadVideo(){
       "videoCaption"
     ).value="";
 
-    dashboardMessage(
+    dashboardپەیام(
       "✅ Video uploaded successfully!",
       "success"
     );
@@ -1830,7 +1816,7 @@ async function uploadVideo(){
 
     console.error(error);
 
-    dashboardMessage(
+    dashboardپەیام(
       error.message ||
       "Video upload failed.",
       "error"
@@ -1888,7 +1874,7 @@ async function loadVideos(){
   if(!data || !data.length){
 
     box.innerHTML =
-      '<div class="small">No videos yet. Upload the first video! 🎬</div>';
+      '<div class="small">هێشتا هیچ ڤیدیۆیەک نییە. Upload the first video! 🎬</div>';
 
     return;
   }
@@ -1923,7 +1909,7 @@ async function loadVideos(){
   if(commentsError){
 
     console.error(
-      "Comments error:",
+      "کۆمێنتەکان error:",
       commentsError.message
     );
   }
@@ -1949,13 +1935,13 @@ async function loadVideos(){
   box.innerHTML =
     data.map(video => {
 
-      const videoComments =
+      const videoکۆمێنتەکان =
         commentsByVideo[video.id] || [];
 
       const commentsHtml =
-        videoComments.length
+        videoکۆمێنتەکان.length
 
-        ? videoComments.map(comment => `
+        ? videoکۆمێنتەکان.map(comment => `
 
             <div class="comment">
 
@@ -2032,7 +2018,7 @@ async function loadVideos(){
                 id="comment-${video.id}"
                 type="text"
                 maxlength="500"
-                placeholder="Write a comment...">
+                placeholder="کۆمێنتەکەت بنووسە...">
 
               <button
                 class="comment-button"
@@ -2085,7 +2071,7 @@ async function likeVideo(id,button){
 
     button.disabled=false;
 
-    dashboardMessage(
+    dashboardپەیام(
       "Like error: " +
       error.message,
       "error"
@@ -2118,7 +2104,7 @@ async function addComment(videoId){
     !userData.user
   ){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Please login first.",
       "error"
     );
@@ -2144,7 +2130,7 @@ async function addComment(videoId){
 
   if(!comment){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Write a comment first.",
       "error"
     );
@@ -2155,7 +2141,7 @@ async function addComment(videoId){
 
   if(comment.length > 500){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Comment is too long.",
       "error"
     );
@@ -2195,7 +2181,7 @@ async function addComment(videoId){
     button.disabled=false;
     button.textContent="💬 Add Comment";
 
-    dashboardMessage(
+    dashboardپەیام(
       "Comment error: " +
       error.message,
       "error"
@@ -2211,7 +2197,7 @@ async function addComment(videoId){
   button.textContent="💬 Add Comment";
 
 
-  dashboardMessage(
+  dashboardپەیام(
     "✅ Comment added!",
     "success"
   );
@@ -2234,7 +2220,7 @@ async function requestWithdraw(){
 
   if(!userData.user){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Please login first.",
       "error"
     );
@@ -2265,7 +2251,7 @@ async function requestWithdraw(){
       .includes(method)
   ){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Select Korek or Asiacell.",
       "error"
     );
@@ -2279,7 +2265,7 @@ async function requestWithdraw(){
       .includes(coins)
   ){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Select a valid amount.",
       "error"
     );
@@ -2292,7 +2278,7 @@ async function requestWithdraw(){
     !/^[0-9+\s-]{10,15}$/.test(phone)
   ){
 
-    dashboardMessage(
+    dashboardپەیام(
       "Enter a valid phone number.",
       "error"
     );
@@ -2333,7 +2319,7 @@ async function requestWithdraw(){
 
   if(error){
 
-    dashboardMessage(
+    dashboardپەیام(
       error.message,
       "error"
     );
@@ -2342,7 +2328,7 @@ async function requestWithdraw(){
   }
 
 
-  setCoins(
+  setدراو(
     data?.new_balance ?? 0
   );
 
@@ -2360,7 +2346,7 @@ async function requestWithdraw(){
   ).value="";
 
 
-  dashboardMessage(
+  dashboardپەیام(
     "✅ Withdrawal request sent.",
     "success"
   );
@@ -2432,7 +2418,7 @@ async function loadWithdrawHistory(user){
   if(!data || !data.length){
 
     box.innerHTML =
-      '<div class="small">No requests yet.</div>';
+      '<div class="small">هێشتا هیچ داواکارییەک نییە.</div>';
 
     return;
   }
@@ -2449,7 +2435,7 @@ async function loadWithdrawHistory(user){
 
         •
         ${Number(r.coins).toLocaleString()}
-        Coins
+        دراو
 
         <br>
 
@@ -2582,7 +2568,7 @@ async function loadAdminRequests(){
 
         •
         ${Number(r.coins).toLocaleString()}
-        Coins
+        دراو
 
         <br>
 
@@ -2648,7 +2634,7 @@ async function adminDecision(
   if(!confirm(
     status === "approved"
     ? "Approve this request?"
-    : "Reject and return Coins?"
+    : "Reject and return دراو?"
   )){
 
     return;
@@ -2670,7 +2656,7 @@ async function adminDecision(
 
   if(error){
 
-    dashboardMessage(
+    dashboardپەیام(
       error.message,
       "error"
     );
@@ -2679,7 +2665,7 @@ async function adminDecision(
   }
 
 
-  dashboardMessage(
+  dashboardپەیام(
     "✅ Withdrawal status updated.",
     "success"
   );
@@ -2700,7 +2686,7 @@ async function adminDecision(
       userData.user
     );
 
-    await loadCoins(
+    await loadدراو(
       userData.user
     );
   }
@@ -2717,7 +2703,7 @@ async function loadTikTokFeed(searchTerm="", mode="all"){
   const box = document.getElementById("tiktokFeed");
   if(!box) return;
 
-  box.innerHTML = '<div class="tiktok-empty">Loading TikTok Feed...</div>';
+  box.innerHTML = '<div class="tiktok-empty">ڤیدیۆکان بار دەکرێن...</div>';
 
   try {
     // supabaseClient is a local const in this page, so do not check
@@ -2776,19 +2762,19 @@ async function loadTikTokFeed(searchTerm="", mode="all"){
       box.innerHTML = `
         <div class="tiktok-empty">
           <div style="font-size:42px">🎬</div>
-          <div>${term ? "No matching videos found." : "No videos yet."}</div>
-          <div class="small">${term ? "Try another search." : "Upload a video and it will appear here."}</div>
+          <div>${term ? "هیچ ڤیدیۆیەکی هاوشێوە نەدۆزرایەوە." : "هێشتا هیچ ڤیدیۆیەک نییە."}</div>
+          <div class="small">${term ? "گەڕانێکی تری تاقی بکەوە." : "ڤیدیۆیەک دابنێ و لێرە دەردەکەوێت."}</div>
         </div>`;
       return;
     }
 
-    // Load the current user's follow state through the ID-safe RPC.
+    // Load follow state through a schema-safe RPC.
     let followingSet = new Set();
     try{
-      const {data:followRows,error:followError} = await supabaseClient.rpc("xallo_my_following_emails");
-      if(followError) throw followError;
-      followingSet = new Set((followRows || []).map(row => String(row).toLowerCase()));
-    }catch(e){ console.warn("Follow state load error",e); }
+      const {data:followRows,error:followStateError}=await supabaseClient.rpc("get_my_following_emails");
+      if(followStateError) throw followStateError;
+      followingSet = new Set((followRows || []).map(x => String(x).toLowerCase()));
+    }catch(e){ console.warn("شوێن بکەوە state load error",e); }
 
     // Render each card safely. One bad video URL must not stop the whole feed.
     box.innerHTML = data.map(video => {
@@ -2827,7 +2813,7 @@ async function loadTikTokFeed(searchTerm="", mode="all"){
               ❤️ <span class="count">${likes}</span>
             </button>
 
-            <button type="button" onclick="openTikTokComments('${escapeHtml(id)}')">
+            <button type="button" onclick="openTikTokکۆمێنتەکان('${escapeHtml(id)}')">
               💬 <span class="count">Comment</span>
             </button>
 
@@ -2836,15 +2822,15 @@ async function loadTikTokFeed(searchTerm="", mode="all"){
             </button>
 
             <button type="button" class="tiktok-follow-button ${isFollowing ? "following" : ""}" onclick="toggleTikTokFollow(event,'${escapeHtml(email)}',this)">
-              ${followingSet.has(String(video.user_email || "").toLowerCase()) ? "✓" : "➕"} <span class="count">${followingSet.has(String(video.user_email || "").toLowerCase()) ? "Following" : "Follow"}</span>
+              ${followingSet.has(String(video.user_email || "").toLowerCase()) ? "✓" : "➕"} <span class="count">${followingSet.has(String(video.user_email || "").toLowerCase()) ? "شوێنکەوترا" : "شوێن بکەوە"}</span>
             </button>
 
             <button type="button" class="tiktok-small-btn" onclick="shareTikTokVideo('${escapeHtml(id)}')">
               ↗️ <span class="count">Share</span>
             </button>
 
-            <button type="button" onclick="openTikTokProfile('${escapeHtml(email)}')">
-              👤 <span class="count">Profile</span>
+            <button type="button" onclick="openTikTokپرۆفایل('${escapeHtml(email)}')">
+              👤 <span class="count">پرۆفایل</span>
             </button>
           </div>
 
@@ -2882,7 +2868,7 @@ async function loadTikTokFeed(searchTerm="", mode="all"){
         <div style="font-size:42px">⚠️</div>
         <div>Could not load TikTok Feed.</div>
         <div class="small" style="margin-top:8px">${escapeHtml(e.message || "Unknown error")}</div>
-        <button type="button" style="margin-top:14px" onclick="loadTikTokFeed()">🔄 Retry</button>
+        <button type="button" style="margin-top:14px" onclick="loadTikTokFeed()">🔄 دووبارە هەوڵدان</button>
       </div>`;
   }
 }
@@ -2953,7 +2939,7 @@ async function likeTikTokVideo(id,button){
 
     button.disabled = false;
 
-    dashboardMessage(
+    dashboardپەیام(
       "Like error: " + error.message,
       "error"
     );
@@ -2983,30 +2969,26 @@ function toggleTikTokMute(event,button){
 
 async function toggleTikTokFollow(event,targetEmail,button){
   if(event) event.stopPropagation();
-  const email = String(targetEmail || "").trim().toLowerCase();
+  const email = String(targetEmail || "").trim();
   if(!email || !button) return;
   const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData && authData.user ? String(authData.user.email||"").toLowerCase() : "";
-  if(!currentEmail){ dashboardMessage("Please login first.","error"); return; }
-  if(currentEmail === email) return;
+  const currentEmail = authData?.user?.email || "";
+  if(!currentEmail){ dashboardپەیام("Please login first.","error"); return; }
+  if(currentEmail.toLowerCase() === email.toLowerCase()) return;
   button.disabled = true;
   try{
-    const {data,error} = await supabaseClient.rpc("toggle_follow",{
-      p_following_email:email
-    });
+    const {data,error}=await supabaseClient.rpc("toggle_follow",{p_following_email:email});
     if(error) throw error;
-    const result=data||{};
-    button.classList.toggle("following",!!result.following);
-    button.innerHTML = result.following
-      ? "✓ <span class=\"count\">Following</span>"
-      : "➕ <span class=\"count\">Follow</span>";
-    try{
-      if(result.following){
-        await supabaseClient.rpc("notify_follow",{p_following_email:email});
-      }
-    }catch(e){ console.warn("Follow notification error",e); }
+    const isFollowing=!!data?.following;
+    button.classList.toggle("following",isFollowing);
+    button.innerHTML=isFollowing
+      ? "✓ <span class=\"count\">شوێنکەوتووە</span>"
+      : "➕ <span class=\"count\">شوێن بکەوە</span>";
+    if(isFollowing){
+      try{ await supabaseClient.rpc("notify_follow",{p_following_email:email}); }catch(e){ console.warn("شوێن بکەوە notification error",e); }
+    }
   }catch(error){
-    dashboardMessage(error.message || "Follow action failed.","error");
+    dashboardپەیام("شوێن بکەوە error: " + (error.message || "Unknown error"),"error");
   }finally{
     button.disabled = false;
   }
@@ -3020,16 +3002,16 @@ async function shareTikTokVideo(videoId){
       return;
     }
     await navigator.clipboard.writeText(url);
-    dashboardMessage("🔗 Video link copied.","success");
+    dashboardپەیام("🔗 Video link copied.","success");
   }catch(error){
     if(error && error.name === "AbortError") return;
-    dashboardMessage("Could not share this video.","error");
+    dashboardپەیام("نەتوانرا ئەم ڤیدیۆیە هاوبەش بکرێت.","error");
   }
 }
 
 let activeTikTokCommentVideoId = "";
 
-async function openTikTokComments(videoId){
+async function openTikTokکۆمێنتەکان(videoId){
   activeTikTokCommentVideoId = String(videoId || "");
   if(!activeTikTokCommentVideoId) return;
   const modal = document.getElementById("tiktokCommentModal");
@@ -3049,14 +3031,14 @@ async function openTikTokComments(videoId){
         <div class="tiktok-comment-user">👤 ${escapeHtml(c.user_email || "")}</div>
         <div class="tiktok-comment-text">${escapeHtml(c.comment || "")}</div>
         <div class="chat-time">${new Date(c.created_at).toLocaleString()}</div>
-      </div>`).join("") : '<div class="small">No comments yet. Be the first! 💬</div>';
+      </div>`).join("") : '<div class="small">هێشتا هیچ کۆمێنتێک نییە. یەکەم کەس بە! 💬</div>';
     setTimeout(()=>input.focus(),80);
   }catch(error){
-    list.innerHTML = `<div class="small">Could not load comments: ${escapeHtml(error.message || "Unknown error")}</div>`;
+    list.innerHTML = `<div class="small">نەتوانرا کۆمێنتەکان بار بکرێن: ${escapeHtml(error.message || "Unknown error")}</div>`;
   }
 }
 
-function closeTikTokComments(event){
+function closeTikTokکۆمێنتەکان(event){
   if(event && event.target !== event.currentTarget) return;
   const modal = document.getElementById("tiktokCommentModal");
   if(modal) modal.style.display = "none";
@@ -3069,14 +3051,14 @@ async function submitTikTokComment(){
   const comment = input ? input.value.trim() : "";
   if(!videoId || !comment) return;
   const {data:userData} = await supabaseClient.auth.getUser();
-  if(!userData.user){ dashboardMessage("Please login first.","error"); return; }
+  if(!userData.user){ dashboardپەیام("Please login first.","error"); return; }
   try{
     const {error} = await supabaseClient.from("comments").insert({video_id:videoId,user_email:userData.user.email,comment});
     if(error) throw error;
     input.value = "";
-    await openTikTokComments(videoId);
+    await openTikTokکۆمێنتەکان(videoId);
   }catch(error){
-    dashboardMessage("Comment error: " + (error.message || "Unknown error"),"error");
+    dashboardپەیام("Comment error: " + (error.message || "Unknown error"),"error");
   }
 }
 
@@ -3094,15 +3076,15 @@ function focusTikTokComment(videoId){
 
     input.focus();
 
-    dashboardMessage(
-      "Write your comment below in the XALLO Videos section.",
+    dashboardپەیام(
+      "کۆمێنتەکەت لە بەشی ڤیدیۆکانی XALLO بنووسە.",
       "success"
     );
 
   }else{
 
-    dashboardMessage(
-      "Open the comment box in XALLO Videos.",
+    dashboardپەیام(
+      "بۆ نووسینی کۆمێنت، سندوقی کۆمێنت لە ڤیدیۆکانی XALLO بکەرەوە.",
       "success"
     );
   }
@@ -3113,164 +3095,121 @@ function focusTikTokComment(videoId){
    FOLLOW / PUBLIC PROFILE
 ========================================= */
 
-let activeProfileEmail = "";
+let activeپرۆفایلEmail = "";
 
-async function openTikTokProfile(email){
-  const targetEmail = String(email || "").trim().toLowerCase();
+async function openTikTokپرۆفایل(email){
+
+  const targetEmail = String(email || "").trim();
   if(!targetEmail) return;
 
   const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData && authData.user ? String(authData.user.email || "").toLowerCase() : "";
+  const currentEmail = authData && authData.user ? authData.user.email : "";
 
-  activeProfileEmail = targetEmail;
+  activeپرۆفایلEmail = targetEmail;
 
   const modal = document.getElementById("profileModal");
   const nameBox = document.getElementById("profileName");
   const emailBox = document.getElementById("profileEmail");
-  const bioBox = document.getElementById("profileBio");
+  const bioBox = document.getElementById("profileدەربارەی خۆت");
   const avatar = document.getElementById("profileAvatar");
   const followButton = document.getElementById("profileFollowButton");
 
   modal.style.display = "flex";
-  nameBox.textContent = "Loading profile...";
+  nameBox.textContent = "پرۆفایل بار دەکرێت...";
   emailBox.textContent = targetEmail;
   bioBox.textContent = "";
-  avatar.style.display = "none";
   avatar.src = "";
   followButton.disabled = true;
   followButton.textContent = "Loading...";
 
   try{
-    // RPC is the primary path. If it is temporarily missing from PostgREST,
-    // fall back to a direct public users query instead of breaking the profile.
-    let profileData = null;
-    const rpc = await supabaseClient.rpc("get_public_profile", {p_email:targetEmail});
-    if(!rpc.error && rpc.data){
-      profileData = rpc.data;
-    }else{
-      const direct = await supabaseClient
-        .from("users")
-        .select("email,username,bio,avatar_url")
-        .eq("email",targetEmail)
-        .maybeSingle();
-      if(direct.error) throw direct.error;
-      profileData = direct.data || {};
-    }
+    const {data:profile,error:profileError} = await supabaseClient.rpc(
+      "get_public_profile",
+      {p_email:targetEmail}
+    );
 
+    if(profileError) throw profileError;
+
+    const profileData = profile || {};
     nameBox.textContent = profileData.username || targetEmail.split("@")[0];
     emailBox.textContent = targetEmail;
     bioBox.textContent = profileData.bio || "";
 
-    if(profileData.avatar_url){
-      avatar.src = profileData.avatar_url;
-      avatar.onload = () => { avatar.style.display = "block"; };
-      avatar.onerror = () => { avatar.style.display = "none"; };
-    }
+    avatar.src = profileData.avatar_url || "";
+    avatar.onerror = () => {
+      avatar.style.display = "none";
+    };
+    avatar.onload = () => {
+      avatar.style.display = "block";
+    };
+    if(!profileData.avatar_url) avatar.style.display = "none";
 
-    const {data:stats,error:statsError}=await supabaseClient.rpc("xallo_follow_stats",{
-      p_email:targetEmail
-    });
+    const {data:stats,error:statsError}=await supabaseClient.rpc("get_follow_stats",{p_email:targetEmail});
     if(statsError) throw statsError;
-
     document.getElementById("profileFollowers").textContent = Number(stats?.followers || 0);
     document.getElementById("profileFollowing").textContent = Number(stats?.following || 0);
 
-    if(currentEmail && currentEmail === targetEmail){
+    if(currentEmail && currentEmail.toLowerCase() === targetEmail.toLowerCase()){
       followButton.disabled = true;
-      followButton.textContent = "Your Profile";
+      followButton.textContent = "Your پرۆفایل";
       followButton.classList.remove("following");
       return;
     }
 
-    if(!currentEmail){
-      followButton.disabled = true;
-      followButton.textContent = "Login to Follow";
-      return;
-    }
+    const {data:followState,error:followCheckError}=await supabaseClient.rpc("is_following",{p_target_email:targetEmail});
+    if(followCheckError) throw followCheckError;
 
-    const check = await supabaseClient.rpc("xallo_is_following",{
-      p_target_email:targetEmail
-    });
-    if(check.error) throw check.error;
-
-    setFollowButton(!!check.data);
+    setFollowButton(!!followState);
     followButton.disabled = false;
     followButton.onclick = () => toggleFollow(targetEmail);
 
   }catch(error){
-    console.error("Profile load error:",error);
-    // Even if the profile RPC is unavailable, the account can still be followed
-    // after the SQL patch; show a usable fallback profile instead of disabling it.
-    nameBox.textContent = targetEmail.split("@")[0];
-    emailBox.textContent = targetEmail;
-    bioBox.textContent = "Profile information is not available yet.";
-    document.getElementById("profileFollowers").textContent = "0";
-    document.getElementById("profileFollowing").textContent = "0";
-
-    if(currentEmail && currentEmail !== targetEmail){
-      followButton.disabled = false;
-      followButton.textContent = "＋ Follow";
-      followButton.classList.remove("following");
-      followButton.onclick = () => toggleFollow(targetEmail);
-    }else if(currentEmail === targetEmail){
-      followButton.disabled = true;
-      followButton.textContent = "Your Profile";
-    }else{
-      followButton.disabled = true;
-      followButton.textContent = "Login to Follow";
-    }
+    nameBox.textContent = "پرۆفایل unavailable";
+    bioBox.textContent = error.message || "نەتوانرا پرۆفایل بار بکرێت.";
+    followButton.disabled = true;
+    followButton.textContent = "شوێنکەوتن بەردەست نییە";
   }
 }
 
 function setFollowButton(isFollowing){
   const button = document.getElementById("profileFollowButton");
   button.classList.toggle("following",!!isFollowing);
-  button.textContent = isFollowing ? "✓ Following" : "＋ Follow";
+  button.textContent = isFollowing ? "✓ شوێنکەوترا" : "＋ شوێن بکەوە";
 }
 
 async function toggleFollow(targetEmail){
   const button = document.getElementById("profileFollowButton");
   const {data:authData} = await supabaseClient.auth.getUser();
-  const currentEmail = authData && authData.user ? String(authData.user.email || "").toLowerCase() : "";
-  const target = String(targetEmail || "").trim().toLowerCase();
+  const currentEmail = authData?.user?.email || "";
 
   if(!currentEmail){
-    dashboardMessage("Please login first.","error");
+    dashboardپەیام("Please login first.","error");
     return;
   }
-  if(!target || currentEmail === target) return;
+  if(currentEmail.toLowerCase() === String(targetEmail).toLowerCase()) return;
 
   button.disabled = true;
-
   try{
-    const {data,error} = await supabaseClient.rpc("toggle_follow",{
-      p_following_email:target
-    });
+    const {data,error}=await supabaseClient.rpc("toggle_follow",{p_following_email:targetEmail});
     if(error) throw error;
+    setFollowButton(!!data?.following);
+    document.getElementById("profileFollowers").textContent = Number(data?.followers || 0);
 
-    const result=data||{};
-    setFollowButton(!!result.following);
-    document.getElementById("profileFollowers").textContent = Number(result.followers || 0);
-
-    try{
-      if(result.following){
-        await supabaseClient.rpc("notify_follow",{p_following_email:target});
-      }
-    }catch(e){ console.warn("Follow notification error",e); }
-
+    if(data?.following){
+      try{ await supabaseClient.rpc("notify_follow",{p_following_email:targetEmail}); }catch(e){ console.warn("شوێن بکەوە notification unavailable:",e); }
+    }
   }catch(error){
-    console.error("Follow error:",error);
-    dashboardMessage("Follow error: " + (error.message || "Unknown error"),"error");
+    dashboardپەیام("شوێن بکەوە error: " + (error.message || "Unknown error"),"error");
   }finally{
     button.disabled = false;
   }
 }
 
-function closeProfileModal(event){
+function closeپرۆفایلModal(event){
   if(event && event.target && event.target.id !== "profileModal") return;
   const modal = document.getElementById("profileModal");
   if(modal) modal.style.display = "none";
-  activeProfileEmail = "";
+  activeپرۆفایلEmail = "";
 }
 
 
@@ -3305,7 +3244,7 @@ function chatSafe(text){
 
 async function loadChat(){
   const input=document.getElementById("chatRecipient");
-  const box=document.getElementById("chatMessages");
+  const box=document.getElementById("chatپەیامs");
   const status=document.getElementById("chatStatus");
   const recipient=(input?.value||"").trim().toLowerCase();
   if(!recipient || !recipient.includes("@")){
@@ -3315,7 +3254,7 @@ async function loadChat(){
   const {data:userData}=await supabaseClient.auth.getUser();
   const me=(userData?.user?.email||"").toLowerCase();
   if(!me){ status.textContent="Please login first."; return; }
-  if(recipient===me){ status.textContent="You cannot message yourself."; return; }
+  if(recipient===me){ status.textContent="ناتوانیت بۆ خۆت پەیام بنێریت."; return; }
   activeChatEmail=recipient; activeChatUserEmail=me;
   box.innerHTML='<div class="small">Loading chat...</div>';
   const {data,error}=await supabaseClient
@@ -3330,7 +3269,7 @@ async function loadChat(){
   }
   status.textContent="Chat with "+recipient;
   if(!data?.length){
-    box.innerHTML='<div class="small">No messages yet. Send the first message.</div>';
+    box.innerHTML='<div class="small">هێشتا هیچ پەیامێک نییە. یەکەم پەیام بنێرە.</div>';
   }else{
     box.innerHTML=data.map(m=>{
       const mine=(m.sender_email||"").toLowerCase()===me;
@@ -3345,7 +3284,7 @@ async function loadChat(){
   }
 }
 
-async function sendChatMessage(){
+async function sendChatپەیام(){
   const text=(document.getElementById("chatInput")?.value||"").trim();
   if(!activeChatEmail){
     document.getElementById("chatStatus").textContent="Load a chat first.";
@@ -3370,7 +3309,7 @@ async function sendChatMessage(){
     "notify_message",
     {p_receiver_email:activeChatEmail,p_preview:text.slice(0,120)}
   );
-  if(notifyError) console.warn("Message notification unavailable:", notifyError.message);
+  if(notifyError) console.warn("پەیام notification unavailable:", notifyError.message);
 
   document.getElementById("chatInput").value="";
   await loadChat();
@@ -3406,16 +3345,16 @@ async function logout(){
 
   await supabaseClient.auth.signOut();
 
+  // Return to the authentication screen cleanly.
+  document.body.classList.remove("xallo-logged-in");
 
   document.getElementById(
     "dashboard"
   ).style.display="none";
 
-
   document.getElementById(
     "authBox"
   ).style.display="block";
-
 
   showLogin();
 }
@@ -3427,29 +3366,56 @@ async function logout(){
 
 
 document.addEventListener("keydown",(event)=>{
-  if(event.key === "Escape") closeTikTokComments();
+  if(event.key === "Escape") closeTikTokکۆمێنتەکان();
 });
 
 async function checkUser(){
+  try{
+    const { data, error } = await supabaseClient.auth.getSession();
 
-  const {
-    data
-  } =
-    await supabaseClient.auth.getUser();
+    if(error){
+      console.error("getSession error:", error);
+      document.body.classList.remove("xallo-logged-in");
+      document.getElementById("dashboard").style.display="none";
+      document.getElementById("authBox").style.display="block";
+      showLogin();
+      showپەیام("کێشەی پەیوەندی بە Supabase هەیە. تکایە دووبارە هەوڵ بدە.","error");
+      return;
+    }
 
-
-  if(data && data.user){
-
-    await createUserProfile(
-      data.user.email
-    );
-
-    await showDashboard(
-      data.user
-    );
+    const session = data?.session;
+    if(session?.user){
+      enterXalloApp(session.user);
+    }else{
+      document.body.classList.remove("xallo-logged-in");
+      document.getElementById("dashboard").style.display="none";
+      document.getElementById("authBox").style.display="block";
+      showLogin();
+    }
+  }catch(err){
+    console.error("checkUser error:", err);
+    document.body.classList.remove("xallo-logged-in");
+    document.getElementById("dashboard").style.display="none";
+    document.getElementById("authBox").style.display="block";
+    showLogin();
+    showپەیام("کێشەیەک ڕوویدا لە چوونەژوورەوە.","error");
   }
 }
 
+// IMPORTANT: do not run Supabase database queries directly inside
+// onAuthStateChange. Supabase holds an auth lock while firing this callback;
+// doing extra awaited queries here can make login appear to freeze.
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if(session?.user){
+    // Do not await any database query inside the auth callback.
+    enterXalloApp(session.user);
+  }else if(event === "SIGNED_OUT"){
+    document.body.classList.remove("xallo-logged-in");
+    document.getElementById("dashboard").style.display="none";
+    document.getElementById("authBox").style.display="block";
+    showLogin();
+  }
+});
 
 /* =========================================
    START
@@ -3478,7 +3444,7 @@ async function loadNotifications(){
   const badge = document.getElementById("notificationBadge");
   if(!list || !badge || typeof supabaseClient === "undefined") return;
 
-  list.innerHTML = '<div class="users-empty">Loading notifications...</div>';
+  list.innerHTML = '<div class="users-empty">ئاگادارییەکان بار دەکرێن...</div>';
 
   try{
     const {data,error} = await supabaseClient
@@ -3527,7 +3493,7 @@ async function markNotificationRead(id){
     .eq("id",id);
 
   if(error){
-    dashboardMessage("Notification error: " + (error.message || "Unknown error"),"error");
+    dashboardپەیام("Notification error: " + (error.message || "Unknown error"),"error");
     return;
   }
 
@@ -3578,12 +3544,12 @@ function setExploreMode(mode){
   loadTikTokFeed("", mode);
 }
 
-function xalloGoProfile(){
+function xalloGoپرۆفایل(){
   document.getElementById("my-profile-box")?.scrollIntoView({behavior:"smooth",block:"start"});
   document.querySelector(".my-profile-box")?.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
-function xalloGoMessages(){
+function xalloGoپەیامs(){
   document.querySelector(".chat-box")?.scrollIntoView({behavior:"smooth",block:"start"});
   setTimeout(()=>openChat(),300);
 }
@@ -3638,7 +3604,7 @@ async function searchUsers(){
           </div>
           <button type="button"
             onclick="startUserChat('${String(u.email).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">
-            💬 Message
+            💬 پەیام
           </button>
         </div>`;
     }).join("");
@@ -3691,7 +3657,7 @@ async function loadInitialUsers(){
           </div>
           <button type="button"
             onclick="startUserChat('${String(u.email).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">
-            💬 Message
+            💬 پەیام
           </button>
         </div>`;
     }).join("");
