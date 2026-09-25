@@ -679,6 +679,10 @@ img,video{max-width:100%}
 <button type="button" onclick="resendVerification()" style="margin-top:10px;background:#17263b;border:1px solid #304864;">
 📧 ناردنەوەی پشتڕاستکردنەوەی ئیمەیڵ
 </button>
+<div id="loginHelp" style="display:block;margin-top:12px;padding:12px;border-radius:12px;
+background:#101b2e;color:#aebbd0;font-size:14px;line-height:1.7;text-align:center;">
+ئەگەر هیچ ئیمەیڵێک نەهات، کێشەکە لە SMTP ـی Supabase ـە، نەک لە دوگمەکە.
+</div>
 
     <div class="switch">
       هەژمارت نییە؟
@@ -1260,6 +1264,12 @@ async function signup(){
    LOGIN
 ========================================= */
 
+
+function showLoginHelp(){
+  const box = document.getElementById("loginHelp");
+  if(box) box.style.display = "block";
+}
+
 async function login(){
   const email = String(document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
   const password = String(document.getElementById("loginPassword")?.value || "");
@@ -1317,7 +1327,7 @@ async function resendVerification(){
       options: { emailRedirectTo: window.location.origin }
     });
     if(error) throw error;
-    showپەیام("ئیمەیڵی پشتڕاستکردنەوە دوبارە نێردرا. Inbox و Spam پشکنە.","success");
+    showپەیام("ئیمەیڵی پشتڕاستکردنەوە نێردرا بۆ هەمان ئیمەیڵ. Inbox و Spam پشکنە.","success");
   }catch(err){
     showپەیام(err?.message || "نەتوانرا ئیمەیڵی پشتڕاستکردنەوە بنێردرێت.","error");
   }
