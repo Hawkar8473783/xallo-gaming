@@ -62,7 +62,6 @@
         #authMessage { min-height: 22px; margin-top: 10px; color: #ffd1da; font-size: .8rem; line-height: 1.5; }
         .account-btn { background: rgba(0,0,0,.5); border: 1px solid #444; color: #fff; font-size: .75rem; min-width: 90px; height: 32px; border-radius: 18px; cursor: pointer; padding: 0 10px; backdrop-filter: blur(5px); }
 
-    
         .upload-modal { position: fixed; inset: 0; z-index: 1001; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.8); padding: 20px; }
         .upload-modal.show { display: flex; }
         .upload-box { width: min(440px, 100%); background: #171717; border: 1px solid #333; border-radius: 18px; padding: 22px; position: relative; }
@@ -74,7 +73,6 @@
         .upload-close { position: absolute; left: 12px; top: 8px; border: 0; background: transparent; color: #fff; font-size: 1.6rem; cursor: pointer; }
         #uploadMessage { min-height: 22px; color: #ffd1da; font-size: .8rem; margin-top: 10px; line-height: 1.5; }
 
-    
         .comments-modal { position: fixed; inset: 0; z-index: 1002; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,.55); }
         .comments-modal.show { display: flex; }
         .comments-box { width: min(520px,100%); max-height: 72vh; background: #171717; border-radius: 20px 20px 0 0; padding: 18px; display: flex; flex-direction: column; }
@@ -88,13 +86,9 @@
         .comment-form input { flex:1; background:#0c0c0c; border:1px solid #444; color:#fff; border-radius:10px; padding:11px; direction:rtl; }
         .comment-form button { border:0; background:#fe2c55; color:#fff; border-radius:10px; padding:0 14px; font-weight:bold; }
         #commentMessage { color:#aaa; font-size:.72rem; margin-top:7px; min-height:18px; }
-
     </style>
 </head>
 <body>
-
-
-
 
     <div id="commentsModal" class="comments-modal" aria-hidden="true">
         <div class="comments-box">
@@ -129,6 +123,7 @@
             <p id="authHint">بۆ بەردەوامبوون بچۆ ژوورەوە یان هەژمارێک دروست بکە.</p>
             <input id="authEmail" type="email" placeholder="ئیمەیڵ" autocomplete="email">
             <input id="authPassword" type="password" placeholder="وشەی نهێنی" autocomplete="current-password">
+            <input id="authReferral" type="text" placeholder="کۆدی ڕیفراڵ (ئارەزوومەندانە)" style="display:none;">
             <button class="auth-main" onclick="submitAuth()">چوونەژوورەوە</button>
             <button class="auth-switch" onclick="toggleAuthMode()" id="authSwitch">هەژمارت نییە؟ هەژمار دروست بکە</button>
             <div id="authMessage"></div>
@@ -183,7 +178,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase configuration
         const SUPABASE_URL = "https://vnyprsjjmmjahkisozib.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueXByc2pqbW1qYWhraXNvemliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5OTE0MjEsImV4cCI6MjEwNTU2NzQyMX0.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -210,8 +204,6 @@
             });
         }, { threshold: 0.6 });
         document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
-
-
 
         function openUpload() {
             supabaseClient.auth.getSession().then(({ data: { session } }) => {
@@ -406,7 +398,6 @@
             }
         }
 
-
         function escapeHtml(value) {
             return String(value)
                 .replaceAll("&", "&amp;")
@@ -415,7 +406,6 @@
                 .replaceAll('"', "&quot;")
                 .replaceAll("'", "&#039;");
         }
-
 
         let activeCommentVideoId = null;
 
@@ -617,6 +607,14 @@
             document.getElementById("authSwitch").textContent = mode === "login"
                 ? "هەژمارت نییە؟ هەژمار دروست بکە"
                 : "هەژمارت هەیە؟ بچۆ ژوورەوە";
+            
+            const refInput = document.getElementById("authReferral");
+            if (mode === "signup") {
+                refInput.style.display = "block";
+            } else {
+                refInput.style.display = "none";
+            }
+
             document.getElementById("authMessage").textContent = "";
             document.getElementById("authModal").classList.add("show");
             document.getElementById("authModal").setAttribute("aria-hidden", "false");
@@ -634,6 +632,7 @@
         async function submitAuth() {
             const email = document.getElementById("authEmail").value.trim();
             const password = document.getElementById("authPassword").value;
+            const referralCode = document.getElementById("authReferral").value.trim();
             const message = document.getElementById("authMessage");
 
             if (!email || !password) {
@@ -655,7 +654,15 @@
                 }
                 closeAuth();
             } else {
-                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            referral_code: referralCode || null
+                        }
+                    }
+                });
                 if (error) {
                     message.textContent = error.message;
                     return;
@@ -667,7 +674,7 @@
                 }
             }
             updateAccountButton();
-        loadVideos();
+            loadVideos();
         }
 
         async function handleAccount() {
@@ -691,7 +698,6 @@
 
         supabaseClient.auth.onAuthStateChange(() => updateAccountButton());
         updateAccountButton();
-
     </script>
 </body>
 </html>
