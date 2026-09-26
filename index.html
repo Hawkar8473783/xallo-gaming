@@ -3,40 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>XALLO-GAMING | TikTok Feed</title>
+    <title>XALLO-GAMING | پرۆفایل</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; }
+        body { background-color: #000; color: #fff; min-height: 100vh; padding-bottom: 70px; }
 
-        .video-feed { height: 100vh; width: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
-        .video-feed::-webkit-scrollbar { display: none; }
-
-        .video-card { position: relative; height: 100vh; width: 100%; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; background-color: #000; overflow: hidden; }
-        .video-card video { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1; }
-
-        .overlay {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            z-index: 2; display: flex; justify-content: space-between; padding: 12px;
-            padding-bottom: calc(55px + env(safe-area-inset-bottom)); pointer-events: none;
+        .profile-header {
+            display: flex; flex-direction: column; align-items: center; padding: 30px 20px 10px; text-align: center;
         }
-        .overlay * { pointer-events: auto; }
 
-        .user-info { width: 70%; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; margin-bottom: 5px; text-align: right; }
-        .username { font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
-        .caption { font-size: 0.7rem; line-height: 1.3; color: #eee; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-        .action-buttons { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 5px; }
-        .action-btn {
-            background: rgba(255, 255, 255, 0.15); border: none; color: #fff; font-size: 1rem;
-            cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px;
-            border-radius: 50%; width: 36px; height: 36px; justify-content: center; backdrop-filter: blur(5px);
+        .avatar {
+            width: 90px; height: 90px; border-radius: 50%; background: #222; border: 2px solid #333;
+            display: flex; justify-content: center; align-items: center; font-size: 2.5rem; margin-bottom: 12px;
         }
-        .action-btn span { font-size: 0.55rem; font-weight: bold; }
-        .follow-btn { background: #fe2c55; border-radius: 50%; width: 32px; height: 32px; font-size: 1rem; display: flex; justify-content: center; align-items: center; color: white; border: none; cursor: pointer; }
 
-        .top-controls { position: absolute; top: 15px; right: 15px; z-index: 3; display: flex; gap: 10px; padding-top: env(safe-area-inset-top); }
-        .top-btn { background: rgba(0, 0, 0, 0.5); border: none; color: white; font-size: 1.1rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .username { font-size: 1.2rem; font-weight: bold; margin-bottom: 4px; }
+        .email { font-size: 0.8rem; color: #888; margin-bottom: 15px; }
+
+        /* بەشی زانیاری سکە و کۆدی ڕیفراڵ */
+        .rewards-card {
+            background: #161616; border: 1px solid #2a2a2a; border-radius: 16px;
+            width: 90%; max-width: 400px; padding: 16px; margin: 10px auto;
+            display: flex; flex-direction: column; gap: 12px; text-align: center;
+        }
+
+        .coin-box {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-size: 1.1rem; color: #ffd700; font-weight: bold;
+        }
+
+        .referral-box {
+            background: #0d0d0d; padding: 10px; border-radius: 10px; border: 1px dashed #444;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .referral-title { font-size: 0.75rem; color: #aaa; margin-bottom: 4px; text-align: right; }
+        .referral-code { font-weight: bold; letter-spacing: 1px; color: #00e5ff; font-size: 0.95rem; }
+
+        .copy-btn {
+            background: #fe2c55; border: none; color: white; padding: 6px 12px;
+            border-radius: 8px; font-size: 0.75rem; font-weight: bold; cursor: pointer;
+        }
+
+        .action-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-edit { background: #222; border: 1px solid #444; color: #fff; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; }
+        .btn-logout { background: #fe2c55; border: none; color: #fff; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; }
 
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
@@ -48,132 +59,44 @@
         .nav-item { display: flex; flex-direction: column; align-items: center; color: #888; text-decoration: none; font-size: 0.6rem; gap: 2px; }
         .nav-item.active { color: #fe2c55; }
         .nav-item span { font-size: 1rem; }
-    
-        .auth-modal { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.78); padding: 20px; }
-        .auth-modal.show { display: flex; }
-        .auth-box { width: min(420px, 100%); background: #171717; border: 1px solid #333; border-radius: 18px; padding: 24px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.55); text-align: right; }
-        .auth-box h2 { font-size: 1.35rem; margin-bottom: 8px; }
-        .auth-box p { color: #aaa; font-size: .85rem; line-height: 1.6; margin-bottom: 18px; }
-        .auth-box input { width: 100%; border: 1px solid #444; background: #0c0c0c; color: #fff; border-radius: 10px; padding: 13px; margin: 6px 0; outline: none; direction: ltr; }
-        .auth-box input:focus { border-color: #fe2c55; }
-        .auth-main { width: 100%; border: 0; background: #fe2c55; color: #fff; padding: 13px; border-radius: 10px; margin-top: 10px; font-weight: bold; cursor: pointer; }
-        .auth-switch { width: 100%; border: 0; background: transparent; color: #ddd; padding: 12px 4px 2px; cursor: pointer; }
-        .auth-close { position: absolute; left: 12px; top: 10px; border: 0; background: transparent; color: #fff; font-size: 1.6rem; cursor: pointer; }
-        #authMessage { min-height: 22px; margin-top: 10px; color: #ffd1da; font-size: .8rem; line-height: 1.5; }
-        .account-btn { background: rgba(0,0,0,.5); border: 1px solid #444; color: #fff; font-size: .75rem; min-width: 90px; height: 32px; border-radius: 18px; cursor: pointer; padding: 0 10px; backdrop-filter: blur(5px); }
-
-        .upload-modal { position: fixed; inset: 0; z-index: 1001; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.8); padding: 20px; }
-        .upload-modal.show { display: flex; }
-        .upload-box { width: min(440px, 100%); background: #171717; border: 1px solid #333; border-radius: 18px; padding: 22px; position: relative; }
-        .upload-box h2 { margin-bottom: 14px; font-size: 1.25rem; }
-        .upload-box input[type=file], .upload-box textarea { width: 100%; background: #0c0c0c; color: #fff; border: 1px solid #444; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
-        .upload-box textarea { min-height: 90px; resize: vertical; direction: rtl; }
-        .upload-main { width: 100%; border: 0; background: #fe2c55; color: #fff; padding: 13px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .upload-main:disabled { opacity: .55; cursor: not-allowed; }
-        .upload-close { position: absolute; left: 12px; top: 8px; border: 0; background: transparent; color: #fff; font-size: 1.6rem; cursor: pointer; }
-        #uploadMessage { min-height: 22px; color: #ffd1da; font-size: .8rem; margin-top: 10px; line-height: 1.5; }
-
-        .comments-modal { position: fixed; inset: 0; z-index: 1002; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,.55); }
-        .comments-modal.show { display: flex; }
-        .comments-box { width: min(520px,100%); max-height: 72vh; background: #171717; border-radius: 20px 20px 0 0; padding: 18px; display: flex; flex-direction: column; }
-        .comments-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-        .comments-head button { border:0; background:transparent; color:#fff; font-size:1.5rem; cursor:pointer; }
-        #commentsList { overflow:auto; min-height:80px; max-height:45vh; }
-        .comment-item { padding:9px 0; border-bottom:1px solid #292929; }
-        .comment-user { font-weight:bold; font-size:.78rem; }
-        .comment-body { color:#ddd; font-size:.82rem; margin-top:3px; word-break:break-word; }
-        .comment-form { display:flex; gap:7px; margin-top:12px; }
-        .comment-form input { flex:1; background:#0c0c0c; border:1px solid #444; color:#fff; border-radius:10px; padding:11px; direction:rtl; }
-        .comment-form button { border:0; background:#fe2c55; color:#fff; border-radius:10px; padding:0 14px; font-weight:bold; }
-        #commentMessage { color:#aaa; font-size:.72rem; margin-top:7px; min-height:18px; }
     </style>
 </head>
 <body>
 
-    <div id="commentsModal" class="comments-modal" aria-hidden="true">
-        <div class="comments-box">
-            <div class="comments-head">
-                <strong>کۆمێنتەکان</strong>
-                <button onclick="closeComments()">×</button>
+    <div class="profile-header">
+        <div class="avatar">🎮</div>
+        <div class="username" id="dispUsername">نایاساسی</div>
+        <div class="email" id="dispEmail">...</div>
+
+        <!-- ئەرکی سکە و کۆدی ڕیفراڵ -->
+        <div class="rewards-card">
+            <div class="coin-box">
+                <span>🪙</span>
+                <span>سکەکانت:</span>
+                <span id="userCoins">0</span>
             </div>
-            <div id="commentsList"></div>
-            <div class="comment-form">
-                <input id="commentInput" maxlength="1000" placeholder="کۆمێنتێک بنووسە...">
-                <button onclick="sendComment()">ناردن</button>
-            </div>
-            <div id="commentMessage"></div>
-        </div>
-    </div>
-
-    <div id="uploadModal" class="upload-modal" aria-hidden="true">
-        <div class="upload-box">
-            <button class="upload-close" onclick="closeUpload()">×</button>
-            <h2>بڵاوکردنەوەی ڤیدیۆ 🎥</h2>
-            <input id="videoFile" type="file" accept="video/*">
-            <textarea id="videoCaption" maxlength="500" placeholder="دەربارەی ڤیدیۆکە بنووسە..."></textarea>
-            <button id="uploadBtn" class="upload-main" onclick="uploadVideo()">بڵاوکردنەوە</button>
-            <div id="uploadMessage"></div>
-        </div>
-    </div>
-
-    <div id="authModal" class="auth-modal" aria-hidden="true">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeAuth()">×</button>
-            <h2 id="authTitle">چوونەژوورەوە</h2>
-            <p id="authHint">بۆ بەردەوامبوون بچۆ ژوورەوە یان هەژمارێک دروست بکە.</p>
-            <input id="authEmail" type="email" placeholder="ئیمەیڵ" autocomplete="email">
-            <input id="authPassword" type="password" placeholder="وشەی نهێنی" autocomplete="current-password">
-            <input id="authReferral" type="text" placeholder="کۆدی ڕیفراڵ (ئارەزوومەندانە)" style="display:none;">
-            <button class="auth-main" onclick="submitAuth()">چوونەژوورەوە</button>
-            <button class="auth-switch" onclick="toggleAuthMode()" id="authSwitch">هەژمارت نییە؟ هەژمار دروست بکە</button>
-            <div id="authMessage"></div>
-        </div>
-    </div>
-
-    <div class="top-controls">
-        <button class="top-btn" id="muteBtn" onclick="toggleMute()">🔇</button>
-        <button class="account-btn" id="accountBtn" onclick="handleAccount()">چوونەژوورەوە</button>
-    </div>
-
-    <div class="video-feed" id="videoFeed">
-        <div class="video-card">
-            <video src="https://www.w3schools.com/html/mov_bbb.mp4" loop playsinline muted></video>
-            <div class="overlay">
-                <div class="user-info">
-                    <div class="username"><span>👤</span> XALLO_GAMER</div>
-                    <div class="caption">یەکەم ڤیدیۆی من لە XALLO-GAMING! 🎮🔥 #گەیمینگ #XALLO</div>
-                </div>
-                <div class="action-buttons">
-                    <button class="follow-btn" onclick="toggleFollow(this)">+</button>
-                    <button class="action-btn" onclick="likeVideo(this)">❤️ <span>1.2K</span></button>
-                    <button class="action-btn" onclick="openComments()">💬 <span>45</span></button>
-                    <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
+            
+            <div>
+                <div class="referral-title">کۆدی ڕیفراڵەکەت (بۆ بانگهێشتکردنی هاوڕێیان):</div>
+                <div class="referral-box">
+                    <span class="referral-code" id="userReferralCode">------</span>
+                    <button class="copy-btn" onclick="copyCode()">کۆپی</button>
                 </div>
             </div>
         </div>
-        <div class="video-card">
-            <video src="https://www.w3schools.com/html/movie.mp4" loop playsinline muted></video>
-            <div class="overlay">
-                <div class="user-info">
-                    <div class="username"><span>👤</span> PRO_GAMER</div>
-                    <div class="caption">یارییەکی زۆر سەخت! 🕹️ ئەتوانی بیبەیت؟ #چالێنج</div>
-                </div>
-                <div class="action-buttons">
-                    <button class="follow-btn" onclick="toggleFollow(this)">+</button>
-                    <button class="action-btn" onclick="likeVideo(this)">❤️ <span>3.5K</span></button>
-                    <button class="action-btn" onclick="openComments()">💬 <span>120</span></button>
-                    <button class="action-btn" onclick="shareVideo()">↗️ <span>Share</span></button>
-                </div>
-            </div>
+
+        <div class="action-btns">
+            <button class="btn-edit">دەستکاری پرۆفایل ✏️</button>
+            <button class="btn-logout" onclick="logout()">دەرچوون 🚪</button>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item active"><span>🏠</span><span>ماڵەوە</span></a>
+        <a href="index.html" class="nav-item"><span>🏠</span><span>ماڵەوە</span></a>
         <a href="search.html" class="nav-item"><span>🔍</span><span>گەڕان</span></a>
-        <a href="#" class="nav-item" onclick="openUpload(); return false;"><span>➕</span><span>بڵاوکردنەوە</span></a>
+        <a href="index.html" class="nav-item"><span>➕</span><span>بڵاوکردنەوە</span></a>
         <a href="#" class="nav-item"><span>💬</span><span>نامەکان</span></a>
-        <a href="profile.html" class="nav-item"><span>👤</span><span>پرۆفایل</span></a>
+        <a href="profile.html" class="nav-item active"><span>👤</span><span>پرۆفایل</span></a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -182,522 +105,47 @@
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueXByc2pqbW1qYWhraXNvemliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5OTE0MjEsImV4cCI6MjEwNTU2NzQyMX0.-CqVI-DzAvgNE_qAa9fwRk12QXl0zMGw7hzqqmZE4sI";
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let authMode = "login";
-        let isMuted = true;
-        const videos = document.querySelectorAll('video');
-        const muteBtn = document.getElementById('muteBtn');
-
-        function toggleMute() {
-            isMuted = !isMuted;
-            videos.forEach(v => v.muted = isMuted);
-            muteBtn.textContent = isMuted ? '🔇' : '🔊';
-        }
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const video = entry.target.querySelector('video');
-                if (entry.isIntersecting) {
-                    video.play().catch(() => { video.muted = true; isMuted = true; muteBtn.textContent = '🔇'; });
-                } else {
-                    video.pause(); video.currentTime = 0;
-                }
-            });
-        }, { threshold: 0.6 });
-        document.querySelectorAll('.video-card').forEach(card => observer.observe(card));
-
-        function openUpload() {
-            supabaseClient.auth.getSession().then(({ data: { session } }) => {
-                if (!session) {
-                    openAuth("login");
-                    return;
-                }
-                document.getElementById("uploadMessage").textContent = "";
-                document.getElementById("videoFile").value = "";
-                document.getElementById("videoCaption").value = "";
-                document.getElementById("uploadModal").classList.add("show");
-                document.getElementById("uploadModal").setAttribute("aria-hidden", "false");
-            });
-        }
-
-        function closeUpload() {
-            document.getElementById("uploadModal").classList.remove("show");
-            document.getElementById("uploadModal").setAttribute("aria-hidden", "true");
-        }
-
-        async function uploadVideo() {
-            const fileInput = document.getElementById("videoFile");
-            const captionInput = document.getElementById("videoCaption");
-            const btn = document.getElementById("uploadBtn");
-            const message = document.getElementById("uploadMessage");
-            const file = fileInput.files[0];
-
-            if (!file) {
-                message.textContent = "تکایە ڤیدیۆیەک هەڵبژێرە.";
-                return;
-            }
-
-            if (!file.type.startsWith("video/")) {
-                message.textContent = "تەنها فایلە ڤیدیۆییەکان ڕێگەپێدراون.";
-                return;
-            }
-
-            const maxSize = 100 * 1024 * 1024;
-            if (file.size > maxSize) {
-                message.textContent = "قەبارەی ڤیدیۆ نابێت لە 100MB زیاتر بێت.";
-                return;
-            }
-
+        async function loadProfile() {
             const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                closeUpload();
-                openAuth("login");
-                return;
-            }
-
-            btn.disabled = true;
-            message.textContent = "ڤیدیۆکە بەرزدەکرێتەوە... تکایە چاوەڕێ بکە.";
-
-            const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-            const filePath = `${session.user.id}/${Date.now()}-${safeName}`;
-
-            const { error: storageError } = await supabaseClient
-                .storage
-                .from("videos")
-                .upload(filePath, file, {
-                    cacheControl: "3600",
-                    upsert: false,
-                    contentType: file.type
-                });
-
-            if (storageError) {
-                message.textContent = "هەڵە لە بەرزکردنەوە: " + storageError.message;
-                btn.disabled = false;
-                return;
-            }
-
-            const { data: publicData } = supabaseClient
-                .storage
-                .from("videos")
-                .getPublicUrl(filePath);
-
-            const { error: dbError } = await supabaseClient
-                .from("videos")
-                .insert({
-                    user_id: session.user.id,
-                    video_url: publicData.publicUrl,
-                    caption: captionInput.value.trim()
-                });
-
-            if (dbError) {
-                await supabaseClient.storage.from("videos").remove([filePath]);
-                message.textContent = "هەڵە لە Database: " + dbError.message;
-                btn.disabled = false;
-                return;
-            }
-
-            message.textContent = "بە سەرکەوتوویی بڵاوکرایەوە! 🎉";
-            btn.disabled = false;
-            setTimeout(() => closeUpload(), 700);
-            loadVideos();
-        }
-
-        async function loadVideos() {
-            const { data: videos, error } = await supabaseClient
-                .from("videos")
-                .select("id, user_id, video_url, caption, created_at")
-                .order("created_at", { ascending: false });
-
-            if (error || !videos) return;
-
-            const userIds = [...new Set(videos.map(v => v.user_id))];
-            const { data: profiles } = userIds.length
-                ? await supabaseClient.from("profiles").select("id, username, display_name").in("id", userIds)
-                : { data: [] };
-
-            const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
-            const { data: { session } } = await supabaseClient.auth.getSession();
-
-            const feed = document.getElementById("videoFeed");
-            feed.innerHTML = "";
-
-            if (!videos.length) {
-                feed.innerHTML = '<div style="height:100vh;display:flex;align-items:center;justify-content:center;color:#aaa">هێشتا ڤیدیۆ نییە 🎥</div>';
-                return;
-            }
-
-            for (const v of videos) {
-                const p = profileMap[v.user_id];
-                const username = p?.username || p?.display_name || "XALLO_GAMER";
-                const card = document.createElement("div");
-                card.className = "video-card";
-                card.dataset.videoId = v.id;
-                card.innerHTML = `
-                    <video src="${escapeHtml(v.video_url)}" loop playsinline muted></video>
-                    <div class="overlay">
-                        <div class="user-info">
-                            <div class="username"><span>👤</span> ${escapeHtml(username)}</div>
-                            <div class="caption">${escapeHtml(v.caption || "")}</div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="follow-btn" data-user-id="${v.user_id}" onclick="toggleFollow(this)">+</button>
-                            <button class="action-btn like-btn" data-video-id="${v.id}" onclick="likeVideo(this)">❤️ <span>0</span></button>
-                            <button class="action-btn comment-btn" data-video-id="${v.id}" onclick="openComments(${v.id})">💬 <span>0</span></button>
-                            <button class="action-btn" onclick="shareVideo(${v.id})">↗️ <span>Share</span></button>
-                        </div>
-                    </div>`;
-                feed.appendChild(card);
-                observer.observe(card);
-
-                const likeBtn = card.querySelector(".like-btn");
-                const commentBtn = card.querySelector(".comment-btn");
-                await updateCountsAndState(v.id, likeBtn, commentBtn, session);
-            }
-        }
-
-        async function updateCountsAndState(videoId, likeBtn, commentBtn, session) {
-            const { count: likes } = await supabaseClient
-                .from("video_likes")
-                .select("*", { count: "exact", head: true })
-                .eq("video_id", videoId);
-
-            const { count: comments } = await supabaseClient
-                .from("comments")
-                .select("*", { count: "exact", head: true })
-                .eq("video_id", videoId);
-
-            likeBtn.querySelector("span").textContent = likes || 0;
-            commentBtn.querySelector("span").textContent = comments || 0;
-
-            if (session) {
-                const { data: mine } = await supabaseClient
-                    .from("video_likes")
-                    .select("video_id")
-                    .eq("video_id", videoId)
-                    .eq("user_id", session.user.id)
-                    .maybeSingle();
-                likeBtn.style.color = mine ? "#fe2c55" : "#fff";
-
-                const { data: video } = await supabaseClient
-                    .from("videos")
-                    .select("user_id")
-                    .eq("id", videoId)
-                    .maybeSingle();
-
-                if (video && video.user_id !== session.user.id) {
-                    const followBtn = document.querySelector(`.video-card[data-video-id="${videoId}"] .follow-btn`);
-                    if (followBtn) {
-                        const { data: followed } = await supabaseClient
-                            .from("follows")
-                            .select("follower_id")
-                            .eq("follower_id", session.user.id)
-                            .eq("following_id", video.user_id)
-                            .maybeSingle();
-                        followBtn.textContent = followed ? "✓" : "+";
-                    }
-                }
-            }
-        }
-
-        function escapeHtml(value) {
-            return String(value)
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll('"', "&quot;")
-                .replaceAll("'", "&#039;");
-        }
-
-        let activeCommentVideoId = null;
-
-        async function likeVideo(btn) {
-            const videoId = btn.dataset.videoId;
-            if (!videoId) return;
-
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                openAuth("login");
-                return;
-            }
-
-            const { data: existing } = await supabaseClient
-                .from("video_likes")
-                .select("video_id")
-                .eq("video_id", videoId)
-                .eq("user_id", session.user.id)
-                .maybeSingle();
-
-            if (existing) {
-                await supabaseClient.from("video_likes")
-                    .delete()
-                    .eq("video_id", videoId)
-                    .eq("user_id", session.user.id);
-            } else {
-                await supabaseClient.from("video_likes")
-                    .insert({ video_id: videoId, user_id: session.user.id });
-            }
-
-            await refreshLikeButton(btn, videoId, session.user.id);
-        }
-
-        async function refreshLikeButton(btn, videoId, userId) {
-            const { count } = await supabaseClient
-                .from("video_likes")
-                .select("*", { count: "exact", head: true })
-                .eq("video_id", videoId);
-
-            const { data: mine } = await supabaseClient
-                .from("video_likes")
-                .select("video_id")
-                .eq("video_id", videoId)
-                .eq("user_id", userId)
-                .maybeSingle();
-
-            btn.style.color = mine ? "#fe2c55" : "#fff";
-            btn.querySelector("span").textContent = count || 0;
-        }
-
-        async function openComments(videoId) {
-            activeCommentVideoId = videoId;
-            document.getElementById("commentInput").value = "";
-            document.getElementById("commentMessage").textContent = "";
-            document.getElementById("commentsModal").classList.add("show");
-            document.getElementById("commentsModal").setAttribute("aria-hidden", "false");
-            await loadComments(videoId);
-        }
-
-        function closeComments() {
-            activeCommentVideoId = null;
-            document.getElementById("commentsModal").classList.remove("show");
-            document.getElementById("commentsModal").setAttribute("aria-hidden", "true");
-        }
-
-        async function loadComments(videoId) {
-            const list = document.getElementById("commentsList");
-            list.innerHTML = "چاوەڕێ بکە...";
-
-            const { data, error } = await supabaseClient
-                .from("comments")
-                .select("id, user_id, body, created_at")
-                .eq("video_id", videoId)
-                .order("created_at", { ascending: false });
-
-            if (error) {
-                list.innerHTML = "هەڵە لە هێنانی کۆمێنتەکان.";
-                return;
-            }
-
-            if (!data.length) {
-                list.innerHTML = '<div style="color:#888;text-align:center;padding:20px">هێشتا کۆمێنت نییە.</div>';
-                return;
-            }
-
-            const ids = [...new Set(data.map(c => c.user_id))];
-            const { data: profiles } = await supabaseClient
-                .from("profiles")
-                .select("id, username, display_name")
-                .in("id", ids);
-
-            const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
-
-            list.innerHTML = data.map(c => {
-                const p = profileMap[c.user_id];
-                const name = p?.username || p?.display_name || "User";
-                return `<div class="comment-item">
-                    <div class="comment-user">${escapeHtml(name)}</div>
-                    <div class="comment-body">${escapeHtml(c.body)}</div>
-                </div>`;
-            }).join("");
-        }
-
-        async function sendComment() {
-            const input = document.getElementById("commentInput");
-            const message = document.getElementById("commentMessage");
-            const body = input.value.trim();
-
-            if (!activeCommentVideoId || !body) return;
-
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                openAuth("login");
-                return;
-            }
-
-            const { error } = await supabaseClient
-                .from("comments")
-                .insert({
-                    video_id: activeCommentVideoId,
-                    user_id: session.user.id,
-                    body
-                });
-
-            if (error) {
-                message.textContent = error.message;
-                return;
-            }
-
-            input.value = "";
-            message.textContent = "";
-            await loadComments(activeCommentVideoId);
-            await updateCommentCount(activeCommentVideoId);
-        }
-
-        async function updateCommentCount(videoId) {
-            const { count } = await supabaseClient
-                .from("comments")
-                .select("*", { count: "exact", head: true })
-                .eq("video_id", videoId);
-
-            const btn = document.querySelector(`.comment-btn[data-video-id="${videoId}"]`);
-            if (btn) btn.querySelector("span").textContent = count || 0;
-        }
-
-        async function toggleFollow(btn) {
-            const followingId = btn.dataset.userId;
-            if (!followingId) return;
-
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                openAuth("login");
-                return;
-            }
-            if (session.user.id === followingId) return;
-
-            const { data: existing } = await supabaseClient
-                .from("follows")
-                .select("follower_id")
-                .eq("follower_id", session.user.id)
-                .eq("following_id", followingId)
-                .maybeSingle();
-
-            if (existing) {
-                await supabaseClient.from("follows")
-                    .delete()
-                    .eq("follower_id", session.user.id)
-                    .eq("following_id", followingId);
-            } else {
-                await supabaseClient.from("follows")
-                    .insert({ follower_id: session.user.id, following_id: followingId });
-            }
-
-            btn.textContent = existing ? "+" : "✓";
-        }
-
-        async function shareVideo(videoId) {
-            const card = document.querySelector(`.video-card[data-video-id="${videoId}"]`);
-            const videoUrl = card?.querySelector("video")?.src || location.href;
-
-            try {
-                if (navigator.share) {
-                    await navigator.share({ title: "XALLO-GAMING", url: videoUrl });
-                } else if (navigator.clipboard) {
-                    await navigator.clipboard.writeText(videoUrl);
-                    alert("بەستەرەکە کۆپی کرا.");
-                } else {
-                    alert(videoUrl);
-                }
-            } catch (e) {}
-        }
-
-        function openAuth(mode = "login") {
-            authMode = mode;
-            document.getElementById("authTitle").textContent = mode === "login" ? "چوونەژوورەوە" : "دروستکردنی هەژمار";
-            document.getElementById("authHint").textContent = mode === "login"
-                ? "ئیمەیڵ و وشەی نهێنییەکەت بنووسە."
-                : "ئیمەیڵ و وشەی نهێنییەکەت بنووسە بۆ دروستکردنی هەژمار.";
-            document.getElementById("authSwitch").textContent = mode === "login"
-                ? "هەژمارت نییە؟ هەژمار دروست بکە"
-                : "هەژمارت هەیە؟ بچۆ ژوورەوە";
             
-            const refInput = document.getElementById("authReferral");
-            if (mode === "signup") {
-                refInput.style.display = "block";
-            } else {
-                refInput.style.display = "none";
-            }
-
-            document.getElementById("authMessage").textContent = "";
-            document.getElementById("authModal").classList.add("show");
-            document.getElementById("authModal").setAttribute("aria-hidden", "false");
-        }
-
-        function closeAuth() {
-            document.getElementById("authModal").classList.remove("show");
-            document.getElementById("authModal").setAttribute("aria-hidden", "true");
-        }
-
-        function toggleAuthMode() {
-            openAuth(authMode === "login" ? "signup" : "login");
-        }
-
-        async function submitAuth() {
-            const email = document.getElementById("authEmail").value.trim();
-            const password = document.getElementById("authPassword").value;
-            const referralCode = document.getElementById("authReferral").value.trim();
-            const message = document.getElementById("authMessage");
-
-            if (!email || !password) {
-                message.textContent = "تکایە ئیمەیڵ و وشەی نهێنی پڕ بکەرەوە.";
-                return;
-            }
-            if (password.length < 6) {
-                message.textContent = "وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.";
+            if (!session) {
+                window.location.href = "index.html";
                 return;
             }
 
-            message.textContent = "تکایە چاوەڕێ بکە...";
+            const user = session.user;
+            document.getElementById("dispEmail").textContent = user.email;
 
-            if (authMode === "login") {
-                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (error) {
-                    message.textContent = error.message;
-                    return;
-                }
-                closeAuth();
-            } else {
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        data: {
-                            referral_code: referralCode || null
-                        }
-                    }
-                });
-                if (error) {
-                    message.textContent = error.message;
-                    return;
-                }
-                if (data.session) {
-                    closeAuth();
-                } else {
-                    message.textContent = "هەژمار دروستکرا. تکایە ئیمەیڵەکەت پشتڕاست بکەرەوە.";
-                }
-            }
-            updateAccountButton();
-            loadVideos();
-        }
+            // هێنانی زانیارییەکان لە خشتەی profiles
+            const { data: profile, error } = await supabaseClient
+                .from("profiles")
+                .select("username, coins, referral_code")
+                .eq("id", user.id)
+                .single();
 
-        async function handleAccount() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                if (confirm("دەتەوێت لە هەژمارەکەت بچیتە دەرەوە؟")) {
-                    await supabaseClient.auth.signOut();
-                    updateAccountButton();
-                }
-            } else {
-                openAuth("login");
+            if (profile) {
+                document.getElementById("dispUsername").textContent = profile.username || user.email.split("@")[0];
+                document.getElementById("userCoins").textContent = profile.coins || 0;
+                document.getElementById("userReferralCode").textContent = profile.referral_code || "کۆد نییە";
             }
         }
 
-        async function updateAccountButton() {
-            const btn = document.getElementById("accountBtn");
-            if (!btn) return;
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            btn.textContent = session ? "دەرچوون" : "چوونەژوورەوە";
+        function copyCode() {
+            const code = document.getElementById("userReferralCode").textContent;
+            if (code && code !== "------" && code !== "کۆد نییە") {
+                navigator.clipboard.writeText(code);
+                alert("کۆدی ڕیفراڵەکەت کۆپی کرا!");
+            }
         }
 
-        supabaseClient.auth.onAuthStateChange(() => updateAccountButton());
-        updateAccountButton();
+        async function logout() {
+            if (confirm("دەتەوێت بچیتە دەرەوە؟")) {
+                await supabaseClient.auth.signOut();
+                window.location.href = "index.html";
+            }
+        }
+
+        loadProfile();
     </script>
 </body>
 </html>
