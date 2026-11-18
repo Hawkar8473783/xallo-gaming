@@ -216,11 +216,13 @@ header .header-tag{display:block;margin-left:47px;font-size:10px;letter-spacing:
 .v47-stat small{display:block;color:#cfadff;font-size:10px;margin-top:3px}
 .v47-tabs{display:flex;gap:8px;margin:12px 0}.v47-tabs button{flex:1;background:#38294f;border:1px solid #7657aa;color:#e9d8ff;padding:13px 5px;border-radius:14px;font-weight:bold}.v47-tabs button[aria-pressed=true]{background:linear-gradient(110deg,#8855ed,#bd63ed);color:white;border-color:#d9a4ff}
 .v47-list{display:grid;gap:9px;margin:12px 0}.v47-person{display:flex;align-items:center;gap:9px;border:1px solid #604a86;border-radius:15px;background:#251c3e;padding:10px}.v47-person-open{display:flex;align-items:center;gap:9px;flex:1;min-width:0;text-align:right;background:none;color:#fff;padding:0;font-size:14px;overflow-wrap:anywhere}.v47-person-open img,.v47-avatar-placeholder{width:40px;height:40px;flex:none;border-radius:50%;object-fit:cover;background:#46306b}.v47-avatar-placeholder{display:grid;place-items:center}.v47-follow{color:white;background:linear-gradient(110deg,#8350db,#aa5bd6);border:1px solid #b48aff;border-radius:11px;padding:10px 8px;font-size:12px;white-space:nowrap}.v47-follow.active{background:#3c2c55;color:#e7d5ff}.v47-more[hidden]{display:none!important}
+/* XALLO+ v4.8 — profile video grid and single-video player */
+.v48-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:12px 0}.v48-tile{position:relative;aspect-ratio:3/4;display:block;overflow:hidden;border:1px solid #69518b;border-radius:9px;background:linear-gradient(145deg,#4a306a,#201731);color:white;padding:0;text-align:right;min-width:0}.v48-tile img,.v48-tile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}.v48-fallback{position:absolute;inset:0;display:grid;place-items:center;font-size:25px;color:#e2c6ff}.v48-tile-info{position:absolute;bottom:0;right:0;left:0;background:linear-gradient(transparent,#100a1ded 45%);padding:20px 6px 6px;text-align:right;font-size:11px;line-height:1.45}.v48-tile-title{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.v48-tile-views{display:block;font-weight:bold;direction:ltr;text-align:right}.v48-player video{display:block;width:100%;max-height:64vh;object-fit:contain;background:#08060e;border-radius:14px}.v48-player-caption{overflow-wrap:anywhere;white-space:pre-wrap;margin:12px 0;color:#f0e4ff}.v48-player-count{font-weight:bold;color:#d1afff}.v48-grid-message{padding:12px;text-align:center;color:#d8c5ec;line-height:1.8}.v48-grid-more{margin:8px 0}
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="brand-lockup"><span class="brand-mark">✦</span><span>XALLO<span class="brand-plus">+</span></span></div><span class="header-tag">v4.7</span><button type="button" class="v40-settings-btn" onclick="v40OpenSettings()" aria-label="ڕێکخستنەکانی پەخش" title="ڕێکخستنەکانی پەخش">⚙️</button></header>
+<header><div class="brand-lockup"><span class="brand-mark">✦</span><span>XALLO<span class="brand-plus">+</span></span></div><span class="header-tag">v4.8</span><button type="button" class="v40-settings-btn" onclick="v40OpenSettings()" aria-label="ڕێکخستنەکانی پەخش" title="ڕێکخستنەکانی پەخش">⚙️</button></header>
 <div id="v40NetworkBanner" class="v40-network-banner" role="status" aria-live="polite" hidden>📡 پەیوەندی ئینتەرنێت بەردەست نییە. ڤیدیۆی نوێ بار ناکرێت. <button type="button" class="v40-retry" onclick="v40RetryFeed()">🔄 دووبارە هەوڵ بدە</button></div>
 <section id="home">
 <div class="v46-feed-tabs" role="group" aria-label="جۆری فید">
@@ -334,7 +336,8 @@ header .header-tag{display:block;margin-left:47px;font-size:10px;letter-spacing:
 <button class="close-btn" type="button" onclick="closeModal('adminAppealsModal')">داخستن</button>
 </div></div>
 <div class="modal" id="v47FollowModal"><div class="box"><h2>👥 فۆڵۆوەر و فۆڵۆکراوەکان</h2><div class="v47-tabs" role="group" aria-label="جۆری لیست"><button type="button" id="v47FollowersTab" onclick="v47SetMode('followers')" aria-pressed="true">فۆڵۆوەرەکان</button><button type="button" id="v47FollowingTab" onclick="v47SetMode('following')" aria-pressed="false">فۆڵۆکراوەکان</button></div><input type="search" id="v47Search" placeholder="🔍 گەڕان بە ناو..." oninput="v47ResetSearch()" maxlength="80" autocomplete="off" aria-label="گەڕان لە لیست"><div class="message" id="v47Status" role="status" aria-live="polite"></div><div class="v47-list" id="v47List"></div><button type="button" class="main-btn v47-more" id="v47More" onclick="v47ShowMore()" hidden>بینینی زیاتر</button><button type="button" class="close-btn" id="v47Refresh" onclick="v47Load()">🔄 نوێکردنەوە</button><button type="button" class="close-btn" onclick="v47CloseFollowList()">گەڕانەوە بۆ پڕۆفایل</button></div></div>
-<div class="modal" id="v40SettingsModal"><div class="box"><h2>⚙️ ڕێکخستنەکانی XALLO+ v4.7</h2>
+<div class="modal" id="v48PlayerModal"><div class="box v48-player"><h2>🎬 ڤیدیۆ</h2><div id="v48PlayerMedia"></div><p id="v48PlayerCaption" class="v48-player-caption"></p><div id="v48PlayerCount" class="v48-player-count"></div><div class="message" id="v48PlayerStatus" role="status" aria-live="polite"></div><button type="button" class="close-btn" onclick="v48ClosePlayer()">↩️ گەڕانەوە بۆ پڕۆفایل</button></div></div>
+<div class="modal" id="v40SettingsModal"><div class="box"><h2>⚙️ ڕێکخستنەکانی XALLO+ v4.8</h2>
 <p class="v40-settings-help">ئەم ڕێکخستنانە تەنها لەم مۆبایلە پاشەکەوت دەبن؛ پێویستیان بە Supabase نییە.</p>
 <label class="v40-settings-toggle" for="v40DataSaver"><span><strong>📶 کەمکردنەوەی بەکارهێنانی داتا</strong><small>پەخشی خۆکار ڕادەگرێت؛ ڤیدیۆکان بە دەستی خۆت لێبدە.</small></span><input type="checkbox" id="v40DataSaver" onchange="v40SettingsChanged()" /></label>
 <label class="v40-settings-toggle" for="v40Autoplay"><span><strong>▶️ پەخشی خۆکاری ڤیدیۆ</strong><small>تەنها کاتێک داتا کەمکردنەوە ناچالاکە.</small></span><input type="checkbox" id="v40Autoplay" onchange="v40SettingsChanged()" /></label>
@@ -352,6 +355,7 @@ const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let feedItems=[],previewObjectUrl=null,currentUser=null,currentCommentVideoId=null;
 let v46Mode='all',v46FollowingState=null;
 let v47State=null,v47Serial=0;
+const v48Profiles=new Map();let v48Player=null;
 let likeRows=[],commentCounts=new Map(),likesReady=false,commentsReady=false;
 let followRows=[],followsReady=false,publicProfileUserId=null;
 let profileCache=new Map();
@@ -443,7 +447,7 @@ async function loadBlockedList(){
 
 const el=id=>document.getElementById(id);
 function showModal(id){pauseFeed();if(id!=='watchHistoryModal')pauseWatchHistoryVideos();el(id).classList.add('show');}
-function closeModal(id){el(id).classList.remove('show');if(id==='commentsModal')currentCommentVideoId=null;if(id==='publicProfileModal')publicProfileUserId=null;if(id==='savedVideosModal')el('savedVideosList').querySelectorAll('video').forEach(v=>v.pause());if(id==='watchHistoryModal')pauseWatchHistoryVideos();}
+function closeModal(id){el(id).classList.remove('show');if(id==='commentsModal')currentCommentVideoId=null;if(id==='publicProfileModal'){publicProfileUserId=null;v48ReleaseProfile('publicProfileVideos');}if(id==='profileModal')v48ReleaseProfile('profileVideos');if(id==='savedVideosModal')el('savedVideosList').querySelectorAll('video').forEach(v=>v.pause());if(id==='watchHistoryModal')pauseWatchHistoryVideos();}
 function openLogin(){el('loginMessage').textContent='';el('loginPassword').value='';showModal('loginModal');}
 function openSignup(){el('signupMessage').textContent='';el('signupPassword').value='';showModal('signupModal');}
 function requireLogin(){if(currentUser)return true;alert('تکایە سەرەتا بچۆ ژوورەوە 🔐');openLogin();return false;}
@@ -452,7 +456,7 @@ function updateUser(user){
  if(!user){stopChatRefresh();chatPeerId=null;}
  if(oldId!==nextId){savedVideoIds=new Set();savedReady=false;blockedIds=new Set();blocksReady=false;resetChatNotificationState();adminAllowed=false;el('adminPanelEntry').style.display='none';if(el('adminPanelModal').classList.contains('show'))closeModal('adminPanelModal');if(el('adminVideosModal').classList.contains('show'))closeModal('adminVideosModal');}
  currentUser=user||null;updateNotificationBadge(0);
- if(oldId!==nextId){v46ResetForAccountChange();v47CloseFollowList();}
+ if(oldId!==nextId){v46ResetForAccountChange();v47CloseFollowList();v48ClosePlayer();closeModal('publicProfileModal');}
  if(oldId!==nextId&&oldId){closeModal('profileModal');v43ClearProfile();closeModal('v44SecurityModal');v44ClearFields(['v44OldPassword','v44NewPassword','v44ConfirmPassword']);el('v44SecurityEmail').textContent='';el('v45SessionMessage').textContent='';v44SecurityUser=null;}
  if(user){loadNotificationCount();if(oldId!==nextId)startChatNotifications();}
  el('authButtons').style.display=user?'none':'flex';el('userBox').style.display=user?'block':'none';el('userEmail').textContent=user?.email||'';
@@ -935,21 +939,64 @@ function profileStatNode(followers,followingCount,videos,userId){
   }
   wrapper.style.display='contents';return wrapper;
 }
+// v4.8: profile uploads are independent of the feed and loaded in bounded pages.
+const V48_PAGE_SIZE=24;
+function v48Active(s){return v48Profiles.get(s.listId)===s&&currentUser?.id===s.viewer&&!isBlockedUser(s.userId)&&(s.listId==='profileVideos'?currentUser?.id===s.userId:publicProfileUserId===s.userId);}
+function v48Views(value){return '👁 '+Math.max(0,Number(value)||0).toLocaleString('en-US');}
+function v48StopMedia(video){video.pause();video.removeAttribute('src');video.load();}
+function v48ReleaseProfile(listId){
+ const s=v48Profiles.get(listId);if(!s)return;v48Profiles.delete(listId);s.observer?.disconnect();
+ if(v48Player?.state===s)v48ClosePlayer();
+ s.previews.forEach(v48StopMedia);el(listId).replaceChildren();
+}
+function v48Tile(s,item){
+ const tile=makeButton('',()=>v48OpenPlayer(s,item));tile.className='v48-tile';tile.setAttribute('aria-label','پەخشی '+(item.caption||'ڤیدیۆ'));
+ const fallback=document.createElement('span');fallback.className='v48-fallback';fallback.textContent='▶';tile.append(fallback);
+ if(item.thumbnail_url){const img=document.createElement('img');img.alt='';img.loading='lazy';img.decoding='async';img.src=item.thumbnail_url;img.onerror=()=>img.remove();tile.append(img);}
+ else if(item.video_url&&!v40Prefs.dataSaver&&s.observer){
+  // Load a first-frame preview only when a tile is visible, without playing or counting a view.
+  const video=document.createElement('video');video.muted=true;video.playsInline=true;video.preload='metadata';video.style.visibility='hidden';video.setAttribute('aria-hidden','true');
+  video.addEventListener('loadeddata',()=>{if(v48Active(s))video.style.visibility='visible';});tile.append(video);s.previews.add(video);s.previewUrls.set(video,item.video_url.split('#')[0]+'#t=0.1');s.observer.observe(video);
+ }
+ const info=document.createElement('span');info.className='v48-tile-info';const name=document.createElement('span');name.className='v48-tile-title';name.textContent=item.caption||'ڤیدیۆی نوێ';const views=document.createElement('span');views.className='v48-tile-views';views.textContent=v48Views(item.views);info.append(name,views);tile.append(info);s.viewLabels.set(String(item.id),views);return tile;
+}
+function v48ClosePlayer(){
+ const old=v48Player;v48Player=null;if(old)v48StopMedia(old.video);
+ el('v48PlayerMedia').replaceChildren();el('v48PlayerCaption').textContent='';el('v48PlayerCount').textContent='';el('v48PlayerStatus').textContent='';closeModal('v48PlayerModal');
+}
+function v48OpenPlayer(s,item){
+ if(!v48Active(s)||!item.video_url||item.is_hidden||isBlockedUser(item.user_id))return;
+ v48ClosePlayer();const video=document.createElement('video');video.src=item.video_url;video.controls=true;video.playsInline=true;video.preload='metadata';if(item.thumbnail_url)video.poster=item.thumbnail_url;
+ v48Player={state:s,item,video};const player=v48Player;attachWatchHistory(video,item);
+ video.addEventListener('play',()=>{if(document.hidden||v48Player!==player)video.pause();});
+ video.addEventListener('error',()=>{if(v48Player===player)el('v48PlayerStatus').textContent='⚠️ ڤیدیۆکە پەخش نەبوو. پەیوەندی ئینتەرنێت بپشکنە.';});
+ el('v48PlayerMedia').append(video);el('v48PlayerCaption').textContent=item.caption||'ڤیدیۆی نوێ 🎬';el('v48PlayerCount').textContent=v48Views(item.views);showModal('v48PlayerModal');
+ if(!document.hidden){try{const promise=video.play();if(promise?.catch)promise.catch(()=>{});}catch(_){}}
+}
+function v48UpdateViewLabels(item){
+ for(const s of v48Profiles.values()){const row=s.items.get(String(item.id));if(row){row.views=item.views;const label=s.viewLabels.get(String(item.id));if(label)label.textContent=v48Views(item.views);}}
+ if(v48Player&&String(v48Player.item.id)===String(item.id)){v48Player.item.views=item.views;el('v48PlayerCount').textContent=v48Views(item.views);}
+}
+async function v48LoadProfilePage(s){
+ if(!v48Active(s)||s.busy||!s.more)return;s.busy=true;s.button.disabled=true;s.button.hidden=false;s.button.textContent='بار دەکرێت...';s.status.textContent='';
+ try{
+  const {data,error,count}=await supabaseClient.from('videos').select('id,caption,user_id,is_hidden,video_url,thumbnail_url,views,created_at',{count:'exact'}).eq('user_id',s.userId).or('is_hidden.is.null,is_hidden.eq.false').order('created_at',{ascending:false}).order('id',{ascending:false}).range(s.offset,s.offset+V48_PAGE_SIZE-1);
+  if(error)throw error;if(!v48Active(s))return;const rows=data||[];s.offset+=rows.length;s.count=typeof count==='number'?count:null;s.more=rows.length===V48_PAGE_SIZE&&(s.count===null||s.offset<s.count);
+  for(const item of visibleVideos(rows)){const id=String(item.id);if(s.items.has(id))continue;s.items.set(id,item);s.grid.append(v48Tile(s,item));}
+  if(!s.items.size&&!s.more)s.status.textContent='هێشتا ڤیدیۆ نییە.';
+  if(s.countLabel)s.countLabel.textContent=String(s.count??'—');
+  s.button.textContent='⬇️ ڤیدیۆی زیاتر';s.button.hidden=!s.more;
+ }catch(e){if(v48Active(s)){s.status.textContent='⚠️ بارکردنی ڤیدیۆ سەرکەوتوو نەبوو.';s.button.textContent='🔄 دووبارە هەوڵ بدە';s.button.hidden=false;}}
+ finally{s.busy=false;if(v48Active(s))s.button.disabled=false;}
+}
 async function showProfileData(userId,statsId,videosId){
-  const stats=el(statsId),list=el(videosId),viewer=currentUser?.id;stats.textContent='بار دەکرێت...';list.replaceChildren();
-  // Profile videos are queried independently; paging the home feed must not hide older uploads.
-  let videos=[];
-  try{
-   const {data,error}=await supabaseClient.from('videos').select('id,caption,user_id,is_hidden')
-     .eq('user_id',userId).order('created_at',{ascending:false}).limit(100);
-   if(error)throw error;
-   videos=(data||[]).filter(v=>!v.is_hidden);
-  }catch(err){console.warn('Profile videos:',err.message);videos=visibleVideos(feedItems.filter(v=>v.user_id===userId));}
-  const [followers,followed]=await Promise.all([supabaseClient.from('user_follows').select('follower_id',{count:'exact',head:true}).eq('following_id',userId),supabaseClient.from('user_follows').select('following_id',{count:'exact',head:true}).eq('follower_id',userId)]);
-  if(currentUser?.id!==viewer||(statsId==='profileStats'?currentUser?.id!==userId:publicProfileUserId!==userId))return;
-  stats.replaceChildren(profileStatNode(followers.error?null:followers.count,followed.error?null:followed.count,videos.length,userId));
-  if(!videos.length){list.textContent='هێشتا ڤیدیۆ نییە.';return;}
-  videos.forEach(v=>{const row=document.createElement('div');row.className='profile-video';const title=document.createElement('p');title.textContent=v.caption||'ڤیدیۆی نوێ 🎬';row.append(title);list.append(row);});
+ const stats=el(statsId),list=el(videosId);v48ReleaseProfile(videosId);stats.textContent='بار دەکرێت...';list.replaceChildren();
+ const s={userId,viewer:currentUser?.id,listId:videosId,offset:0,count:null,more:true,busy:false,items:new Map(),viewLabels:new Map(),previews:new Set(),previewUrls:new Map(),observer:null};v48Profiles.set(videosId,s);
+ s.grid=document.createElement('div');s.grid.className='v48-grid';s.status=document.createElement('div');s.status.className='v48-grid-message';s.status.setAttribute('role','status');s.button=makeButton('⬇️ ڤیدیۆی زیاتر',()=>v48LoadProfilePage(s));s.button.className='main-btn v48-grid-more';s.button.hidden=true;list.append(s.grid,s.status,s.button);
+ if(typeof IntersectionObserver!=='undefined'){s.observer=new IntersectionObserver(entries=>{if(!v48Active(s))return;for(const entry of entries){if(entry.isIntersecting&&s.previewUrls.has(entry.target)){const video=entry.target;const url=s.previewUrls.get(video);s.previewUrls.delete(video);s.observer.unobserve(video);if(!v40Prefs.dataSaver)video.src=url;}}},{root:list.closest('.box'),rootMargin:'80px'});}
+ const counts=Promise.allSettled([supabaseClient.from('user_follows').select('follower_id',{count:'exact',head:true}).eq('following_id',userId),supabaseClient.from('user_follows').select('following_id',{count:'exact',head:true}).eq('follower_id',userId)]);
+ await v48LoadProfilePage(s);const results=await counts;if(!v48Active(s))return;
+ const countOf=r=>r.status==='fulfilled'&&!r.value.error?r.value.count:null;stats.replaceChildren(profileStatNode(countOf(results[0]),countOf(results[1]),s.count,userId));s.countLabel=stats.querySelector('div > div:last-child b');
 }
 async function openPublicProfile(id){
   if(!id)return;if(isBlockedUser(id)){alert('ئەم بەکارهێنەرە بلۆککراوە. بۆ لابردنی بلۆک بچۆ پڕۆفایلی خۆت.');return;}publicProfileUserId=id;
@@ -1063,7 +1110,7 @@ async function registerVideoView(item){
  try{
   const {data,error}=await supabaseClient.rpc('xallo_register_video_view',{p_video_id:item.id});
   if(error)throw error;
-  if(data){item.views=Math.max(0,Number(item.views)||0)+1;}
+  if(data){item.views=Math.max(0,Number(item.views)||0)+1;v48UpdateViewLabels(item);}
  }catch(err){console.warn('View counter (run v3.6 SQL):',err.message);}
 }
 
