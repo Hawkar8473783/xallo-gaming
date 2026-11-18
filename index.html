@@ -211,11 +211,16 @@ header .header-tag{display:block;margin-left:47px;font-size:10px;letter-spacing:
 #home.v46-following .welcome,#home.v46-following .demo-video{display:none}
 .box .v40-settings-toggle input[type=checkbox]{width:24px;height:24px;padding:0;margin:0;flex:0 0 24px}
 .v40-settings-toggle>span{flex:1;min-width:0}
+/* XALLO+ v4.7 — follower and following lists */
+.profile-stats .v47-stat{background:#30244c;border:1px solid #9973d6;border-radius:13px;color:#eee2ff;padding:9px 12px;font:inherit;min-width:90px}
+.v47-stat small{display:block;color:#cfadff;font-size:10px;margin-top:3px}
+.v47-tabs{display:flex;gap:8px;margin:12px 0}.v47-tabs button{flex:1;background:#38294f;border:1px solid #7657aa;color:#e9d8ff;padding:13px 5px;border-radius:14px;font-weight:bold}.v47-tabs button[aria-pressed=true]{background:linear-gradient(110deg,#8855ed,#bd63ed);color:white;border-color:#d9a4ff}
+.v47-list{display:grid;gap:9px;margin:12px 0}.v47-person{display:flex;align-items:center;gap:9px;border:1px solid #604a86;border-radius:15px;background:#251c3e;padding:10px}.v47-person-open{display:flex;align-items:center;gap:9px;flex:1;min-width:0;text-align:right;background:none;color:#fff;padding:0;font-size:14px;overflow-wrap:anywhere}.v47-person-open img,.v47-avatar-placeholder{width:40px;height:40px;flex:none;border-radius:50%;object-fit:cover;background:#46306b}.v47-avatar-placeholder{display:grid;place-items:center}.v47-follow{color:white;background:linear-gradient(110deg,#8350db,#aa5bd6);border:1px solid #b48aff;border-radius:11px;padding:10px 8px;font-size:12px;white-space:nowrap}.v47-follow.active{background:#3c2c55;color:#e7d5ff}.v47-more[hidden]{display:none!important}
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="brand-lockup"><span class="brand-mark">✦</span><span>XALLO<span class="brand-plus">+</span></span></div><span class="header-tag">v4.6</span><button type="button" class="v40-settings-btn" onclick="v40OpenSettings()" aria-label="ڕێکخستنەکانی پەخش" title="ڕێکخستنەکانی پەخش">⚙️</button></header>
+<header><div class="brand-lockup"><span class="brand-mark">✦</span><span>XALLO<span class="brand-plus">+</span></span></div><span class="header-tag">v4.7</span><button type="button" class="v40-settings-btn" onclick="v40OpenSettings()" aria-label="ڕێکخستنەکانی پەخش" title="ڕێکخستنەکانی پەخش">⚙️</button></header>
 <div id="v40NetworkBanner" class="v40-network-banner" role="status" aria-live="polite" hidden>📡 پەیوەندی ئینتەرنێت بەردەست نییە. ڤیدیۆی نوێ بار ناکرێت. <button type="button" class="v40-retry" onclick="v40RetryFeed()">🔄 دووبارە هەوڵ بدە</button></div>
 <section id="home">
 <div class="v46-feed-tabs" role="group" aria-label="جۆری فید">
@@ -328,7 +333,8 @@ header .header-tag{display:block;margin-left:47px;font-size:10px;letter-spacing:
 <button class="close-btn" type="button" onclick="closeModal('adminAppealsModal');openAdminPanel()">↩️ گەڕانەوە بۆ پانێڵ</button>
 <button class="close-btn" type="button" onclick="closeModal('adminAppealsModal')">داخستن</button>
 </div></div>
-<div class="modal" id="v40SettingsModal"><div class="box"><h2>⚙️ ڕێکخستنەکانی XALLO+ v4.6</h2>
+<div class="modal" id="v47FollowModal"><div class="box"><h2>👥 فۆڵۆوەر و فۆڵۆکراوەکان</h2><div class="v47-tabs" role="group" aria-label="جۆری لیست"><button type="button" id="v47FollowersTab" onclick="v47SetMode('followers')" aria-pressed="true">فۆڵۆوەرەکان</button><button type="button" id="v47FollowingTab" onclick="v47SetMode('following')" aria-pressed="false">فۆڵۆکراوەکان</button></div><input type="search" id="v47Search" placeholder="🔍 گەڕان بە ناو..." oninput="v47ResetSearch()" maxlength="80" autocomplete="off" aria-label="گەڕان لە لیست"><div class="message" id="v47Status" role="status" aria-live="polite"></div><div class="v47-list" id="v47List"></div><button type="button" class="main-btn v47-more" id="v47More" onclick="v47ShowMore()" hidden>بینینی زیاتر</button><button type="button" class="close-btn" id="v47Refresh" onclick="v47Load()">🔄 نوێکردنەوە</button><button type="button" class="close-btn" onclick="v47CloseFollowList()">گەڕانەوە بۆ پڕۆفایل</button></div></div>
+<div class="modal" id="v40SettingsModal"><div class="box"><h2>⚙️ ڕێکخستنەکانی XALLO+ v4.7</h2>
 <p class="v40-settings-help">ئەم ڕێکخستنانە تەنها لەم مۆبایلە پاشەکەوت دەبن؛ پێویستیان بە Supabase نییە.</p>
 <label class="v40-settings-toggle" for="v40DataSaver"><span><strong>📶 کەمکردنەوەی بەکارهێنانی داتا</strong><small>پەخشی خۆکار ڕادەگرێت؛ ڤیدیۆکان بە دەستی خۆت لێبدە.</small></span><input type="checkbox" id="v40DataSaver" onchange="v40SettingsChanged()" /></label>
 <label class="v40-settings-toggle" for="v40Autoplay"><span><strong>▶️ پەخشی خۆکاری ڤیدیۆ</strong><small>تەنها کاتێک داتا کەمکردنەوە ناچالاکە.</small></span><input type="checkbox" id="v40Autoplay" onchange="v40SettingsChanged()" /></label>
@@ -345,6 +351,7 @@ const SUPABASE_KEY='sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let feedItems=[],previewObjectUrl=null,currentUser=null,currentCommentVideoId=null;
 let v46Mode='all',v46FollowingState=null;
+let v47State=null,v47Serial=0;
 let likeRows=[],commentCounts=new Map(),likesReady=false,commentsReady=false;
 let followRows=[],followsReady=false,publicProfileUserId=null;
 let profileCache=new Map();
@@ -445,7 +452,7 @@ function updateUser(user){
  if(!user){stopChatRefresh();chatPeerId=null;}
  if(oldId!==nextId){savedVideoIds=new Set();savedReady=false;blockedIds=new Set();blocksReady=false;resetChatNotificationState();adminAllowed=false;el('adminPanelEntry').style.display='none';if(el('adminPanelModal').classList.contains('show'))closeModal('adminPanelModal');if(el('adminVideosModal').classList.contains('show'))closeModal('adminVideosModal');}
  currentUser=user||null;updateNotificationBadge(0);
- if(oldId!==nextId)v46ResetForAccountChange();
+ if(oldId!==nextId){v46ResetForAccountChange();v47CloseFollowList();}
  if(oldId!==nextId&&oldId){closeModal('profileModal');v43ClearProfile();closeModal('v44SecurityModal');v44ClearFields(['v44OldPassword','v44NewPassword','v44ConfirmPassword']);el('v44SecurityEmail').textContent='';el('v45SessionMessage').textContent='';v44SecurityUser=null;}
  if(user){loadNotificationCount();if(oldId!==nextId)startChatNotifications();}
  el('authButtons').style.display=user?'none':'flex';el('userBox').style.display=user?'block':'none';el('userEmail').textContent=user?.email||'';
@@ -833,15 +840,103 @@ async function toggleFollow(id,btn){
     if(publicProfileUserId===id&&el('publicProfileModal').classList.contains('show'))await showProfileData(id,'publicProfileStats','publicProfileVideos');
   }catch(e){alert('هەڵەی Follow: '+e.message);}finally{btn.disabled=false;}
 }
-function profileStatNode(followers,followingCount,videos){
+// v4.7: follow lists are queried for the selected profile, not the feed cache.
+const V47_DISPLAY_PAGE=35;
+function v47Active(state,serial){return v47State===state&&serial===v47Serial&&currentUser?.id===state.viewer&&el('v47FollowModal').classList.contains('show');}
+function v47CloseFollowList(){v47Serial++;v47State=null;closeModal('v47FollowModal');el('v47List').replaceChildren();el('v47Search').value='';el('v47Status').textContent='';el('v47More').hidden=true;el('v47Refresh').disabled=false;}
+function v47OpenFollowList(target,mode){
+ if(!requireLogin()||!target||isBlockedUser(target))return;
+ v47State={target,viewer:currentUser.id,mode,rows:[],mine:new Set(),pending:new Set(),limit:V47_DISPLAY_PAGE,busy:false};
+ el('v47Search').value='';showModal('v47FollowModal');return v47Load();
+}
+function v47SetMode(mode){
+ const s=v47State;if(!s||s.pending.size||!['followers','following'].includes(mode)||s.mode===mode)return;
+ s.mode=mode;s.limit=V47_DISPLAY_PAGE;el('v47Search').value='';return v47Load();
+}
+function v47ResetSearch(){if(!v47State)return;v47State.limit=V47_DISPLAY_PAGE;v47Render();}
+function v47ShowMore(){if(!v47State)return;v47State.limit+=V47_DISPLAY_PAGE;v47Render();}
+async function v47Load(){
+ const s=v47State;if(!s||s.pending.size)return;
+ const serial=++v47Serial,mode=s.mode;
+ const peer=mode==='followers'?'follower_id':'following_id',owner=mode==='followers'?'following_id':'follower_id';
+ s.rows=[];s.mine=new Set();s.busy=true;s.loaded=false;
+ el('v47FollowersTab').setAttribute('aria-pressed',String(mode==='followers'));el('v47FollowingTab').setAttribute('aria-pressed',String(mode==='following'));
+ el('v47List').replaceChildren();el('v47More').hidden=true;el('v47Refresh').disabled=true;el('v47Status').textContent='لیستەکە بار دەکرێت...';
+ try{
+  if(!await loadBlockedUsers())throw new Error('لیستی بلۆک بار نەبووە.');
+  if(!v47Active(s,serial))return;
+  const ids=new Set(),pageSize=200;
+  for(let offset=0;;offset+=pageSize){
+   const {data,error}=await supabaseClient.from('user_follows').select(peer).eq(owner,s.target).order(peer,{ascending:true}).range(offset,offset+pageSize-1);
+   if(error)throw error;if(!v47Active(s,serial))return;
+   for(const row of data||[])if(row[peer]&&!isBlockedUser(row[peer]))ids.add(String(row[peer]));
+   if((data||[]).length<pageSize)break;
+  }
+  const people=[...ids],profiles=new Map(),mine=new Set();
+  for(let i=0;i<people.length;i+=80){
+   const batch=people.slice(i,i+80);
+   const [p,f]=await Promise.all([
+    supabaseClient.from('profiles').select('id,display_name,avatar_url').in('id',batch),
+    supabaseClient.from('user_follows').select('following_id').eq('follower_id',s.viewer).in('following_id',batch)
+   ]);
+   if(p.error)throw p.error;if(f.error)throw f.error;if(!v47Active(s,serial))return;
+   for(const row of p.data||[])profiles.set(String(row.id),row);
+   for(const row of f.data||[])mine.add(String(row.following_id));
+  }
+  if(!v47Active(s,serial))return;
+  s.rows=people.map(id=>({id,name:profiles.get(id)?.display_name||'بەکارهێنەر · '+id.slice(0,8),avatar:profiles.get(id)?.avatar_url||''})).sort((a,b)=>a.name.localeCompare(b.name)||a.id.localeCompare(b.id));
+  for(const p of profiles.values())profileCache.set(p.id,p);
+  s.mine=mine;s.busy=false;s.loaded=true;v47Render();
+ }catch(e){if(v47Active(s,serial)){s.busy=false;el('v47Status').textContent='⚠️ لیست بار نەبووە: '+e.message;}}
+ finally{if(v47Active(s,serial))el('v47Refresh').disabled=false;}
+}
+function v47Render(){
+ const s=v47State;if(!s||s.busy||!s.loaded||!v47Active(s,v47Serial))return;
+ const root=el('v47List'),q=el('v47Search').value.trim().toLowerCase();root.replaceChildren();
+ const matches=s.rows.filter(p=>!isBlockedUser(p.id)&&(!q||p.name.toLowerCase().includes(q)));
+ el('v47Status').textContent=matches.length?'👥 '+matches.length+' بەکارهێنەر':(q?'هیچ ئەنجامێک نەدۆزرایەوە.':'هێشتا هیچ بەکارهێنەرێک نییە.');
+ el('v47More').hidden=matches.length<=s.limit;
+ for(const p of matches.slice(0,s.limit)){
+  const row=document.createElement('div');row.className='v47-person';
+  const open=makeButton('',()=>{if(s.pending.size||!v47Active(s,v47Serial))return;v47CloseFollowList();closeModal('profileModal');closeModal('publicProfileModal');if(p.id===currentUser?.id)void profile();else void openPublicProfile(p.id);});open.className='v47-person-open';
+  const fallback=document.createElement('span');fallback.className='v47-avatar-placeholder';fallback.textContent='👤';
+  if(p.avatar){const img=document.createElement('img');img.loading='lazy';img.alt='';img.src=p.avatar;img.onerror=()=>img.replaceWith(fallback);open.append(img);}else open.append(fallback);
+  const name=document.createElement('span');name.textContent=p.name+(p.id===s.viewer?' (تۆ)':'');open.append(name);row.append(open);
+  if(p.id!==s.viewer){const yes=s.mine.has(p.id);const btn=makeButton(yes?'✓ فۆڵۆکراوە':'➕ فۆڵۆ',()=>v47ToggleFollow(p.id));btn.className='v47-follow'+(yes?' active':'');btn.setAttribute('aria-pressed',String(yes));btn.disabled=s.pending.size>0;row.append(btn);}
+  root.append(row);
+ }
+}
+async function v47ToggleFollow(id){
+ const s=v47State,serial=v47Serial;
+ if(!s||!v47Active(s,serial)||s.busy||s.pending.size||id===s.viewer||isBlockedUser(id)||!s.rows.some(p=>p.id===id))return;
+ const yes=s.mine.has(id);s.pending.add(id);v47Render();
+ try{
+  const query=yes?supabaseClient.from('user_follows').delete().eq('follower_id',s.viewer).eq('following_id',id).select('following_id'):supabaseClient.from('user_follows').insert({follower_id:s.viewer,following_id:id}).select('following_id');
+  const {data,error}=await query;if(error)throw error;if(!data?.length)throw new Error('گۆڕانکارییەکە پاشەکەوت نەکرا.');
+  if(currentUser?.id!==s.viewer)return;
+  if(v47Active(s,serial)){
+   if(yes)s.mine.delete(id);else s.mine.add(id);
+   if(yes&&s.target===s.viewer&&s.mode==='following')s.rows=s.rows.filter(p=>p.id!==id);
+   if(yes&&s.target===id&&s.mode==='followers')s.rows=s.rows.filter(p=>p.id!==s.viewer);
+   if(!yes&&s.target===id&&s.mode==='followers'&&!s.rows.some(p=>p.id===s.viewer)){const me=profileCache.get(s.viewer);s.rows.push({id:s.viewer,name:me?.display_name||'تۆ',avatar:me?.avatar_url||''});}
+  }
+  await refreshFollows();if(currentUser?.id!==s.viewer)return;
+  if(v46Mode==='following')await loadVideos();else refreshVisibleCards();
+  if(currentUser?.id!==s.viewer)return;
+  if(el('profileModal').classList.contains('show'))void showProfileData(s.viewer,'profileStats','profileVideos');
+  if(publicProfileUserId&&el('publicProfileModal').classList.contains('show')){const target=publicProfileUserId;void showProfileData(target,'publicProfileStats','publicProfileVideos');if(target===id){const btn=el('publicProfileFollow').querySelector('button');if(btn)btn.textContent=yes?'➕ Follow':'✓ Following';}}
+ }catch(e){if(v47Active(s,serial))alert('هەڵەی فۆڵۆ: '+e.message);}
+ finally{s.pending.delete(id);if(v47Active(s,serial))v47Render();}
+}
+function profileStatNode(followers,followingCount,videos,userId){
   const wrapper=document.createElement('div');
-  for(const [label,num] of [['Followers',followers],['Following',followingCount],['ڤیدیۆ',videos]]){
-    const div=document.createElement('div');const b=document.createElement('b');b.textContent=String(num);const t=document.createElement('span');t.textContent=label;div.append(b,t);wrapper.append(div);
+  for(const [label,num,mode] of [['فۆڵۆوەرەکان',followers,'followers'],['فۆڵۆکراوەکان',followingCount,'following'],['ڤیدیۆ',videos,null]]){
+    const div=mode?makeButton('',()=>v47OpenFollowList(userId,mode)):document.createElement('div');if(mode)div.className='v47-stat';const b=document.createElement('b');b.textContent=String(num??'—');const t=document.createElement('span');t.textContent=label;div.append(b,t);if(mode){const hint=document.createElement('small');hint.textContent='بینینی لیست';div.append(hint);}wrapper.append(div);
   }
   wrapper.style.display='contents';return wrapper;
 }
 async function showProfileData(userId,statsId,videosId){
-  const stats=el(statsId),list=el(videosId);stats.textContent='بار دەکرێت...';list.replaceChildren();
+  const stats=el(statsId),list=el(videosId),viewer=currentUser?.id;stats.textContent='بار دەکرێت...';list.replaceChildren();
   // Profile videos are queried independently; paging the home feed must not hide older uploads.
   let videos=[];
   try{
@@ -850,10 +945,9 @@ async function showProfileData(userId,statsId,videosId){
    if(error)throw error;
    videos=(data||[]).filter(v=>!v.is_hidden);
   }catch(err){console.warn('Profile videos:',err.message);videos=visibleVideos(feedItems.filter(v=>v.user_id===userId));}
-  if(!followsReady)await refreshFollows();
-  if(statsId==='profileStats'&&currentUser?.id!==userId)return;
-  if(!followsReady){stats.textContent='ژمارەی Follow بار نەبووە.';}
-  else{const followers=followRows.filter(r=>r.following_id===userId).length;const followingCount=followRows.filter(r=>r.follower_id===userId).length;stats.replaceChildren(profileStatNode(followers,followingCount,videos.length));}
+  const [followers,followed]=await Promise.all([supabaseClient.from('user_follows').select('follower_id',{count:'exact',head:true}).eq('following_id',userId),supabaseClient.from('user_follows').select('following_id',{count:'exact',head:true}).eq('follower_id',userId)]);
+  if(currentUser?.id!==viewer||(statsId==='profileStats'?currentUser?.id!==userId:publicProfileUserId!==userId))return;
+  stats.replaceChildren(profileStatNode(followers.error?null:followers.count,followed.error?null:followed.count,videos.length,userId));
   if(!videos.length){list.textContent='هێشتا ڤیدیۆ نییە.';return;}
   videos.forEach(v=>{const row=document.createElement('div');row.className='profile-video';const title=document.createElement('p');title.textContent=v.caption||'ڤیدیۆی نوێ 🎬';row.append(title);list.append(row);});
 }
