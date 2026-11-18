@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ku">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>XALLO+</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:#000;color:#fff;font-family:Arial,sans-serif}body{min-height:100vh}button{border:0;cursor:pointer}button:disabled{opacity:.5}.app{max-width:480px;min-height:100vh;margin:auto;background:#111;padding-bottom:85px}header{position:sticky;top:0;z-index:20;padding:16px;text-align:center;font-size:25px;font-weight:bold;background:#111;border-bottom:1px solid #333}.logo{font-size:46px;font-weight:bold;color:#ff0050;margin-top:20px}.welcome{text-align:center;padding:25px 18px}.welcome p{color:#aaa;line-height:1.8}.buttons{display:flex;gap:10px;justify-content:center;margin-top:25px}.buttons button{padding:13px 20px;border-radius:25px;font-size:15px}.login,.main-btn{background:#ff0050;color:white}.signup{background:white;color:#000}.user-box{display:none;background:#1c1c1c;padding:18px;margin-top:20px;border-radius:18px}.user-box strong,.uploaded-info strong{color:#ff0050;overflow-wrap:anywhere}.logout{background:#333;color:#fff;padding:11px 25px;border-radius:20px;margin-top:12px}.demo-video{min-height:280px;margin:15px;border-radius:18px;position:relative;overflow:hidden;background:linear-gradient(150deg,#ff0050,#7000ff,#090909)}.demo-content{min-height:280px;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px}.video-info{position:absolute;bottom:12px;right:20px;left:80px}.actions{position:absolute;left:12px;bottom:20px;display:flex;flex-direction:column;gap:10px}.action{width:48px;height:48px;border-radius:50%;color:#fff;background:#000a;font-size:21px}.uploaded-video{margin:15px;background:#181818;border-radius:18px;overflow:hidden}.uploaded-video video{width:100%;max-height:600px;display:block;background:#000}.uploaded-info{padding:15px}.uploaded-info p{color:#ddd;line-height:1.7;overflow-wrap:anywhere}.video-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.video-actions button{background:#292929;color:#fff;border-radius:20px;padding:10px 13px;font-size:14px}.video-actions button.liked{background:#751631;color:#fff}nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);height:70px;background:#111;border-top:1px solid #333;display:flex;justify-content:space-around;align-items:center;z-index:50}nav button{background:none;color:#fff;font-size:13px;padding:5px 10px}.modal{display:none;position:fixed;inset:0;z-index:100;background:#000e;align-items:center;justify-content:center;padding:16px}.modal.show{display:flex}.box{width:100%;max-width:400px;max-height:90vh;overflow:auto;background:#181818;border-radius:22px;padding:22px}.box h2{text-align:center;margin-top:0}.box input:not([type=file]),.box textarea{width:100%;padding:14px;margin:7px 0;border:1px solid #444;border-radius:12px;background:#242424;color:#fff;font-size:16px;outline:none}.box textarea{resize:vertical;min-height:75px}.main-btn,.close-btn{width:100%;padding:14px;margin-top:10px;border-radius:25px;color:#fff;font-size:16px}.close-btn{background:#333}.message{text-align:center;color:#bbb;margin-top:12px;line-height:1.7;white-space:pre-line;overflow-wrap:anywhere}.profile-info{background:#222;border-radius:15px;padding:15px;margin:15px 0;line-height:2;overflow-wrap:anywhere}.profile-info strong{color:#ff0050}.file-label{display:block;background:#292929;border:1px dashed #666;padding:20px;border-radius:15px;text-align:center;margin:10px 0;color:#ddd}.file-label input{display:block;width:100%;margin-top:12px}#videoPreview{margin-top:15px}#videoPreview video{width:100%;max-height:320px;border-radius:15px;background:#000}.search-box{padding:15px}.search-box input{width:100%;padding:14px;border-radius:25px;border:1px solid #444;background:#222;color:#fff;font-size:16px}.empty{text-align:center;color:#888;padding:30px 15px;line-height:1.8}.comment-item{padding:12px 0;border-bottom:1px solid #333;overflow-wrap:anywhere}.comment-item strong{color:#ff5c89}.comment-item p{margin:7px 0;white-space:pre-wrap}.comment-item small{color:#aaa}.comment-item button{background:#383838;color:white;border-radius:14px;padding:6px 10px;margin-right:8px}.comment-row{display:flex;gap:8px;align-items:flex-start}.comment-row textarea{flex:1}.comment-row button{margin-top:7px;padding:13px;border-radius:12px;background:#ff0050;color:white}.hint{color:#aaa;font-size:12px;text-align:center}
+ .follow-btn{background:#ff0050!important}.follow-btn.following{background:#444!important}.profile-stats{display:flex;justify-content:space-around;background:#242424;border-radius:14px;padding:16px;margin:12px 0;text-align:center}.profile-stats b{display:block;color:#ff668d;font-size:20px}.profile-video{padding:12px;border-bottom:1px solid #333}.profile-video button{background:#333;color:#fff;padding:9px;border-radius:14px}.owner-name{background:none;color:#ff668d;font-weight:bold;padding:4px 0;text-align:right;overflow-wrap:anywhere}
+
+/* Vertical swipe feed */
+#home.feed-mode .welcome,#home.feed-mode .demo-video{display:none}
+#home.feed-mode #feedMessage{font-size:12px;margin:0;padding:3px}
+#home.feed-mode #uploadedVideos{height:calc(100dvh - 122px);min-height:350px;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none}
+#home.feed-mode #uploadedVideos::-webkit-scrollbar{display:none}
+#home.feed-mode #uploadedVideos>.uploaded-video{height:100%;min-height:100%;margin:0;border-radius:0;position:relative;scroll-snap-align:start;scroll-snap-stop:always;background:#000;display:flex;align-items:center;justify-content:center}
+#home.feed-mode #uploadedVideos>.uploaded-video>video{width:100%;height:100%;max-height:none;object-fit:contain}
+#home.feed-mode #uploadedVideos>.uploaded-video>.uploaded-info{position:absolute;bottom:10px;right:0;left:0;padding:22px 12px 12px;background:linear-gradient(transparent,#000b);pointer-events:none}
+#home.feed-mode #uploadedVideos>.uploaded-video>.uploaded-info button{pointer-events:auto}
+#home.feed-mode .uploaded-info p{margin:6px 0}
+#home.feed-mode .video-actions{gap:6px}
+#home.feed-mode .video-actions button{background:#242424cc}
+
+.notification-item{padding:14px 10px;border-bottom:1px solid #333;line-height:1.7;cursor:pointer}.notification-item.unread{background:#30202a;border-right:3px solid #ff0050}.notification-item small{display:block;color:#aaa}.notification-badge{display:inline-block;background:#ff0050;color:white;border-radius:15px;padding:1px 6px;font-size:11px;min-width:20px}.notification-tools{display:flex;gap:8px}.notification-tools button{flex:1;padding:10px;border-radius:15px;background:#333;color:white}
+
+/* XALLO+ profile editor */
+.avatar-circle{width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid #b48aff;background:#39265d;display:block;margin:8px auto}
+.profile-name{text-align:center;font-size:20px;font-weight:800;color:#e7d6ff;margin:8px}
+.profile-edit{background:#251a43;border:1px solid #70569c;border-radius:17px;padding:14px;margin:12px 0}
+.profile-edit label{display:block;color:#d6c2fa;margin:8px 0 4px}
+.profile-edit input[type=file]{width:100%;max-width:100%;color:#fff}
+.profile-mini-avatar{width:30px;height:30px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-left:7px;border:1px solid #b48aff}
+
+.editor-thumb{width:100%;max-height:180px;object-fit:cover;border-radius:14px;margin:10px 0;background:#211832}.editor-field{display:block;margin:12px 0;color:#d9c5ff}.editor-field input{width:100%;margin-top:8px}.edit-video-btn{background:linear-gradient(110deg,#7c3aed,#2563eb)!important;color:#fff!important}
+
+/* XALLO+ private chat */
+.chat-list{display:flex;flex-direction:column;gap:9px;max-height:55vh;overflow:auto;margin:12px 0}
+.chat-person{width:100%;text-align:right;padding:13px;border:1px solid #7756b4;border-radius:13px;background:#241b39;color:#fff}
+.chat-thread{height:48vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px;background:#151020;border-radius:14px;margin:10px 0}
+.chat-bubble{max-width:82%;padding:10px 13px;border-radius:15px;background:#35234e;overflow-wrap:anywhere;align-self:flex-start;white-space:pre-wrap}
+.chat-bubble.mine{background:#7142c3;align-self:flex-end}
+.chat-bubble small{display:block;font-size:10px;opacity:.7;margin-top:4px}
+.chat-compose{display:flex;gap:7px;align-items:flex-end}.chat-compose textarea{flex:1;min-height:48px;max-height:110px}.chat-compose button{min-width:72px}
+
+/* XALLO+ v3.3 — search UI */
+.search-label{display:block;color:#cbb8ec;font-size:13px;margin:10px 1px}.search-tabs{display:flex;gap:8px;margin:13px 0 2px}.search-tab{flex:1;border-radius:15px;padding:10px 7px;background:#342747;color:#ddd1f7;border:1px solid #5f4883;font-size:14px}.search-tab.selected{background:linear-gradient(120deg,#7849d7,#b866e2);color:white;border-color:#d3acff;font-weight:bold}.search-group-heading{font-size:17px;color:#eddfff;margin:20px 0 10px}.search-status{white-space:pre-line;padding:14px 7px}.search-user-row{display:flex;align-items:center;gap:10px;padding:12px 8px;border-radius:17px;margin:9px 0;background:#251c3f;border:1px solid #594676}.search-user-avatar{width:45px;height:45px;border-radius:50%;object-fit:cover;flex:none}.search-user-name{flex:1;text-align:right;background:transparent;color:#fff;overflow-wrap:anywhere;font-size:15px}.search-user-open{font-size:12px;border-radius:12px;padding:10px 8px;color:#fff;background:#6942aa;white-space:nowrap}
+/* XALLO+ v3.6 - video analytics and notification filters */
+.stats-hint{font-size:12px;line-height:1.9;color:#d3c2ee}
+.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+.stats-tile{border:1px solid #72559b;background:linear-gradient(145deg,#422966,#221839);border-radius:16px;text-align:center;padding:14px 8px}
+.stats-tile b{display:block;font-size:23px;color:#e5c9ff;overflow-wrap:anywhere}
+.stats-tile span{display:block;font-size:12px;color:#d6c8ec;margin-top:4px}
+.stats-top{display:grid;gap:10px;margin:12px 0}
+.stats-row{padding:12px;background:#251b3a;border:1px solid #644c86;border-radius:14px}
+.stats-row strong{display:block;white-space:normal;overflow-wrap:anywhere;line-height:1.6}
+.stats-row small{display:block;margin-top:6px;color:#d8c5ed;font-size:12px}
+.notify-filters{display:flex;gap:5px;flex-wrap:wrap;margin:12px 0;justify-content:center}
+.notify-filter{background:#38284f;color:#eadfff;border:1px solid #745a91;border-radius:14px;padding:8px 9px;font-size:12px}
+.notify-filter.active{background:#935fe2;border-color:#d5b0ff;color:#fff}
+.notification-item{display:flex;align-items:center;gap:10px;text-align:right}
+.notification-item .notify-body{flex:1;min-width:0;overflow-wrap:anywhere}
+.notify-avatar{width:38px;height:38px;object-fit:cover;border-radius:50%;flex:none;background:#4b3269;border:1px solid #9a74cb}
+
+/* XALLO+ v3.7 - server-authorized moderation dashboard */
+.admin-panel-intro{color:#d5c2ef;font-size:13px;line-height:1.8}
+.admin-panel-tools{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+.admin-panel-tools button,.admin-panel-tools select{border:1px solid #8d68c4;background:#34244e;color:#fff;border-radius:12px;padding:11px;font-size:13px}
+.admin-panel-tools select{flex:1;min-width:140px}
+.admin-panel-list{display:grid;gap:12px;margin:12px 0}
+.admin-report{border:1px solid #795ba4;border-radius:16px;background:#251c3b;padding:14px;overflow-wrap:anywhere}
+.admin-report h3{font-size:16px;margin:0 0 10px;color:#f4e8ff}
+.admin-report p{margin:7px 0;line-height:1.65;font-size:13px}
+.admin-report small{color:#baa8d0}
+.admin-report .admin-details{white-space:pre-wrap;background:#1b142d;padding:10px;border-radius:10px}
+.admin-report textarea{width:100%;min-height:60px;border:1px solid #735396;border-radius:10px;background:#160f24;color:#fff;padding:10px;margin-top:8px;resize:vertical}
+.admin-report-actions{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 0}
+.admin-report-actions button{flex:1;min-width:90px;color:#fff;background:#5e3c89;border-radius:11px;padding:10px}
+.admin-report-actions button.admin-dismiss{background:#523449}
+.admin-report-actions button:disabled{opacity:.5}
+.admin-counts{text-align:center;color:#d7bcff;font-size:13px}
+
+/* XALLO+ v4.1 — small pages for the swipe feed */
+.v41-more-card{flex-direction:column!important;gap:17px;text-align:center;padding:26px!important;background:linear-gradient(155deg,#211737,#130e25)!important;color:#e7d8fa;scroll-snap-align:start;scroll-snap-stop:normal}
+.v41-more-card .v41-more-title{font-weight:800;font-size:19px;color:#e8d2ff}
+.v41-more-card .v41-more-sub{line-height:1.9;font-size:13px;color:#cabbe0;max-width:300px}
+.v41-more-card button{background:linear-gradient(115deg,#834bdb,#ad65dc);border:1px solid #bd92ef;border-radius:17px;color:#fff;font-weight:800;padding:14px 21px;min-height:48px;min-width:190px}
+.v41-more-card button:disabled{opacity:.6}
+.v41-more-card[hidden]{display:none!important}
+/* XALLO+ v4.2 — hashtag discovery */
+.v42-trending{margin:13px 0 17px;padding:13px;border:1px solid #7356aa;border-radius:18px;background:#261c42}
+.v42-trend-header{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#ebd9ff}
+.v42-trend-header button{border-radius:11px;padding:7px 12px;color:#fff;background:#6841a1}
+.v42-trend-hint,.v42-upload-hint{color:#d4bee9;font-size:12px;line-height:1.8;margin:8px 0}
+.v42-trend-tags,.v42-inline-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.v42-tag{border:1px solid #a37ee0;border-radius:999px;padding:7px 11px;color:#f6e8ff;background:#452d70;font-size:12px;max-width:100%;overflow-wrap:anywhere}
+.v42-tag:focus-visible{outline:2px solid #f8e0ff;outline-offset:2px}
+.v42-inline-tags{margin:6px 0 11px}
+.v42-inline-tags .v42-tag{background:#3a2859aa;padding:6px 9px;pointer-events:auto}
+.v43-profile-guest{text-align:center}.v43-profile-guest-icon{display:grid;place-items:center;width:84px;height:84px;border-radius:28px;background:linear-gradient(135deg,#7545d8,#cc75ef);font-size:42px;margin:8px auto 18px;box-shadow:0 8px 26px #8a50d955}.v43-profile-guest p{color:#d7c5ef;line-height:1.9;margin:12px 0}.v43-account-status{display:block;color:#b8f2d1;background:#223b38;border:1px solid #487c66;border-radius:14px;text-align:center;padding:10px;margin:8px 0;font-size:14px}.v43-profile-logout{width:100%;padding:14px;border-radius:17px;color:#ffc9df;background:#48243e;border:1px solid #ad658c;font-size:16px;font-weight:bold;margin:0 0 12px}
+</style>
+<style>
+/* XALLO+ Purple Modern — visual layer; original functionality preserved */
+:root{color-scheme:dark;--surface:#141026;--panel:#211a3b;--panel2:#2b2249;--border:#40345f;--accent:#9b6bff;--accent2:#e47bff;--ink:#f8f5ff;--muted:#bcb2d6}
+html,body{background:#0d0a19;color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Arabic",Tahoma,Arial,sans-serif}
+body{background:radial-gradient(ellipse at 50% -10%,#35205d 0%,#110d22 48%,#0b0915 100%) fixed}
+.app{background:linear-gradient(180deg,#19122e 0%,#100d20 46%,#100c1e 100%);box-shadow:0 0 60px #0007;min-height:100dvh;padding-bottom:104px}
+header{height:76px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#1c1436ed;backdrop-filter:blur(18px);border-bottom:1px solid #65518a70;box-shadow:0 8px 25px #08051266}
+.brand-lockup{display:flex;align-items:center;gap:9px;font-size:25px;font-weight:900;letter-spacing:.3px;direction:ltr}.brand-mark{display:grid;place-items:center;width:36px;height:36px;background:linear-gradient(135deg,#a36dff,#e776ff);border-radius:13px;color:white;box-shadow:0 4px 18px #a16bff77}.brand-plus{color:#e28aff}.header-tag{font-size:9px;letter-spacing:1.2px;color:#d8baff;border:1px solid #6f5796;padding:7px 9px;border-radius:999px;white-space:nowrap}
+.welcome{margin:17px 15px 14px;padding:26px 18px;background:radial-gradient(circle at 10% 0%,#6741a780,transparent 58%),linear-gradient(145deg,#2d2050,#19152e);border:1px solid #654c91;border-radius:25px;box-shadow:0 16px 30px #0804146b}
+.logo{font-size:34px;margin:0 0 10px;letter-spacing:.4px;background:linear-gradient(100deg,#e9d2ff,#b58cff,#ef93f5);background-clip:text;-webkit-background-clip:text;color:transparent}.welcome h2{font-size:21px;margin:9px 0}.welcome p{font-size:13px;color:#d0c5e6;line-height:1.9;margin:8px 0}
+.buttons{flex-wrap:wrap;margin-top:18px}.buttons button{border-radius:15px;padding:12px 18px;font-weight:700;box-shadow:0 5px 15px #0a061a77}.login,.main-btn{background:linear-gradient(110deg,#8855ed,#bd63ed);color:white}.signup{background:#eee6ff;color:#27183f}
+.user-box{background:#211a3d;border:1px solid #5a467f;border-radius:17px}.user-box strong,.uploaded-info strong,.profile-info strong{color:#c8a5ff}.logout{background:#44315f;border:1px solid #6c5391}
+.demo-video{min-height:270px;border-radius:24px;margin:15px;border:1px solid #8a64c9;background:radial-gradient(circle at 28% 22%,#e06cfa88,transparent 34%),radial-gradient(circle at 80% 80%,#633be5aa,transparent 43%),linear-gradient(140deg,#4b287a,#1a1644 58%,#100d20);box-shadow:0 14px 34px #08051777}.demo-content{min-height:270px}.demo-content h2{font-size:27px;letter-spacing:1px}.demo-content p{color:#e5d8ff}.video-info h3{color:#e8d3ff}.action{background:#201636d9;border:1px solid #ad8be477;backdrop-filter:blur(8px);box-shadow:0 4px 15px #0d072077}
+.uploaded-video{background:#1c1730;border:1px solid #493865;border-radius:23px;box-shadow:0 14px 30px #08051575;overflow:hidden}.uploaded-video video{max-height:78dvh;object-fit:contain}.uploaded-info{padding:16px}.uploaded-info p{color:#e4dcf1}.video-actions{gap:8px}.video-actions button{background:#34294e;border:1px solid #604b82;border-radius:13px;padding:10px 12px;font-weight:600}.video-actions button.liked{background:#6f315e;border-color:#d075b7}.video-actions button:active,.main-btn:active,.nav-item:active{transform:scale(.97)}
+nav{height:80px;padding:8px 8px max(8px,env(safe-area-inset-bottom));background:#1b1530f5;border-top:1px solid #6b5290;backdrop-filter:blur(18px);box-shadow:0 -8px 28px #07041099}nav button{position:relative;flex:1;color:#d8cbea;font-size:11px;line-height:1.7;border-radius:15px;min-width:0;padding:7px 2px}nav button:first-child{color:#d7b6ff}nav button.nav-upload{flex:0 0 66px;background:linear-gradient(135deg,#8654ee,#c264e8);color:white;border:1px solid #dc9cff;border-radius:17px;box-shadow:0 5px 18px #a16aff65;font-weight:800;font-size:12px;transform:translateY(-8px)}.notification-badge{background:#e667b7!important;border:2px solid #1b1530;border-radius:99px}
+.modal{background:#080515e8;backdrop-filter:blur(8px)}.box{background:linear-gradient(165deg,#2a2047,#19132e);border:1px solid #6b538d;border-radius:25px;box-shadow:0 24px 60px #030107b3;padding:23px}.box h2{color:#eedfff;font-size:22px}.box input:not([type=file]),.box textarea{background:#17122a;border:1px solid #5b487d;border-radius:14px;color:#fff}.box input:focus,.box textarea:focus,.search-box input:focus{border-color:#b58bff;box-shadow:0 0 0 3px #a36aff33}.main-btn,.close-btn{border-radius:15px;font-weight:700}.close-btn{background:#3b2d55;border:1px solid #6c558c}.profile-info{background:#211a3b;border:1px solid #55416f;border-radius:18px}.file-label{background:#211937;border:1px dashed #ad86f1;border-radius:18px}.search-box{padding:18px}.search-box h2{color:#e2ccff}.search-box input{background:#221a3b;border:1px solid #665083}.empty,.message{color:#c7bddb}.comment-item{border-bottom:1px solid #57436e}.comment-item strong{color:#d2a6ff}.comment-item button,.notification-tools button{background:#3d2c5d;border:1px solid #70538e;color:white;border-radius:12px}.comment-row button{background:linear-gradient(135deg,#8754ef,#c46ae7)}
+.profile-stats{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.profile-stats>*{background:#2a2047;border:1px solid #624c86;border-radius:13px;padding:8px 12px}
+:focus-visible{outline:2px solid #d5b1ff;outline-offset:3px}button{transition:background .18s,transform .15s,border-color .18s}
+@media(max-width:360px){.header-tag{font-size:8px;padding:6px}.brand-lockup{font-size:21px}.welcome{padding:20px 12px}.video-actions button{font-size:12px;padding:8px}}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+
+/* Saved videos panel — XALLO+ v3.1 */
+.saved-entry-btn{width:100%;background:linear-gradient(120deg,#55339a,#8b49d4);border:1px solid #b48aff;border-radius:16px;color:#fff;font-weight:800;padding:13px;margin:12px 0}
+.save-video-btn{background:#292040;color:#f9efff;border:1px solid #5e4b80}
+.save-video-btn.saved{background:#6844a8!important;border-color:#c393ff!important;color:white}
+.saved-grid{display:grid;gap:14px;margin:12px 0 22px}
+.saved-grid .uploaded-video{margin:0;min-height:unset;height:auto;overflow:hidden;scroll-snap-align:none}
+.saved-grid .uploaded-video video{width:100%;height:auto;max-height:300px;object-fit:contain}
+.saved-grid .uploaded-info{position:static;pointer-events:auto;background:#241b3a}
+.saved-grid .video-actions{display:flex;flex-wrap:wrap}
+.saved-grid .video-actions button{font-size:12px}
+/* XALLO+ v3.4 — local watch history */
+.history-toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:10px 0}
+.history-toolbar button{flex:1;padding:12px;border-radius:14px;border:1px solid #8f67c6;background:#392650;color:#f7efff;font-weight:750}
+.history-toolbar button.danger-outline{border-color:#c27cad;background:#482741}
+.history-note{font-size:12px;line-height:1.8;color:#cfbfeb;margin:10px 0}
+.history-grid{display:grid;gap:13px;margin:12px 0}
+.history-grid .uploaded-video{min-height:unset;height:auto;margin:0;overflow:hidden;scroll-snap-align:none}
+.history-grid .uploaded-video video{width:100%;height:auto;max-height:300px;object-fit:contain}
+.history-grid .uploaded-info{position:static;background:#241b3a;pointer-events:auto}
+.history-grid .video-actions{display:flex;flex-wrap:wrap}
+.history-grid .video-actions button{font-size:12px}
+/* XALLO+ v3.2 — foreground-only chat notifications */
+.chat-person{position:relative;padding-left:46px}
+.chat-person.has-unread{border-color:#d9a8ff;background:#3b225b;font-weight:700}
+.chat-unread-pill{display:inline-block;background:#bb6cff;color:white;padding:3px 9px;border-radius:999px;margin-right:9px;font-size:12px}
+#chatToast{position:fixed;z-index:250;top:85px;left:50%;transform:translateX(-50%);max-width:min(92vw,420px);background:#50327e;color:#fff;border:1px solid #d6a6ff;border-radius:16px;padding:12px 18px;box-shadow:0 12px 28px #100924bb;text-align:center;cursor:pointer;font-size:14px}
+/* XALLO+ v3.5 — Report & Block */
+.safety-entry-btn{width:100%;margin:9px 0;padding:12px;border-radius:14px;background:#322348;border:1px solid #765b99;color:#fff;font-weight:700}
+.safety-danger-btn{background:#59304b!important;border:1px solid #c380a8!important;color:#fff!important}
+.safety-list{display:grid;gap:10px;margin:12px 0}
+.safety-list-row{display:flex;align-items:center;justify-content:space-between;gap:9px;background:#241a3c;border:1px solid #59416f;border-radius:12px;padding:10px;overflow-wrap:anywhere}
+.safety-list-row span{flex:1;min-width:0}
+.safety-list-row button{border:1px solid #b28cda;border-radius:11px;padding:10px;background:#49345c;color:white}
+.safety-form-label{display:block;margin:12px 0 5px;color:#eadbff}
+.safety-select{width:100%;padding:13px;border-radius:12px;background:#201732;border:1px solid #8261a5;color:#fff;font-size:15px}
+.safety-note{color:#d2c2e7;font-size:13px;line-height:1.8}
+
+/* XALLO+ v3.8 — admin video moderation */
+.admin-video-card{background:#271d40;border:1px solid #7b5eab;border-radius:17px;padding:14px;margin:12px 0;overflow-wrap:anywhere}
+.admin-video-card h3{margin:2px 0 10px;color:#f0e1ff;font-size:17px}
+.admin-video-card p{font-size:13px;line-height:1.8;color:#e1d0f5;margin:8px 0}
+.admin-video-state{display:inline-block;padding:7px 12px;border:1px solid #9677c4;border-radius:999px;background:#39254e}
+.admin-video-state.hidden{background:#573045;border-color:#db97b9}
+.admin-video-card textarea{width:100%;min-height:80px;margin:10px 0;padding:11px;border-radius:12px;border:1px solid #8665ae;background:#171125;color:#fff;font-size:14px;resize:vertical}
+.admin-video-card button{width:100%;padding:13px;color:#fff;border-radius:13px;background:#7647bb;margin-top:4px;font-weight:700}
+.admin-video-card button.unhide{background:#3c7762}
+.admin-video-card button.hide{background:#873d70}
+.admin-video-card button:disabled{opacity:.55}
+
+/* XALLO+ v3.9 — moderation notices and appeals */
+.v39-moderation{border-top:1px solid #684790;margin-top:18px;padding-top:12px}
+.v39-moderation h3{color:#d6b8ff;margin:10px 0}
+.v39-card{background:#231a3c;border:1px solid #7259a6;border-radius:15px;padding:13px;margin:12px 0;line-height:1.8;overflow-wrap:anywhere}
+.v39-card.unread{border-right:4px solid #a767ff}
+.v39-card h4{margin:0 0 8px;color:#f0dfff}
+.v39-card p{margin:6px 0;white-space:pre-wrap}
+.v39-card small{color:#ccbce8;display:block}
+.v39-card textarea{width:100%;background:#130c23;border:1px solid #7955bd;border-radius:12px;color:white;padding:10px;min-height:82px;resize:vertical}
+.v39-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.v39-actions button,.v39-toolbar button{flex:1;min-width:120px;background:#6941b3;color:#fff;border-radius:12px;padding:11px 10px}
+.v39-actions .reject{background:#744252}
+.v39-message{color:#d5c1ec;font-size:13px;line-height:1.7;white-space:pre-wrap}
+.v39-toolbar{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+.v39-toolbar select{flex:1;background:#302347;color:#fff;border:1px solid #785f9c;border-radius:12px;padding:10px}
+
+/* XALLO+ v4.0 — lightweight playback, network feedback and accessibility */
+.v40-settings-btn{position:absolute;left:13px;top:13px;background:#30224d;color:#f6eaff;border:1px solid #8664bc;border-radius:13px;padding:8px 12px;font-size:21px;line-height:1.2;min-width:44px;min-height:44px}
+header .header-tag{display:none}
+.v40-settings-btn:focus-visible,.v40-settings-toggle input:focus-visible,.v40-retry:focus-visible{outline:3px solid #e1baff;outline-offset:2px}
+.v40-network-banner{background:#392449;border-bottom:1px solid #b47ce0;color:#fff;text-align:center;padding:10px;font-size:13px;line-height:1.7}
+.v40-network-banner[hidden]{display:none!important}
+.v40-retry{background:#7948bd;color:white;padding:8px 12px;border-radius:12px;margin:5px 8px;font-size:13px}
+.v40-settings-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:65px;padding:12px;background:#2a2043;border:1px solid #674c94;border-radius:15px;margin:12px 0}
+.v40-settings-toggle strong{display:block;font-size:15px;color:#f1e6ff}
+.v40-settings-toggle small{display:block;color:#cfbde6;font-size:12px;line-height:1.7;margin-top:3px}
+.v40-settings-toggle input{width:24px;height:24px;flex:0 0 auto;accent-color:#ae76e9}
+.v40-settings-help{color:#dacbea;font-size:13px;line-height:1.9}
+@media(prefers-reduced-motion: reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand-lockup"><span class="brand-mark">✦</span><span>XALLO<span class="brand-plus">+</span></span></div><span class="header-tag">PURPLE EDITION · v4.5</span><button type="button" class="v40-settings-btn" onclick="v40OpenSettings()" aria-label="ڕێکخستنەکانی پەخش" title="ڕێکخستنەکانی پەخش">⚙️</button></header>
+<div id="v40NetworkBanner" class="v40-network-banner" role="status" aria-live="polite" hidden>📡 پەیوەندی ئینتەرنێت بەردەست نییە. ڤیدیۆی نوێ بار ناکرێت. <button type="button" class="v40-retry" onclick="v40RetryFeed()">🔄 دووبارە هەوڵ بدە</button></div>
+<section id="home">
+<div class="welcome"><div class="logo">✦ XALLO+</div><h2>دنیای ڤیدیۆی تۆ ✨</h2><p>ڤیدیۆی نوێ بدۆزەوە، داهێنانەکانت بڵاو بکەرەوە و پەیوەندی دروست بکە.</p>
+<div class="buttons" id="authButtons"><button class="login" onclick="openLogin()">چوونەژوورەوە</button><button class="signup" onclick="openSignup()">دروستکردنی هەژمار</button></div>
+<div class="user-box" id="userBox"><p>بەخێربێیت 👋</p><strong id="userEmail"></strong><br/><button class="logout" onclick="logout()">دەرچوون</button></div></div>
+<div class="demo-video"><div class="demo-content"><div><h2>✦ XALLO+ STUDIO</h2><p>شوێنی داهێنانەکانت ✨</p></div></div><div class="video-info"><h3>@xallo</h3><p>بەخێربێیت بۆ XALLO+ 🔥</p></div><div class="actions"><button class="action" onclick="likeDemo(this)">♡</button><button class="action" onclick="commentDemo()">💬</button><button class="action" onclick="shareDemo()">↗️</button></div></div>
+<div class="message" id="feedMessage">ڤیدیۆکان بار دەکرێن...</div><div id="uploadedVideos"></div>
+</section>
+<section id="searchPage" style="display:none"><div class="search-box"><h2>🔎 گەڕانی پێشکەوتوو</h2>
+<label class="search-label" for="searchInput">ڤیدیۆ، ناوی بەکارهێنەر یان ناونیشان بدۆزەوە</label>
+<input id="searchInput" oninput="scheduleSearch()" placeholder="وشە بنووسە یان #Kurdistan..." type="search" maxlength="65" autocomplete="off" />
+<div class="v42-trending" id="v42TrendingPanel" aria-label="هاشتاگە باوەکان">
+  <div class="v42-trend-header"><strong>🔥 هاشتاگە باوەکان</strong><button type="button" onclick="v42LoadTrending(true)" aria-label="نوێکردنەوەی هاشتاگەکان">🔄</button></div>
+  <p class="v42-trend-hint">لە ناونیشانی تا ٢٠٠ ڤیدیۆی نوێدا؛ تەنها ڤیدیۆکانی بەردەست</p>
+  <div id="v42TrendTags" class="v42-trend-tags"><span class="v42-trend-hint">هاشتاگەکان بار دەکرێن...</span></div>
+</div>
+<div class="search-tabs" role="group" aria-label="جۆری گەڕان"><button type="button" class="search-tab selected" id="searchTabAll" onclick="setSearchMode('all')">هەموو</button><button type="button" class="search-tab" id="searchTabVideos" onclick="setSearchMode('videos')">🎬 ڤیدیۆ</button><button type="button" class="search-tab" id="searchTabUsers" onclick="setSearchMode('users')">👤 بەکارهێنەر</button></div>
+<p class="empty search-status" id="searchResult" role="status" aria-live="polite">بۆ گەڕان لانیکەم دوو پیت بنووسە.</p>
+<div id="searchUsersGroup"><h3 class="search-group-heading">👤 بەکارهێنەران</h3><div id="searchUsers"></div></div>
+<div id="searchVideosGroup"><h3 class="search-group-heading">🎬 ڤیدیۆکان</h3><div id="searchVideos"></div></div>
+</div></section>
+<nav><button class="nav-item" onclick="home()">🏠<br/>سەرەتا</button><button class="nav-item" onclick="search()">🔍<br/>گەڕان</button><button class="nav-item nav-upload" onclick="openUpload()">➕<br/>دانان</button><button class="nav-item" onclick="openChatInbox()">💬<span class="notification-badge" id="chatUnreadBadge" style="display:none" aria-label="نامەی نەخوێندراو">0</span><br/>چات</button><button class="nav-item" onclick="openNotifications()">🔔<span class="notification-badge" id="notificationBadge" style="display:none">0</span><br/>ئاگاداری</button><button class="nav-item" onclick="profile()">👤<br/>پڕۆفایل</button></nav>
+</div>
+<div class="modal" id="v43GuestProfileModal"><div class="box v43-profile-guest"><div class="v43-profile-guest-icon" aria-hidden="true">👤</div><h2>پڕۆفایلی من</h2><p>بچۆ ژوورەوە بۆ دەستگەیشتن بە پڕۆفایل و ڤیدیۆکانت.</p><button type="button" class="main-btn" onclick="openLogin()">🔐 چوونەژوورەوە (Login)</button><button type="button" class="close-btn" onclick="openSignup()">➕ دروستکردنی هەژمار</button><button type="button" class="close-btn" onclick="closeModal('v43GuestProfileModal')">داخستن</button></div></div>
+<div class="modal" id="loginModal"><div class="box"><h2>🔐 چوونەژوورەوە</h2><input autocomplete="email" id="loginEmail" placeholder="ئیمەیڵ" type="email"/><input autocomplete="current-password" id="loginPassword" placeholder="وشەی نهێنی" type="password"/><button class="main-btn" id="loginBtn" onclick="login()">چوونەژوورەوە</button><button type="button" class="close-btn" onclick="v44OpenRecovery()">🔑 وشەی نهێنیم لەبیر کردووە</button><button class="close-btn" onclick="closeModal('loginModal')">داخستن</button><div class="message" id="loginMessage"></div></div></div>
+<div class="modal" id="signupModal"><div class="box"><h2>👤 دروستکردنی هەژمار</h2><input autocomplete="email" id="signupEmail" placeholder="ئیمەیڵ" type="email"/><input autocomplete="new-password" id="signupPassword" placeholder="وشەی نهێنی، لانیکەم ٦ پیت" type="password"/><button class="main-btn" id="signupBtn" onclick="signup()">دروستکردنی هەژمار</button><button class="close-btn" onclick="closeModal('signupModal')">داخستن</button><div class="message" id="signupMessage"></div></div></div>
+<div class="modal" id="profileModal"><div class="box"><h2>👤 پڕۆفایلی من</h2><div class="v43-account-status">🟢 چوویتە ژوورەوە</div><button type="button" class="safety-entry-btn" onclick="v44OpenSecurity()">🛡️ ئاسایشی هەژمار</button><button type="button" class="v43-profile-logout" id="v43ProfileLogoutBtn" onclick="v43ProfileLogout()">🚪 دەرچوون (Logout)</button><div class="message" id="v43AccountMessage" role="status" aria-live="polite"></div><div class="profile-info"><div>ئیمەیڵ:</div><strong id="profileEmail">---</strong><hr/><div>User ID:</div><strong id="profileId">---</strong></div><img class="avatar-circle" id="myAvatar" alt="وێنەی پڕۆفایل" style="display:none"><div class="profile-name" id="myDisplayName"></div>
+<div class="profile-edit"><label for="editDisplayName">ناوی پیشاندان</label><input id="editDisplayName" maxlength="40" placeholder="ناوی خۆت بنووسە"><label for="editAvatar">وێنەی پڕۆفایل (JPEG / PNG / WebP، تا 3MB)</label><input id="editAvatar" type="file" accept="image/*"><button class="main-btn" id="saveProfileBtn" onclick="saveMyProfile()">💜 پاشەکەوتکردنی پڕۆفایل</button><div class="message" id="profileEditMessage"></div></div><div class="profile-stats" id="profileStats"></div><button class="saved-entry-btn" onclick="openMyVideoStats()">📊 ئاماری ڤیدیۆکانم</button><button id="adminPanelEntry" class="safety-entry-btn" style="display:none" onclick="openAdminPanel()">🛡️ پانێڵی بەڕێوەبەر — ڕاپۆرتەکان</button><button class="saved-entry-btn" onclick="openSavedVideos()">🔖 ڤیدیۆی پاشەکەوتکراوەکانم</button><button class="saved-entry-btn" onclick="openWatchHistory()">🕘 مێژووی ڤیدیۆ بینراوەکانم</button><button class="safety-entry-btn" onclick="openBlockedUsers()">🛡️ بەڕێوەبردنی بەکارهێنەرە بلۆککراوەکان</button><h3>🎬 ڤیدیۆکانم</h3><div id="profileVideos"></div><button class="main-btn" onclick="closeModal('profileModal')">داخستن</button></div></div>
+<div class="modal" id="v44SecurityModal"><div class="box v44-security"><h2>🛡️ ئاسایشی هەژمار</h2><div class="v43-account-status" id="v44SecurityEmail"></div><p class="v44-security-hint">وشەی نهێنی بەهێز بەکاربهێنە و لەگەڵ هیچ کەسێک هاوبەشی مەکە.</p><h3>🔑 گۆڕینی وشەی نهێنی</h3><label for="v44OldPassword">وشەی نهێنی ئێستا</label><input id="v44OldPassword" type="password" autocomplete="current-password"><label for="v44NewPassword">وشەی نهێنی نوێ (لانیکەم ٨ پیت)</label><input id="v44NewPassword" type="password" autocomplete="new-password"><label for="v44ConfirmPassword">دووبارە وشەی نهێنی نوێ</label><input id="v44ConfirmPassword" type="password" autocomplete="new-password"><button type="button" class="main-btn" id="v44ChangeBtn" onclick="v44ChangePassword()">✅ گۆڕینی وشەی نهێنی</button><div class="message" id="v44SecurityMessage" role="status" aria-live="polite"></div><section class="v45-sessions" aria-label="چوونەژوورەوە لە ئامێرەکان">
+  <h3>📱 بەڕێوەبردنی چوونەژوورەوە</h3>
+  <p class="v44-security-hint">ئەگەر لە ئامێرێکی تر چوویتە ژوورەوە، دەتوانیت دەستی پێوەندیدارت لەو ئامێرە کوتاه بکەیت.</p>
+  <button type="button" class="main-btn" id="v45OtherBtn" onclick="v45EndSessions('others')">🔒 دەرچوون لە هەموو ئامێرەکانی تر</button>
+  <button type="button" class="v43-profile-logout" id="v45AllBtn" onclick="v45EndSessions('global')">🚪 دەرچوون لە هەموو ئامێرەکان</button>
+  <p class="v44-security-hint">ئامێرەکانی تر دوای بەسەرچوونی مۆڵەتی چوونەژوورەوە دەردەچن. هەژمار و ڤیدیۆکانت ناسڕێنەوە.</p>
+  <div class="message" id="v45SessionMessage" role="status" aria-live="polite"></div>
+</section><button type="button" id="v44SecurityClose" class="close-btn" onclick="v44CloseSecurity()">گەڕانەوە بۆ پڕۆفایل</button></div></div>
+<div class="modal" id="v44RecoveryModal"><div class="box v44-security"><h2>🔑 گەڕاندنەوەی وشەی نهێنی</h2><p class="v44-security-hint">ئیمەیڵی هەژمارەکەت بنووسە. کۆد یان لینکی گەڕاندنەوە لە ئیمەیڵەکەت کۆپی بکە و لێرە دایبنێ؛ لینکەکە مەکەرەوە.</p><label for="v44RecoveryEmail">ئیمەیڵ</label><input id="v44RecoveryEmail" type="email" autocomplete="email" dir="ltr"><button type="button" class="main-btn" id="v44SendRecovery" onclick="v44SendEmail()">📧 ناردنی ئیمەیڵ</button><label for="v44RecoveryToken">کۆدی ئیمەیڵ یان لینکی گەڕاندنەوە</label><input id="v44RecoveryToken" type="text" autocomplete="off" spellcheck="false" dir="ltr" maxlength="4096"><label for="v44ResetPassword">وشەی نهێنی نوێ (لانیکەم ٨ پیت)</label><input id="v44ResetPassword" type="password" autocomplete="new-password"><label for="v44ResetConfirm">دووبارە وشەی نهێنی نوێ</label><input id="v44ResetConfirm" type="password" autocomplete="new-password"><button type="button" class="main-btn" id="v44ResetBtn" onclick="v44ResetPassword()">✅ پاشەکەوتکردنی وشەی نهێنی نوێ</button><div class="message" id="v44RecoveryMessage" role="status" aria-live="polite"></div><button type="button" class="close-btn" id="v44RecoveryClose" onclick="v44CloseRecovery()">گەڕانەوە بۆ چوونەژوورەوە</button></div></div>
+<div class="modal" id="publicProfileModal"><div class="box"><h2>👤 پڕۆفایلی بەکارهێنەر</h2><img class="avatar-circle" id="publicAvatar" alt="وێنەی پڕۆفایل" style="display:none"><div class="profile-info" id="publicProfileName"></div><div class="profile-stats" id="publicProfileStats"></div><div id="publicProfileFollow"></div><div id="publicProfileSafety"></div><button class="main-btn" id="profileChatBtn" onclick="openChatWith(publicProfileUserId)" style="display:none">💬 ناردنی نامە</button><h3>🎬 ڤیدیۆکان</h3><div id="publicProfileVideos"></div><button class="close-btn" onclick="closeModal('publicProfileModal')">داخستن</button></div></div>
+<div class="modal" id="uploadModal"><div class="box"><h2>🎥 دانانی ڤیدیۆ</h2><label class="file-label">ڤیدیۆ هەڵبژێرە 🎬<input accept="video/*" id="videoFile" onchange="previewVideo()" type="file"/></label><input id="videoCaption" maxlength="500" placeholder="دەربارەی ڤیدیۆکە بنووسە... #Kurdistan #Gaming" type="text"/><p class="v42-upload-hint">#هاشتاگ لە ناونیشانی ڤیدیۆکە بنووسە، وەک #Kurdistan یان #Gaming.</p><div id="videoPreview"></div><button class="main-btn" id="uploadBtn" onclick="uploadVideo()">🚀 بڵاوکردنەوەی ڤیدیۆ</button><button class="close-btn" onclick="closeModal('uploadModal')">داخستن</button><div class="message" id="uploadMessage"></div></div></div>
+<div class="modal" id="myStatsModal"><div class="box"><h2>📊 ئاماری ڤیدیۆکانم</h2><p class="stats-hint">تەنها ئامارەکانی ڤیدیۆکانی خۆت دەبینیت. بینینی نوێ تەنها بۆ هەژماری چووەژوورەوە تۆمار دەبێت؛ هەر کەس بۆ هەر ڤیدیۆیەک ڕۆژانە یەکجار.</p><div id="myStatsSummary" class="stats-grid" aria-live="polite"></div><h3>🏆 ڤیدیۆکانی زۆرترین بینین</h3><div id="myStatsTop" class="stats-top"></div><button type="button" class="main-btn" id="myStatsRefresh" onclick="loadMyVideoStats()">🔄 نوێکردنەوە</button><button type="button" class="close-btn" onclick="closeModal('myStatsModal')">داخستن</button></div></div>
+<div class="modal" id="notificationsModal"><div class="box"><h2>🔔 ئاگادارکردنەوەکان</h2><div class="notification-tools"><button onclick="refreshAllNotifications()">🔄 نوێکردنەوە</button><button id="markAllReadBtn" onclick="markAllNotificationsRead()">✓ هەمووی خوێندراوە</button></div>
+<div class="notify-filters" role="group" aria-label="پاڵاوتنی ئاگادارکردنەوەکان">
+<button type="button" class="notify-filter active" data-notify-filter="all" onclick="setNotificationFilter('all')">هەموو</button>
+<button type="button" class="notify-filter" data-notify-filter="unread" onclick="setNotificationFilter('unread')">نەخوێندراو</button>
+<button type="button" class="notify-filter" data-notify-filter="like" onclick="setNotificationFilter('like')">❤️ لایک</button>
+<button type="button" class="notify-filter" data-notify-filter="follow" onclick="setNotificationFilter('follow')">👥 فۆڵۆ</button>
+<button type="button" class="notify-filter" data-notify-filter="comment" onclick="setNotificationFilter('comment')">💬 کۆمێنت</button>
+</div><div class="message" id="notificationList">بار دەکرێن...</div>
+<section class="v39-moderation" aria-label="ئاگادارکردنەوەی بەڕێوەبردنی ڤیدیۆ">
+ <h3>🛡️ پەیامەکانی بەڕێوەبردنی ڤیدیۆ</h3>
+ <p class="v39-message">کاتێک ڤیدیۆیەک دەشاردرێتەوە یان دەگەڕێندرێتەوە، ئاگادار دەبیتەوە. دەتوانیت داوای پێداچوونەوە بنێریت.</p>
+ <div class="v39-toolbar"><button type="button" onclick="loadModerationNotices()">🔄 نوێکردنەوە</button><button type="button" onclick="markAllModerationRead()">✓ هەمووی خوێندراوە</button></div>
+ <div class="v39-message" id="moderationNoticesStatus" role="status" aria-live="polite"></div>
+ <div id="moderationNoticesList"></div>
+</section>
+<button class="close-btn" onclick="closeModal('notificationsModal')">داخستن</button></div></div>
+<div class="modal" id="commentsModal"><div class="box"><h2>💬 کۆمێنتەکان</h2><div class="message" id="commentsList">بار دەکرێن...</div><div class="comment-row"><textarea id="commentText" maxlength="2000" placeholder="کۆمێنتێک بنووسە..."></textarea><button id="sendCommentBtn" onclick="sendComment()">ناردن</button></div><div class="message" id="commentMessage"></div><button class="close-btn" onclick="closeModal('commentsModal')">داخستن</button></div></div>
+<div class="modal" id="videoEditorModal"><div class="box"><h2>🎬 دەستکاریکردنی ڤیدیۆ</h2><label class="editor-field">ناونیشان / دەربارەی ڤیدیۆ<input id="editorCaption" maxlength="500" placeholder="ناونیشانی ڤیدیۆ"></label><label class="editor-field">🖼️ وێنەی سەرەکی (JPEG / PNG / WebP، تا 3MB)<input id="editorThumbnail" type="file" accept="image/jpeg,image/png,image/webp" onchange="previewEditorThumbnail()"></label><img id="editorThumbPreview" class="editor-thumb" alt="وێنەی سەرەکی" style="display:none"><button class="main-btn" onclick="captureEditorFrame()">📸 وەرگرتنی وێنە لە ڤیدیۆ</button><video id="editorVideo" controls playsinline preload="metadata" style="width:100%;max-height:210px;margin-top:10px"></video><p class="hint">ڤیدیۆکە بگەیەنە ئەو ساتەی دەتەوێت، پاشان وێنەیەک وەربگرە.</p><button id="saveVideoEditBtn" class="main-btn" onclick="saveVideoEdit()">💾 پاشەکەوتکردن</button><div id="editorMessage" class="message"></div><button class="close-btn" onclick="closeVideoEditor()">داخستن</button></div></div>
+<div class="modal" id="watchHistoryModal"><div class="box"><h2>🕘 مێژووی ڤیدیۆ بینراوەکان</h2><p class="history-note">ئەو ڤیدیۆیانەی لەم مۆبایلەدا بینیوتن لێرە تۆمار دەکرێن. ئەم لیستە تەنها لەسەر ئەم ئامێرە پاشەکەوت دەبێت، نەک لە Supabase.</p><div class="history-toolbar"><button type="button" onclick="loadWatchHistory()">🔄 نوێکردنەوە</button><button type="button" class="danger-outline" onclick="clearWatchHistory()">🗑️ سڕینەوەی مێژوو</button></div><div id="watchHistoryStatus" class="message" role="status" aria-live="polite"></div><div id="watchHistoryList" class="history-grid"></div><button class="close-btn" onclick="closeModal('watchHistoryModal')">داخستن</button></div></div>
+<div class="modal" id="savedVideosModal"><div class="box"><h2>🔖 ڤیدیۆی پاشەکەوتکراو</h2><p class="hint">ئەو ڤیدیۆیانەی بۆ دواتر پاشەکەوتت کردوون، لێرە دەردەکەون.</p><button class="main-btn" onclick="loadSavedVideoList()">🔄 نوێکردنەوە</button><div class="message" id="savedVideosStatus" role="status"></div><div id="savedVideosList" class="saved-grid"></div><button class="close-btn" onclick="closeModal('savedVideosModal')">داخستن</button></div></div>
+<div class="modal" id="chatInboxModal"><div class="box"><h2>💬 چاتی تایبەتی</h2><p class="hint">تەنها تۆ و ئەو کەسەی نامەی بۆ دەنێریت دەتوانن نامەکان بخوێننەوە.</p><button class="main-btn" onclick="loadChatInbox()">🔄 نوێکردنەوە</button><div id="chatInboxList" class="chat-list">بار دەکرێت...</div><div id="chatInboxStatus" class="message" role="status"></div><button class="close-btn" onclick="closeModal('chatInboxModal')">داخستن</button></div></div>
+<div class="modal" id="chatThreadModal"><div class="box"><h2 id="chatPartnerTitle">💬 چات</h2><div id="chatThreadList" class="chat-thread"></div><div class="chat-compose"><textarea id="chatText" maxlength="2000" placeholder="نامەکەت بنووسە..."></textarea><button class="main-btn" id="chatSendBtn" onclick="sendPrivateMessage()">ناردن</button></div><div class="message" id="chatStatus"></div><button class="close-btn" onclick="closeChatThread()">داخستن</button></div></div>
+<div class="modal" id="reportModal"><div class="box">
+<h2>🚩 ڕاپۆرتکردن</h2><p class="safety-note">ڕاپۆرتەکەت بۆ پشکنین تۆمار دەکرێت؛ تەنها ڕاپۆرتکردن بە مانای سڕینەوەی ڤیدیۆ یان هەژمار نییە.</p>
+<label class="safety-form-label" for="reportReason">هۆکاری ڕاپۆرت</label>
+<select class="safety-select" id="reportReason"><option value="spam">سپام و ڕیکلامی نەخوازراو</option><option value="harassment">ئازاردان و هەڕەشە</option><option value="hate">قسەی نەگونجاو و ڕق</option><option value="unsafe">ناوەڕۆکی مەترسیدار</option><option value="other">هۆکاری تر</option></select>
+<label class="safety-form-label" for="reportDetails">ڕوونکردنەوە (ئارەزوومەندانە)</label>
+<textarea id="reportDetails" maxlength="500" placeholder="بە کورتی باس بکە چی ڕوویداوە..."></textarea>
+<button class="main-btn" id="submitReportBtn" onclick="submitReport()">🚩 ناردنی ڕاپۆرت</button>
+<div class="message" id="reportStatus" role="status"></div><button class="close-btn" onclick="closeModal('reportModal')">داخستن</button>
+</div></div>
+<div class="modal" id="blockedUsersModal"><div class="box"><h2>🛡️ هەژمارە بلۆککراوەکان</h2>
+<p class="safety-note">بلۆککردن ڤیدیۆ و پڕۆفایل و چاتی ئەو هەژمارانە لە ئەپەکەتدا دەشارێتەوە و ناردنی نامەی نوێ لە نێوانتان قەدەغە دەکات. وێنە و ڤیدیۆی گشتی لە ئینتەرنێت بە تەواوی ناشارێتەوە.</p>
+<div class="message" id="blockedUsersStatus"></div><div class="safety-list" id="blockedUsersList"></div>
+<button class="close-btn" onclick="closeModal('blockedUsersModal')">داخستن</button></div></div>
+
+<div class="modal" id="adminPanelModal"><div class="box">
+<h2>🛡️ پانێڵی بەڕێوەبەر</h2>
+<p class="admin-panel-intro">ئەم بەشە تەنها بۆ بەڕێوەبەری دیاریکراوە. ڕاپۆرتەکان بپشکنە و دۆخیان بگۆڕە. هیچ ڤیدیۆ یان هەژمارێک لەم پانێڵەوە بە خۆکار ناسڕدرێتەوە.</p>
+<div class="admin-panel-tools"><select id="adminReportFilter" onchange="loadAdminReports()" aria-label="فلتەری ڕاپۆرت"><option value="open">🟡 نوێ / چاوەڕوان</option><option value="all">هەموو</option><option value="reviewed">✅ پشکنراو</option><option value="dismissed">❎ ڕەتکراوە</option></select><button type="button" onclick="loadAdminReports()">🔄 نوێکردنەوە</button></div>
+<div class="admin-counts" id="adminReportCounts"></div>
+<div class="message" id="adminPanelStatus" role="status" aria-live="polite"></div>
+<div class="admin-panel-list" id="adminReportList"></div>
+<button class="safety-entry-btn" type="button" onclick="openAdminVideoPanel()">🎬 بەڕێوەبردنی ڤیدیۆکان — شاردنەوە / گەڕاندنەوە</button>
+<button class="safety-entry-btn" type="button" onclick="openAdminAppealsPanel()">🧾 داواکارییەکانی پێداچوونەوە</button>
+<button class="close-btn" onclick="closeModal('adminPanelModal')">داخستن</button>
+</div></div>
+<div class="modal" id="adminVideosModal"><div class="box">
+<h2>🎬 بەڕێوەبردنی ڤیدیۆکان</h2>
+<p class="admin-panel-intro">تەنها بەڕێوەبەر دەتوانێت ڤیدیۆ بشارێتەوە یان دووبارە ئاشکرای بکاتەوە. ڤیدیۆی شاراوە لە فید و گەڕانی گشتی نیشان نادرێت؛ بەڵام فایلی ڤیدیۆ لە Storage ناسڕدرێتەوە.</p>
+<div class="admin-panel-tools"><select id="adminVideoFilter" onchange="loadAdminVideos()" aria-label="فلتەری ڤیدیۆکان"><option value="all">هەموو ڤیدیۆکان</option><option value="visible">✅ ئاشکرا</option><option value="hidden">🛡️ شاراوە</option></select><button type="button" onclick="loadAdminVideos()">🔄 نوێکردنەوە</button></div>
+<div id="adminVideoFocus" class="message" style="display:none"></div>
+<button type="button" class="safety-entry-btn" id="adminShowAllVideos" onclick="adminShowAllVideos()" style="display:none">🎬 هەموو ڤیدیۆکان ببینە</button>
+<div class="message" id="adminVideosStatus" role="status" aria-live="polite"></div>
+<div class="admin-panel-list" id="adminVideosList"></div>
+<button class="close-btn" onclick="closeModal('adminVideosModal');openAdminPanel()">↩️ گەڕانەوە بۆ ڕاپۆرتەکان</button>
+<button class="close-btn" onclick="closeModal('adminVideosModal')">داخستن</button>
+</div></div>
+<div class="modal" id="adminAppealsModal"><div class="box">
+<h2>🧾 پێداچوونەوەی داواکارییەکان</h2>
+<p class="v39-message">تەنها ئەدمین دەتوانێت وەڵام بداتەوە. ✅ قبوڵکردن ڤیدیۆکە ئاشکرا دەکاتەوە؛ ❌ ڕەتکردنەوە ڤیدیۆکە بە شاراوەیی دەهێڵێتەوە.</p>
+<div class="v39-toolbar"><select id="adminAppealsFilter" aria-label="فلتەری داواکارییەکان" onchange="loadAdminAppeals()"><option value="pending">🟡 چاوەڕوان</option><option value="all">هەموو</option><option value="approved">✅ قبوڵکراو</option><option value="rejected">❌ ڕەتکراوە</option></select><button type="button" onclick="loadAdminAppeals()">🔄 نوێکردنەوە</button></div>
+<div class="v39-message" role="status" aria-live="polite" id="adminAppealsStatus"></div>
+<div id="adminAppealsList"></div>
+<button class="close-btn" type="button" onclick="closeModal('adminAppealsModal');openAdminPanel()">↩️ گەڕانەوە بۆ پانێڵ</button>
+<button class="close-btn" type="button" onclick="closeModal('adminAppealsModal')">داخستن</button>
+</div></div>
+<div class="modal" id="v40SettingsModal"><div class="box"><h2>⚙️ ڕێکخستنەکانی XALLO+ v4.0</h2>
+<p class="v40-settings-help">ئەم ڕێکخستنانە تەنها لەم مۆبایلە پاشەکەوت دەبن؛ پێویستیان بە Supabase نییە.</p>
+<label class="v40-settings-toggle" for="v40DataSaver"><span><strong>📶 کەمکردنەوەی بەکارهێنانی داتا</strong><small>پەخشی خۆکار ڕادەگرێت؛ ڤیدیۆکان بە دەستی خۆت لێبدە.</small></span><input type="checkbox" id="v40DataSaver" onchange="v40SettingsChanged()" /></label>
+<label class="v40-settings-toggle" for="v40Autoplay"><span><strong>▶️ پەخشی خۆکاری ڤیدیۆ</strong><small>تەنها کاتێک داتا کەمکردنەوە ناچالاکە.</small></span><input type="checkbox" id="v40Autoplay" onchange="v40SettingsChanged()" /></label>
+<p class="v40-settings-help" id="v40SettingsMessage" role="status" aria-live="polite"></p>
+<button class="main-btn" type="button" onclick="v40RetryFeed()">🔄 نوێکردنەوەی فیدی ڤیدیۆکان</button>
+<button class="close-btn" type="button" onclick="v40CloseSettings()">داخستن</button></div></div>
+<div id="chatToast" role="status" aria-live="polite" style="display:none" onclick="openChatInbox()"></div>
+<style>.v45-sessions{border-top:1px solid #ffffff26;margin-top:18px;padding-top:16px}.v45-sessions h3{margin-bottom:6px}.v45-sessions button{width:100%;margin-top:8px}.v45-sessions .message{overflow-wrap:anywhere}</style>
+<style>.v44-security label{display:block;color:#e7d5ff;margin-top:11px;line-height:1.7;font-size:14px}.v44-security-hint{color:#d0bfe8;line-height:1.9;font-size:14px}.v44-security h3{color:#e9d7ff}.v44-security input[type=password]{direction:ltr;text-align:left}.v44-security .message{overflow-wrap:anywhere}</style>
+<script>
+'use strict';
+const SUPABASE_URL='https://vnyprsjjmmjahkisozib.supabase.co';
+const SUPABASE_KEY='sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let feedItems=[],previewObjectUrl=null,currentUser=null,currentCommentVideoId=null;
+let likeRows=[],commentCounts=new Map(),likesReady=false,commentsReady=false;
+let followRows=[],followsReady=false,publicProfileUserId=null;
+let profileCache=new Map();
+// A user's bookmarks are stored in Supabase, never in another user's local session.
+let savedVideoIds=new Set(),savedReady=false;
+// XALLO+ v3.5: the block list belongs to the signed-in user only.
+let blockedIds=new Set(),blocksReady=false,reportTarget=null;
+function isBlockedUser(id){return !!(currentUser&&id&&blockedIds.has(String(id)));}
+function visibleVideos(items){return (items||[]).filter(item=>!item.is_hidden&&!isBlockedUser(item.user_id));}
+async function loadBlockedUsers(){
+ const uid=currentUser?.id;
+ if(!uid){blockedIds=new Set();blocksReady=true;return true;}
+ try{
+  const {data,error}=await supabaseClient.from('user_blocks').select('blocked_id').eq('blocker_id',uid).limit(2000);
+  if(error)throw error;
+  if(currentUser?.id!==uid)return false;
+  blockedIds=new Set((data||[]).map(row=>String(row.blocked_id)));blocksReady=true;
+  return true;
+ }catch(err){if(currentUser?.id===uid){blocksReady=false;console.warn('Blocks:',err.message);}return false;}
+}
+async function openReportDialog(type,id){
+ if(!requireLogin())return;
+ if(type!=='video'&&type!=='user')return;
+ if(type==='user'&&(!id||id===currentUser.id)){alert('ناتوانیت هەژماری خۆت ڕاپۆرت بکەیت.');return;}
+ if(type==='video'&&!Number.isSafeInteger(Number(id)))return;
+ reportTarget={type,id};el('reportReason').value='spam';el('reportDetails').value='';el('reportStatus').textContent='';showModal('reportModal');
+}
+async function submitReport(){
+ if(!requireLogin()||!reportTarget)return;
+ const target={...reportTarget},reason=el('reportReason').value,details=el('reportDetails').value.trim(),status=el('reportStatus'),btn=el('submitReportBtn');
+ if(!['spam','harassment','hate','unsafe','other'].includes(reason))return;
+ if(details.length>500){status.textContent='ڕوونکردنەوە نابێت لە ٥٠٠ پیت زیاتر بێت.';return;}
+ btn.disabled=true;status.textContent='ڕاپۆرتەکە دەنێردرێت...';
+ try{
+  const table=target.type==='video'?'video_reports':'user_reports';
+  const row={reporter_id:currentUser.id,reason,details};
+  if(target.type==='video')row.video_id=target.id;else row.reported_user_id=target.id;
+  const {error}=await supabaseClient.from(table).insert(row);
+  if(error){if(error.code==='23505')throw new Error('پێشتر ئەم ڕاپۆرتەت ناردووە.');throw error;}
+  status.textContent='✅ ڕاپۆرتەکەت تۆمار کرا. سوپاس بۆ ئاگادارکردنەوە.';
+  reportTarget=null;setTimeout(()=>{if(el('reportModal').classList.contains('show'))closeModal('reportModal');},1300);
+ }catch(err){status.textContent='هەڵە: '+err.message+' — SQL ـی v3.5 بپشکنە.';}
+ finally{btn.disabled=false;}
+}
+async function blockUser(id){
+ if(!requireLogin()||!id||id===currentUser.id)return;
+ if(isBlockedUser(id))return;
+ if(!confirm('ئەم بەکارهێنەرە بلۆک بکەیت؟ ڤیدیۆ و چاتەکانی لە ئەپەکەتدا نیشان نادرێن.'))return;
+ try{
+  const {error}=await supabaseClient.from('user_blocks').insert({blocker_id:currentUser.id,blocked_id:id});
+  if(error){if(error.code!=='23505')throw error;}
+  const loaded=await loadBlockedUsers();if(!loaded)throw new Error('لیستی بلۆک بار نەبوو؛ ئەپەکە دووبارە بکەرەوە.');
+  if(chatPeerId===id)closeChatThread();
+  closeModal('publicProfileModal');await loadVideos();renderSearchResults();
+  void loadChatUnreadCount();alert('🛡️ بەکارهێنەرەکە بلۆک کرا.');
+ }catch(err){alert('هەڵەی بلۆک: '+err.message);}
+}
+async function unblockUser(id){
+ if(!requireLogin()||!id)return;
+ try{
+  const {error}=await supabaseClient.from('user_blocks').delete().eq('blocker_id',currentUser.id).eq('blocked_id',id);
+  if(error)throw error;
+  if(!await loadBlockedUsers())throw new Error('لیستی بلۆک نوێ نەبووە.');
+  await loadBlockedList();await loadVideos();renderSearchResults();void loadChatUnreadCount();
+ }catch(err){el('blockedUsersStatus').textContent='هەڵە: '+err.message;}
+}
+async function openBlockedUsers(){
+ if(!requireLogin())return;
+ closeModal('profileModal');showModal('blockedUsersModal');
+ await loadBlockedList();
+}
+async function loadBlockedList(){
+ const list=el('blockedUsersList'),status=el('blockedUsersStatus');list.replaceChildren();status.textContent='بار دەکرێت...';
+ if(!await loadBlockedUsers()){status.textContent='لیستی بلۆک بار نەبوو. SQL ـی v3.5 بپشکنە.';return;}
+ const ids=[...blockedIds];if(!ids.length){status.textContent='هێشتا هیچ کەسێکت بلۆک نەکردووە.';return;}
+ try{
+  const {data,error}=await supabaseClient.from('profiles').select('id,display_name').in('id',ids).limit(2000);
+  if(error)console.warn('Blocked names:',error.message);
+  const labels=new Map((data||[]).map(p=>[String(p.id),p.display_name]));
+  for(const id of ids){
+   const row=document.createElement('div');row.className='safety-list-row';
+   const name=document.createElement('span');name.textContent=labels.get(id)||profileCache.get(id)?.display_name||('ID: '+id.slice(0,8)+'…');
+   const btn=makeButton('لابردنی بلۆک',()=>unblockUser(id));row.append(name,btn);list.append(row);
+  }
+  status.textContent=ids.length+' بەکارهێنەر بلۆک کراون.';
+ }catch(err){status.textContent='هەڵە: '+err.message;}
+}
+
+
+const el=id=>document.getElementById(id);
+function showModal(id){pauseFeed();if(id!=='watchHistoryModal')pauseWatchHistoryVideos();el(id).classList.add('show');}
+function closeModal(id){el(id).classList.remove('show');if(id==='commentsModal')currentCommentVideoId=null;if(id==='publicProfileModal')publicProfileUserId=null;if(id==='savedVideosModal')el('savedVideosList').querySelectorAll('video').forEach(v=>v.pause());if(id==='watchHistoryModal')pauseWatchHistoryVideos();}
+function openLogin(){el('loginMessage').textContent='';el('loginPassword').value='';showModal('loginModal');}
+function openSignup(){el('signupMessage').textContent='';el('signupPassword').value='';showModal('signupModal');}
+function requireLogin(){if(currentUser)return true;alert('تکایە سەرەتا بچۆ ژوورەوە 🔐');openLogin();return false;}
+function updateUser(user){
+ const nextId=user?.id||null,oldId=currentUser?.id||null;
+ if(!user){stopChatRefresh();chatPeerId=null;}
+ if(oldId!==nextId){savedVideoIds=new Set();savedReady=false;blockedIds=new Set();blocksReady=false;resetChatNotificationState();adminAllowed=false;el('adminPanelEntry').style.display='none';if(el('adminPanelModal').classList.contains('show'))closeModal('adminPanelModal');if(el('adminVideosModal').classList.contains('show'))closeModal('adminVideosModal');}
+ currentUser=user||null;updateNotificationBadge(0);
+ if(oldId!==nextId&&oldId){closeModal('profileModal');v43ClearProfile();closeModal('v44SecurityModal');v44ClearFields(['v44OldPassword','v44NewPassword','v44ConfirmPassword']);el('v44SecurityEmail').textContent='';el('v45SessionMessage').textContent='';v44SecurityUser=null;}
+ if(user){loadNotificationCount();if(oldId!==nextId)startChatNotifications();}
+ el('authButtons').style.display=user?'none':'flex';el('userBox').style.display=user?'block':'none';el('userEmail').textContent=user?.email||'';
+ if(user&&el('v43GuestProfileModal').classList.contains('show')&&!el('loginModal').classList.contains('show')&&!el('signupModal').classList.contains('show')){closeModal('v43GuestProfileModal');setTimeout(()=>{if(currentUser?.id===nextId)void profile();},0);}
+}
+async function checkUser(){const {data,error}=await supabaseClient.auth.getSession();if(error)console.error(error);updateUser(data?.session?.user||null);}
+supabaseClient.auth.onAuthStateChange((_event,session)=>{const oldId=currentUser?.id;updateUser(session?.user||null);if(oldId!==currentUser?.id&&feedItems.length)Promise.all([refreshSocialData(),refreshFollows(),loadSavedVideoIds(),loadBlockedUsers()]).then(refreshVisibleCards);});
+async function signup(){const email=el('signupEmail').value.trim(),password=el('signupPassword').value,msg=el('signupMessage');if(!email||!password){msg.textContent='تکایە ئیمەیڵ و وشەی نهێنی بنووسە.';return;}if(password.length<6){msg.textContent='وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت.';return;}el('signupBtn').disabled=true;msg.textContent='چاوەڕێ بکە...';try{const {data,error}=await supabaseClient.auth.signUp({email,password});if(error)throw error;msg.textContent=data.session?'هەژمارەکەت دروست کرا و چوویتە ژوورەوە ✅':'هەژمارەکەت دروست کرا. ئیمەیڵەکەت بپشکنە بۆ پشتڕاستکردنەوە.';el('signupPassword').value='';if(data.session){updateUser(data.session.user);v43ReturnToProfile('signupModal');}}catch(e){msg.textContent='هەڵە: '+e.message;}finally{el('signupBtn').disabled=false;}}
+async function login(){const email=el('loginEmail').value.trim(),password=el('loginPassword').value,msg=el('loginMessage');if(!email||!password){msg.textContent='تکایە ئیمەیڵ و وشەی نهێنی بنووسە.';return;}el('loginBtn').disabled=true;msg.textContent='چاوەڕێ بکە...';try{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;updateUser(data.user);el('loginPassword').value='';msg.textContent='بە سەرکەوتوویی چوویتە ژوورەوە ✅';if(!v43ReturnToProfile('loginModal'))closeModal('loginModal');void loadVideos().catch(e=>console.warn('Feed:',e));}catch(e){msg.textContent='هەڵە: '+e.message;}finally{el('loginBtn').disabled=false;}}
+function v43ReturnToProfile(authModal){if(!currentUser||!el('v43GuestProfileModal').classList.contains('show'))return false;closeModal(authModal);closeModal('v43GuestProfileModal');void profile();return true;}
+function v43ClearProfile(){el('profileEmail').textContent='---';el('profileId').textContent='---';el('myDisplayName').textContent='';el('editDisplayName').value='';el('editAvatar').value='';el('profileEditMessage').textContent='';el('profileStats').replaceChildren();el('profileVideos').replaceChildren();setAvatar('myAvatar',null);}
+async function logout(){if(!currentUser||v44SecurityBusy||v45SessionBusy)return false;try{const {error}=await supabaseClient.auth.signOut({scope:'local'});if(error)throw error;updateUser(null);void refreshSocialData().then(refreshVisibleCards).catch(e=>console.warn('Social:',e));return true;}catch(e){alert('هەڵە لە دەرچوون: '+e.message);return !currentUser;}}
+async function v43ProfileLogout(){if(!currentUser||!confirm('دڵنیایت لە دەرچوون لەم ئامێرە؟'))return;const btn=el('v43ProfileLogoutBtn');btn.disabled=true;el('v43AccountMessage').textContent='چاوەڕێ بکە...';try{if(await logout()){closeModal('profileModal');showModal('v43GuestProfileModal');}}finally{btn.disabled=false;el('v43AccountMessage').textContent='';}}
+async function profile(){if(!currentUser){closeModal('profileModal');showModal('v43GuestProfileModal');return;}closeModal('v43GuestProfileModal');v43ClearProfile();el('profileEmail').textContent=currentUser.email||'---';el('profileId').textContent=currentUser.id;el('v43AccountMessage').textContent='';showModal('profileModal');void refreshAdminEntry();try{await Promise.all([showProfileData(currentUser.id,'profileStats','profileVideos'),loadMyProfile()]);}catch(e){if(currentUser)el('profileEditMessage').textContent='هەڵەی بارکردنی پڕۆفایل: '+e.message;}}
+// XALLO+ v4.4 — account security. Recovery uses a separate, nonpersistent Auth session.
+let v44SecurityBusy=false,v44SecurityUser=null,v44RecoveryBusy=false,v44RecoveryClient=null,v44VerifiedEmail=null,v44LastEmailSent=0;
+let v45SessionBusy=false;
+function v44ClearFields(ids){ids.forEach(id=>el(id).value='');}
+function v44SetDisabled(ids,value){ids.forEach(id=>el(id).disabled=value);}
+function v44PasswordError(password,confirmation){if(password.length<8)return 'وشەی نهێنی نوێ دەبێت لانیکەم ٨ پیت بێت.';if(password!==confirmation)return 'هەردوو وشەی نهێنی نوێ دەبێت وەک یەک بن.';return '';}
+function v44OpenSecurity(){if(!requireLogin()||v44SecurityBusy||v45SessionBusy)return;v44SecurityUser=currentUser.id;el('v44SecurityEmail').textContent=currentUser.email||'';v44ClearFields(['v44OldPassword','v44NewPassword','v44ConfirmPassword']);el('v44SecurityMessage').textContent='';el('v45SessionMessage').textContent='';showModal('v44SecurityModal');}
+function v44CloseSecurity(){if(v44SecurityBusy||v45SessionBusy)return;v44ClearFields(['v44OldPassword','v44NewPassword','v44ConfirmPassword']);v44SecurityUser=null;closeModal('v44SecurityModal');}
+async function v44ChangePassword(){
+ if(v44SecurityBusy||v45SessionBusy||!currentUser||currentUser.id!==v44SecurityUser)return;
+ const uid=currentUser.id,email=currentUser.email,old=el('v44OldPassword').value,password=el('v44NewPassword').value,confirmation=el('v44ConfirmPassword').value,msg=el('v44SecurityMessage');
+ const invalid=!email||!old?'تکایە وشەی نهێنی ئێستا بنووسە.':v44PasswordError(password,confirmation)|| (old===password?'وشەی نهێنی نوێ دەبێت جیاواز بێت.':'');
+ if(invalid){msg.textContent=invalid;return;}
+ const ids=['v45OtherBtn','v45AllBtn','v44ChangeBtn','v44SecurityClose','v44OldPassword','v44NewPassword','v44ConfirmPassword'];v44SecurityBusy=true;v44SetDisabled(ids,true);msg.textContent='پشتڕاست دەکرێتەوە...';
+ try{
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:old});
+  if(error)throw error;
+  if(data?.user?.id!==uid||currentUser?.id!==uid)throw new Error('هەژمارەکە پشتڕاست نەکرایەوە.');
+  msg.textContent='وشەی نهێنی دەگۆڕدرێت...';
+  const {error:updateError}=await supabaseClient.auth.updateUser({password,current_password:old});
+  if(updateError)throw updateError;
+  v44ClearFields(['v44OldPassword','v44NewPassword','v44ConfirmPassword']);msg.textContent='✅ وشەی نهێنی بە سەرکەوتوویی گۆڕدرا.';
+ }catch(e){el('v44OldPassword').value='';msg.textContent='هەڵە: '+(e.message||'دووبارە هەوڵ بدە.');}
+ finally{v44SecurityBusy=false;v44SetDisabled(ids,false);}
+}
+// XALLO+ v4.5 — revoke refresh tokens in other sessions without deleting account data.
+async function v45EndSessions(scope){
+ if(scope!=='others'&&scope!=='global')return;
+ if(v45SessionBusy||v44SecurityBusy||!currentUser||currentUser.id!==v44SecurityUser||!el('v44SecurityModal').classList.contains('show'))return;
+ const uid=currentUser.id,other=scope==='others',msg=el('v45SessionMessage');
+ if(!confirm(other?'دڵنیایت لە دەرچوون لە هەموو ئامێرەکانی تر؟ ئەم ئامێرە دەمێنێتەوە.':'دڵنیایت لە دەرچوون لە هەموو ئامێرەکان، لەگەڵ ئەم ئامێرەش؟'))return;
+ const ids=['v45OtherBtn','v45AllBtn','v44ChangeBtn','v44SecurityClose','v44OldPassword','v44NewPassword','v44ConfirmPassword'];
+ v45SessionBusy=true;v44SetDisabled(ids,true);msg.textContent='چاوەڕێ بکە...';
+ try{
+  const {error}=await supabaseClient.auth.signOut({scope});
+  if(error)throw error;
+  if(other){
+   if(currentUser?.id===uid)msg.textContent='✅ چوونەژوورەوەی ئامێرەکانی تر هەڵوەشێندرایەوە. ئەم ئامێرە دەمێنێتەوە.';
+  }else if(!currentUser||currentUser.id===uid){
+   if(currentUser)updateUser(null);
+   closeModal('v44SecurityModal');closeModal('profileModal');showModal('v43GuestProfileModal');
+   void refreshSocialData().then(refreshVisibleCards).catch(e=>console.warn('Social:',e));
+  }
+ }catch(e){if(currentUser?.id===uid)msg.textContent='هەڵە: '+(e.message||'دووبارە هەوڵ بدە.');}
+ finally{v45SessionBusy=false;v44SetDisabled(ids,false);}
+}
+function v44RecoveryAuth(){if(!v44RecoveryClient){v44RecoveryClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false,storageKey:'xallo-recovery-v44'}});}return v44RecoveryClient.auth;}
+function v44RecoveryEmail(){const field=el('v44RecoveryEmail');return field.value.trim().toLowerCase();}
+function v44RecoveryParams(email,value){
+ const raw=value.trim();
+ if(/^\d{6,10}$/.test(raw))return {email,token:raw,type:'recovery'};
+ try{
+  const url=new URL(raw),expected=new URL(SUPABASE_URL);
+  const token=url.searchParams.get('token')||url.searchParams.get('token_hash');
+  if(url.origin===expected.origin&&url.pathname==='/auth/v1/verify'&&url.searchParams.get('type')==='recovery'&&token&&/^[A-Za-z0-9_-]{16,512}$/.test(token))return {token_hash:token,type:'recovery'};
+ }catch(_){}
+ throw new Error('کۆد یان لینکی گەڕاندنەوەی Supabase دروست نییە. لینکی ناو ئیمەیڵەکە کۆپی بکە، مەیکەرەوە.');
+}
+function v44OpenRecovery(){
+ if(currentUser||v44RecoveryBusy)return;
+ const email=el('loginEmail').value.trim();v44ClearFields(['loginPassword','v44RecoveryToken','v44ResetPassword','v44ResetConfirm']);el('v44RecoveryEmail').value=email;el('v44RecoveryMessage').textContent='';
+ v44VerifiedEmail=null;v44SetDisabled(['v44RecoveryEmail','v44RecoveryToken','v44SendRecovery'],false);closeModal('loginModal');showModal('v44RecoveryModal');
+}
+async function v44DisposeRecovery(){const previous=v44RecoveryClient;v44RecoveryClient=null;v44VerifiedEmail=null;if(previous){try{await previous.auth.signOut({scope:'local'});}catch(_){}}}
+async function v44CloseRecovery(){
+ if(v44RecoveryBusy)return;v44RecoveryBusy=true;
+ const email=el('v44RecoveryEmail').value.trim();v44ClearFields(['v44RecoveryEmail','v44RecoveryToken','v44ResetPassword','v44ResetConfirm']);
+ closeModal('v44RecoveryModal');void v44DisposeRecovery();v44RecoveryBusy=false;el('loginEmail').value=email;openLogin();
+}
+async function v44SendEmail(){
+ if(v44RecoveryBusy||currentUser||v44VerifiedEmail)return;const email=v44RecoveryEmail(),msg=el('v44RecoveryMessage');
+ if(!email||!el('v44RecoveryEmail').checkValidity()){msg.textContent='ئیمەیڵێکی دروست بنووسە.';return;}
+ if(Date.now()-v44LastEmailSent<60000){msg.textContent='تکایە ٦٠ چرکە چاوەڕێ بکە پێش ناردنەوە.';return;}
+ const ids=['v44SendRecovery','v44RecoveryClose','v44ResetBtn','v44RecoveryEmail','v44RecoveryToken','v44ResetPassword','v44ResetConfirm'];
+ v44RecoveryBusy=true;v44SetDisabled(ids,true);msg.textContent='ئیمەیڵ دەنێردرێت...';
+ try{const {error}=await v44RecoveryAuth().resetPasswordForEmail(email);if(error)throw error;v44LastEmailSent=Date.now();msg.textContent='📧 ئەگەر هەژمارەکە هەبێت، ئیمەیڵی گەڕاندنەوە دەنێردرێت. Inbox و Spam بپشکنە.';}
+ catch(e){msg.textContent='هەڵە: '+(e.message||'ناردن سەرکەوتوو نەبوو.');}
+ finally{v44RecoveryBusy=false;v44SetDisabled(ids,false);}
+}
+async function v44ResetPassword(){
+ if(v44RecoveryBusy||currentUser)return;
+ const email=v44RecoveryEmail(),token=el('v44RecoveryToken').value,password=el('v44ResetPassword').value,confirmation=el('v44ResetConfirm').value,msg=el('v44RecoveryMessage');
+ if(!email||!el('v44RecoveryEmail').checkValidity()){msg.textContent='ئیمەیڵێکی دروست بنووسە.';return;}
+ const invalid=v44PasswordError(password,confirmation);if(invalid){msg.textContent=invalid;return;}
+ let params;
+ if(v44VerifiedEmail!==email){try{params=v44RecoveryParams(email,token);}catch(e){msg.textContent=e.message;return;}}
+ const ids=['v44SendRecovery','v44RecoveryClose','v44ResetBtn','v44RecoveryEmail','v44RecoveryToken','v44ResetPassword','v44ResetConfirm'];
+ v44RecoveryBusy=true;v44SetDisabled(ids,true);msg.textContent='کۆدەکە پشتڕاست دەکرێتەوە...';
+ try{
+  const auth=v44RecoveryAuth();
+  if(v44VerifiedEmail!==email){
+   const {data,error}=await auth.verifyOtp(params);if(error)throw error;
+   if(!data?.session||data.user?.email?.toLowerCase()!==email){await v44DisposeRecovery();throw new Error('کۆد یان لینک بۆ ئەم ئیمەیڵە نییە.');}
+   v44VerifiedEmail=email;el('v44RecoveryToken').value='';
+  }
+  msg.textContent='وشەی نهێنی نوێ پاشەکەوت دەکرێت...';
+  const {error}=await auth.updateUser({password});if(error)throw error;
+  v44ClearFields(['v44RecoveryEmail','v44RecoveryToken','v44ResetPassword','v44ResetConfirm']);closeModal('v44RecoveryModal');void v44DisposeRecovery();el('loginEmail').value=email;openLogin();el('loginMessage').textContent='✅ وشەی نهێنی نوێ پاشەکەوت کرا. ئێستا بچۆ ژوورەوە.';
+ }catch(e){msg.textContent='هەڵە: '+(e.message||'دووبارە هەوڵ بدە.');}
+ finally{v44RecoveryBusy=false;v44SetDisabled(ids,false);if(v44VerifiedEmail)v44SetDisabled(['v44RecoveryEmail','v44RecoveryToken','v44SendRecovery'],true);}
+}
+function openUpload(){if(!requireLogin())return;el('uploadMessage').textContent='';showModal('uploadModal');}
+function previewVideo(){const file=el('videoFile').files[0],preview=el('videoPreview'),msg=el('uploadMessage');preview.replaceChildren();msg.textContent='';if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null;}if(!file)return;if(!file.type.startsWith('video/')){msg.textContent='تکایە فایلێکی ڤیدیۆ هەڵبژێرە.';el('videoFile').value='';return;}if(file.size>100*1024*1024){msg.textContent='قەبارەی ڤیدیۆ نابێت لە 100MB زیاتر بێت.';el('videoFile').value='';return;}previewObjectUrl=URL.createObjectURL(file);const video=document.createElement('video');video.src=previewObjectUrl;video.controls=true;video.playsInline=true;preview.append(video);msg.textContent='ڤیدیۆکە ئامادەیە ▶️';}
+async function uploadVideo(){const file=el('videoFile').files[0],caption=el('videoCaption').value.trim(),btn=el('uploadBtn'),msg=el('uploadMessage');if(!file){msg.textContent='تکایە سەرەتا ڤیدیۆیەک هەڵبژێرە 🎥';return;}if(!file.type.startsWith('video/')||file.size>100*1024*1024){msg.textContent='جۆری فایل یان قەبارەی ڤیدیۆ گونجاو نییە (زۆرترین 100MB).';return;}if(!requireLogin())return;btn.disabled=true;let filePath=null,uploaded=false;try{const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();if(sessionError)throw sessionError;const session=sessionData.session;if(!session)throw new Error('تکایە دووبارە بچۆ ژوورەوە.');msg.textContent='١. ڤیدیۆکە بەرزدەکرێتەوە... ⏳';const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(-90)||'video.mp4';filePath=session.user.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2)+'-'+safeName;const {error:storageError}=await supabaseClient.storage.from('videos').upload(filePath,file,{cacheControl:'3600',upsert:false,contentType:file.type});if(storageError)throw new Error('Storage: '+storageError.message);uploaded=true;const {data:publicData}=supabaseClient.storage.from('videos').getPublicUrl(filePath);msg.textContent='٢. زانیاریی ڤیدیۆکە پاشەکەوت دەکرێت... ⏳';const {error:dbError}=await supabaseClient.from('videos').insert({user_id:session.user.id,video_url:publicData.publicUrl,caption,user_email:session.user.email||'',likes:0,views:0});if(dbError)throw new Error('Database: '+dbError.message);msg.textContent='بە سەرکەوتوویی بڵاوکرایەوە 🎉';v42TrendingLoadedAt=0;el('videoFile').value='';el('videoCaption').value='';el('videoPreview').replaceChildren();if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null;}await loadVideos();setTimeout(()=>closeModal('uploadModal'),900);}catch(e){msg.textContent='هەڵە:\n'+e.message;console.error(e);if(uploaded&&filePath){const {error}=await supabaseClient.storage.from('videos').remove([filePath]);if(error)console.warn('Cleanup:',error.message);}}finally{btn.disabled=false;}}
+async function refreshSocialData(){likeRows=[];commentCounts=new Map();likesReady=false;commentsReady=false;if(!feedItems.length)return;const ids=feedItems.map(x=>x.id);try{const {data,error}=await supabaseClient.from('video_likes').select('video_id,user_id').in('video_id',ids);if(error)throw error;likeRows=data||[];likesReady=true;}catch(e){console.warn('Likes:',e);}
+try{const {data,error}=await supabaseClient.from('video_comments').select('video_id').in('video_id',ids);if(error)throw error;for(const row of data||[])commentCounts.set(String(row.video_id),(commentCounts.get(String(row.video_id))||0)+1);commentsReady=true;}catch(e){console.warn('Comments:',e);}}
+function countLikes(id){return likeRows.filter(x=>String(x.video_id)===String(id)).length;}
+function hasLiked(id){return !!currentUser&&likeRows.some(x=>String(x.video_id)===String(id)&&x.user_id===currentUser.id);}
+// XALLO+ v4.1: Fetch twelve feed entries at a time. Search and saved videos have their own queries.
+const V41_FEED_PAGE_SIZE=12;
+let v41FeedOffset=0,v41HasMore=false,v41FeedBusy=false,v41FeedSerial=0;
+function v41UpdateLoadCard(){
+ const root=el('uploadedVideos');if(!root)return;
+ const existing=root.querySelector('.v41-more-card');if(existing)existing.remove();
+ if(!v41HasMore)return;
+ const card=document.createElement('article');card.className='uploaded-video v41-more-card';
+ card.setAttribute('aria-label','ڤیدیۆکانی داهاتوو');
+ const title=document.createElement('strong');title.className='v41-more-title';title.textContent='🎬 ڤیدیۆی زیاتر';
+ const sub=document.createElement('p');sub.className='v41-more-sub';sub.textContent='فید بە بەشە بچووکەکان بار دەبێت بۆ خێراترکردنی ئەپ.';
+ const button=makeButton(v41FeedBusy?'⏳ بار دەکرێت...':'⬇️ بارکردنی ڤیدیۆی زیاتر',()=>{void v41LoadMoreVideos();});
+ button.className='v41-more-btn';button.disabled=v41FeedBusy;
+ card.append(title,sub,button);root.append(card);
+}
+function v41UpdateFeedLabel(){
+ const count=visibleVideos(feedItems).length;
+ let label=count?'🎬 '+count+' ڤیدیۆ بارکراوە. بە گەیشتن بە کۆتایی فید، ڤیدیۆی زیاتر بار دەبێت.':'هێشتا لەم بەشەدا ڤیدیۆی ئاشکرا نەدۆزرایەوە.';
+ if(!v41HasMore&&!count)label='هێشتا هیچ ڤیدیۆیەکی ئاشکرا نییە. 🎥';
+ if(!likesReady&&feedItems.length)label+='\n⚠️ زانیاری لایک نەخوێندرایەوە؛ Policy ـەکانی video_likes بپشکنە.';
+ if(!commentsReady&&feedItems.length)label+='\n⚠️ زانیاری کۆمێنت نەخوێندرایەوە؛ Policy ـەکانی video_comments بپشکنە.';
+ if(!followsReady)label+='\n⚠️ Follow بار نەبووە؛ user_follows بپشکنە.';
+ el('feedMessage').textContent=label;
+}
+async function loadVideos(){
+ const serial=++v41FeedSerial,root=el('uploadedVideos'),message=el('feedMessage');
+ v41FeedBusy=true;v41FeedOffset=0;v41HasMore=false;feedItems=[];
+ message.textContent='🎬 یەکەم ١٢ ڤیدیۆ بار دەکرێن...';
+ if(feedObserver){feedObserver.disconnect();feedObserver=null;}root.replaceChildren();
+ try{
+  const {data,error}=await supabaseClient.from('videos').select('*')
+   .order('created_at',{ascending:false}).order('id',{ascending:false}).range(0,V41_FEED_PAGE_SIZE-1);
+  if(error)throw error;if(serial!==v41FeedSerial)return;
+  feedItems=data||[];v41FeedOffset=feedItems.length;v41HasMore=feedItems.length===V41_FEED_PAGE_SIZE;
+  await loadBlockedUsers();if(serial!==v41FeedSerial)return;
+  void loadChatUnreadCount();await loadProfiles();if(serial!==v41FeedSerial)return;
+  await refreshSocialData();if(serial!==v41FeedSerial)return;
+  await refreshFollows();if(serial!==v41FeedSerial)return;
+  await loadSavedVideoIds();if(serial!==v41FeedSerial)return;
+  renderVideos(visibleVideos(feedItems),root);
+  el('home').classList.toggle('feed-mode',visibleVideos(feedItems).length>0||v41HasMore);
+  v41UpdateFeedLabel();
+ }catch(e){if(serial===v41FeedSerial){message.textContent='نەتوانرا فید بار بکرێت. 🔄 دوگمەی نوێکردنەوە بەکاربهێنە.\n'+e.message;console.error(e);}}
+ finally{if(serial===v41FeedSerial){v41FeedBusy=false;v41UpdateLoadCard();}}
+}
+async function v41LoadPageSocial(page){
+ const ids=page.map(v=>v.id);if(!ids.length)return;
+ const idSet=new Set(ids.map(String));
+ const [likes,comments]=await Promise.all([
+  supabaseClient.from('video_likes').select('video_id,user_id').in('video_id',ids),
+  supabaseClient.from('video_comments').select('video_id').in('video_id',ids)
+ ]);
+ if(!likes.error){likeRows=likeRows.filter(r=>!idSet.has(String(r.video_id))).concat(likes.data||[]);likesReady=true;}
+ else{likesReady=false;console.warn('More likes:',likes.error.message);}
+ if(!comments.error){for(const id of ids)commentCounts.delete(String(id));for(const r of comments.data||[])commentCounts.set(String(r.video_id),(commentCounts.get(String(r.video_id))||0)+1);commentsReady=true;}
+ else{commentsReady=false;console.warn('More comments:',comments.error.message);}
+}
+async function v41LoadMoreVideos(){
+ if(v41FeedBusy||!v41HasMore)return;
+ if(navigator.onLine===false){el('feedMessage').textContent='📡 ئینتەرنێت نییە. کاتێک پەیوەندی گەڕایەوە دووبارە هەوڵ بدە.';return;}
+ const serial=v41FeedSerial,start=v41FeedOffset;v41FeedBusy=true;v41UpdateLoadCard();
+ try{
+  const {data,error}=await supabaseClient.from('videos').select('*')
+   .order('created_at',{ascending:false}).order('id',{ascending:false})
+   .range(start,start+V41_FEED_PAGE_SIZE-1);
+  if(error)throw error;if(serial!==v41FeedSerial)return;
+  const fetched=data||[];v41FeedOffset+=fetched.length;
+  v41HasMore=fetched.length===V41_FEED_PAGE_SIZE;
+  const known=new Set(feedItems.map(v=>String(v.id)));
+  const unique=fetched.filter(v=>!known.has(String(v.id)));
+  feedItems.push(...unique);
+  if(unique.length){
+   await Promise.all([loadProfiles(),v41LoadPageSocial(unique)]);
+   if(serial!==v41FeedSerial)return;
+   rootAppend(unique);
+  }
+  v41UpdateFeedLabel();
+ }catch(e){if(serial===v41FeedSerial){console.error('More feed:',e);el('feedMessage').textContent='⚠️ ڤیدیۆی زیاتر بار نەبوو. دوگمەی بارکردنی زیاتر دووبارە تاقی بکە.\n'+e.message;}}
+ finally{if(serial===v41FeedSerial){v41FeedBusy=false;v41UpdateLoadCard();}}
+}
+function rootAppend(items){
+ const root=el('uploadedVideos');const more=root.querySelector('.v41-more-card');if(more)more.remove();
+ renderVideos(items,root,true);
+}
+// The swipe feed has its own scroll container, not the document's scroll.
+let v41ScrollQueued=false;
+function v41OnFeedScroll(){
+ if(v41ScrollQueued)return;v41ScrollQueued=true;
+ requestAnimationFrame(()=>{
+  v41ScrollQueued=false;
+  const root=el('uploadedVideos');
+  if(!v41HasMore||v41FeedBusy||document.hidden||navigator.onLine===false||el('home').style.display==='none'||document.querySelector('.modal.show'))return;
+  if(root.scrollHeight-root.scrollTop-root.clientHeight<Math.max(root.clientHeight*1.35,300))void v41LoadMoreVideos();
+ });
+}
+
+
+// Video Editor: owner-only caption and thumbnail updates.
+let editorItem=null,editorBlob=null,editorPreviewUrl=null;
+function resetEditorBlob(){if(editorPreviewUrl){URL.revokeObjectURL(editorPreviewUrl);editorPreviewUrl=null;}editorBlob=null;}
+function openVideoEditor(item){if(!currentUser||currentUser.id!==item.user_id)return;editorItem=item;resetEditorBlob();el('editorCaption').value=item.caption||'';el('editorThumbnail').value='';el('editorMessage').textContent='';const img=el('editorThumbPreview');img.style.display=item.thumbnail_url?'block':'none';img.src=item.thumbnail_url||'';const video=el('editorVideo');video.src=item.video_url;video.load();showModal('videoEditorModal');}
+function closeVideoEditor(){el('editorVideo').pause();el('editorVideo').removeAttribute('src');el('editorVideo').load();resetEditorBlob();editorItem=null;closeModal('videoEditorModal');}
+function setEditorBlob(blob){resetEditorBlob();editorBlob=blob;editorPreviewUrl=URL.createObjectURL(blob);el('editorThumbPreview').src=editorPreviewUrl;el('editorThumbPreview').style.display='block';}
+function previewEditorThumbnail(){const f=el('editorThumbnail').files[0];if(!f)return;if(!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>3*1024*1024){el('editorMessage').textContent='وێنەکە دەبێت JPEG، PNG یان WebP بێت و لە 3MB کەمتر بێت.';el('editorThumbnail').value='';return;}el('editorMessage').textContent='';setEditorBlob(f);}
+function captureEditorFrame(){const video=el('editorVideo'),msg=el('editorMessage');if(!video.videoWidth||!video.videoHeight){msg.textContent='سەرەتا ڤیدیۆکە لێبدە و ساتێک هەڵبژێرە.';return;}try{const canvas=document.createElement('canvas');const scale=Math.min(1,960/video.videoWidth);canvas.width=Math.round(video.videoWidth*scale);canvas.height=Math.round(video.videoHeight*scale);canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{if(!blob){msg.textContent='وێنەکە دروست نەبوو.';return;}setEditorBlob(blob);msg.textContent='وێنەی فریمەکە ئامادەیە ✅';},'image/jpeg',0.85);}catch(e){msg.textContent='WebView ڕێگەی وەرگرتنی فریم نادات؛ وێنەیەک لە مۆبایل هەڵبژێرە.';}}
+async function saveVideoEdit(){const item=editorItem;if(!item||!currentUser||currentUser.id!==item.user_id)return;const btn=el('saveVideoEditBtn'),msg=el('editorMessage');const caption=el('editorCaption').value.trim();btn.disabled=true;msg.textContent='پاشەکەوت دەکرێت...';let uploadedPath=null;try{const patch={caption};if(editorBlob){const extension=editorBlob.type==='image/png'?'png':editorBlob.type==='image/webp'?'webp':'jpg';uploadedPath=currentUser.id+'/'+item.id+'-'+Date.now()+'.'+extension;const {error:uploadError}=await supabaseClient.storage.from('thumbnails').upload(uploadedPath,editorBlob,{contentType:editorBlob.type||'image/jpeg',upsert:false});if(uploadError)throw uploadError;patch.thumbnail_url=supabaseClient.storage.from('thumbnails').getPublicUrl(uploadedPath).data.publicUrl;}const {data,error}=await supabaseClient.from('videos').update(patch).eq('id',item.id).eq('user_id',currentUser.id).select('id');if(error)throw error;if(!data?.length)throw new Error('پاشەکەوت نەکرا. Policy ـی UPDATE بپشکنە.');msg.textContent='بە سەرکەوتوویی پاشەکەوت کرا ✅';v42TrendingLoadedAt=0;await loadVideos();setTimeout(()=>{if(editorItem?.id===item.id)closeVideoEditor();},650);}catch(e){msg.textContent='هەڵە: '+e.message;if(uploadedPath){await supabaseClient.storage.from('thumbnails').remove([uploadedPath]);}}finally{btn.disabled=false;}}
+
+function makeButton(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.addEventListener('click',fn);return b;}
+function renderVideos(items,container,append=false){items=visibleVideos(items);if(!append)container.replaceChildren();if(!items.length&&!append){const empty=document.createElement('div');empty.className='empty';empty.textContent='هیچ ڤیدیۆیەک نەدۆزرایەوە.';container.append(empty);return;}items.forEach(item=>{const card=document.createElement('article');card.className='uploaded-video';card.dataset.feedVideoId=String(item.id);const video=document.createElement('video');if(item.thumbnail_url)video.poster=item.thumbnail_url;video.src=item.video_url;video.controls=true;video.playsInline=true;video.preload='none';video.addEventListener('play',()=>{if(document.hidden){video.pause();return;}if(container===el('uploadedVideos'))container.querySelectorAll('video').forEach(other=>{if(other!==video)other.pause();});});attachWatchHistory(video,item);video.addEventListener('error',()=>{const note=document.createElement('p');note.className='message';note.textContent='ئەم ڤیدیۆیە نەیتوانی بکرێتەوە. ڕێکخستنی Storage بپشکنە.';if(!card.querySelector('.video-error')){note.classList.add('video-error');card.append(note);}});card.append(video);const info=document.createElement('div');info.className='uploaded-info';const owner=makeButton('@'+(profileCache.get(item.user_id)?.display_name||item.user_email||'xallo'),()=>openPublicProfile(item.user_id));owner.className='owner-name';const caption=document.createElement('p');caption.textContent=item.caption||'ڤیدیۆی نوێ 🎬';info.append(owner,caption);
+const v42Tags=v42ExtractHashtags(item.caption).slice(0,5);
+if(v42Tags.length){
+  const tagsRow=document.createElement('div');tagsRow.className='v42-inline-tags';
+  for(const tag of v42Tags){
+    const tagBtn=makeButton('#'+tag,()=>v42OpenHashtag(tag));
+    tagBtn.className='v42-tag';tagBtn.setAttribute('aria-label','گەڕان بە هاشتاگی '+tag);
+    tagsRow.append(tagBtn);
+  }
+  info.append(tagsRow);
+}
+const actions=document.createElement('div');actions.className='video-actions';const likeBtn=makeButton('❤️ '+(likesReady?countLikes(item.id):'—'),()=>toggleLike(item.id,likeBtn));if(hasLiked(item.id))likeBtn.classList.add('liked');actions.append(likeBtn);const commentBtn=makeButton('💬 '+(commentsReady?(commentCounts.get(String(item.id))||0):'—'),()=>openComments(item.id));actions.append(commentBtn);
+const saveBtn=makeButton(savedVideoIds.has(String(item.id))?'🔖 پاشەکوتکراو':'🔖 پاشەکەوت',()=>toggleSavedVideo(item.id,saveBtn));
+saveBtn.classList.add('save-video-btn');saveBtn.dataset.saveId=String(item.id);
+if(savedVideoIds.has(String(item.id)))saveBtn.classList.add('saved');
+actions.append(saveBtn);
+if(currentUser&&currentUser.id!==item.user_id){const reportBtn=makeButton('🚩 ڕاپۆرت',()=>openReportDialog('video',item.id));reportBtn.classList.add('report-video-btn');actions.append(reportBtn);}
+if(currentUser&&currentUser.id!==item.user_id){const followBtn=makeButton(following(item.user_id)?'✓ Following':'➕ Follow',()=>toggleFollow(item.user_id,followBtn));followBtn.classList.add('follow-btn');if(following(item.user_id))followBtn.classList.add('following');actions.append(followBtn);}const views=document.createElement('span');views.textContent='👁️ '+(item.views??0);actions.append(views);if(currentUser&&currentUser.id===item.user_id){const editBtn=makeButton('✏️ دەستکاری',()=>openVideoEditor(item));editBtn.classList.add('edit-video-btn');actions.append(editBtn);actions.append(makeButton('🗑️ سڕینەوە',()=>deleteVideo(item)));}info.append(actions);card.append(info);container.append(card);});if(container===el('uploadedVideos')){v41UpdateLoadCard();setupSwipePlayback();}}
+
+let feedObserver=null;
+function setupSwipePlayback(){
+  if(feedObserver){feedObserver.disconnect();feedObserver=null;}
+  const root=el('uploadedVideos');
+  const cards=[...root.querySelectorAll(':scope > .uploaded-video')];
+  if(!cards.length)return;
+  if(typeof IntersectionObserver==='undefined')return;
+  feedObserver=new IntersectionObserver(entries=>{
+    if(document.hidden||el('home').style.display==='none'||document.querySelector('.modal.show'))return;
+    entries.forEach(entry=>{
+      const video=entry.target.querySelector('video');if(!video)return;
+      if(entry.isIntersecting&&entry.intersectionRatio>=0.65){
+        if(!v40ShouldAutoplay())return;
+        root.querySelectorAll('video').forEach(other=>{if(other!==video)other.pause();});
+        video.muted=true;
+        const playing=video.play();if(playing&&playing.catch)playing.catch(()=>{});
+      }else video.pause();
+    });
+  },{root,threshold:[0,0.65,1]});
+  cards.forEach(card=>feedObserver.observe(card));
+}
+function pauseFeed(){el('uploadedVideos').querySelectorAll('video').forEach(v=>v.pause());}
+
+async function refreshFollows(){
+  followsReady=false;followRows=[];
+  try{const {data,error}=await supabaseClient.from('user_follows').select('follower_id,following_id').limit(1000);if(error)throw error;followRows=data||[];followsReady=true;}
+  catch(e){console.warn('Follows:',e);}
+}
+function following(id){return !!currentUser&&followRows.some(r=>r.follower_id===currentUser.id&&r.following_id===id);}
+async function toggleFollow(id,btn){
+  if(!requireLogin())return;
+  if(isBlockedUser(id)){alert('ناتوانیت ئەم بەکارهێنەرە Follow بکەیت.');return;}if(!followsReady){alert('Follow بار نەبووە. Policy ـی user_follows بپشکنە.');return;}
+  if(id===currentUser.id)return;
+  btn.disabled=true;
+  try{
+    const yes=following(id);
+    const query=yes?supabaseClient.from('user_follows').delete().eq('follower_id',currentUser.id).eq('following_id',id):supabaseClient.from('user_follows').insert({follower_id:currentUser.id,following_id:id});
+    const {error}=await query;if(error)throw error;
+    await refreshFollows();refreshVisibleCards();
+    if(publicProfileUserId===id&&el('publicProfileModal').classList.contains('show'))await showProfileData(id,'publicProfileStats','publicProfileVideos');
+  }catch(e){alert('هەڵەی Follow: '+e.message);}finally{btn.disabled=false;}
+}
+function profileStatNode(followers,followingCount,videos){
+  const wrapper=document.createElement('div');
+  for(const [label,num] of [['Followers',followers],['Following',followingCount],['ڤیدیۆ',videos]]){
+    const div=document.createElement('div');const b=document.createElement('b');b.textContent=String(num);const t=document.createElement('span');t.textContent=label;div.append(b,t);wrapper.append(div);
+  }
+  wrapper.style.display='contents';return wrapper;
+}
+async function showProfileData(userId,statsId,videosId){
+  const stats=el(statsId),list=el(videosId);stats.textContent='بار دەکرێت...';list.replaceChildren();
+  // Profile videos are queried independently; paging the home feed must not hide older uploads.
+  let videos=[];
+  try{
+   const {data,error}=await supabaseClient.from('videos').select('id,caption,user_id,is_hidden')
+     .eq('user_id',userId).order('created_at',{ascending:false}).limit(100);
+   if(error)throw error;
+   videos=(data||[]).filter(v=>!v.is_hidden);
+  }catch(err){console.warn('Profile videos:',err.message);videos=visibleVideos(feedItems.filter(v=>v.user_id===userId));}
+  if(!followsReady)await refreshFollows();
+  if(statsId==='profileStats'&&currentUser?.id!==userId)return;
+  if(!followsReady){stats.textContent='ژمارەی Follow بار نەبووە.';}
+  else{const followers=followRows.filter(r=>r.following_id===userId).length;const followingCount=followRows.filter(r=>r.follower_id===userId).length;stats.replaceChildren(profileStatNode(followers,followingCount,videos.length));}
+  if(!videos.length){list.textContent='هێشتا ڤیدیۆ نییە.';return;}
+  videos.forEach(v=>{const row=document.createElement('div');row.className='profile-video';const title=document.createElement('p');title.textContent=v.caption||'ڤیدیۆی نوێ 🎬';row.append(title);list.append(row);});
+}
+async function openPublicProfile(id){
+  if(!id)return;if(isBlockedUser(id)){alert('ئەم بەکارهێنەرە بلۆککراوە. بۆ لابردنی بلۆک بچۆ پڕۆفایلی خۆت.');return;}publicProfileUserId=id;
+  const item=feedItems.find(v=>v.user_id===id);
+  el('publicProfileName').textContent='@'+(profileCache.get(id)?.display_name||item?.user_email||'xallo');loadPublicProfile(id);
+  const slot=el('publicProfileFollow');slot.replaceChildren();
+  if(currentUser&&currentUser.id!==id){const btn=makeButton(following(id)?'✓ Following':'➕ Follow',()=>toggleFollow(id,btn));btn.className='main-btn';slot.append(btn);}
+  el('profileChatBtn').style.display=currentUser&&currentUser.id!==id?'block':'none';
+  const safety=el('publicProfileSafety');safety.replaceChildren();
+  if(currentUser&&currentUser.id!==id){
+    const report=makeButton('🚩 ڕاپۆرتکردنی بەکارهێنەر',()=>openReportDialog('user',id));report.className='safety-entry-btn';
+    const block=makeButton('🛡️ بلۆککردنی بەکارهێنەر',()=>blockUser(id));block.className='safety-entry-btn safety-danger-btn';
+    safety.append(report,block);
+  }
+  showModal('publicProfileModal');await showProfileData(id,'publicProfileStats','publicProfileVideos');
+}
+function refreshVisibleCards(){const root=el('uploadedVideos'),top=root.scrollTop;renderVideos(visibleVideos(feedItems),root);root.scrollTop=top;if(el('searchPage').style.display!=='none')doSearch();}
+async function toggleLike(videoId,button){if(!requireLogin())return;if(!likesReady){alert('زانیاری لایک بار نەبووە؛ Policy ـەکان بپشکنە.');return;}button.disabled=true;try{const already=hasLiked(videoId);let query=already?supabaseClient.from('video_likes').delete().eq('video_id',videoId).eq('user_id',currentUser.id):supabaseClient.from('video_likes').insert({video_id:videoId,user_id:currentUser.id});const {error}=await query;if(error)throw error;await refreshSocialData();refreshVisibleCards();}catch(e){alert('هەڵەی لایک: '+e.message);console.error(e);}finally{button.disabled=false;}}
+async function openComments(videoId){currentCommentVideoId=videoId;el('commentText').value='';el('commentMessage').textContent='';showModal('commentsModal');await loadComments(videoId);}
+async function loadComments(videoId){const list=el('commentsList');list.replaceChildren();list.textContent='کۆمێنتەکان بار دەکرێن...';try{const {data,error}=await supabaseClient.from('video_comments').select('id,video_id,user_id,comment,created_at').eq('video_id',videoId).order('created_at',{ascending:false}).limit(100);if(error)throw error;if(currentCommentVideoId!==videoId)return;list.replaceChildren();if(!data.length){list.textContent='هێشتا کۆمێنت نییە. یەکەم کۆمێنت بنووسە!';return;}data.filter(row=>!isBlockedUser(row.user_id)).forEach(row=>{const div=document.createElement('div');div.className='comment-item';const name=document.createElement('strong');name.textContent=row.user_id===currentUser?.id?'تۆ':'بەکارهێنەر';const body=document.createElement('p');body.textContent=row.comment||'';const date=document.createElement('small');date.textContent=row.created_at?new Date(row.created_at).toLocaleString('en-GB'):'';div.append(name,body,date);if(currentUser&&row.user_id===currentUser.id)div.append(makeButton('🗑️ سڕینەوە',()=>deleteComment(row)));list.append(div);});}catch(e){list.textContent='هەڵە لە بارکردنی کۆمێنت: '+e.message;}}
+async function sendComment(){if(!requireLogin())return;const content=el('commentText').value.trim(),id=currentCommentVideoId,btn=el('sendCommentBtn'),msg=el('commentMessage');if(id==null)return;if(!content){msg.textContent='تکایە کۆمێنتێک بنووسە.';return;}if(content.length>2000){msg.textContent='کۆمێنتەکە زۆر درێژە.';return;}btn.disabled=true;msg.textContent='دەنێردرێت...';try{const {error}=await supabaseClient.from('video_comments').insert({video_id:id,user_id:currentUser.id,comment:content});if(error)throw error;el('commentText').value='';msg.textContent='کۆمێنتەکە نێردرا ✅';await loadComments(id);await refreshSocialData();refreshVisibleCards();}catch(e){msg.textContent='هەڵە: '+e.message;}finally{btn.disabled=false;}}
+async function deleteComment(row){if(!currentUser||row.user_id!==currentUser.id)return;if(!confirm('ئەم کۆمێنتە بسڕدرێتەوە؟'))return;try{const {error}=await supabaseClient.from('video_comments').delete().eq('id',row.id).eq('user_id',currentUser.id);if(error)throw error;await loadComments(row.video_id);await refreshSocialData();refreshVisibleCards();}catch(e){alert('هەڵە لە سڕینەوەی کۆمێنت: '+e.message);}}
+async function deleteVideo(item){if(!currentUser||currentUser.id!==item.user_id){alert('تەنها ڤیدیۆی خۆت دەتوانیت بسڕیتەوە.');return;}if(!confirm('دڵنیایت دەتەوێت ئەم ڤیدیۆیە بسڕیتەوە؟'))return;try{const {error:dbError,data}=await supabaseClient.from('videos').delete().eq('id',item.id).eq('user_id',currentUser.id).select('id');if(dbError)throw dbError;if(!data?.length)throw new Error('ڕێگەی سڕینەوە نییە یان ڤیدیۆکە نەدۆزرایەوە.');const marker='/storage/v1/object/public/videos/';const index=item.video_url.indexOf(marker);if(index>=0){const path=decodeURIComponent(item.video_url.substring(index+marker.length).split('?')[0]);const {error:storageError}=await supabaseClient.storage.from('videos').remove([path]);if(storageError)alert('ڤیدیۆ لە لیست سڕایەوە، بەڵام لە Storage نەسڕایەوە: '+storageError.message);}await loadVideos();}catch(e){alert('هەڵە لە سڕینەوە: '+e.message);}}
+
+// === XALLO+ v3.1 / Saved Videos ===
+// The saved_videos database is protected by RLS. Never trust the client for authorization.
+async function loadSavedVideoIds(){
+  const uid=currentUser?.id;
+  if(!uid){savedVideoIds=new Set();savedReady=true;syncSavedButtons();return;}
+  try{
+    const {data,error}=await supabaseClient.from('saved_videos').select('video_id').eq('user_id',uid).limit(1000);
+    if(error)throw error;
+    if(currentUser?.id!==uid)return;
+    savedVideoIds=new Set((data||[]).map(row=>String(row.video_id)));
+    savedReady=true;
+    syncSavedButtons();
+  }catch(err){
+    if(currentUser?.id!==uid)return;
+    savedReady=false;console.warn('Saved videos:',err.message);
+  }
+}
+function syncSavedButtons(){
+  document.querySelectorAll('.save-video-btn[data-save-id]').forEach(btn=>{
+    const isSaved=savedVideoIds.has(btn.dataset.saveId);
+    btn.textContent=isSaved?'🔖 پاشەکوتکراو':'🔖 پاشەکەوت';
+    btn.classList.toggle('saved',isSaved);
+    btn.setAttribute('aria-pressed',String(isSaved));
+  });
+}
+async function toggleSavedVideo(videoId,btn){
+  if(!requireLogin())return;
+  if(!savedReady){await loadSavedVideoIds();if(!savedReady){alert('پاشەکەوتکردن ئامادە نییە. سەرەتا SQL ـی Saved Videos جێبەجێ بکە.');return;}}
+  const uid=currentUser?.id,id=String(videoId),already=savedVideoIds.has(id);
+  btn.disabled=true;
+  try{
+    const query=already
+      ?supabaseClient.from('saved_videos').delete().eq('user_id',uid).eq('video_id',videoId)
+      :supabaseClient.from('saved_videos').insert({user_id:uid,video_id:videoId});
+    const {error}=await query;
+    if(error)throw error;
+    if(currentUser?.id!==uid)return;
+    if(already)savedVideoIds.delete(id);else savedVideoIds.add(id);
+    syncSavedButtons();
+    if(el('savedVideosModal').classList.contains('show'))await loadSavedVideoList();
+  }catch(err){alert('هەڵەی پاشەکەوتکردنی ڤیدیۆ: '+err.message);}
+  finally{btn.disabled=false;}
+}
+async function openSavedVideos(){
+  if(!requireLogin())return;
+  closeModal('profileModal');
+  showModal('savedVideosModal');
+  await loadSavedVideoList();
+}
+async function loadSavedVideoList(){
+  if(!currentUser)return;
+  const uid=currentUser.id,list=el('savedVideosList'),status=el('savedVideosStatus');
+  list.replaceChildren();status.textContent='ڤیدیۆ پاشەکەوتکراوەکان بار دەکرێن...';
+  try{
+    const {data:rows,error}=await supabaseClient.from('saved_videos')
+      .select('video_id,created_at').eq('user_id',uid).order('created_at',{ascending:false}).limit(100);
+    if(error)throw error;
+    if(currentUser?.id!==uid)return;
+    const ids=(rows||[]).map(row=>row.video_id);
+    savedVideoIds=new Set(ids.map(String));savedReady=true;syncSavedButtons();
+    if(!ids.length){status.textContent='هێشتا هیچ ڤیدیۆیەکت پاشەکەوت نەکردووە. 🔖';return;}
+    const {data:videos,error:videoError}=await supabaseClient.from('videos').select('*').in('id',ids);
+    if(videoError)throw videoError;
+    if(currentUser?.id!==uid)return;
+    const videosById=new Map((videos||[]).map(v=>[String(v.id),v]));
+    const ordered=visibleVideos(ids.map(id=>videosById.get(String(id))).filter(Boolean));
+    renderVideos(ordered,list);
+    status.textContent='🔖 ڤیدیۆی پاشەکەوتکراو: '+ordered.length;
+    if(ordered.length<ids.length)status.textContent+=' (هەندێک ڤیدیۆ سڕاوەتەوە یان بەردەست نییە)';
+  }catch(err){status.textContent='هەڵە: '+err.message+' — SQL ـی Saved Videos بپشکنە.';console.error(err);}
+}
+// === End Saved Videos ===
+
+// === XALLO+ v3.4 — Watch History (on-device only; no database setup) ===
+// Watching for at least ~2 seconds adds a clip to this account's on-device history.
+// Separate keys prevent different logged-in accounts sharing a visible history.
+const WATCH_HISTORY_MAX=60;
+// v3.6: server records at most one view per signed-in account/video/UTC day.
+// Guests and owners do not change the counter; errors never interrupt playback.
+const xalloViewsReported=new Set();
+async function registerVideoView(item){
+ if(!currentUser||!item||currentUser.id===item.user_id)return;
+ const uid=currentUser.id, day=new Date().toISOString().slice(0,10);
+ const key=uid+':'+item.id+':'+day;
+ if(xalloViewsReported.has(key))return;
+ xalloViewsReported.add(key);
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_register_video_view',{p_video_id:item.id});
+  if(error)throw error;
+  if(data){item.views=Math.max(0,Number(item.views)||0)+1;}
+ }catch(err){console.warn('View counter (run v3.6 SQL):',err.message);}
+}
+
+const WATCH_HISTORY_PREFIX='xallo_watch_history_v3_4_';
+let watchHistoryStorageError=false;
+function watchHistoryKey(){return currentUser?.id?WATCH_HISTORY_PREFIX+currentUser.id:null;}
+function readWatchHistory(){
+  const key=watchHistoryKey();if(!key)return [];
+  try{
+    const raw=localStorage.getItem(key);const parsed=raw?JSON.parse(raw):[];
+    if(!Array.isArray(parsed))return [];
+    const seen=new Set();const clean=[];
+    for(const row of parsed){
+      const id=String(row?.id??'');
+      if(!/^\d+$/.test(id)||seen.has(id))continue;
+      seen.add(id);clean.push({id,at:Number(row.at)||0});
+      if(clean.length>=WATCH_HISTORY_MAX)break;
+    }
+    return clean;
+  }catch(err){watchHistoryStorageError=true;console.warn('Watch history is unavailable:',err);return [];}
+}
+function recordWatchHistory(videoId){
+  const key=watchHistoryKey();if(!key)return;
+  const id=String(videoId);
+  if(!/^\d+$/.test(id))return;
+  const history=readWatchHistory().filter(row=>row.id!==id);
+  history.unshift({id,at:Date.now()});
+  try{localStorage.setItem(key,JSON.stringify(history.slice(0,WATCH_HISTORY_MAX)));}
+  catch(err){watchHistoryStorageError=true;console.warn('Cannot save watch history:',err);}
+}
+function attachWatchHistory(video,item){
+  let counted=false;
+  const remember=()=>{
+    if(counted||video.paused||!currentUser)return;
+    const duration=Number.isFinite(video.duration)?video.duration:2;
+    if(video.currentTime>=Math.min(2,Math.max(0.25,duration*0.7))){
+      counted=true;recordWatchHistory(item.id);void registerVideoView(item);
+    }
+  };
+  video.addEventListener('timeupdate',remember);
+  video.addEventListener('ended',()=>{if(!counted&&currentUser){counted=true;recordWatchHistory(item.id);void registerVideoView(item);}});
+}
+function pauseWatchHistoryVideos(){el('watchHistoryList').querySelectorAll('video').forEach(v=>v.pause());}
+async function openWatchHistory(){
+  if(!requireLogin())return;
+  closeModal('profileModal');showModal('watchHistoryModal');
+  await loadWatchHistory();
+}
+async function loadWatchHistory(){
+  if(!currentUser)return;
+  const uid=currentUser.id,list=el('watchHistoryList'),status=el('watchHistoryStatus');
+  pauseWatchHistoryVideos();list.replaceChildren();
+  watchHistoryStorageError=false;
+  const history=readWatchHistory();
+  if(watchHistoryStorageError){status.textContent='⚠️ پاشەکەوتکردنی مێژوو لەم WebView ـەدا بەردەست نییە. DOM Storage بپشکنە.';return;}
+  if(!history.length){status.textContent='هێشتا ڤیدیۆیەکت نەبینیوە. ڤیدیۆیەک لێبدە، پاشان لێرە بگەڕێوە.';return;}
+  status.textContent='مێژوو بار دەکرێت...';
+  try{
+    const ids=history.map(row=>row.id);
+    const {data,error}=await supabaseClient.from('videos').select('*').in('id',ids).limit(WATCH_HISTORY_MAX);
+    if(error)throw error;
+    if(currentUser?.id!==uid||!el('watchHistoryModal').classList.contains('show'))return;
+    const byId=new Map((data||[]).map(item=>[String(item.id),item]));
+    const ordered=visibleVideos(ids.map(id=>byId.get(id)).filter(Boolean));
+    if(ordered.length)renderVideos(ordered,list);
+    status.textContent='🕘 ڤیدیۆی بینراو: '+ordered.length;
+    if(ordered.length<ids.length)status.textContent+=' — هەندێک ڤیدیۆ سڕاوەتەوە یان بەردەست نییە.';
+    if(!ordered.length)status.textContent='ڤیدیۆ بینراوەکان چیتر بەردەست نین.';
+  }catch(err){status.textContent='نەتوانرا مێژوو بار بکرێت: '+err.message;console.warn('Watch history:',err);}
+}
+function clearWatchHistory(){
+  const key=watchHistoryKey();if(!key)return;
+  if(!confirm('دڵنیایت دەتەوێت مێژووی ڤیدیۆ بینراوەکانت لەم مۆبایلە بسڕیتەوە؟'))return;
+  try{
+    localStorage.removeItem(key);
+    pauseWatchHistoryVideos();el('watchHistoryList').replaceChildren();
+    el('watchHistoryStatus').textContent='✅ مێژووی بینین سڕایەوە.';
+  }catch(err){el('watchHistoryStatus').textContent='هەڵە لە سڕینەوەی مێژوو: '+err.message;}
+}
+// === End Watch History ===
+
+// === XALLO+ v4.2 — caption-based hashtags; no new DB table ===
+const V42_TAG_PATTERN=/#([\p{L}\p{N}_]{2,40})/gu;
+let v42TrendingLoadedAt=0,v42TrendingBusy=false;
+function v42ExtractHashtags(caption){
+ const text=String(caption||''),found=new Map();
+ const matches=text.matchAll(new RegExp(V42_TAG_PATTERN.source,'gu'));
+ for(const match of matches){
+  const pos=match.index||0,prev=pos?text.slice(0,pos).slice(-1):'';
+  const after=text.slice(pos+match[0].length).slice(0,1);
+  // Avoid counting partial tags inside words or longer than 40 characters.
+  if(prev&&/[\p{L}\p{N}_]/u.test(prev))continue;
+  if(/(?:https?:\/\/|www\.)\S*$/i.test(text.slice(0,pos)))continue;
+  if(after&&/[\p{L}\p{N}_]/u.test(after))continue;
+  const tag=match[1],key=tag.toLowerCase();
+  if(!found.has(key))found.set(key,tag);
+ }
+ return [...found.values()];
+}
+function v42OpenHashtag(tag){
+ const input=el('searchInput');input.value='#'+tag;
+ setSearchMode('videos');search();
+}
+async function v42LoadTrending(force=false){
+ const root=el('v42TrendTags');
+ if(v42TrendingBusy||!force&&v42TrendingLoadedAt&&Date.now()-v42TrendingLoadedAt<120000)return;
+ v42TrendingBusy=true;root.textContent='هاشتاگەکان بار دەکرێن...';
+ try{
+  const {data,error}=await supabaseClient.from('videos')
+   .select('id,user_id,is_hidden,caption').order('created_at',{ascending:false}).limit(200);
+  if(error)throw error;
+  const counts=new Map();
+  for(const video of visibleVideos(data||[])){
+   for(const tag of v42ExtractHashtags(video.caption)){
+    const key=tag.toLowerCase(),old=counts.get(key);
+    if(old)old.count++;
+    else counts.set(key,{tag,count:1});
+   }
+  }
+  const top=[...counts.values()].sort((a,b)=>b.count-a.count||a.tag.localeCompare(b.tag)).slice(0,12);
+  root.replaceChildren();
+  if(!top.length)root.textContent='هێشتا هاشتاگ لە ڤیدیۆ نوێکاندا نەدۆزرایەوە.';
+  for(const item of top){const btn=makeButton('#'+item.tag+' · '+item.count,()=>v42OpenHashtag(item.tag));btn.className='v42-tag';root.append(btn);}
+  v42TrendingLoadedAt=Date.now();
+ }catch(err){console.warn('Hashtags:',err);root.textContent='هاشتاگەکان بار نەبوون. لەسەر 🔄 دابگرە.';}
+ finally{v42TrendingBusy=false;}
+}
+async function v42SearchHashtag(raw,serial){
+ const tag=raw.slice(1).toLowerCase();
+ try{
+  // Narrow the query on Supabase first, then check exact hashtags locally,
+  // so searching #game cannot return videos tagged only #gamer.
+  const {data,error}=await supabaseClient.from('videos').select('*')
+   .ilike('caption',safeIlikeText('#'+raw.slice(1)))
+   .order('created_at',{ascending:false}).limit(200);
+  if(error)throw error;
+  if(serial!==searchSerial||el('searchPage').style.display==='none')return;
+  searchResultsUsers=[];
+  searchResultsVideos=visibleVideos((data||[]).filter(video=>v42ExtractHashtags(video.caption).some(t=>t.toLowerCase()===tag))).slice(0,50);
+  lastSearchText=raw;
+  try{await updateSearchSocialCounts(searchResultsVideos);}catch(err){console.warn('Tag social:',err);}
+  if(serial!==searchSerial||el('searchPage').style.display==='none')return;
+  renderSearchResults();
+  if((data||[]).length===200)el('searchResult').textContent+='\nتەنها ٢٠٠ ئەنجامی سەرەتایی پشکنران؛ لەوانەیە زیاتر هەبن.';
+ }catch(err){
+  if(serial!==searchSerial)return;
+  searchResultsUsers=[];searchResultsVideos=[];lastSearchText='';
+  el('searchUsers').replaceChildren();el('searchVideos').replaceChildren();
+  el('searchResult').textContent='⚠️ گەڕانی هاشتاگ سەرکەوتوو نەبوو: '+err.message;
+ }
+}
+// === End v4.2 ===
+
+// === XALLO+ v3.3 — Advanced Search ===
+// Supabase queries run only after 350ms without typing, and older results are ignored.
+let searchMode='all',searchTimer=null,searchSerial=0,searchResultsUsers=[],searchResultsVideos=[],lastSearchText='';
+const SEARCH_LIMIT=25;
+function home(){
+  searchSerial++;
+  clearTimeout(searchTimer);
+  el('searchVideos').querySelectorAll('video').forEach(v=>v.pause());
+  el('home').style.display='block';el('searchPage').style.display='none';
+  loadVideos();window.scrollTo({top:0,behavior:'smooth'});
+}
+function search(){pauseFeed();el('home').style.display='none';el('searchPage').style.display='block';
+  if(el('searchInput').value.trim().length>=2)scheduleSearch();
+  void v42LoadTrending();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setSearchMode(mode){
+  if(!['all','videos','users'].includes(mode))return;
+  searchMode=mode;
+  for(const [id,key] of [['searchTabAll','all'],['searchTabVideos','videos'],['searchTabUsers','users']]){
+    const btn=el(id);btn.classList.toggle('selected',key===mode);btn.setAttribute('aria-pressed',String(key===mode));
+  }
+  // Selecting a tab never sends a second network request.
+  renderSearchResults();
+}
+function scheduleSearch(){
+  clearTimeout(searchTimer);searchSerial++;
+  const term=el('searchInput').value.trim();
+  if(term.length<2||term.startsWith('#')&&!/^#[\p{L}\p{N}_]{2,40}$/u.test(term)){lastSearchText='';searchResultsVideos=[];searchResultsUsers=[];
+    el('searchResult').textContent=term.startsWith('#')?'هاشتاگێکی دروست بنووسە، وەک #Kurdistan (لانیکەم دوو پیت).':'بۆ گەڕان لانیکەم دوو پیت بنووسە.';renderSearchResults();return;}
+  el('searchResult').textContent='گەڕان دەکرێت... 🔎';
+  const serial=searchSerial;
+  searchTimer=setTimeout(()=>runAdvancedSearch(term,serial),350);
+}
+function doSearch(){scheduleSearch();} // Backwards compatibility for previous callers.
+function safeIlikeText(text){return '%'+text.replace(/[\\%_]/g,'\\$&')+'%';}
+function uniqueByKey(rows,key){const found=new Map();for(const row of rows||[]){if(row&&row[key]!=null)found.set(String(row[key]),row);}return [...found.values()];}
+async function runAdvancedSearch(text,serial){
+  if(serial!==searchSerial||el('searchPage').style.display==='none')return;
+  if(text.startsWith('#')){await v42SearchHashtag(text,serial);return;}
+  const pattern=safeIlikeText(text),tasks=[
+    supabaseClient.from('profiles').select('id,display_name,avatar_url').ilike('display_name',pattern).limit(SEARCH_LIMIT),
+    supabaseClient.from('videos').select('*').ilike('caption',pattern).order('created_at',{ascending:false}).limit(SEARCH_LIMIT),
+    supabaseClient.from('videos').select('*').ilike('user_email',pattern).order('created_at',{ascending:false}).limit(SEARCH_LIMIT)
+  ];
+  const [profilesResult,captionResult,emailResult]=await Promise.allSettled(tasks);
+  if(serial!==searchSerial||el('searchPage').style.display==='none')return;
+  const good=r=>r.status==='fulfilled'&&!r.value.error;
+  const profiles=good(profilesResult)?profilesResult.value.data||[]:[];
+  const videos=uniqueByKey([
+    ...(good(captionResult)?captionResult.value.data||[]:[]),
+    ...(good(emailResult)?emailResult.value.data||[]:[])
+  ],'id');
+  const warnings=[];
+  if(!good(profilesResult))warnings.push('گەڕانی پڕۆفایل: '+(profilesResult.status==='rejected'?String(profilesResult.reason):profilesResult.value.error.message));
+  if(!good(captionResult)||!good(emailResult))warnings.push('گەڕانی ڤیدیۆ بە تەواوی بار نەبوو.');
+  // Profiles can have videos whose caption doesn't mention their name.
+  if(profiles.length){
+    try{const {data,error}=await supabaseClient.from('videos').select('*').in('user_id',profiles.map(p=>p.id)).order('created_at',{ascending:false}).limit(SEARCH_LIMIT);
+      if(error)throw error;videos.push(...(data||[]));
+    }catch(e){warnings.push('ڤیدیۆی بەکارهێنەران بار نەبوو.');}
+  }
+  if(serial!==searchSerial||el('searchPage').style.display==='none')return;
+  searchResultsUsers=profiles.filter(p=>!isBlockedUser(p.id));
+  searchResultsVideos=visibleVideos(uniqueByKey(videos,'id')).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,50);
+  lastSearchText=text;
+  for(const p of profiles)profileCache.set(p.id,p);
+  try{await updateSearchSocialCounts(searchResultsVideos);}catch(e){console.warn('Search social counts:',e);}
+  if(serial!==searchSerial||el('searchPage').style.display==='none')return;
+  renderSearchResults();
+  if(warnings.length)el('searchResult').textContent+='\n⚠️ '+warnings.join(' | ');
+}
+async function updateSearchSocialCounts(items){
+  // Only append metadata for remote results not already present in the feed.
+  const feedIds=new Set(feedItems.map(v=>String(v.id)));
+  const ids=items.map(v=>v.id).filter(id=>!feedIds.has(String(id)));
+  if(!ids.length)return;
+  const [likes,comments]=await Promise.all([
+    supabaseClient.from('video_likes').select('video_id,user_id').in('video_id',ids),
+    supabaseClient.from('video_comments').select('video_id').in('video_id',ids)
+  ]);
+  if(!likes.error){
+    const idset=new Set(ids.map(String));likeRows=likeRows.filter(r=>!idset.has(String(r.video_id))).concat(likes.data||[]);
+    likesReady=true;
+  }
+  if(!comments.error){
+    ids.forEach(id=>commentCounts.delete(String(id)));
+    for(const r of comments.data||[])commentCounts.set(String(r.video_id),(commentCounts.get(String(r.video_id))||0)+1);
+    commentsReady=true;
+  }
+}
+function renderSearchResults(){
+  const usersBox=el('searchUsers'),videosBox=el('searchVideos'),status=el('searchResult');
+  usersBox.replaceChildren();videosBox.replaceChildren();
+  const term=el('searchInput').value.trim();
+  const ready=term.length>=2&&term===lastSearchText;
+  el('searchUsersGroup').style.display=searchMode==='videos'||!ready?'none':'block';
+  el('searchVideosGroup').style.display=searchMode==='users'||!ready?'none':'block';
+  if(!ready)return;
+  if(searchMode!=='videos'){
+    if(!searchResultsUsers.length){const empty=document.createElement('p');empty.className='empty';empty.textContent='هیچ بەکارهێنەرێک نەدۆزرایەوە.';usersBox.append(empty);}
+    for(const p of searchResultsUsers.filter(p=>!isBlockedUser(p.id))){
+      const row=document.createElement('div');row.className='search-user-row';
+      const avatar=document.createElement('img');avatar.loading='lazy';avatar.decoding='async';avatar.className='search-user-avatar';avatar.alt='وێنەی پڕۆفایل';
+      if(p.avatar_url){avatar.src=p.avatar_url;avatar.onerror=()=>{avatar.style.display='none';};}
+      else avatar.style.display='none';
+      const name=makeButton('👤 '+(p.display_name||'بەکارهێنەر'),()=>openPublicProfile(p.id));
+      name.className='search-user-name';row.append(avatar,name);
+      if(currentUser?.id!==p.id){const view=makeButton('بینینی پڕۆفایل',()=>openPublicProfile(p.id));view.className='search-user-open';row.append(view);}
+      usersBox.append(row);
+    }
+  }
+  if(searchMode!=='users')renderVideos(searchResultsVideos,videosBox);
+  const u=searchResultsUsers.filter(p=>!isBlockedUser(p.id)).length,v=visibleVideos(searchResultsVideos).length;
+  status.textContent=searchMode==='users'?'👤 '+u+' بەکارهێنەر':searchMode==='videos'?'🎬 '+v+' ڤیدیۆ':'👤 '+u+' بەکارهێنەر • 🎬 '+v+' ڤیدیۆ';
+  if(u>=SEARCH_LIMIT||v>=50)status.textContent+='\nئەمانە تەنها بەشێک لە ئەنجامەکانن؛ وشەی وردتر بنووسە.';
+}
+// === End Advanced Search ===
+function likeDemo(button){button.dataset.liked=button.dataset.liked==='true'?'false':'true';button.textContent=button.dataset.liked==='true'?'❤️':'♡';}
+function commentDemo(){alert('ئەمە ڤیدیۆی نموونەییە. بۆ کۆمێنتکردن، ڤیدیۆی بڵاوکراوە هەڵبژێرە.');}
+async function shareDemo(){try{if(navigator.share)await navigator.share({title:'XALLO+',text:'سەیری XALLO+ بکە!'});else alert('Share لەم ئامێرەدا بەردەست نییە.');}catch(e){}}
+// v3.6 creator analytics: aggregation runs in Supabase with user-id isolation.
+const fmtStat=num=>new Intl.NumberFormat('en-US').format(Number(num)||0);
+function statTile(label,number){
+ const tile=document.createElement('div');tile.className='stats-tile';
+ const value=document.createElement('b');value.textContent=fmtStat(number);
+ const caption=document.createElement('span');caption.textContent=label;
+ tile.append(value,caption);return tile;
+}
+async function openMyVideoStats(){if(!requireLogin())return;showModal('myStatsModal');await loadMyVideoStats();}
+async function loadMyVideoStats(){
+ if(!currentUser)return;
+ const uid=currentUser.id,sum=el('myStatsSummary'),top=el('myStatsTop'),btn=el('myStatsRefresh');
+ sum.replaceChildren();top.textContent='بار دەکرێت...';btn.disabled=true;
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_my_video_stats');
+  if(error)throw error;
+  if(currentUser?.id!==uid)return;
+  if(!data)throw new Error('داتای ئامار بەردەست نییە.');
+  sum.append(statTile('🎬 ژمارەی ڤیدیۆ',data.total_videos),statTile('👁️ بینینە تۆمارکراوەکان',data.total_views),statTile('❤️ لایکەکان',data.total_likes),statTile('💬 کۆمێنتەکان',data.total_comments));
+  top.replaceChildren();
+  const rows=Array.isArray(data.top_videos)?data.top_videos:[];
+  if(!rows.length){top.textContent='هێشتا ڤیدیۆت نییە.';return;}
+  for(const row of rows){
+   const div=document.createElement('div');div.className='stats-row';
+   const title=document.createElement('strong');title.textContent=row.caption||'ڤیدیۆی بێ ناونیشان';
+   const detail=document.createElement('small');detail.textContent='👁️ '+fmtStat(row.views)+'  ·  ❤️ '+fmtStat(row.likes)+'  ·  💬 '+fmtStat(row.comments);
+   div.append(title,detail);top.append(div);
+  }
+ }catch(err){sum.replaceChildren();top.textContent='هەڵە: '+err.message+' — سەرەتا SQL ـی v3.6 جێبەجێ بکە.';}
+ finally{btn.disabled=false;}
+}
+
+let notificationRows=[];
+function updateNotificationBadge(n){const badge=el('notificationBadge');if(!badge)return;badge.style.display=n?'inline-block':'none';badge.textContent=n>99?'99+':String(n);}
+async function loadNotificationCount(){
+ if(!currentUser){updateNotificationBadge(0);return;}
+ const uid=currentUser.id;
+ const [regular,moderation]=await Promise.all([
+  supabaseClient.from('notifications').select('id',{count:'exact',head:true}).eq('recipient_id',uid).eq('is_read',false),
+  supabaseClient.rpc('xallo_my_moderation_unread_count')
+ ]);
+ if(currentUser?.id!==uid)return;
+ if(regular.error)console.warn('Notifications:',regular.error.message);
+ if(moderation.error)console.warn('Moderation notices:',moderation.error.message);
+ updateNotificationBadge((regular.error?0:(regular.count||0))+(moderation.error?0:(Number(moderation.data)||0)));
+}
+let notificationFilter='all';
+let notificationActorProfiles=new Map();
+function setNotificationFilter(filter){
+ notificationFilter=['all','unread','like','follow','comment'].includes(filter)?filter:'all';
+ document.querySelectorAll('[data-notify-filter]').forEach(button=>button.classList.toggle('active',button.dataset.notifyFilter===notificationFilter));
+ renderFilteredNotifications();
+}
+function renderFilteredNotifications(){
+ const list=el('notificationList');list.replaceChildren();
+ let rows=notificationRows;
+ if(notificationFilter==='unread')rows=rows.filter(row=>!row.is_read);
+ else if(notificationFilter!=='all')rows=rows.filter(row=>row.event_type===notificationFilter);
+ if(!rows.length){list.textContent='لەم بەشەدا ئاگادارکردنەوە نییە 🔔';return;}
+ for(const n of rows){
+  const div=document.createElement('div');div.className='notification-item'+(n.is_read?'':' unread');
+  const actor=notificationActorProfiles.get(n.actor_id);
+  const avatar=document.createElement('img');avatar.loading='lazy';avatar.decoding='async';avatar.className='notify-avatar';avatar.alt='';
+  if(actor?.avatar_url){avatar.src=actor.avatar_url;avatar.onerror=()=>{avatar.style.display='none';};}
+  else avatar.style.display='none';
+  const body=document.createElement('div');body.className='notify-body';
+  const label=document.createElement('div');
+  const name=actor?.display_name||'بەکارهێنەرێک';
+  const action=n.event_type==='follow'?'👥 فۆڵۆی کردوویت':n.event_type==='like'?'❤️ لایکی ڤیدیۆکەتی کرد':'💬 کۆمێنتی لەسەر ڤیدیۆکەت نووسی';
+  label.textContent=name+' '+action;
+  const date=document.createElement('small');date.textContent=n.created_at?new Date(n.created_at).toLocaleString('en-GB'):'';
+  body.append(label,date);div.append(avatar,body);
+  div.addEventListener('click',()=>openNotificationItem(n));list.append(div);
+ }
+}
+async function openNotifications(){if(!requireLogin())return;showModal('notificationsModal');await refreshAllNotifications();}
+async function refreshAllNotifications(){await Promise.all([loadNotifications(),loadModerationNotices()]);}
+async function loadNotifications(silent=false){
+ if(!currentUser)return;
+ const uid=currentUser.id,list=el('notificationList');if(!silent)list.textContent='بار دەکرێن...';
+ try{
+  const {data,error}=await supabaseClient.from('notifications').select('id,actor_id,recipient_id,video_id,event_type,is_read,created_at').eq('recipient_id',uid).order('created_at',{ascending:false}).limit(100);
+  if(error)throw error;if(currentUser?.id!==uid)return;
+  notificationRows=data||[];
+  const actors=[...new Set(notificationRows.map(row=>row.actor_id).filter(Boolean))];
+  notificationActorProfiles=new Map();
+  // Non-sensitive public display names and avatars only. Fallback to generic name if private.
+  if(actors.length){
+   const {data:profiles,error:profileError}=await supabaseClient.from('profiles').select('id,display_name,avatar_url').in('id',actors);
+   if(!profileError)for(const actor of profiles||[])notificationActorProfiles.set(actor.id,actor);
+  }
+  if(currentUser?.id!==uid)return;
+  renderFilteredNotifications();await loadNotificationCount();
+ }catch(e){if(!silent||!notificationRows.length)list.textContent='هەڵە لە ئاگادارکردنەوەکان: '+e.message;else console.warn('Notifications:',e.message);}
+}
+async function markNotificationRead(n){
+  if(n.is_read||!currentUser)return;
+  const {error}=await supabaseClient.from('notifications').update({is_read:true}).eq('id',n.id).eq('recipient_id',currentUser.id);
+  if(error)throw error;n.is_read=true;renderFilteredNotifications();
+}
+async function openNotificationItem(n){
+  try{
+    await markNotificationRead(n);closeModal('notificationsModal');await loadNotificationCount();
+    if(n.event_type==='follow'&&n.actor_id){await openPublicProfile(n.actor_id);return;}
+    if(n.video_id!=null){home();const video=feedItems.find(v=>String(v.id)===String(n.video_id));if(video){setTimeout(()=>{const card=document.querySelector('[data-feed-video-id="'+String(n.video_id)+'"]');if(card)card.scrollIntoView({behavior:'smooth',block:'center'});},400);}else alert('ئەم ڤیدیۆیە لە فیدەکەدا نییە یان سڕاوەتەوە.');}
+  }catch(e){alert('هەڵە: '+e.message);}
+}
+async function markAllNotificationsRead(){
+  if(!currentUser)return;const btn=el('markAllReadBtn');btn.disabled=true;
+  try{const {error}=await supabaseClient.from('notifications').update({is_read:true}).eq('recipient_id',currentUser.id).eq('is_read',false);if(error)throw error;await loadNotifications();}
+  catch(e){alert('هەڵە: '+e.message);}finally{btn.disabled=false;}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){void loadNotificationCount();if(el('notificationsModal').classList.contains('show')){void loadNotifications(true);void loadModerationNotices(true);}}});
+// Foreground-only refresh. Not an Android system push notification.
+setInterval(()=>{if(!document.hidden&&currentUser){void loadNotificationCount();if(el('notificationsModal').classList.contains('show')){void loadNotifications(true);void loadModerationNotices(true);}}},30000);
+async function loadProfiles(){
+ const ids=[...new Set(feedItems.map(v=>v.user_id).filter(Boolean))];if(!ids.length)return;
+ const {data,error}=await supabaseClient.from('profiles').select('id,display_name,avatar_url').in('id',ids);
+ if(error){console.warn('Profiles:',error.message);return;}
+ for(const row of data||[])profileCache.set(row.id,row);
+}
+function setAvatar(imgId,url){const img=el(imgId);img.style.display=url?'block':'none';if(url)img.src=url;else img.removeAttribute('src');}
+async function loadMyProfile(){
+ if(!currentUser)return;
+ const userId=currentUser.id;
+ const {data,error}=await supabaseClient.from('profiles').select('id,display_name,avatar_url').eq('id',userId).maybeSingle();
+ if(currentUser?.id!==userId)return;
+ if(error){el('profileEditMessage').textContent='هەڵەی خوێندنەوەی پڕۆفایل: '+error.message;return;}
+ if(data)profileCache.set(data.id,data);
+ el('editDisplayName').value=data?.display_name||'';
+ el('myDisplayName').textContent=data?.display_name||'ناوی پڕۆفایل دیاری نەکراوە';
+ setAvatar('myAvatar',data?.avatar_url);
+}
+async function loadPublicProfile(id){
+ const {data,error}=await supabaseClient.from('profiles').select('id,display_name,avatar_url').eq('id',id).maybeSingle();
+ if(publicProfileUserId!==id)return;
+ if(error){console.warn('Public profile:',error.message);return;}
+ if(data)profileCache.set(id,data);
+ if(data?.display_name)el('publicProfileName').textContent='@'+data.display_name;
+ setAvatar('publicAvatar',data?.avatar_url);
+}
+async function saveMyProfile(){
+ if(!requireLogin())return;
+ const name=el('editDisplayName').value.trim(),file=el('editAvatar').files[0],msg=el('profileEditMessage'),btn=el('saveProfileBtn');
+ if(!name||name.length>40){msg.textContent='ناوێکی ١ تا ٤٠ پیت بنووسە.';return;}
+ if(file&&(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>3*1024*1024)){msg.textContent='تەنها JPG/PNG/WebP تا 3MB ڕێگەپێدراوە.';return;}
+ btn.disabled=true;msg.textContent='پاشەکەوت دەکرێت...';
+ try{
+  let avatar=profileCache.get(currentUser.id)?.avatar_url||null;
+  if(file){
+   const ext=({'image/jpeg':'jpg','image/png':'png','image/webp':'webp'})[file.type];
+   const path=currentUser.id+'/avatar-'+Date.now()+'.'+ext;
+   const {error:uploadError}=await supabaseClient.storage.from('avatars').upload(path,file,{contentType:file.type,upsert:false});
+   if(uploadError)throw uploadError;
+   avatar=supabaseClient.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+  }
+  const {data,error}=await supabaseClient.from('profiles').upsert({id:currentUser.id,display_name:name,avatar_url:avatar},{onConflict:'id'}).select('id,display_name,avatar_url').single();
+  if(error)throw error;
+  profileCache.set(data.id,data);el('editAvatar').value='';el('myDisplayName').textContent=name;setAvatar('myAvatar',avatar);
+  msg.textContent='پڕۆفایلەکەت پاشەکەوت کرا ✅';refreshVisibleCards();
+ }catch(e){msg.textContent='هەڵە: '+e.message;}finally{btn.disabled=false;}
+}
+
+// Private messages: Supabase RLS limits access to sender and recipient.
+// XALLO+ v3.2: unread counts and in-app notifications while the WebView is open.
+// These are NOT Android system push notifications.
+let chatPeerId=null,chatTimer=null,chatLoading=false;
+let chatNotificationTimer=null,chatNotificationBusy=false;
+let lastChatUnreadCount=null,chatToastTimer=null;
+function chatDisplayName(id){const p=profileCache.get(id);const video=feedItems.find(v=>v.user_id===id);return p?.display_name||video?.user_email||'بەکارهێنەر';}
+function stopChatRefresh(){if(chatTimer){clearInterval(chatTimer);chatTimer=null;}}
+function updateChatBadge(count){
+ const b=el('chatUnreadBadge');if(!b)return;
+ b.textContent=count>99?'99+':String(count);b.style.display=count>0?'inline-block':'none';
+}
+function hideChatToast(){if(chatToastTimer)clearTimeout(chatToastTimer);chatToastTimer=null;const t=el('chatToast');if(t)t.style.display='none';}
+function showChatToast(count){
+ const t=el('chatToast');if(!t||document.hidden)return;
+ t.textContent='💬 '+count+' نامەی نەخوێندراو هەیە — بۆ بینین دابگرە';t.style.display='block';
+ if(chatToastTimer)clearTimeout(chatToastTimer);chatToastTimer=setTimeout(hideChatToast,4500);
+}
+function resetChatNotificationState(){
+ if(chatNotificationTimer){clearInterval(chatNotificationTimer);chatNotificationTimer=null;}
+ lastChatUnreadCount=null;hideChatToast();updateChatBadge(0);
+}
+function startChatNotifications(){
+ if(!currentUser)return;
+ if(chatNotificationTimer)clearInterval(chatNotificationTimer);
+ void loadChatUnreadCount();
+ chatNotificationTimer=setInterval(()=>{if(!document.hidden)void loadChatUnreadCount();},10000);
+}
+async function loadChatUnreadCount(){
+ if(!currentUser){updateChatBadge(0);return;}
+ if(chatNotificationBusy)return;
+ chatNotificationBusy=true;const uid=currentUser.id;
+ try{
+  const {data,error}=await supabaseClient.from('private_messages')
+   .select('sender_id').eq('recipient_id',uid).eq('is_read',false).limit(1000);
+  if(error)throw error;
+  if(currentUser?.id!==uid)return;
+  const n=(data||[]).filter(m=>!isBlockedUser(m.sender_id)).length;updateChatBadge(n);
+  // First fetch establishes a baseline; old unread messages do not trigger a popup.
+  // The active chat thread has its own refresh and read handling.
+  if(lastChatUnreadCount!==null&&n>lastChatUnreadCount&& !el('chatThreadModal').classList.contains('show'))showChatToast(n);
+  lastChatUnreadCount=n;
+  if(el('chatInboxModal').classList.contains('show'))void loadChatInbox(true);
+ }catch(e){console.warn('Chat notifications:',e.message);}
+ finally{chatNotificationBusy=false;}
+}
+async function openChatInbox(){
+ if(!requireLogin())return;
+ stopChatRefresh();hideChatToast();showModal('chatInboxModal');
+ await loadChatInbox();
+}
+let chatInboxLoading=false;
+async function loadChatInbox(silent=false){
+ if(!currentUser||chatInboxLoading)return;
+ chatInboxLoading=true;
+ const uid=currentUser.id,list=el('chatInboxList'),status=el('chatInboxStatus');
+ if(!silent)list.textContent='بار دەکرێت...';status.textContent='';
+ try{
+  const {data,error}=await supabaseClient.from('private_messages')
+   .select('sender_id,recipient_id,body,created_at,is_read')
+   .or('sender_id.eq.'+uid+',recipient_id.eq.'+uid)
+   .order('created_at',{ascending:false}).limit(300);
+  if(error)throw error;
+  if(currentUser?.id!==uid||!el('chatInboxModal').classList.contains('show'))return;
+  const peers=new Map(),unread=new Map();
+  for(const m of data||[]){
+   const peer=m.sender_id===uid?m.recipient_id:m.sender_id;
+   if(isBlockedUser(peer))continue;
+   if(!peers.has(peer))peers.set(peer,m);
+   if(m.recipient_id===uid&&!m.is_read)unread.set(peer,(unread.get(peer)||0)+1);
+  }
+  list.replaceChildren();
+  if(!peers.size){list.textContent='هێشتا نامەت نییە. بچۆ پڕۆفایلی بەکارهێنەرێک و دوگمەی چات دابگرە.';return;}
+  for(const [id,m] of peers){
+   const btn=document.createElement('button');btn.className='chat-person';
+   const count=unread.get(id)||0;if(count)btn.classList.add('has-unread');
+   btn.textContent='💬 '+chatDisplayName(id)+' — '+(m.body||'').slice(0,70);
+   if(count){const pill=document.createElement('span');pill.className='chat-unread-pill';pill.textContent=count+' نوێ';btn.append(pill);}
+   btn.onclick=()=>openChatWith(id);list.append(btn);
+  }
+ }catch(e){if(!silent)list.textContent='نەتوانرا چاتەکان بار بکرێن.';status.textContent='هەڵە: '+e.message+' — SQL ـی v3.2 جێبەجێ بکە.';}
+ finally{chatInboxLoading=false;}
+}
+async function openChatWith(id){
+ if(!requireLogin())return;
+ if(!id||id===currentUser.id)return;
+ if(isBlockedUser(id)){alert('ئەم بەکارهێنەرە بلۆککراوە.');return;}
+ stopChatRefresh();hideChatToast();chatPeerId=id;
+ el('chatPartnerTitle').textContent='💬 '+chatDisplayName(id);el('chatText').value='';el('chatStatus').textContent='';
+ closeModal('chatInboxModal');closeModal('publicProfileModal');showModal('chatThreadModal');
+ await loadChatThread();
+ chatTimer=setInterval(()=>{if(chatPeerId&&el('chatThreadModal').classList.contains('show')&&!document.hidden)void loadChatThread(true);},6000);
+}
+function closeChatThread(){stopChatRefresh();chatPeerId=null;closeModal('chatThreadModal');void loadChatUnreadCount();}
+async function markIncomingChatRead(peer,ids){
+ if(!currentUser||!ids.length||chatPeerId!==peer||!el('chatThreadModal').classList.contains('show'))return;
+ const uid=currentUser.id;
+ try{
+  const {error}=await supabaseClient.from('private_messages')
+   .update({is_read:true}).eq('recipient_id',uid).eq('sender_id',peer).in('id',ids);
+  if(error)throw error;
+  void loadChatUnreadCount();
+ }catch(e){el('chatStatus').textContent='نامەکان خوێندرانەوە، بەڵام نیشانەی نەخوێندراو نوێ نەبووە: '+e.message;}
+}
+async function loadChatThread(silent=false){
+ if(!currentUser||!chatPeerId||chatLoading)return;
+ chatLoading=true;
+ const peer=chatPeerId,box=el('chatThreadList');if(!silent)box.textContent='بار دەکرێت...';
+ try{
+  const uid=currentUser.id;
+  const filter='and(sender_id.eq.'+uid+',recipient_id.eq.'+peer+'),and(sender_id.eq.'+peer+',recipient_id.eq.'+uid+')';
+  const {data,error}=await supabaseClient.from('private_messages')
+   .select('id,sender_id,recipient_id,body,created_at,is_read')
+   .or(filter).order('created_at',{ascending:false}).limit(200);
+  if(error)throw error;if(chatPeerId!==peer||currentUser?.id!==uid)return;
+  const nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<90;
+  box.replaceChildren();if(!data?.length)box.textContent='یەکەم نامە بنێرە 👋';
+  for(const m of [...(data||[])].reverse()){
+   const div=document.createElement('div');div.className='chat-bubble'+(m.sender_id===uid?' mine':'');
+   const body=document.createElement('div');body.textContent=m.body;
+   const time=document.createElement('small');time.textContent=new Date(m.created_at).toLocaleString('en-GB');
+   div.append(body,time);box.append(div);
+  }
+  if(nearBottom||!silent)box.scrollTop=box.scrollHeight;
+  el('chatStatus').textContent='';
+  const receivedUnread=(data||[]).filter(m=>m.recipient_id===uid&&!m.is_read).map(m=>m.id);
+  if(receivedUnread.length&&el('chatThreadModal').classList.contains('show'))void markIncomingChatRead(peer,receivedUnread);
+ }catch(e){el('chatStatus').textContent='هەڵەی بارکردن: '+e.message;}
+ finally{chatLoading=false;}
+}
+async function sendPrivateMessage(){
+ if(!currentUser||!chatPeerId)return;
+ if(isBlockedUser(chatPeerId)){el('chatStatus').textContent='ئەم بەکارهێنەرە بلۆککراوە.';return;}
+ const input=el('chatText'),body=input.value.trim(),btn=el('chatSendBtn');
+ if(!body||body.length>2000){el('chatStatus').textContent='نامەیەکی ١ تا ٢٠٠٠ پیت بنووسە.';return;}
+ btn.disabled=true;el('chatStatus').textContent='دەنێردرێت...';
+ try{
+  const {error}=await supabaseClient.from('private_messages').insert({sender_id:currentUser.id,recipient_id:chatPeerId,body});
+  if(error)throw error;input.value='';await loadChatThread();
+ }catch(e){el('chatStatus').textContent='هەڵەی ناردن: '+e.message;}
+ finally{btn.disabled=false;}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)void loadChatUnreadCount();});
+
+
+// XALLO+ v3.7 — all privileged actions are checked AGAIN inside Supabase SQL RPC.
+// No secret key, admin email or admin role is stored in this HTML file.
+let adminAllowed=false;
+const adminReasonNames={spam:'سپام',harassment:'ئازاردان',hate:'ڕق و ناوەڕۆکی نەگونجاو',unsafe:'مەترسیدار',other:'هۆکاری تر'};
+const adminStatusNames={open:'🟡 چاوەڕوان',reviewed:'✅ پشکنراو',dismissed:'❎ ڕەتکراوە'};
+async function refreshAdminEntry(){
+ const uid=currentUser?.id,btn=el('adminPanelEntry');btn.style.display='none';adminAllowed=false;
+ if(!uid)return;
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_admin_is_admin');
+  if(error)throw error;
+  if(currentUser?.id!==uid)return;
+  adminAllowed=data===true;btn.style.display=adminAllowed?'block':'none';
+ }catch(err){console.warn('Admin availability:',err.message);}
+}
+async function openAdminPanel(){
+ if(!requireLogin())return;
+ const uid=currentUser.id;
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_admin_is_admin');
+  if(error)throw error;
+  if(data!==true||currentUser?.id!==uid)throw new Error('تەنها بەڕێوەبەری ڕێگەپێدراو دەتوانێت ئەم بەشە بکاتەوە.');
+  adminAllowed=true;closeModal('profileModal');showModal('adminPanelModal');
+  el('adminReportFilter').value='open';await loadAdminReports();
+ }catch(err){alert('پانێڵی بەڕێوەبەر: '+err.message+' — SQL ـی v3.7 بپشکنە.');}
+}
+function adminInfoLine(label,value){
+ const p=document.createElement('p'),strong=document.createElement('strong');
+ strong.textContent=label+' ';p.append(strong,document.createTextNode(value==null?'—':String(value)));return p;
+}
+function adminDate(value){const d=new Date(value);return Number.isNaN(d.getTime())?'—':d.toLocaleString('en-GB');}
+function adminMakeCard(report,kind){
+ const card=document.createElement('article');card.className='admin-report';
+ const title=document.createElement('h3');title.textContent=(kind==='video'?'🎬 ڕاپۆرتی ڤیدیۆ #':'👤 ڕاپۆرتی بەکارهێنەر #')+String(report.id);card.append(title);
+ const target=kind==='video'?'ڤیدیۆ: '+report.video_id+' — '+(report.video_caption||'ناونیشان نییە'):'هەژمار: '+report.reported_user_id;
+ card.append(adminInfoLine('🎯 ئامانج:',target));
+ card.append(adminInfoLine('🚩 هۆکار:',adminReasonNames[report.reason]||report.reason));
+ card.append(adminInfoLine('📌 دۆخ:',adminStatusNames[report.status]||report.status));
+ card.append(adminInfoLine('🕒 کات:',adminDate(report.created_at)));
+ const detail=document.createElement('p');detail.className='admin-details';detail.textContent='ڕوونکردنەوە: '+(report.details||'نییە');card.append(detail);
+ const note=document.createElement('textarea');note.maxLength=300;note.placeholder='تێبینی بەڕێوەبەر (ئارەزوومەندانە؛ تا ٣٠٠ پیت)';note.value=report.note||'';note.setAttribute('aria-label','تێبینی ڕاپۆرت');card.append(note);
+ const actions=document.createElement('div');actions.className='admin-report-actions';
+ const states=[['reviewed','✅ پشکنرا'],['dismissed','❎ ڕەتکردنەوە'],['open','↩️ کردنەوەی دووبارە']];
+ for(const [status,label] of states){
+  const b=document.createElement('button');b.type='button';b.textContent=label;if(status==='dismissed')b.classList.add('admin-dismiss');
+  b.addEventListener('click',()=>adminReviewReport(kind,report,status,note.value,actions));actions.append(b);
+ }
+ card.append(actions);
+ if(kind==='video'&&report.video_id!=null){
+  const manage=makeButton('🎬 شاردنەوە / گەڕاندنەوەی ئەم ڤیدیۆیە',()=>openAdminVideoPanel(report.video_id));
+  manage.className='safety-entry-btn';card.append(manage);
+ }
+ return card;
+}
+async function loadAdminReports(){
+ const box=el('adminReportList'),status=el('adminPanelStatus'),counts=el('adminReportCounts');
+ box.replaceChildren();counts.textContent='';status.textContent='ڕاپۆرتەکان بار دەکرێن...';
+ if(!currentUser||!adminAllowed){status.textContent='دەستگەیشتن ڕێگەپێنەدراوە.';return;}
+ const uid=currentUser.id,filter=el('adminReportFilter').value;
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_admin_list_reports',{p_filter:filter,p_limit:50});
+  if(error)throw error;
+  if(currentUser?.id!==uid||!el('adminPanelModal').classList.contains('show'))return;
+  const v=Array.isArray(data?.video_reports)?data.video_reports:[];
+  const u=Array.isArray(data?.user_reports)?data.user_reports:[];
+  const both=[...v.map(r=>({report:r,kind:'video'})),...u.map(r=>({report:r,kind:'user'}))];
+  both.sort((a,b)=>new Date(b.report.created_at)-new Date(a.report.created_at));
+  counts.textContent='🎬 '+v.length+' ڕاپۆرتی ڤیدیۆ · 👤 '+u.length+' ڕاپۆرتی بەکارهێنەر';
+  status.textContent=both.length?'دەتوانیت دۆخی ڕاپۆرتەکان نوێ بکەیتەوە.':'بۆ ئەم فلتەرە هیچ ڕاپۆرتێک نییە.';
+  both.forEach(x=>box.append(adminMakeCard(x.report,x.kind)));
+ }catch(err){status.textContent='هەڵە: '+err.message+' — SQL و مۆڵەتی بەڕێوەبەر بپشکنە.';}
+}
+async function adminReviewReport(kind,report,newStatus,note,actions){
+ if(!adminAllowed||!currentUser)return;
+ if(!['video','user'].includes(kind)||!['open','reviewed','dismissed'].includes(newStatus))return;
+ if(note.length>300){el('adminPanelStatus').textContent='تێبینی زۆر درێژە.';return;}
+ if(!confirm('دۆخی ڕاپۆرت #'+report.id+' بگۆڕدرێت بۆ '+(adminStatusNames[newStatus]||newStatus)+'؟'))return;
+ const buttons=[...actions.querySelectorAll('button')];buttons.forEach(x=>x.disabled=true);
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_admin_set_report_status',{p_kind:kind,p_report_id:report.id,p_new_status:newStatus,p_note:note});
+  if(error)throw error;if(data!==true)throw new Error('ڕاپۆرتەکە نەدۆزرایەوە.');
+  await loadAdminReports();
+ }catch(err){el('adminPanelStatus').textContent='هەڵە لە گۆڕینی دۆخ: '+err.message;}
+ finally{buttons.forEach(x=>x.disabled=false);}
+}
+
+
+// XALLO+ v3.8 — server-verified video hiding/unhiding.
+// Moderation is performed ONLY by Supabase RPCs; the client role is never trusted.
+let adminVideoFocusId=null;
+async function openAdminVideoPanel(videoId=null){
+ if(!requireLogin())return;
+ const uid=currentUser.id;
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_admin_is_admin');
+  if(error)throw error;
+  if(data!==true||currentUser?.id!==uid)throw new Error('تەنها بەڕێوەبەری ڕێگەپێدراو.');
+  adminAllowed=true;
+  adminVideoFocusId=videoId==null?null:String(videoId);
+  el('adminVideoFilter').value='all';
+  closeModal('adminPanelModal');showModal('adminVideosModal');
+  await loadAdminVideos();
+ }catch(err){alert('بەڕێوەبردنی ڤیدیۆکان: '+err.message+' — SQL ـی v3.8 بپشکنە.');}
+}
+function adminShowAllVideos(){
+ adminVideoFocusId=null;el('adminVideoFilter').value='all';void loadAdminVideos();
+}
+function adminMakeVideoCard(row){
+ const card=document.createElement('article');card.className='admin-video-card';
+ const title=document.createElement('h3');title.textContent='🎬 ڤیدیۆ #'+String(row.id)+' — '+(row.caption||'بێ ناونیشان');card.append(title);
+ card.append(adminInfoLine('👤 خاوەن:',row.user_name||'—'));
+ card.append(adminInfoLine('👁️ بینین:',row.views??0));
+ card.append(adminInfoLine('🕒 بڵاوکراوەتەوە:',adminDate(row.created_at)));
+ const state=document.createElement('span');state.className='admin-video-state'+(row.is_hidden?' hidden':'');
+ state.textContent=row.is_hidden?'🛡️ شاراوە':'✅ ئاشکرا';card.append(state);
+ if(row.is_hidden){
+  card.append(adminInfoLine('📝 هۆکاری شاردنەوە:',row.hidden_reason||'—'));
+  card.append(adminInfoLine('🕒 کاتی شاردنەوە:',adminDate(row.hidden_at)));
+ }
+ const note=document.createElement('textarea');note.maxLength=300;note.setAttribute('aria-label','هۆکاری شاردنەوە');
+ note.placeholder='هۆکاری شاردنەوە بنووسە (لانیکەم ٥ پیت، تا ٣٠٠ پیت)';
+ note.value=row.is_hidden?(row.hidden_reason||''):'';card.append(note);
+ const toggle=makeButton(row.is_hidden?'↩️ گەڕاندنەوەی ڤیدیۆ':'🛡️ شاردنەوەی ڤیدیۆ',()=>adminSetVideoVisibility(row,!row.is_hidden,note.value,toggle));
+ toggle.className=row.is_hidden?'unhide':'hide';card.append(toggle);
+ return card;
+}
+async function loadAdminVideos(){
+ const list=el('adminVideosList'),status=el('adminVideosStatus'),focus=el('adminVideoFocus'),all=el('adminShowAllVideos');
+ list.replaceChildren();status.textContent='ڤیدیۆکان بار دەکرێن...';
+ focus.style.display=adminVideoFocusId?'block':'none';
+ all.style.display=adminVideoFocusId?'block':'none';
+ focus.textContent=adminVideoFocusId?'🎯 ڤیدیۆی دیاریکراو #'+adminVideoFocusId:'';
+ if(!currentUser||!adminAllowed){status.textContent='دەستگەیشتن ڕێگەپێنەدراوە.';return;}
+ const uid=currentUser.id;
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_admin_list_videos',{
+   p_filter:adminVideoFocusId?'all':el('adminVideoFilter').value,
+   p_limit:80,p_video_id:adminVideoFocusId||null
+  });
+  if(error)throw error;
+  if(currentUser?.id!==uid||!el('adminVideosModal').classList.contains('show'))return;
+  const videos=Array.isArray(data?.videos)?data.videos:[];
+  status.textContent=videos.length?'🎬 '+videos.length+' ڤیدیۆ — هەر گۆڕانکارییەک لە Supabase تۆمار دەبێت.':'هیچ ڤیدیۆیەک بۆ ئەم فلتەرە نەدۆزرایەوە.';
+  videos.forEach(item=>list.append(adminMakeVideoCard(item)));
+ }catch(err){status.textContent='هەڵە: '+err.message+' — SQL ـی v3.8 بپشکنە.';}
+}
+async function adminSetVideoVisibility(row,hide,reason,btn){
+ if(!currentUser||!adminAllowed)return;
+ const note=String(reason||'').trim();
+ if(note.length>300){el('adminVideosStatus').textContent='هۆکار نابێت زیاتر لە ٣٠٠ پیت بێت.';return;}
+ if(hide&&note.length<5){el('adminVideosStatus').textContent='بۆ شاردنەوە هۆکارێکی لانیکەم ٥ پیت بنووسە.';return;}
+ const question=hide?'دڵنیایت دەتەوێت ئەم ڤیدیۆیە لە گەڕان و فیدی گشتی بشاریتەوە؟':'دڵنیایت دەتەوێت ئەم ڤیدیۆیە دووبارە ئاشکرا بکەیتەوە؟';
+ if(!confirm('ڤیدیۆ #'+row.id+' — '+question))return;
+ btn.disabled=true;el('adminVideosStatus').textContent='گۆڕانکارییەکە پاشەکەوت دەکرێت...';
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_admin_set_video_visibility',{
+   p_video_id:row.id,p_hidden:hide,p_reason:hide?note:''
+  });
+  if(error)throw error;if(data!==true)throw new Error('ڤیدیۆکە نەدۆزرایەوە.');
+  await loadAdminVideos();await loadVideos();
+  el('adminVideosStatus').textContent='گۆڕانکارییەکە پاشەکەوت کرا ✅';
+ }catch(err){el('adminVideosStatus').textContent='هەڵە لە گۆڕانکاری: '+err.message;}
+ finally{btn.disabled=false;}
+}
+
+
+// XALLO+ v3.9 — moderation owner inbox + one appeal per hide decision.
+// Server RPCs check auth.uid() and xallo_admins; client visibility is not security.
+const v39AppealLabel={pending:'🟡 چاوەڕوان',approved:'✅ قبوڵکراو',rejected:'❌ ڕەتکراوە'};
+function v39Text(parent,tag,str,klass=''){
+ const node=document.createElement(tag);
+ if(klass)node.className=klass;
+ node.textContent=String(str??'');parent.append(node);return node;
+}
+function v39Button(label,handler){
+ const b=document.createElement('button');b.type='button';b.textContent=label;
+ b.addEventListener('click',handler);return b;
+}
+let v39OwnerNotices=[];
+async function loadModerationNotices(silent=false){
+ const list=el('moderationNoticesList'),status=el('moderationNoticesStatus');
+ if(!currentUser){list.replaceChildren();status.textContent='بۆ بینینی ئاگادارییەکان بچۆ ژوورەوە.';return;}
+ const uid=currentUser.id;if(!silent)status.textContent='بار دەکرێن...';
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_my_moderation_notices');
+  if(error)throw error;
+  if(currentUser?.id!==uid||!el('notificationsModal').classList.contains('show'))return;
+  v39OwnerNotices=Array.isArray(data)?data:[];
+  list.replaceChildren();status.textContent='';
+  if(!v39OwnerNotices.length){status.textContent='هێشتا هیچ ئاگادارکردنەوەی بەڕێوەبردنی ڤیدیۆ نییە.';return;}
+  const latestByVideo=new Map();
+  for(const row of v39OwnerNotices){const k=String(row.video_id);if(!latestByVideo.has(k))latestByVideo.set(k,String(row.id));}
+  for(const row of v39OwnerNotices){
+   const card=document.createElement('div');card.className='v39-card'+(row.is_read?'':' unread');
+   v39Text(card,'h4',row.event_type==='hidden'?'🛡️ ڤیدیۆکەت شاردرایەوە':'🔓 ڤیدیۆکەت ئاشکرا کرایەوە');
+   v39Text(card,'p','🎬 '+(row.video_caption||'ڤیدیۆی بێ ناونیشان')+' (#'+row.video_id+')');
+   if(row.reason)v39Text(card,'p','📝 هۆکار: '+row.reason);
+   v39Text(card,'small','🕒 '+adminDate(row.created_at));
+   if(row.appeal_id!=null){
+    v39Text(card,'p','🧾 داواکاری: '+(v39AppealLabel[row.appeal_status]||row.appeal_status));
+    if(row.appeal_reply)v39Text(card,'p','👑 وەڵامی بەڕێوەبەر: '+row.appeal_reply);
+   }
+   const actions=v39Text(card,'div','', 'v39-actions');
+   if(!row.is_read)actions.append(v39Button('✓ خوێندراوە',()=>v39MarkRead(row,card)));
+   const mayAppeal=row.event_type==='hidden'&&row.appeal_id==null
+      &&latestByVideo.get(String(row.video_id))===String(row.id);
+   if(mayAppeal){
+    const explanation=document.createElement('textarea');explanation.maxLength=500;
+    explanation.placeholder='هۆکاری داواکاری پێداچوونەوە بنووسە (١٠ تا ٥٠٠ پیت)';
+    explanation.setAttribute('aria-label','هۆکاری داواکاری پێداچوونەوە');card.append(explanation);
+    const send=v39Button('🧾 ناردنی داواکاری',()=>v39SubmitAppeal(row,explanation,send));
+    const sendRow=v39Text(card,'div','', 'v39-actions');sendRow.append(send);
+   }
+   list.append(card);
+  }
+ }catch(e){status.textContent='هەڵە: '+e.message+' — SQL ـی v3.9 جێبەجێ بکە.';}
+}
+async function v39MarkRead(row,card){
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_moderation_mark_read',{p_notice_id:row.id});
+  if(error)throw error;if(data!==true)throw new Error('نەتوانرا خوێندراوە تۆمار بکرێت');
+  row.is_read=true;card.classList.remove('unread');
+  await loadModerationNotices(true);await loadNotificationCount();
+ }catch(e){el('moderationNoticesStatus').textContent='هەڵە: '+e.message;}
+}
+async function markAllModerationRead(){
+ if(!currentUser)return;
+ try{
+  const {error}=await supabaseClient.rpc('xallo_moderation_mark_all_read');
+  if(error)throw error;
+  await loadModerationNotices();await loadNotificationCount();
+ }catch(e){el('moderationNoticesStatus').textContent='هەڵە: '+e.message;}
+}
+async function v39SubmitAppeal(row,textarea,button){
+ if(!requireLogin())return;
+ const message=textarea.value.trim();
+ if(message.length<10||message.length>500){el('moderationNoticesStatus').textContent='تکایە ڕوونکردنەوەیەکی ١٠ تا ٥٠٠ پیت بنووسە.';return;}
+ if(!confirm('داواکاری پێداچوونەوە بۆ ڤیدیۆ #'+row.video_id+' بنێردرێت؟'))return;
+ button.disabled=true;
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_request_video_appeal',{p_notice_id:row.id,p_message:message});
+  if(error)throw error;
+  if(data!==true)throw new Error('داواکاری پێشتر نێردراوە.');
+  await loadModerationNotices();el('moderationNoticesStatus').textContent='داواکارییەکەت نێردرا ✅';
+ }catch(e){el('moderationNoticesStatus').textContent='هەڵە: '+e.message;}
+ finally{button.disabled=false;}
+}
+
+// XALLO+ v3.9 — admin appeal review.
+async function openAdminAppealsPanel(){
+ if(!requireLogin())return;const uid=currentUser.id;
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_admin_is_admin');
+  if(error)throw error;
+  if(data!==true||currentUser?.id!==uid)throw new Error('تەنها بەڕێوەبەری ڕێگەپێدراو.');
+  adminAllowed=true;el('adminAppealsFilter').value='pending';
+  closeModal('adminPanelModal');showModal('adminAppealsModal');await loadAdminAppeals();
+ }catch(e){alert('پانێڵی داواکارییەکان: '+e.message);}
+}
+async function loadAdminAppeals(){
+ const list=el('adminAppealsList'),status=el('adminAppealsStatus');list.replaceChildren();
+ if(!currentUser||!adminAllowed){status.textContent='دەستگەیشتن ڕێگەپێنەدراوە.';return;}
+ const uid=currentUser.id,filter=el('adminAppealsFilter').value;status.textContent='بار دەکرێن...';
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_admin_list_video_appeals',{p_filter:filter,p_limit:80});
+  if(error)throw error;
+  if(currentUser?.id!==uid||!el('adminAppealsModal').classList.contains('show'))return;
+  const rows=Array.isArray(data?.appeals)?data.appeals:[];status.textContent='داواکاری: '+rows.length;
+  if(!rows.length){v39Text(list,'p','لەم بەشە هیچ داواکارییەک نییە.','v39-message');return;}
+  for(const row of rows){
+   const card=v39Text(list,'article','', 'v39-card');
+   v39Text(card,'h4','🧾 داواکاری #'+row.id+' — ڤیدیۆ #'+row.video_id);
+   v39Text(card,'p','🎬 '+(row.video_caption||'بێ ناونیشان'));
+   v39Text(card,'p','📌 '+(v39AppealLabel[row.status]||row.status));
+   v39Text(card,'p','🛡️ هۆکاری شاردنەوە: '+(row.hidden_reason||'—'));
+   v39Text(card,'p','💬 داواکاری خاوەن: '+row.message);
+   v39Text(card,'small','🕒 '+adminDate(row.created_at));
+   if(row.reply)v39Text(card,'p','👑 وەڵام: '+row.reply);
+   if(row.status==='pending'){
+    const reply=document.createElement('textarea');reply.maxLength=300;
+    reply.placeholder='وەڵامی بەڕێوەبەر (٥ تا ٣٠٠ پیت)';
+    reply.setAttribute('aria-label','وەڵامی داواکاری');card.append(reply);
+    const actions=v39Text(card,'div','', 'v39-actions');
+    const approve=v39Button('✅ قبوڵکردن و ئاشکراکردنەوە',()=>v39DecideAppeal(row,'approved',reply,approve,reject));
+    const reject=v39Button('❌ ڕەتکردنەوە',()=>v39DecideAppeal(row,'rejected',reply,approve,reject));
+    reject.classList.add('reject');actions.append(approve,reject);
+   }
+  }
+ }catch(e){status.textContent='هەڵە: '+e.message+' — SQL ـی v3.9 بپشکنە.';}
+}
+async function v39DecideAppeal(row,decision,textarea,approveBtn,rejectBtn){
+ const reply=textarea.value.trim();
+ if(reply.length<5||reply.length>300){el('adminAppealsStatus').textContent='تکایە وەڵامێکی ٥ تا ٣٠٠ پیت بنووسە.';return;}
+ const question=decision==='approved'?'داواکاری قبوڵ بکرێت و ڤیدیۆکە دووبارە ئاشکرا بکرێتەوە؟':'داواکاری ڕەت بکرێتەوە و ڤیدیۆکە شاراوە بمێنێتەوە؟';
+ if(!confirm(question))return;
+ approveBtn.disabled=rejectBtn.disabled=true;
+ try{
+  const {data,error}=await supabaseClient.rpc('xallo_admin_review_video_appeal',{p_appeal_id:row.id,p_decision:decision,p_reply:reply});
+  if(error)throw error;if(data!==true)throw new Error('داواکارییەکە نەدۆزرایەوە.');
+  await loadAdminAppeals();
+  if(decision==='approved')await loadVideos();
+  el('adminAppealsStatus').textContent='بڕیارەکە پاشەکەوت کرا ✅';
+ }catch(e){el('adminAppealsStatus').textContent='هەڵە: '+e.message;}
+ finally{approveBtn.disabled=rejectBtn.disabled=false;}
+}
+
+
+// XALLO+ v4.0: settings are device-local and never uploaded to Supabase.
+const V40_PREFS_KEY='xallo_v40_playback_preferences';
+let v40Prefs={dataSaver:false,autoPlay:true};
+try{
+ const saved=JSON.parse(localStorage.getItem(V40_PREFS_KEY)||'null');
+ if(saved&&typeof saved==='object'){
+  if(typeof saved.dataSaver==='boolean')v40Prefs.dataSaver=saved.dataSaver;
+  if(typeof saved.autoPlay==='boolean')v40Prefs.autoPlay=saved.autoPlay;
+ }
+}catch(err){console.warn('Preferences unavailable:',err);}
+function v40ShouldAutoplay(){return !v40Prefs.dataSaver&&v40Prefs.autoPlay&&!document.hidden;}
+function v40SyncSettingControls(){
+ el('v40DataSaver').checked=v40Prefs.dataSaver;
+ el('v40Autoplay').checked=v40Prefs.autoPlay;
+ el('v40Autoplay').disabled=v40Prefs.dataSaver;
+ el('v40SettingsMessage').textContent=v40Prefs.dataSaver?'📶 داتا کەمکردنەوە چالاکە؛ ڤیدیۆکان بە دەستی خۆت لێبدە.':(v40Prefs.autoPlay?'▶️ پەخشی خۆکار چالاکە.':'⏸️ پەخشی خۆکار ناچالاکە.');
+}
+function v40OpenSettings(){v40SyncSettingControls();showModal('v40SettingsModal');}
+function v40CloseSettings(){closeModal('v40SettingsModal');if(el('home').style.display!=='none')setupSwipePlayback();}
+function v40SettingsChanged(){
+ v40Prefs.dataSaver=!!el('v40DataSaver').checked;
+ if(!el('v40Autoplay').disabled)v40Prefs.autoPlay=!!el('v40Autoplay').checked;
+ try{localStorage.setItem(V40_PREFS_KEY,JSON.stringify(v40Prefs));}catch(err){console.warn('Could not save preference:',err);}
+ v40SyncSettingControls();pauseFeed();
+ // After closing the settings modal the feed observer is recreated using new preferences.
+}
+function v40UpdateNetworkBanner(){
+ const offline=navigator.onLine===false;
+ el('v40NetworkBanner').hidden=!offline;
+ if(offline)pauseFeed();
+}
+async function v40RetryFeed(){
+ v40UpdateNetworkBanner();
+ if(navigator.onLine===false){el('feedMessage').textContent='📡 ئینتەرنێت بەردەست نییە. پەیوەندییەکەت بپشکنە.';return;}
+ if(el('v40SettingsModal').classList.contains('show'))v40CloseSettings();
+ await loadVideos();
+}
+window.addEventListener('online',v40UpdateNetworkBanner);
+window.addEventListener('offline',v40UpdateNetworkBanner);
+document.addEventListener('visibilitychange',()=>{
+ if(document.hidden){
+  document.querySelectorAll('video').forEach(video=>video.pause());
+ }else if(el('home').style.display!=='none'&&!document.querySelector('.modal.show')){
+  setupSwipePlayback();
+ }
+});
+
+async function startApp(){try{await checkUser();await loadVideos();}catch(e){el('feedMessage').textContent='هەڵە لە دەستپێکردنی ئەپ: '+e.message;}}
+el('uploadedVideos').addEventListener('scroll',v41OnFeedScroll,{passive:true});
+v40UpdateNetworkBanner();
+startApp();
+</script>
+</body>
+</html>
