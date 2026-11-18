@@ -200,12 +200,29 @@ header .header-tag{display:none}
 .v40-settings-help{color:#dacbea;font-size:13px;line-height:1.9}
 @media(prefers-reduced-motion: reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
+<style>
+/* XALLO+ v4.6 — Home feed tabs */
+header .header-tag{display:block;margin-left:47px;font-size:10px;letter-spacing:0;padding:5px 7px}
+.v46-feed-tabs{display:flex;align-items:center;gap:7px;padding:7px 10px;background:#1c1436;border-bottom:1px solid #5b4383}
+.v46-feed-tabs button{flex:1;min-width:0;min-height:38px;padding:7px 5px;border-radius:13px;background:#35264c;color:#e4d3ff;border:1px solid #654d8e;font-size:13px;font-weight:bold}
+.v46-feed-tabs button[aria-pressed=true]{background:linear-gradient(115deg,#8953e5,#b763e4);color:white;border-color:#e1a5ff}
+.v46-feed-tabs .v46-refresh-btn{flex:0 0 42px}
+#home.feed-mode #uploadedVideos{height:calc(100vh - 173px);height:calc(100dvh - 173px)}
+#home.v46-following .welcome,#home.v46-following .demo-video{display:none}
+.box .v40-settings-toggle input[type=checkbox]{width:24px;height:24px;padding:0;margin:0;flex:0 0 24px}
+.v40-settings-toggle>span{flex:1;min-width:0}
+</style>
 </head>
 <body>
 <div class="app">
-<header><div class="brand-lockup"><span class="brand-mark">✦</span><span>XALLO<span class="brand-plus">+</span></span></div><span class="header-tag">PURPLE EDITION · v4.5</span><button type="button" class="v40-settings-btn" onclick="v40OpenSettings()" aria-label="ڕێکخستنەکانی پەخش" title="ڕێکخستنەکانی پەخش">⚙️</button></header>
+<header><div class="brand-lockup"><span class="brand-mark">✦</span><span>XALLO<span class="brand-plus">+</span></span></div><span class="header-tag">v4.6</span><button type="button" class="v40-settings-btn" onclick="v40OpenSettings()" aria-label="ڕێکخستنەکانی پەخش" title="ڕێکخستنەکانی پەخش">⚙️</button></header>
 <div id="v40NetworkBanner" class="v40-network-banner" role="status" aria-live="polite" hidden>📡 پەیوەندی ئینتەرنێت بەردەست نییە. ڤیدیۆی نوێ بار ناکرێت. <button type="button" class="v40-retry" onclick="v40RetryFeed()">🔄 دووبارە هەوڵ بدە</button></div>
 <section id="home">
+<div class="v46-feed-tabs" role="group" aria-label="جۆری فید">
+ <button type="button" id="v46AllTab" aria-pressed="true" onclick="v46SetMode('all')">🎬 هەموو ڤیدیۆکان</button>
+ <button type="button" id="v46FollowingTab" aria-pressed="false" onclick="v46SetMode('following')">👥 فۆڵۆکراوەکان</button>
+ <button type="button" class="v46-refresh-btn" aria-label="نوێکردنەوەی فید" onclick="loadVideos()">🔄</button>
+</div>
 <div class="welcome"><div class="logo">✦ XALLO+</div><h2>دنیای ڤیدیۆی تۆ ✨</h2><p>ڤیدیۆی نوێ بدۆزەوە، داهێنانەکانت بڵاو بکەرەوە و پەیوەندی دروست بکە.</p>
 <div class="buttons" id="authButtons"><button class="login" onclick="openLogin()">چوونەژوورەوە</button><button class="signup" onclick="openSignup()">دروستکردنی هەژمار</button></div>
 <div class="user-box" id="userBox"><p>بەخێربێیت 👋</p><strong id="userEmail"></strong><br/><button class="logout" onclick="logout()">دەرچوون</button></div></div>
@@ -311,7 +328,7 @@ header .header-tag{display:none}
 <button class="close-btn" type="button" onclick="closeModal('adminAppealsModal');openAdminPanel()">↩️ گەڕانەوە بۆ پانێڵ</button>
 <button class="close-btn" type="button" onclick="closeModal('adminAppealsModal')">داخستن</button>
 </div></div>
-<div class="modal" id="v40SettingsModal"><div class="box"><h2>⚙️ ڕێکخستنەکانی XALLO+ v4.0</h2>
+<div class="modal" id="v40SettingsModal"><div class="box"><h2>⚙️ ڕێکخستنەکانی XALLO+ v4.6</h2>
 <p class="v40-settings-help">ئەم ڕێکخستنانە تەنها لەم مۆبایلە پاشەکەوت دەبن؛ پێویستیان بە Supabase نییە.</p>
 <label class="v40-settings-toggle" for="v40DataSaver"><span><strong>📶 کەمکردنەوەی بەکارهێنانی داتا</strong><small>پەخشی خۆکار ڕادەگرێت؛ ڤیدیۆکان بە دەستی خۆت لێبدە.</small></span><input type="checkbox" id="v40DataSaver" onchange="v40SettingsChanged()" /></label>
 <label class="v40-settings-toggle" for="v40Autoplay"><span><strong>▶️ پەخشی خۆکاری ڤیدیۆ</strong><small>تەنها کاتێک داتا کەمکردنەوە ناچالاکە.</small></span><input type="checkbox" id="v40Autoplay" onchange="v40SettingsChanged()" /></label>
@@ -327,6 +344,7 @@ const SUPABASE_URL='https://vnyprsjjmmjahkisozib.supabase.co';
 const SUPABASE_KEY='sb_publishable_ixrANIhgAIwrxkyRL94YAw_iegjwNYp';
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let feedItems=[],previewObjectUrl=null,currentUser=null,currentCommentVideoId=null;
+let v46Mode='all',v46FollowingState=null;
 let likeRows=[],commentCounts=new Map(),likesReady=false,commentsReady=false;
 let followRows=[],followsReady=false,publicProfileUserId=null;
 let profileCache=new Map();
@@ -427,6 +445,7 @@ function updateUser(user){
  if(!user){stopChatRefresh();chatPeerId=null;}
  if(oldId!==nextId){savedVideoIds=new Set();savedReady=false;blockedIds=new Set();blocksReady=false;resetChatNotificationState();adminAllowed=false;el('adminPanelEntry').style.display='none';if(el('adminPanelModal').classList.contains('show'))closeModal('adminPanelModal');if(el('adminVideosModal').classList.contains('show'))closeModal('adminVideosModal');}
  currentUser=user||null;updateNotificationBadge(0);
+ if(oldId!==nextId)v46ResetForAccountChange();
  if(oldId!==nextId&&oldId){closeModal('profileModal');v43ClearProfile();closeModal('v44SecurityModal');v44ClearFields(['v44OldPassword','v44NewPassword','v44ConfirmPassword']);el('v44SecurityEmail').textContent='';el('v45SessionMessage').textContent='';v44SecurityUser=null;}
  if(user){loadNotificationCount();if(oldId!==nextId)startChatNotifications();}
  el('authButtons').style.display=user?'none':'flex';el('userBox').style.display=user?'block':'none';el('userEmail').textContent=user?.email||'';
@@ -545,13 +564,82 @@ async function v44ResetPassword(){
 function openUpload(){if(!requireLogin())return;el('uploadMessage').textContent='';showModal('uploadModal');}
 function previewVideo(){const file=el('videoFile').files[0],preview=el('videoPreview'),msg=el('uploadMessage');preview.replaceChildren();msg.textContent='';if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null;}if(!file)return;if(!file.type.startsWith('video/')){msg.textContent='تکایە فایلێکی ڤیدیۆ هەڵبژێرە.';el('videoFile').value='';return;}if(file.size>100*1024*1024){msg.textContent='قەبارەی ڤیدیۆ نابێت لە 100MB زیاتر بێت.';el('videoFile').value='';return;}previewObjectUrl=URL.createObjectURL(file);const video=document.createElement('video');video.src=previewObjectUrl;video.controls=true;video.playsInline=true;preview.append(video);msg.textContent='ڤیدیۆکە ئامادەیە ▶️';}
 async function uploadVideo(){const file=el('videoFile').files[0],caption=el('videoCaption').value.trim(),btn=el('uploadBtn'),msg=el('uploadMessage');if(!file){msg.textContent='تکایە سەرەتا ڤیدیۆیەک هەڵبژێرە 🎥';return;}if(!file.type.startsWith('video/')||file.size>100*1024*1024){msg.textContent='جۆری فایل یان قەبارەی ڤیدیۆ گونجاو نییە (زۆرترین 100MB).';return;}if(!requireLogin())return;btn.disabled=true;let filePath=null,uploaded=false;try{const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();if(sessionError)throw sessionError;const session=sessionData.session;if(!session)throw new Error('تکایە دووبارە بچۆ ژوورەوە.');msg.textContent='١. ڤیدیۆکە بەرزدەکرێتەوە... ⏳';const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(-90)||'video.mp4';filePath=session.user.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2)+'-'+safeName;const {error:storageError}=await supabaseClient.storage.from('videos').upload(filePath,file,{cacheControl:'3600',upsert:false,contentType:file.type});if(storageError)throw new Error('Storage: '+storageError.message);uploaded=true;const {data:publicData}=supabaseClient.storage.from('videos').getPublicUrl(filePath);msg.textContent='٢. زانیاریی ڤیدیۆکە پاشەکەوت دەکرێت... ⏳';const {error:dbError}=await supabaseClient.from('videos').insert({user_id:session.user.id,video_url:publicData.publicUrl,caption,user_email:session.user.email||'',likes:0,views:0});if(dbError)throw new Error('Database: '+dbError.message);msg.textContent='بە سەرکەوتوویی بڵاوکرایەوە 🎉';v42TrendingLoadedAt=0;el('videoFile').value='';el('videoCaption').value='';el('videoPreview').replaceChildren();if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null;}await loadVideos();setTimeout(()=>closeModal('uploadModal'),900);}catch(e){msg.textContent='هەڵە:\n'+e.message;console.error(e);if(uploaded&&filePath){const {error}=await supabaseClient.storage.from('videos').remove([filePath]);if(error)console.warn('Cleanup:',error.message);}}finally{btn.disabled=false;}}
-async function refreshSocialData(){likeRows=[];commentCounts=new Map();likesReady=false;commentsReady=false;if(!feedItems.length)return;const ids=feedItems.map(x=>x.id);try{const {data,error}=await supabaseClient.from('video_likes').select('video_id,user_id').in('video_id',ids);if(error)throw error;likeRows=data||[];likesReady=true;}catch(e){console.warn('Likes:',e);}
-try{const {data,error}=await supabaseClient.from('video_comments').select('video_id').in('video_id',ids);if(error)throw error;for(const row of data||[])commentCounts.set(String(row.video_id),(commentCounts.get(String(row.video_id))||0)+1);commentsReady=true;}catch(e){console.warn('Comments:',e);}}
+async function refreshSocialData(){const serial=v41FeedSerial;likeRows=[];commentCounts=new Map();likesReady=false;commentsReady=false;if(!feedItems.length)return;const ids=feedItems.map(x=>x.id);try{const {data,error}=await supabaseClient.from('video_likes').select('video_id,user_id').in('video_id',ids);if(error)throw error;if(serial!==v41FeedSerial)return;likeRows=data||[];likesReady=true;}catch(e){console.warn('Likes:',e);}
+if(serial!==v41FeedSerial)return;try{const {data,error}=await supabaseClient.from('video_comments').select('video_id').in('video_id',ids);if(error)throw error;if(serial!==v41FeedSerial)return;for(const row of data||[])commentCounts.set(String(row.video_id),(commentCounts.get(String(row.video_id))||0)+1);commentsReady=true;}catch(e){console.warn('Comments:',e);}}
 function countLikes(id){return likeRows.filter(x=>String(x.video_id)===String(id)).length;}
 function hasLiked(id){return !!currentUser&&likeRows.some(x=>String(x.video_id)===String(id)&&x.user_id===currentUser.id);}
 // XALLO+ v4.1: Fetch twelve feed entries at a time. Search and saved videos have their own queries.
 const V41_FEED_PAGE_SIZE=12;
 let v41FeedOffset=0,v41HasMore=false,v41FeedBusy=false,v41FeedSerial=0;
+// v4.6: follow IDs are read for this account only. Query videos in small
+// batches, then merge their descending pages without truncating the feed.
+function v46SyncTabs(){
+ const followingSelected=v46Mode==='following';
+ el('v46AllTab').setAttribute('aria-pressed',String(!followingSelected));
+ el('v46FollowingTab').setAttribute('aria-pressed',String(followingSelected));
+ el('home').classList.toggle('v46-following',followingSelected);
+}
+function v46SetMode(mode){
+ if(mode!=='all'&&mode!=='following')return;
+ if(mode==='following'&&!requireLogin())return;
+ if(v46Mode===mode)return;
+ v46Mode=mode;v46SyncTabs();return loadVideos();
+}
+function v46ResetForAccountChange(){
+ if(v46Mode!=='following')return;
+ v46Mode='all';v46FollowingState=null;
+ const serial=++v41FeedSerial;v41HasMore=false;v41FeedBusy=false;v41FeedOffset=0;feedItems=[];
+ pauseFeed();el('uploadedVideos').replaceChildren();v46SyncTabs();
+ el('home').classList.remove('feed-mode');el('feedMessage').textContent='🎬 فید نوێ دەکرێتەوە...';
+ setTimeout(()=>{if(serial===v41FeedSerial)void loadVideos();},0);
+}
+async function v46CreateFollowingState(uid,serial){
+ const ids=new Set(),size=200;
+ for(let start=0;;start+=size){
+  const {data,error}=await supabaseClient.from('user_follows').select('following_id')
+   .eq('follower_id',uid).order('following_id',{ascending:true}).range(start,start+size-1);
+  if(error)throw error;
+  if(serial!==v41FeedSerial||currentUser?.id!==uid)return null;
+  const rows=data||[];
+  for(const row of rows){if(row.following_id&&row.following_id!==uid&&!isBlockedUser(row.following_id))ids.add(String(row.following_id));}
+  if(rows.length<size)break;
+ }
+ const list=[...ids],groups=[];
+ for(let start=0;start<list.length;start+=80)groups.push({ids:list.slice(start,start+80),offset:0,buffer:[],done:false});
+ return {uid,ids,groups};
+}
+// Compare PostgREST timestamps to microsecond precision, then numeric video ID.
+function v46CompareVideos(a,b){
+ const ta=String(a.created_at||''),tb=String(b.created_at||'');
+ const diff=(Date.parse(tb)||0)-(Date.parse(ta)||0);if(diff)return diff;
+ const fraction=s=>(s.match(/\.(\d+)/)?.[1]||'').padEnd(6,'0').slice(0,6);
+ const fa=fraction(ta),fb=fraction(tb);if(fa!==fb)return fa>fb?-1:1;
+ const ai=String(a.id),bi=String(b.id);
+ if(/^\d+$/.test(ai)&&/^\d+$/.test(bi)){if(ai.length!==bi.length)return bi.length-ai.length;}
+ return ai===bi?0:ai>bi?-1:1;
+}
+async function v46ReadFollowingPage(state,serial){
+ // Work on a copy so a failed fetch never advances the actual feed cursor.
+ const groups=state.groups.map(g=>({...g,buffer:[...g.buffer]})),items=[];
+ const valid=()=>serial===v41FeedSerial&&currentUser?.id===state.uid&&v46Mode==='following';
+ async function fill(g){
+  const {data,error}=await supabaseClient.from('videos').select('*').in('user_id',g.ids)
+   .order('created_at',{ascending:false}).order('id',{ascending:false})
+   .range(g.offset,g.offset+V41_FEED_PAGE_SIZE-1);
+  if(error)throw error;
+  const rows=data||[];g.buffer=rows;g.offset+=rows.length;g.done=rows.length<V41_FEED_PAGE_SIZE;
+ }
+ while(items.length<V41_FEED_PAGE_SIZE){
+  if(!valid())return null;
+  const empty=groups.filter(g=>!g.buffer.length&&!g.done);
+  for(let i=0;i<empty.length;i+=6){await Promise.all(empty.slice(i,i+6).map(fill));if(!valid())return null;}
+  const candidates=groups.filter(g=>g.buffer.length);
+  if(!candidates.length)break;
+  candidates.sort((a,b)=>v46CompareVideos(a.buffer[0],b.buffer[0]));
+  items.push(candidates[0].buffer.shift());
+ }
+ return {items,state:{...state,groups},hasMore:groups.some(g=>g.buffer.length||!g.done)};
+}
 function v41UpdateLoadCard(){
  const root=el('uploadedVideos');if(!root)return;
  const existing=root.querySelector('.v41-more-card');if(existing)existing.remove();
@@ -568,6 +656,11 @@ function v41UpdateFeedLabel(){
  const count=visibleVideos(feedItems).length;
  let label=count?'🎬 '+count+' ڤیدیۆ بارکراوە. بە گەیشتن بە کۆتایی فید، ڤیدیۆی زیاتر بار دەبێت.':'هێشتا لەم بەشەدا ڤیدیۆی ئاشکرا نەدۆزرایەوە.';
  if(!v41HasMore&&!count)label='هێشتا هیچ ڤیدیۆیەکی ئاشکرا نییە. 🎥';
+ if(v46Mode==='following'){
+  if(!v46FollowingState?.ids.size)label='👥 هێشتا هیچ بەکارهێنەرێکت فۆڵۆ نەکردووە. لە فیدی هەموو ڤیدیۆکان کەسێک فۆڵۆ بکە.';
+  else if(!count&&!v41HasMore)label='👥 کەسانی فۆڵۆکراوت هێشتا هیچ ڤیدیۆیەکی ئاشکرایان نییە.';
+  else label='👥 '+label;
+ }
  if(!likesReady&&feedItems.length)label+='\n⚠️ زانیاری لایک نەخوێندرایەوە؛ Policy ـەکانی video_likes بپشکنە.';
  if(!commentsReady&&feedItems.length)label+='\n⚠️ زانیاری کۆمێنت نەخوێندرایەوە؛ Policy ـەکانی video_comments بپشکنە.';
  if(!followsReady)label+='\n⚠️ Follow بار نەبووە؛ user_follows بپشکنە.';
@@ -575,15 +668,27 @@ function v41UpdateFeedLabel(){
 }
 async function loadVideos(){
  const serial=++v41FeedSerial,root=el('uploadedVideos'),message=el('feedMessage');
+ if(v46Mode==='following'&&!currentUser)v46Mode='all';
+ const mode=v46Mode,uid=currentUser?.id;
+ v46SyncTabs();v46FollowingState=null;
  v41FeedBusy=true;v41FeedOffset=0;v41HasMore=false;feedItems=[];
  message.textContent='🎬 یەکەم ١٢ ڤیدیۆ بار دەکرێن...';
- if(feedObserver){feedObserver.disconnect();feedObserver=null;}root.replaceChildren();
+ if(feedObserver){feedObserver.disconnect();feedObserver=null;}pauseFeed();root.replaceChildren();root.scrollTop=0;
  try{
-  const {data,error}=await supabaseClient.from('videos').select('*')
-   .order('created_at',{ascending:false}).order('id',{ascending:false}).range(0,V41_FEED_PAGE_SIZE-1);
-  if(error)throw error;if(serial!==v41FeedSerial)return;
-  feedItems=data||[];v41FeedOffset=feedItems.length;v41HasMore=feedItems.length===V41_FEED_PAGE_SIZE;
-  await loadBlockedUsers();if(serial!==v41FeedSerial)return;
+  if(mode==='following'){
+   if(!await loadBlockedUsers())throw new Error('لیستی بلۆک بار نەبووە. دووبارە هەوڵ بدە.');
+   if(serial!==v41FeedSerial||currentUser?.id!==uid)return;
+   const state=await v46CreateFollowingState(uid,serial);if(!state||serial!==v41FeedSerial)return;
+   const page=await v46ReadFollowingPage(state,serial);if(!page||serial!==v41FeedSerial)return;
+   v46FollowingState=page.state;feedItems=page.items;v41HasMore=page.hasMore;
+  }else{
+   const {data,error}=await supabaseClient.from('videos').select('*')
+    .order('created_at',{ascending:false}).order('id',{ascending:false}).range(0,V41_FEED_PAGE_SIZE-1);
+   if(error)throw error;if(serial!==v41FeedSerial)return;
+   feedItems=data||[];v41HasMore=feedItems.length===V41_FEED_PAGE_SIZE;
+   await loadBlockedUsers();if(serial!==v41FeedSerial)return;
+  }
+  v41FeedOffset=feedItems.length;
   void loadChatUnreadCount();await loadProfiles();if(serial!==v41FeedSerial)return;
   await refreshSocialData();if(serial!==v41FeedSerial)return;
   await refreshFollows();if(serial!==v41FeedSerial)return;
@@ -594,13 +699,14 @@ async function loadVideos(){
  }catch(e){if(serial===v41FeedSerial){message.textContent='نەتوانرا فید بار بکرێت. 🔄 دوگمەی نوێکردنەوە بەکاربهێنە.\n'+e.message;console.error(e);}}
  finally{if(serial===v41FeedSerial){v41FeedBusy=false;v41UpdateLoadCard();}}
 }
-async function v41LoadPageSocial(page){
+async function v41LoadPageSocial(page,serial=v41FeedSerial){
  const ids=page.map(v=>v.id);if(!ids.length)return;
  const idSet=new Set(ids.map(String));
  const [likes,comments]=await Promise.all([
   supabaseClient.from('video_likes').select('video_id,user_id').in('video_id',ids),
   supabaseClient.from('video_comments').select('video_id').in('video_id',ids)
  ]);
+ if(serial!==v41FeedSerial)return;
  if(!likes.error){likeRows=likeRows.filter(r=>!idSet.has(String(r.video_id))).concat(likes.data||[]);likesReady=true;}
  else{likesReady=false;console.warn('More likes:',likes.error.message);}
  if(!comments.error){for(const id of ids)commentCounts.delete(String(id));for(const r of comments.data||[])commentCounts.set(String(r.video_id),(commentCounts.get(String(r.video_id))||0)+1);commentsReady=true;}
@@ -611,12 +717,20 @@ async function v41LoadMoreVideos(){
  if(navigator.onLine===false){el('feedMessage').textContent='📡 ئینتەرنێت نییە. کاتێک پەیوەندی گەڕایەوە دووبارە هەوڵ بدە.';return;}
  const serial=v41FeedSerial,start=v41FeedOffset;v41FeedBusy=true;v41UpdateLoadCard();
  try{
-  const {data,error}=await supabaseClient.from('videos').select('*')
-   .order('created_at',{ascending:false}).order('id',{ascending:false})
-   .range(start,start+V41_FEED_PAGE_SIZE-1);
-  if(error)throw error;if(serial!==v41FeedSerial)return;
-  const fetched=data||[];v41FeedOffset+=fetched.length;
-  v41HasMore=fetched.length===V41_FEED_PAGE_SIZE;
+  let fetched;
+  if(v46Mode==='following'){
+   if(!v46FollowingState)return;
+   const page=await v46ReadFollowingPage(v46FollowingState,serial);
+   if(!page||serial!==v41FeedSerial)return;
+   v46FollowingState=page.state;fetched=page.items;v41HasMore=page.hasMore;
+  }else{
+   const {data,error}=await supabaseClient.from('videos').select('*')
+    .order('created_at',{ascending:false}).order('id',{ascending:false})
+    .range(start,start+V41_FEED_PAGE_SIZE-1);
+   if(error)throw error;if(serial!==v41FeedSerial)return;
+   fetched=data||[];v41HasMore=fetched.length===V41_FEED_PAGE_SIZE;
+  }
+  v41FeedOffset+=fetched.length;
   const known=new Set(feedItems.map(v=>String(v.id)));
   const unique=fetched.filter(v=>!known.has(String(v.id)));
   feedItems.push(...unique);
@@ -704,7 +818,7 @@ async function refreshFollows(){
   try{const {data,error}=await supabaseClient.from('user_follows').select('follower_id,following_id').limit(1000);if(error)throw error;followRows=data||[];followsReady=true;}
   catch(e){console.warn('Follows:',e);}
 }
-function following(id){return !!currentUser&&followRows.some(r=>r.follower_id===currentUser.id&&r.following_id===id);}
+function following(id){return !!currentUser&&(v46Mode==='following'&&v46FollowingState?.uid===currentUser.id?v46FollowingState.ids.has(String(id)):followRows.some(r=>r.follower_id===currentUser.id&&r.following_id===id));}
 async function toggleFollow(id,btn){
   if(!requireLogin())return;
   if(isBlockedUser(id)){alert('ناتوانیت ئەم بەکارهێنەرە Follow بکەیت.');return;}if(!followsReady){alert('Follow بار نەبووە. Policy ـی user_follows بپشکنە.');return;}
@@ -714,7 +828,8 @@ async function toggleFollow(id,btn){
     const yes=following(id);
     const query=yes?supabaseClient.from('user_follows').delete().eq('follower_id',currentUser.id).eq('following_id',id):supabaseClient.from('user_follows').insert({follower_id:currentUser.id,following_id:id});
     const {error}=await query;if(error)throw error;
-    await refreshFollows();refreshVisibleCards();
+    await refreshFollows();
+    if(v46Mode==='following')await loadVideos();else refreshVisibleCards();
     if(publicProfileUserId===id&&el('publicProfileModal').classList.contains('show'))await showProfileData(id,'publicProfileStats','publicProfileVideos');
   }catch(e){alert('هەڵەی Follow: '+e.message);}finally{btn.disabled=false;}
 }
