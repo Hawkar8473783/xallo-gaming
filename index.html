@@ -239,11 +239,63 @@ html,body{background:#08070d;color:var(--ink)}.app{background:#0e0b17;padding-bo
 #commentsModal{padding:0;align-items:flex-end;justify-content:center}#commentsModal>.box{width:min(480px,100%);max-width:none;max-height:74vh;max-height:74dvh;min-height:300px;display:flex;flex-direction:column;border-radius:25px 25px 0 0;padding:10px 15px calc(12px + env(safe-area-inset-bottom,0px));overflow:hidden;background:#171020;border-bottom:0}#commentsModal>.box::before{content:'';width:38px;height:4px;border-radius:10px;background:#7b668d;margin:0 auto 12px;flex:none}#commentsModal h2{font-size:18px;margin:0 0 6px}#commentsList{flex:1;min-height:0;overflow:auto;text-align:right;overscroll-behavior:contain}#commentsModal .comment-row{flex:none;align-items:stretch;gap:7px}#commentsModal .comment-row textarea{min-height:44px;max-height:85px;border-radius:18px;resize:vertical}#commentsModal .close-btn{margin-top:5px;padding:8px}#commentsModal .comment-item{border-color:#30243c;padding:11px 2px}
 #profileModal.modal>.box,#publicProfileModal.modal>.box{border:0;border-radius:0;background:#100c19;box-shadow:none}#commentsModal.modal>.box{border-radius:25px 25px 0 0;border-bottom:0;background:#171020}#home.feed-mode #uploadedVideos>.uploaded-video>.uploaded-info{padding-bottom:38px}#home.feed-mode .video-actions{bottom:38px;max-height:calc(100dvh - 205px);overflow:auto;scrollbar-width:none}#home.feed-mode .video-actions button{flex:none}
 @media(max-width:350px){.app>nav .nav-item{font-size:9px}.app>nav .nav-item.nav-upload{flex-basis:46px}.app>nav .nav-item svg{width:20px;height:20px}.brand-lockup{font-size:20px}#home.feed-mode #uploadedVideos>.uploaded-video>.uploaded-info{padding-left:80px}#home.feed-mode .video-actions{width:60px;left:8px}}@media(max-height:450px){#home.feed-mode .video-actions{gap:3px;max-height:calc(100dvh - 180px)}#home.feed-mode .video-actions button{min-height:35px;font-size:10px;padding:5px 2px}#commentsModal>.box{min-height:0;max-height:88dvh}}@media(prefers-reduced-motion:no-preference){.nav-item,.v46-feed-tabs button,.v51-feed-tools button,.v48-tile{transition:background .15s,transform .15s,border-color .15s}.nav-item:active,.v51-feed-tools button:active,.v48-tile:active{transform:scale(.96)}}
+/* XALLO+ v5.2 — refined violet, compact profile and floating video controls. */
+:root{--v51-header:54px;--v51-nav:65px;--accent:#b594ff;--accent2:#dfabff;--ink:#faf7ff;--muted:#b9aec9}
+.app>header{background:linear-gradient(115deg,#161122,#100d19);border-color:#332541;padding-inline:12px}
+.brand-mark{background:linear-gradient(145deg,#7452eb,#d58aff);border-radius:12px;box-shadow:0 3px 14px #a876ff40}
+.app>header .header-tag{display:inline-block;letter-spacing:.3px;color:#cfc0ed;background:#21172e;border-color:#443255}
+.v40-settings-btn{border-radius:50%;background:#221a30}
+.v46-feed-tabs{background:#100d19;gap:4px;padding:4px 10px}.v46-feed-tabs button{font-size:12px;border-radius:999px;min-height:32px}
+.v46-feed-tabs button[aria-pressed=true]{background:linear-gradient(110deg,#34234d,#261b3c);box-shadow:inset 0 0 0 1px #9d75e970;color:#f0dfff}
+.v46-feed-tabs .v46-refresh-btn{border-radius:50%;background:#221a30}
+#home.feed-mode #feedMessage{padding:3px 8px;font-size:10px;background:#100d19}
+#home.feed-mode #uploadedVideos>.uploaded-video>.uploaded-info{padding:48px 12px 38px 72px;background:linear-gradient(transparent,#0008 43%,#000e);min-height:108px}
+#home.feed-mode .owner-name{font-size:15px;color:#fff}#home.feed-mode .uploaded-info p{font-size:12px;margin:4px 0 6px}
+#home.feed-mode .video-actions{left:8px;bottom:39px;width:55px;gap:8px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+#home.feed-mode .video-actions button.v52-rail-button{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:0;padding:0 0 2px;background:transparent!important;border:0!important;box-shadow:none;color:#fff;border-radius:8px;text-shadow:0 1px 4px #000}
+.v52-rail-icon{display:grid;place-items:center;width:44px;height:44px;flex:none;border:1px solid #ffffff38;border-radius:50%;background:#100b21a8;box-shadow:0 3px 14px #0006;backdrop-filter:blur(8px)}
+.v52-rail-icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v52-rail-label{font-size:10px;line-height:1.4;max-width:100%;overflow-wrap:anywhere;font-weight:700}
+.v52-rail-button.liked .v52-rail-icon{color:#ff668e;background:#35172ecc;border-color:#fa91b490}.v52-rail-button.liked svg{fill:currentColor}
+.v52-rail-button.saved .v52-rail-icon{color:#dfbcff;background:#3c2159cc;border-color:#d6a6ff90}.v52-rail-button.saved svg{fill:currentColor}
+.v51-feed-tools{gap:4px;font-size:10px}.v51-feed-tools button{min-height:32px;border-radius:99px;padding:5px 8px;font-size:10px;background:#17141fbf;border-color:#ffffff40}
+#home.feed-mode .v51-feed-tools .edit-video-btn{background:#241638dd!important;border-color:#bb94ff80;color:#eedfff!important}
+.app>nav{background:#100d19fa;border-color:#382849;box-shadow:0 -6px 22px #0005}
+.app>nav .nav-item{gap:3px;height:49px;color:#aaa1ba;border-radius:14px;font-size:10px}
+.app>nav .nav-item[aria-current=page]{color:#e0c5ff;background:#261b38}
+.app>nav .nav-item[aria-current=page]:not(.nav-upload)::after{content:'';width:13px;height:2px;border-radius:9px;background:#c18fff;position:absolute;bottom:1px}
+.app>nav .nav-item.nav-upload{flex-basis:52px;height:48px;border-radius:17px;background:linear-gradient(130deg,#7753ec,#ca79ee)}
+.app>nav .nav-item svg{stroke-width:1.9}
+#profileModal.modal>.box,#publicProfileModal.modal>.box{background:radial-gradient(ellipse at 70% 0,#211630,transparent 42%),#100d19;padding:12px 12px 24px}
+.v51-profile-head{padding:1px 0 10px;border-color:#39284b}.v51-profile-head h2{font-size:17px}.v51-profile-head button{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;padding:0}
+.v51-profile-hero{position:relative;display:grid;grid-template-columns:72px minmax(0,1fr);grid-template-rows:auto auto auto;column-gap:12px;row-gap:0;align-items:center;text-align:start;padding:17px 15px 12px;margin-top:10px;border-radius:20px;border-color:#71539490;background:radial-gradient(ellipse at 100% 0,#6744a066,transparent 70%),linear-gradient(130deg,#251a37,#191223);box-shadow:0 8px 30px #0003}
+.v51-avatar-shell{grid-column:1;grid-row:1/span 2;width:72px;height:72px;margin:0;border:2px solid #d4b7ff;box-shadow:0 0 0 5px #b58aff24,0 6px 16px #08051080}
+.v51-profile-hero .profile-name,.v51-profile-hero #publicProfileName{grid-column:2;grid-row:1;align-self:end;text-align:start;margin:0;font-size:22px;line-height:1.3;min-width:0}
+.v51-profile-hero #publicProfileName{grid-row:1/span 2;align-self:center}
+.v51-profile-hero .v43-account-status{grid-column:2;grid-row:2;align-self:start;text-align:start;margin-top:5px;color:#a9e0c6;font-size:11px}
+.v51-profile-hero .profile-stats{grid-column:1/-1;grid-row:3;gap:0;margin:16px 0 0;padding:10px 0 0;border-top:1px solid #ffffff20}
+.v51-profile-hero .profile-stats .v47-stat,.v51-profile-hero .profile-stats>div>div{min-width:0;border:0;border-radius:0;background:none;padding:4px 2px;font-size:11px;color:#d1c4e3;box-shadow:none}
+.v51-profile-hero .profile-stats .v47-stat+.v47-stat,.v51-profile-hero .profile-stats>div>div+div{border-inline-start:1px solid #ffffff20}
+.v51-profile-hero .profile-stats b{font-size:21px;color:#fff;line-height:1.3}.v51-profile-hero .v47-stat small{font-size:10px;color:#c9a8f4}
+#profileModal .v51-profile-tools{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+#profileModal .v51-profile-tools details{flex:1 1 0;min-width:0;margin:0;border-radius:13px;background:#1e172c;border-color:#48365d}
+#profileModal .v51-profile-tools details[open]{flex:1 1 100%}
+#profileModal .v51-profile-tools summary{list-style:none;display:flex;align-items:center;justify-content:center;text-align:center;min-height:58px;padding:8px 5px;font-size:11px;line-height:1.6;color:#e7d8f9}
+#profileModal .v51-profile-tools summary::-webkit-details-marker{display:none}
+#profileModal .v51-profile-tools details[open]>summary{background:#302044;color:#f5eaff;margin-bottom:9px}
+.v51-profile-section-title{font-size:15px;margin:13px 0 8px;color:#efe4ff;border-color:#39284b}
+.v48-grid{gap:5px;margin:8px 0 12px}.v48-tile{border-radius:11px;border-color:#49335f;background:linear-gradient(145deg,#392652,#1b1327)}
+.v48-tile::after{content:'▶';position:absolute;top:7px;left:7px;display:grid;place-items:center;width:23px;height:23px;border-radius:50%;color:#fff;background:#0b0717a8;border:1px solid #ffffff44;font-size:10px;pointer-events:none}
+.v48-tile-info{background:linear-gradient(transparent,#0c0818e8)}
+#commentsModal.modal>.box{background:#1a1427;border-color:#7654a07a}
+.comment-item strong{color:#d2b6ff}
+@media(max-width:350px){#home.feed-mode #uploadedVideos>.uploaded-video>.uploaded-info{padding-left:62px}#home.feed-mode .video-actions{width:49px;left:6px;gap:5px}.v52-rail-icon{width:40px;height:40px}.v52-rail-icon svg{width:22px;height:22px}.v52-rail-label{font-size:9px}.v51-profile-hero{padding-inline:12px;column-gap:9px;grid-template-columns:64px minmax(0,1fr)}.v51-avatar-shell{width:64px;height:64px}.v51-profile-hero .profile-name{font-size:20px}}
+@media(max-height:450px){#home.feed-mode .video-actions{gap:3px}.v52-rail-icon{width:36px;height:36px}.v52-rail-icon svg{width:20px;height:20px}}
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="brand-lockup"><span class="brand-mark">✦</span><span>XALLO<span class="brand-plus">+</span></span></div><span class="header-tag">v5.1</span><button type="button" class="v40-settings-btn" onclick="v40OpenSettings()" aria-label="ڕێکخستنەکانی پەخش" title="ڕێکخستنەکانی پەخش">⚙</button></header>
+<header><div class="brand-lockup"><span class="brand-mark">✦</span><span>XALLO<span class="brand-plus">+</span></span></div><span class="header-tag">v5.2</span><button type="button" class="v40-settings-btn" onclick="v40OpenSettings()" aria-label="ڕێکخستنەکانی پەخش" title="ڕێکخستنەکانی پەخش">⚙</button></header>
 <div id="v40NetworkBanner" class="v40-network-banner" role="status" aria-live="polite" hidden>📡 پەیوەندی ئینتەرنێت بەردەست نییە. ڤیدیۆی نوێ بار ناکرێت. <button type="button" class="v40-retry" onclick="v40RetryFeed()">🔄 دووبارە هەوڵ بدە</button></div>
 <section id="home">
 <div class="v46-feed-tabs" role="group" aria-label="جۆری فید">
@@ -358,7 +410,7 @@ html,body{background:#08070d;color:var(--ink)}.app{background:#0e0b17;padding-bo
 </div></div>
 <div class="modal" id="v47FollowModal"><div class="box"><h2>👥 فۆڵۆوەر و فۆڵۆکراوەکان</h2><div class="v47-tabs" role="group" aria-label="جۆری لیست"><button type="button" id="v47FollowersTab" onclick="v47SetMode('followers')" aria-pressed="true">فۆڵۆوەرەکان</button><button type="button" id="v47FollowingTab" onclick="v47SetMode('following')" aria-pressed="false">فۆڵۆکراوەکان</button></div><input type="search" id="v47Search" placeholder="🔍 گەڕان بە ناو..." oninput="v47ResetSearch()" maxlength="80" autocomplete="off" aria-label="گەڕان لە لیست"><div class="message" id="v47Status" role="status" aria-live="polite"></div><div class="v47-list" id="v47List"></div><button type="button" class="main-btn v47-more" id="v47More" onclick="v47ShowMore()" hidden>بینینی زیاتر</button><button type="button" class="close-btn" id="v47Refresh" onclick="v47Load()">🔄 نوێکردنەوە</button><button type="button" class="close-btn" onclick="v47CloseFollowList()">گەڕانەوە بۆ پڕۆفایل</button></div></div>
 <div class="modal" id="v48PlayerModal"><div class="box v48-player"><div id="v48PlayerMedia"></div><button type="button" id="v50Tap" class="v50-tap" onclick="v50TogglePlay()" aria-label="پەخشکردن"><span id="v50PlayIcon" class="v50-play-icon" aria-hidden="true">▶</span></button><div class="v50-top"><button type="button" onclick="v48ClosePlayer()" aria-label="گەڕانەوە">↩️</button><div class="v49-nav"><button type="button" id="v49Prev" onclick="v49Navigate(-1)">⬇ پێشوو</button><button type="button" id="v49Next" onclick="v49Navigate(1)">⬆ دواتر</button></div><button type="button" id="v50Sound" onclick="v50ToggleSound()" aria-label="بێدەنگکردن" aria-pressed="false">🔊</button><div class="v49-swipe" id="v49Swipe">⬆️ ڕاکێشە بۆ ڤیدیۆی دواتر · ⬇️ پێشوو</div></div><div class="v50-rail" aria-label="کردارەکانی ڤیدیۆ"><button type="button" id="v49Like" onclick="v49Toggle('like')" aria-label="لایک" aria-pressed="false"><span class="v50-action-icon" id="v50LikeIcon">♡</span><span class="v50-action-label" id="v50LikeLabel">لایک —</span></button><button type="button" id="v49Comment" onclick="v49OpenComments()" aria-label="کۆمێنت"><span class="v50-action-icon">💬</span><span class="v50-action-label" id="v50CommentLabel">—</span></button><button type="button" id="v49Save" onclick="v49Toggle('save')" aria-label="پاشەکەوتکردن" aria-pressed="false"><span class="v50-action-icon" id="v50SaveIcon">🔖</span><span class="v50-action-label" id="v50SaveLabel">پاشەکەوت</span></button><button type="button" onclick="v49Share(false)"><span class="v50-action-icon">↗</span><span class="v50-action-label">هاوبەش</span></button><button type="button" onclick="v49Share(true)"><span class="v50-action-icon">🔗</span><span class="v50-action-label">کۆپی</span></button></div><div class="v50-footer"><div class="v50-caption"><p id="v48PlayerCaption" class="v48-player-caption"></p><div id="v48PlayerCount" class="v48-player-count"></div></div><input id="v49ShareLink" class="v49-share-link" type="text" readonly hidden aria-label="لینکی ڤیدیۆ"><div class="message" id="v49ActionStatus" role="status" aria-live="polite"></div><div class="message" id="v48PlayerStatus" role="status" aria-live="polite"></div><div class="v50-seek-row" id="v50SeekRow" hidden><span id="v50Time">0:00</span><input type="range" id="v50Seek" min="0" max="1" step="0.1" value="0" oninput="v50SeekTo(this.value)" aria-label="شوێنی پەخش"><span id="v50Duration">0:00</span></div></div></div></div>
-<div class="modal" id="v40SettingsModal"><div class="box"><h2>⚙️ ڕێکخستنەکانی XALLO+ v5.1</h2>
+<div class="modal" id="v40SettingsModal"><div class="box"><h2>⚙️ ڕێکخستنەکانی XALLO+ v5.2</h2>
 <p class="v40-settings-help">ئەم ڕێکخستنانە تەنها لەم مۆبایلە پاشەکەوت دەبن؛ پێویستیان بە Supabase نییە.</p>
 <label class="v40-settings-toggle" for="v40DataSaver"><span><strong>📶 کەمکردنەوەی بەکارهێنانی داتا</strong><small>پەخشی خۆکار ڕادەگرێت؛ ڤیدیۆکان بە دەستی خۆت لێبدە.</small></span><input type="checkbox" id="v40DataSaver" onchange="v40SettingsChanged()" /></label>
 <label class="v40-settings-toggle" for="v40Autoplay"><span><strong>▶️ پەخشی خۆکاری ڤیدیۆ</strong><small>تەنها کاتێک داتا کەمکردنەوە ناچالاکە.</small></span><input type="checkbox" id="v40Autoplay" onchange="v40SettingsChanged()" /></label>
@@ -820,9 +872,34 @@ const saveBtn=makeButton(savedVideoIds.has(String(item.id))?'🔖 پاشەکوت
 saveBtn.classList.add('save-video-btn');saveBtn.dataset.saveId=String(item.id);
 if(savedVideoIds.has(String(item.id)))saveBtn.classList.add('saved');
 actions.append(saveBtn);
-const isHome=container===el('uploadedVideos'),secondary=isHome?document.createElement('div'):actions;if(isHome){secondary.className='v51-feed-tools';actions.append(makeButton('↗ هاوبەش',()=>v51ShareClip(item)));}
+const isHome=container===el('uploadedVideos'),secondary=isHome?document.createElement('div'):actions;if(isHome){
+ secondary.className='v51-feed-tools';
+ v52DecorateFeedButton(likeBtn,'like',String(likesReady?countLikes(item.id):'—'),'لایک');
+ likeBtn.setAttribute('aria-pressed',String(hasLiked(item.id)));
+ v52DecorateFeedButton(commentBtn,'comment',String(commentsReady?(commentCounts.get(String(item.id))||0):'—'),'کۆمێنت');
+ const saved=savedVideoIds.has(String(item.id));
+ v52DecorateFeedButton(saveBtn,'save',saved?'پاشەکەوتکراو':'پاشەکەوت','پاشەکەوت');
+ saveBtn.setAttribute('aria-pressed',String(saved));
+ const shareBtn=makeButton('↗ هاوبەش',()=>v51ShareClip(item));
+ v52DecorateFeedButton(shareBtn,'share','هاوبەش','هاوبەشکردن');actions.append(shareBtn);
+}
 if(currentUser&&currentUser.id!==item.user_id){const reportBtn=makeButton('🚩 ڕاپۆرت',()=>openReportDialog('video',item.id));reportBtn.classList.add('report-video-btn');secondary.append(reportBtn);}
 if(currentUser&&currentUser.id!==item.user_id){const followBtn=makeButton(following(item.user_id)?'✓ Following':'➕ Follow',()=>toggleFollow(item.user_id,followBtn));followBtn.classList.add('follow-btn');if(following(item.user_id))followBtn.classList.add('following');secondary.append(followBtn);}const views=document.createElement('span');views.textContent='👁️ '+(item.views??0);secondary.append(views);if(currentUser&&currentUser.id===item.user_id){const editBtn=makeButton('✏️ دەستکاری',()=>openVideoEditor(item));editBtn.classList.add('edit-video-btn');secondary.append(editBtn);secondary.append(makeButton('🗑️ سڕینەوە',()=>deleteVideo(item)));}if(isHome)info.append(secondary);info.append(actions);card.append(info);container.append(card);});if(container===el('uploadedVideos')){v41UpdateLoadCard();setupSwipePlayback();}}
+
+function v52DecorateFeedButton(btn,type,label,description){
+ const paths={
+  like:['M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z'],
+  comment:['M21 11.5a9 9 0 0 1-9 9 10 10 0 0 1-4-.9L3 21l1.5-4.5A9 9 0 1 1 21 11.5z','M8 11.5h.01M12 11.5h.01M16 11.5h.01'],
+  save:['M6 4h12v17l-6-4-6 4z'],
+  share:['M7 17 19 5M9 5h10v10']
+ };
+ const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
+ svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');
+ for(const d of paths[type]||[]){const path=document.createElementNS(ns,'path');path.setAttribute('d',d);svg.append(path);}
+ const glyph=document.createElement('span');glyph.className='v52-rail-icon';glyph.append(svg);
+ const text=document.createElement('span');text.className='v52-rail-label';text.textContent=label;
+ btn.replaceChildren(glyph,text);btn.classList.add('v52-rail-button');btn.setAttribute('aria-label',description+' — '+label);
+}
 
 let feedObserver=null;
 function setupSwipePlayback(){
@@ -1136,7 +1213,11 @@ async function loadSavedVideoIds(){
 function syncSavedButtons(){
   document.querySelectorAll('.save-video-btn[data-save-id]').forEach(btn=>{
     const isSaved=savedVideoIds.has(btn.dataset.saveId);
-    btn.textContent=isSaved?'🔖 پاشەکوتکراو':'🔖 پاشەکەوت';
+    if(btn.classList.contains('v52-rail-button')){
+      const label=btn.querySelector('.v52-rail-label');
+      if(label)label.textContent=isSaved?'پاشەکەوتکراو':'پاشەکەوت';
+      btn.setAttribute('aria-label',isSaved?'پاشەکەوتکراو':'پاشەکەوت');
+    }else btn.textContent=isSaved?'🔖 پاشەکوتکراو':'🔖 پاشەکەوت';
     btn.classList.toggle('saved',isSaved);
     btn.setAttribute('aria-pressed',String(isSaved));
   });
